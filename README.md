@@ -15,7 +15,7 @@ To install this mod, you simply need to put the **JSONCardLoaderPlugin.dll** in 
 
 ## Custom Cards
 
-To create your own cards you just create a .json file and fill in all the parameters. An example file is included in this repo.
+To create your own cards you just create a .json file and fill in all the parameters you want your card to have (parameters you don't include will be defaulted). An example file is included in this repo.
 
 All custom cards must have their json files be in a **Cards** folder, and their art in an **Artwork** folder in the same path as the dll.
 
