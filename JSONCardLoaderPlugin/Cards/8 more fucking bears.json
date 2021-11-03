@@ -1,0 +1,14 @@
+{
+  "name": "Eight_Bears2",
+  "displayedName": "8 more fucking bears!",
+  "description": "Kill this other abomination please",
+  "metaCategories": [ 0, 1, 3 ],
+  "cardComplexity": 2,
+  "temple" : 0,
+  "baseAttack": 64,
+  "baseHealth": 96,
+  "bonesCost": 10,
+  "abilities": [ 15 ],
+  "appearanceBehaviour": [ 7, 6 ],
+  "texture": "eightfuckingbears.png"
+}
