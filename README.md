@@ -76,7 +76,7 @@ Enabled = true
 in **Inscryption/BepInEx/Config/BepInEx.cfg**
 ___
 
-If you want help debugging you can find me on [Inscryption modding discord](https://discord.com/invite/danielmullinsgames) as Cyantist.
+If you want help debugging you can find me on [Inscryption modding discord](https://discord.gg/QrJEF5Denm) as Cyantist.
 
 ## Development
 
