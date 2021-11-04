@@ -1,18 +1,23 @@
 ﻿using APIPlugin;
+
 using BepInEx;
 using BepInEx.Logging;
+
 using DiskCardGame;
+
 using HarmonyLib;
+
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+
 using UnityEngine;
 
 namespace JSONCardParserPlugin
 {
-	[BepInPlugin(PluginGuid, PluginName, PluginVersion)]
-	[BepInDependency("cyantist.inscryption.api", BepInDependency.DependencyFlags.HardDependency)]
+	[BepInPlugin( PluginGuid, PluginName, PluginVersion )]
+	[BepInDependency( "cyantist.inscryption.api", BepInDependency.DependencyFlags.HardDependency )]
 	public class Plugin : BaseUnityPlugin
 	{
 		private const string PluginGuid = "MADH.inscryption.JSONCardParser";
@@ -21,27 +26,30 @@ namespace JSONCardParserPlugin
 
 		internal static ManualLogSource Log;
 
-		public const string ArtPath = "BepInEx/plugins/CardLoader/Artwork/";
-		private const string JSONPath = "BepInEx/plugins/CardLoader/Cards/";
+		static readonly string[] artPaths = { Paths.PluginPath, "CardLoader", "Artwork" };
+		static readonly string[] jsonPaths = { Paths.PluginPath, "CardLoader", "Cards" };
+
+		public static readonly string ArtPath = Path.Combine(artPaths);
+		private static readonly string JSONPath = Path.Combine(jsonPaths);
 
 		private void Awake()
 		{
-			Logger.LogInfo($"Loaded {PluginName}!");
+			Logger.LogInfo( $"Loaded {PluginName}!" );
 			Log = base.Logger;
 
-			Harmony harmony = new Harmony(PluginGuid);
+			Harmony harmony = new Harmony( PluginGuid );
 			harmony.PatchAll();
 
 
-			Logger.LogInfo("Loading cards from JSON...");
+			Logger.LogInfo( "Loading cards from JSON..." );
 
-			foreach (string file in Directory.EnumerateFiles(JSONPath, "*.json"))
+			foreach ( string file in Directory.EnumerateFiles( JSONPath, "*.json" ) )
 			{
-				CardData card = CardData.CreateFromJSON(File.ReadAllText(file));
+				CardData card = CardData.CreateFromJSON( File.ReadAllText( file ) );
 
-				CardData.GenerateNewCard(card);
+				CardData.GenerateNewCard( card );
 
-				Log.LogInfo($"Loaded {file.Substring( file.LastIndexOf('/') + 1 )}");
+				Log.LogInfo( $"Loaded { file.Substring( file.LastIndexOf( '/' ) + 1 ) }" );
 			}
 		}
 	}
@@ -97,46 +105,46 @@ namespace JSONCardParserPlugin
 		public string animatedPortrait;
 		public List<string> decals;
 
-		public static CardData CreateFromJSON(string jsonString)
+		public static CardData CreateFromJSON( string jsonString )
 		{
-			return JsonUtility.FromJson<CardData>(jsonString);
+			return JsonUtility.FromJson<CardData>( jsonString );
 		}
 
-		public static Texture2D LoadTexture2D(string image)
+		public static Texture2D LoadTexture2D( string image )
 		{
-			return image == null ? null : new Texture2D(2, 2).WithImage(image);
+			return image == null ? null : new Texture2D( 2, 2 ).WithImage( image );
 		}
 
-		public static void GenerateNewCard(CardData card)
+		public static void GenerateNewCard( CardData card )
 		{
 			new NewCard(
-				card.name, 
-				card.metaCategories.AsEnum<CardMetaCategory>(), 
+				card.name,
+				card.metaCategories.AsEnum<CardMetaCategory>(),
 				(CardComplexity)card.cardComplexity,
 				(CardTemple)card.temple,
-				card.displayedName ?? "", 
-				card.baseAttack, card.baseHealth == 0 ? 1 : card.baseHealth, 
-				card.description ?? "", 
-				card.hideAttackAndHealth, 
-				card.cost, card.bonesCost, 
-				card.energyCost, 
-				card.gemsCost.AsEnum<GemType>(), 
-				(SpecialStatIcon)card.specialStatIcon, 
-				card.tribes.AsEnum<Tribe>(), 
-				card.traits.AsEnum<Trait>(), 
-				card.specialAbilities.AsEnum<SpecialTriggeredAbility>(), 
-				card.abilities.AsEnum<Ability>(), 
+				card.displayedName ?? "",
+				card.baseAttack, card.baseHealth == 0 ? 1 : card.baseHealth,
+				card.description ?? "",
+				card.hideAttackAndHealth,
+				card.cost, card.bonesCost,
+				card.energyCost,
+				card.gemsCost.AsEnum<GemType>(),
+				(SpecialStatIcon)card.specialStatIcon,
+				card.tribes.AsEnum<Tribe>(),
+				card.traits.AsEnum<Trait>(),
+				card.specialAbilities.AsEnum<SpecialTriggeredAbility>(),
+				card.abilities.AsEnum<Ability>(),
 				null, //TODO
-				card.defaultEvolutionName, 
+				card.defaultEvolutionName,
 				null, //TODO
 				null, //TODO
-				card.flipPortraitForStrafe, 
-				card.onePerDeck, 
-				card.appearanceBehaviour.AsEnum<CardAppearanceBehaviour.Appearance>(), 
-				CardData.LoadTexture2D(card.texture), 
-				CardData.LoadTexture2D(card.altTexture), 
-				CardData.LoadTexture2D(card.titleGraphic), 
-				CardData.LoadTexture2D(card.pixelTexture), 
+				card.flipPortraitForStrafe,
+				card.onePerDeck,
+				card.appearanceBehaviour.AsEnum<CardAppearanceBehaviour.Appearance>(),
+				CardData.LoadTexture2D( card.texture ),
+				CardData.LoadTexture2D( card.altTexture ),
+				CardData.LoadTexture2D( card.titleGraphic ),
+				CardData.LoadTexture2D( card.pixelTexture ),
 				null, //TODO
 				card.decals.AsTextures()
 			);
@@ -145,27 +153,27 @@ namespace JSONCardParserPlugin
 
 	public static class UtilityExtensions
 	{
-		public static List<T> AsEnum<T>(this List<int> list) where T : struct, IConvertible
+		public static List<T> AsEnum<T>( this List<int> list ) where T : struct, IConvertible
 		{
-			return list.Select(i => (T)(object)i).ToList();
+			return list.Select( i => (T)(object)i ).ToList();
 		}
 
-		public static List<Texture> AsTextures(this List<string> list)
+		public static List<Texture> AsTextures( this List<string> list )
 		{
 			List<Texture> textures = new List<Texture>();
-			foreach (string image in list)
+			foreach ( string image in list )
 			{
-				Texture2D tex = new Texture2D(2, 2).WithImage(image);
-				textures.Add(tex);
+				Texture2D tex = new Texture2D( 2, 2 ).WithImage( image );
+				textures.Add( tex );
 			}
 
 			return textures.Count() == 0 ? null : textures;
 		}
 
-		public static Texture2D WithImage(this Texture2D texture, string image)
+		public static Texture2D WithImage( this Texture2D texture, string image )
 		{
-			byte[] imgBytes = System.IO.File.ReadAllBytes(Plugin.ArtPath + image);
-			texture.LoadImage(imgBytes);
+			byte[] imgBytes = File.ReadAllBytes( Path.Combine( Plugin.ArtPath, image ) );
+			texture.LoadImage( imgBytes );
 			return texture;
 		}
 	}
