@@ -1,5 +1,3 @@
-
-# JSON Card Loader
 ## Card Loader by MADH95
 
 This is a BepInEx plugin made for Incryption create custom cards using JSON files and the API by Cyantist.
