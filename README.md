@@ -48,11 +48,11 @@ Cards have lots of fields that can be edited - this is a list of all fields name
 | onePerDeck | **[Optional]** A boolean value that toggles if there can be only one of the card per deck |
 | appearanceBehaviour | **[Optional]** A string array for the behaviours the cards appearance should have (See enums.txt for a list of appearance behaviours) |
 | texture | **[Optional]** A string for the name of the card's image (including extension). If it is in a subfolder within *Artwork* the subfolder can preceed the file name seperated by a '/' (or your system equivelent) |
-| altTexture | **[Optional]** A string the name of the card's alternate image (including extension) |
-| titleGraphic | **[Optional]** A string for the name of the card's title image (including extension) |
-| pixelTexture | **[Optional]** A string for the name of the card's act2 image (including extension) |
+| altTexture | **[Optional]** A string the name of the card's alternate image (including file extension) |
+| titleGraphic | **[Optional]** A string for the name of the card's title image (including file extension) |
+| pixelTexture | **[Optional]** A string for the name of the card's act2 image (including file extension) |
 | animatedPortrait | **[Unavailable]** |
-| decals | **[Optional]** A string array for the texture names of a card decals | 
+| decals | **[Optional]** A string array for the texture names of a card decals (including file extension) |
 
 ## Debugging
 The easiest way to check if the plugin is working properly or to debug an error is to enable the console. This can be done by changing
