@@ -33,15 +33,6 @@ Bell
 GreenGems
 CardsInHand
 
-Tribe
-None
-Squirrel
-Bird
-Canine
-Hooved
-Reptile
-Insect
-
 Trait
 None
 Squirrel
