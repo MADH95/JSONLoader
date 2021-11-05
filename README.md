@@ -9,15 +9,15 @@ To install this plugin you first need to install BepInEx as a mod loader for Ins
 
 You will also need the [InscryptionAPI](https://github.com/ScottWilson0903/InscryptionAPI) plugin.
 
-To install this mod, you simply need to put the **JSONCardLoaderPlugin.dll** in **Inscryption/BepInEx/plugins/CardLoader** beside the **APIPlugin.dll**.
+To install this mod, you simply need to put the **JSONCardLoaderPlugin.dll** in **BepInEx/plugins** in a folder called **JSONLoader**.
 
 ## Custom Cards
 
-To create your own cards you just create a .json file and fill in all the parameters you want your card to have (parameters you don't include will be defaulted). Some parameters are required, and some are optional with default values. Those parameters and their values are specified in the table below. For reference, an example file is included in this repo.
+To create your own cards you just create a .json file and fill in all the fields you want your card to have (fields you don't include will be defaulted). Some fields are required, and some are optional with default values. Those fields and their values are specified in the table below. For reference, an example card is included in this repo.
 
-All custom cards must have their json files be in a **Cards** folder, and their art in an **Artwork** folder in the same path as the dll.
+All custom cards must have their json files in a **Cards** folder, and their art in an **Artwork** folder in the **JSONLoader** folder.
 
-Cards have lots of fields that can be edited - this is a list of all fields names and their purpose. The parameters you wish to include in the json file should be copied exactly from this table, and any parameters that refer to *Enum.txt* should have their strings be copied exactly from there.
+Cards have lots of fields that can be edited - this is a list of all fields names and their purpose. The fields you wish to include in the json file should be copied exactly from this table, and any fields that refer to *Enum.txt* should have their strings be copied exactly from there.
 
 | Parameter | Description |
 |------|-------------|
