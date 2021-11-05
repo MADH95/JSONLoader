@@ -33,7 +33,7 @@ Bell
 GreenGems
 CardsInHand
 
-Trait
+Tribe
 None
 Squirrel
 Bird
@@ -41,6 +41,30 @@ Canine
 Hooved
 Reptile
 Insect
+
+Trait
+None
+EatsWarrens
+FeedsStoat
+LikesHoney
+Wolf
+Bear
+Juvenile
+ProtectsCub
+Undead
+Structure
+Blind
+Ant
+Terrain
+Pelt
+Uncuttable
+SatisfiesRingTrial
+Giant
+Gem
+Fused
+KillsSurvivors
+Goat
+DeathcardCreationNonOption
 
 SpecialAbilities
 None
