@@ -4,7 +4,7 @@ This is a BepInEx plugin made for Incryption to create custom cards using JSON f
 It can currently parse custom cards and pass them to APIPlugin to load them into the game. Cards with custom EvolveParams, TailParams, IceCubeParams, and animatedPortraits are not yet supported.
 
 ## Installation
-#####Requirements
+######Requirements
 To install this plugin you first need to install BepInEx as a mod loader for Inscryption. A guide to do this can be found [here](https://docs.bepinex.dev/articles/user_guide/installation/index.html#where-to-download-bepinex)
 
 You will also need the [InscryptionAPI](https://github.com/ScottWilson0903/InscryptionAPI) plugin.
