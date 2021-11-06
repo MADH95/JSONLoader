@@ -100,3 +100,4 @@ If you want help debugging you can find me on [Inscryption modding discord](http
 Plans for the future:
  - Add functionality for EvolveParams, TailParams, IceCubeParams and animatedPortraits
  - Add functionality for updating existing cards
+ - Add functionality for creating custom sigils and compiling c# scripts for them at runtime
