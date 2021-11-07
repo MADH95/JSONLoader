@@ -217,7 +217,7 @@ namespace JSONCardParserPlugin
 
 		public static void GenerateNewCard( CardData card )
 		{
-			var _ = new NewCard(
+			NewCard.Add(
 				card.name,
 				card.metaCategories.AsEnum( Dicts.MetaCategory ),
 				card.cardComplexity == null ? CardComplexity.Vanilla : Dicts.Complexity[ card.cardComplexity ],
