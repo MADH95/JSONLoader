@@ -106,4 +106,3 @@ If you want help debugging you can find me on [Inscryption modding discord](http
 Plans for the future:
  - Add functionality for updating existing cards
  - Add functionality for adding custom sigils loaded by other mods
- - Update compatability to InscyptionAPI v1.8+
