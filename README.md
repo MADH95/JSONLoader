@@ -7,26 +7,28 @@ It can parse custom cards and pass them to APIPlugin to load them into the game.
 
 To install this plugin you first need to install BepInEx as a mod loader for Inscryption. A guide to do this can be found [here](https://docs.bepinex.dev/articles/user_guide/installation/index.html#where-to-download-bepinex)
 
-You will also need a version of the [InscryptionAPI](https://github.com/ScottWilson0903/InscryptionAPI) plugin. (v1.2.0 and below require version 1.7.2 of API, v1.2.1 is compatable with version 1.8+ of API)
+You will also need version 1.8+ of the [InscryptionAPI](https://github.com/ScottWilson0903/InscryptionAPI) plugin.
 
 To install this mod, you simply need to put the **JSONLoader** folder in **BepInEx/plugins**.
 
 ## Custom Cards
 
-To create your own cards you just create a .json file and fill in all the fields you want your card to have (fields you don't include will be defaulted). Some fields are required, and some are optional with default values. Those fields and their values are specified in the table below. For reference, an example card is included in this repo.
+To create your own cards you just create a .json file and fill in all the fields you want your card to have (fields you don't include will be defaulted). Some fields are required, and some are optional with default values. Those fields and their values are specified in the table below. For reference, an example custom card (8 f\*cking bears.json) is included in the **Cards** folder in this repo.
+
+To edit existing cards, you similarly create a .json file and fill in the fields you want to edit on the card. You must include both the *name* field and the *fieldsToEdit* field with at least 1 field name in it (explained more on the table). Any fields you don't include in *fieldsToEdit* will not be changed from the base card.
 
 You can use this [online JSON IDE](https://jsoneditoronline.org/#left=local.duxaza&right=local.napoto) to avoid syntax errors in your json files.
 
-All custom cards must have their json files in a **Cards** folder, and their art in an **Artwork** folder in the **JSONLoader** folder.
+All cards (custom or edited) must have their json files in the **Cards** folder, and their art in the **Artwork** folder in the **JSONLoader** folder.
 
-Cards have lots of fields that can be edited - this is a list of all field names and their purpose. The fields you wish to include in the json file should be copied exactly from this table, and any fields that refer to *Enum.txt* should have their strings be copied exactly from there.
+Cards have lots of fields that can be filled - this is a list of all field names and their purpose. The fields you wish to include in the json file should be copied exactly from this table, and any fields that refer to *Enum.txt* should have their strings be copied exactly from there.
 
 **Note:** Fields that have a prefix followed by an underscore (e.g. "evolve_") must all be included together. You either include them all, or none of them.
 
-| Parameter | Description |
+| Field | Description |
 |------|-------------|
-| priority | **[Unused]** |
-| name | **[Required]** A string for the name the game will use to identify the card - should contain no spaces |
+| fieldsToEdit | **[Required: Editing]** A string array for the fields you wish to edit. The fields must be the exact names as in the right hand side of this table |
+| name | **[Required]** A string for the name the game will use to identify the card - should contain no spaces. When editing, this field must match the card's name (See *Card Names.txt* for a list of ingame card names) |
 | displayedName | **[Required]** A string for the name displayed on the card |
 | description | **[Required]** A string for the description Leshy gives when you find the card |
 | metaCategories | **[Required]** A string array of meta catagories the card has (See *Enums.txt* for a list of catagories) |
