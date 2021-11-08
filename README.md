@@ -28,7 +28,7 @@ Cards have lots of fields that can be edited - this is a list of all field names
 | priority | **[Unused]** |
 | name | **[Required]** A string for the name the game will use to identify the card - should contain no spaces |
 | displayedName | **[Required]** A string for the name displayed on the card |
-| discription | **[Required]** A string for the description Leshy gives when you find the card |
+| description | **[Required]** A string for the description Leshy gives when you find the card |
 | metaCategories | **[Required]** A string array of meta catagories the card has (See *Enums.txt* for a list of catagories) |
 | cardComplexity | **[Optional]** **[Default: Vanilla]** A string for the complexity of the card (See *Enums.txt* for a list of levels of complexity) |
 | temple | **[Optional]** **[Default: Nature]** A string for which Scrybe created the card |
