@@ -38,6 +38,7 @@ namespace JLPlugin.Utils
         private static string Message( string cardName, string value, string field )
             => $"{ cardName } - \"{ value }\" is an invalid value for { field }";
 
+
         public static List<T> Assign<T>( CardData card, List<string> fieldData, string fieldName, Dictionary<string, T> dict ) where T : struct, IConvertible
             => fieldData?.AsEnum( dict, v => Message( card.name, v, fieldName ) );
 
@@ -45,11 +46,13 @@ namespace JLPlugin.Utils
             => string.IsNullOrEmpty( fieldData ) ? default : TryLog( () => dict[ fieldData ], Message( card.name, fieldData, fieldName ) );
 
         public static Texture2D Assign( CardData card, string fieldData, string fieldName )
-            => string.IsNullOrEmpty( fieldData ) ? null : TryLog( () => LoadTexture2D( card.texture ), Message( card.name, fieldData, fieldName ) );
+            => string.IsNullOrEmpty( fieldData ) ? null : TryLog( () => LoadTexture2D( fieldData ), Message( card.name, fieldData, fieldName ) );
 
         public static List<Texture> Assign( CardData card, List<string> fieldData, string fieldName )
             => fieldData?.Select( elem => TryLog( () => ( Texture ) LoadTexture2D( elem ), Message( card.name, elem, fieldName ) ) ).ToList();
 
+
+        //CustomCards need to be checked before assignment
         public static List<T> CheckThenAssign<T>( CardData card, List<string> fieldData, string fieldName, Dictionary<string, T> dict ) where T : struct, IConvertible
             => card.fieldsToEdit.Contains( fieldName ) ? Assign( card, fieldData, fieldName, dict ) : null;
 

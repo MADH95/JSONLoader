@@ -30,12 +30,14 @@ namespace JLPlugin.Utils
                 bonesCost:              card.bonesCost,
                 energyCost:             card.energyCost,
                 gemsCost:               JLUtils.Assign( card, card.gemsColour,          nameof( card.gemsColour ),          Dicts.GemColour ),
+
                 metaCategories:         JLUtils.Assign( card, card.metaCategories,      nameof( card.metaCategories ),      Dicts.MetaCategory ),
                 cardComplexity:         JLUtils.Assign( card, card.cardComplexity,      nameof( card.cardComplexity ),      Dicts.Complexity ),
                 temple:                 JLUtils.Assign( card, card.temple,              nameof( card.temple ),              Dicts.Temple ),
                 tribes:                 JLUtils.Assign( card, card.tribes,              nameof( card.tribes ),              Dicts.Tribes ),
-
+         
                 abilities:              JLUtils.Assign( card, card.abilities,           nameof( card.abilities ),           Dicts.Abilities ),
+                
                 traits:                 JLUtils.Assign( card, card.traits,              nameof( card.traits ),              Dicts.Traits ),
                 specialAbilities:       JLUtils.Assign( card, card.specialAbilities,    nameof( card.specialAbilities ),    Dicts.SpecialAbilities ),
                 specialStatIcon:        JLUtils.Assign( card, card.specialStatIcon,     nameof( card.specialStatIcon ),     Dicts.StatIcon ),
