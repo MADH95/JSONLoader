@@ -12,15 +12,18 @@ using HarmonyLib;
 
 using APIPlugin;
 
-namespace JSONLoaderPlugin
+namespace JLPlugin
 {
+    using Data;
+    using Utils;
+
     [BepInPlugin( PluginGuid, PluginName, PluginVersion )]
     [BepInDependency( "cyantist.inscryption.api", BepInDependency.DependencyFlags.HardDependency )]
     public class Plugin : BaseUnityPlugin
     {
         private const string PluginGuid = "MADH.inscryption.JSONCardLoader";
         private const string PluginName = "JSONCardLoader";
-        private const string PluginVersion = "1.3.5.0";
+        private const string PluginVersion = "1.3.6.0";
 
         internal static ManualLogSource Log;
 
@@ -53,7 +56,7 @@ namespace JSONLoaderPlugin
             {
                 string fileName = file.Substring(file.LastIndexOf(Path.DirectorySeparatorChar) + 1);
 
-                CardData card = CardData.CreateFromJSON(File.ReadAllText(file));
+                CardData card = CDUtils.CreateFromJSON(File.ReadAllText(file));
 
                 if ( card is not null )
                 {
@@ -61,7 +64,7 @@ namespace JSONLoaderPlugin
                     {
                         Log.LogInfo( $"Editing from { fileName }..." );
 
-                        CardData.EditExistingCard( card );
+                        CDUtils.EditExistingCard( card );
 
                         Log.LogInfo( $"Edited from { fileName }!" );
 
@@ -71,9 +74,9 @@ namespace JSONLoaderPlugin
                     {
                         Log.LogInfo( $"Loading from { fileName }..." );
 
-                        CardData.GenerateNewCard( card );
+                        CDUtils.GenerateNewCard( card );
 
-                        //Log.LogInfo( $"Loaded from { fileName }!" );
+                        //Log.LogInfo( $"Loaded from { fileName }!" ); // Commented because API Logs when successful
 
                         continue;
                     }
@@ -103,47 +106,4 @@ namespace JSONLoaderPlugin
 
         
     }
-
-    #region Patches
-
-    [HarmonyPatch( typeof( DeckInfo ), "InitializeAsPlayerDeck" )]
-    public class DeckInfo_InitializeAsPlayerDeck
-    {
-        [HarmonyPrefix]
-        public static bool Prefix( ref DeckInfo __instance )
-        {
-            Plugin p = new();
-            if ( !p.GetTestDeck() )
-                return true;
-
-            List<string> Cards = p.GetCards();
-            __instance.AddCard( CardLoader.GetCardByName( Cards[ 0 ] ) );
-            __instance.AddCard( CardLoader.GetCardByName( Cards[ 1 ] ) );
-            __instance.AddCard( CardLoader.GetCardByName( Cards[ 2 ] ) );
-            __instance.AddCard( CardLoader.GetCardByName( Cards[ 3 ] ) );
-
-            return false;
-        }
-    }
-
-    [HarmonyPatch( typeof( LoadingScreenManager ), "LoadGameData" )]
-    public class LoadingScreenManager_LoadGameData
-    {
-        [HarmonyAfter( new string[] { "cyantist.inscryption.api" } )]
-        public static void Prefix()
-        {
-            JLUtils.ProcessAbilityData();
-        }
-    }
-
-    [HarmonyPatch( typeof( ChapterSelectMenu ), "OnChapterConfirmed" )]
-    public class ChapterSelectMenu_OnChapterConfirmed
-    {
-        [HarmonyAfter( new string[] { "cyantist.inscryption.api" } )]
-        public static void Prefix()
-        {
-            JLUtils.ProcessAbilityData();
-        }
-    }
-    #endregion
 }

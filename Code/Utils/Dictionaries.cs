@@ -4,8 +4,10 @@ using System.Collections.Generic;
 
 using DiskCardGame;
 
-namespace JSONLoaderPlugin
+namespace JLPlugin.Utils
 {
+    using Data;
+
     public static class Dicts
     {
         public static readonly Dictionary<string, CardMetaCategory> MetaCategory

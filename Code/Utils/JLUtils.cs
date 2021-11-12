@@ -1,5 +1,4 @@
 ﻿using System;
-using System.IO;
 using System.Linq;
 using System.Collections.Generic;
 
@@ -7,10 +6,14 @@ using UnityEngine;
 
 using DiskCardGame;
 
-namespace JSONLoaderPlugin
+namespace JLPlugin.Utils
 {
+    using Data;
+
     public static class JLUtils
     {
+        private record struct AbilityData( EvolveData evolveData, TailData tailData, IceCubeData iceCubeData );
+
         private static readonly Dictionary< string, AbilityData > cardsWithParams = new();
 
         private static Texture2D LoadTexture2D( string image )
@@ -99,45 +102,6 @@ namespace JSONLoaderPlugin
                 if ( !Dicts.CardDataFields.Contains( field ) )
                     Plugin.Log.LogError( $"{ card.name } - \"{ field }\" is an invalid field name" );
             }
-        }
-    }
-
-    public static class UtilityExtensions
-    {
-        public static List<T> AsEnum<T>( this List<string> list, Dictionary<string, T> dict, Func<string, string> message ) where T : struct, IConvertible
-        {
-            List<T> output = new();
-
-            foreach ( string elem in list )
-            {
-                try
-                {
-                    output.Add( dict[ elem ] );
-                }
-                catch
-                {
-                    Plugin.Log.LogError( message( elem ) );
-                }
-            }
-
-            return output;
-        }
-
-        public static Texture2D WithImage( this Texture2D texture, string image )
-        {
-            byte[] imgBytes = File.ReadAllBytes( Path.Combine( Plugin.ArtPath, image ) );
-            texture.LoadImage( imgBytes );
-            return texture;
-        }
-
-        public static Sprite AsSprite( this Texture2D tex, string name )
-        {
-            tex.name = "portrait_" + name;
-            tex.filterMode = FilterMode.Point;
-            Sprite sprite = Sprite.Create(tex, new(0.0f, 0.0f, tex.width, tex.height), new(0.5f, 0.5f));
-            sprite.name = "portrait_" + name;
-
-            return sprite;
         }
     }
 }
