@@ -16,6 +16,13 @@ namespace JLPlugin.Utils
 
         private static readonly Dictionary< string, AbilityData > cardsWithParams = new();
 
+        private static bool ValidateTexture( string texture )
+            => TryLog( () => texture.Substring( texture.Length - 4 ) is not ".png" ? throw new Exception() : true, $"\"{ texture }\" is not a .png file" );
+
+
+        private static Texture2D LoadTexture2D( string image )
+            => !string.IsNullOrEmpty( image ) && ValidateTexture( image ) ? new Texture2D( 2, 2 ).WithImage( image ) : null;
+
         private static T TryLog<T>( Func<T> func, string message )
         {
             try
@@ -30,9 +37,6 @@ namespace JLPlugin.Utils
             return default;
         }
 
-        private static Texture2D LoadTexture2D( string image )
-            => String.IsNullOrEmpty( image ) && TryLog( () => image.Substring(image.Length - 4) is not ".png", $"\"{ image }\" must be a .png file" ) ? null : new Texture2D( 2, 2 ).WithImage( image );
-
         #region Assignment Helpers
 
         private static string Message( string cardName, string value, string field )
@@ -46,7 +50,7 @@ namespace JLPlugin.Utils
             => string.IsNullOrEmpty( fieldData ) ? default : TryLog( () => dict[ fieldData ], Message( card.name, fieldData, fieldName ) );
 
         public static Texture2D Assign( CardData card, string fieldData, string fieldName )
-            => string.IsNullOrEmpty( fieldData ) ? null : TryLog( () => LoadTexture2D( fieldData ), Message( card.name, fieldData, fieldName ) );
+            => TryLog( () => LoadTexture2D( fieldData ), Message( card.name, fieldData, fieldName ) );
 
         public static List<Texture> Assign( CardData card, List<string> fieldData, string fieldName )
             => fieldData?.Select( elem => TryLog( () => ( Texture ) LoadTexture2D( elem ), Message( card.name, elem, fieldName ) ) ).ToList();
