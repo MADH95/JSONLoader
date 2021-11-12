@@ -23,7 +23,7 @@ namespace JLPlugin
     {
         private const string PluginGuid = "MADH.inscryption.JSONCardLoader";
         private const string PluginName = "JSONCardLoader";
-        private const string PluginVersion = "1.3.6.0";
+        private const string PluginVersion = "1.3.8.0";
 
         internal static ManualLogSource Log;
 

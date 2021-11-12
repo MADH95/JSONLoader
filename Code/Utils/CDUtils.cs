@@ -43,8 +43,8 @@ namespace JLPlugin.Utils
                 appearanceBehaviour:    JLUtils.Assign( card, card.appearanceBehaviour, nameof( card.appearanceBehaviour ), Dicts.AppearanceBehaviour ),
 
                 tex:                    JLUtils.Assign( card, card.texture,             nameof( card.texture ) ),
-                altTex:                 JLUtils.Assign( card, card.texture,             nameof( card.altTexture ) ),
-                titleGraphic:           JLUtils.Assign( card, card.texture,             nameof( card.titleGraphic ) ),
+                altTex:                 JLUtils.Assign( card, card.altTexture,          nameof( card.altTexture ) ),
+                titleGraphic:           JLUtils.Assign( card, card.titleGraphic,        nameof( card.titleGraphic ) ),
                 pixelTex:               JLUtils.Assign( card, card.pixelTexture,        nameof( card.pixelTexture ) ),
                 animatedPortrait:       null, //TODO: implement
                 decals:                 JLUtils.Assign( card, card.decals,              nameof( card.decals ) )
