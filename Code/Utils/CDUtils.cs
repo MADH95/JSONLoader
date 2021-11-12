@@ -1,6 +1,6 @@
-﻿using UnityEngine;
+﻿using APIPlugin;
 
-using APIPlugin;
+using TinyJson;
 
 namespace JLPlugin.Utils
 {
@@ -9,7 +9,7 @@ namespace JLPlugin.Utils
     class CDUtils
     {
         public static CardData CreateFromJSON( string jsonString )
-            => JsonUtility.FromJson<CardData>( jsonString );
+            => JSONParser.FromJson<CardData>( jsonString );
 
         public static void GenerateNewCard( CardData card )
         {

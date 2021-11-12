@@ -22,7 +22,7 @@ namespace JLPlugin
     {
         private const string PluginGuid = "MADH.inscryption.JSONCardLoader";
         private const string PluginName = "JSONCardLoader";
-        private const string PluginVersion = "1.3.10.0";
+        private const string PluginVersion = "1.4.0.0";
 
         internal static ManualLogSource Log;
 
@@ -59,7 +59,7 @@ namespace JLPlugin
 
                 if ( card is not null )
                 {
-                    if ( card.fieldsToEdit.Count > 0 )
+                    if ( card.fieldsToEdit is not null )
                     {
                         Log.LogInfo( $"Editing from { fileName }..." );
 
