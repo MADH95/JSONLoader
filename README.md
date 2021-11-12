@@ -7,13 +7,13 @@ It can parse custom cards and pass them to APIPlugin to load them into the game.
 
 To install this plugin you first need to install BepInEx as a mod loader for Inscryption. A guide to do this can be found [here](https://docs.bepinex.dev/articles/user_guide/installation/index.html#where-to-download-bepinex)
 
-You will also need version 1.8+ of the [InscryptionAPI](https://github.com/ScottWilson0903/InscryptionAPI) plugin.
+You will also need version 1.10+ of the [InscryptionAPI](https://github.com/ScottWilson0903/InscryptionAPI) plugin.
 
 To install this mod, you simply need to put the **JSONLoader** folder in **BepInEx/plugins**.
 
 ## Custom Cards
 
-To create your own cards you just create a .json file and fill in all the fields you want your card to have (fields you don't include will be defaulted). Some fields are required, and some are optional with default values. Those fields and their values are specified in the table below. For reference, an example custom card (8 f\*cking bears.json) is included in the **Cards** folder in this repo.
+To create your own cards you just create a .json file and fill in all the fields you want your card to have (fields you don't include will be defaulted). The *name* field is required, and the rest are optional with default values (though that would be a boring card). Those fields and their values are specified in the table below. For reference, an example custom card (8 f\*cking bears.json) is included in the **Cards** folder in this repo.
 
 To edit existing cards, you similarly create a .json file and fill in the fields you want to edit on the card. You must include both the *name* field and the *fieldsToEdit* field with at least 1 field name in it (explained more on the table). Any fields you don't include in *fieldsToEdit* will not be changed from the base card.
 
@@ -29,9 +29,9 @@ Cards have lots of fields that can be filled - this is a list of all field names
 |------|-------------|
 | fieldsToEdit | **[Required: Editing]** A string array for the fields you wish to edit. The fields must be the exact names as in the right hand side of this table |
 | name | **[Required]** A string for the name the game will use to identify the card - should contain no spaces. When editing, this field must match the card's name (See *Card Names.txt* for a list of ingame card names) |
-| displayedName | **[Required]** A string for the name displayed on the card |
-| description | **[Required]** A string for the description Leshy gives when you find the card |
-| metaCategories | **[Required]** A string array of meta catagories the card has (See *Enums.txt* for a list of catagories) |
+| displayedName | **[Optional]** **[Default: ""]** A string for the name displayed on the card |
+| description | **[Optional]** **[Default: ""]** A string for the description Leshy gives when you find the card |
+| metaCategories | **[Optional]** A string array of meta catagories the card has (See *Enums.txt* for a list of catagories) |
 | cardComplexity | **[Optional]** **[Default: Vanilla]** A string for the complexity of the card (See *Enums.txt* for a list of levels of complexity) |
 | temple | **[Optional]** **[Default: Nature]** A string for which Scrybe created the card |
 | baseAttack | **[Optional]** **[Default: 0]** An integer value for the attack of a card |
@@ -106,5 +106,6 @@ If you want help debugging you can find me on [Inscryption modding discord](http
 ## Development
 
 Plans for the future:
- - Add functionality for updating existing cards
  - Add functionality for adding custom sigils loaded by other mods
+ - Implement support for Thunderstore mod loader
+ - Use a better Parser to allow for more Natural json files (i.e. param fields are objects with their own fields)
