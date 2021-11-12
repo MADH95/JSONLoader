@@ -16,9 +16,6 @@ namespace JLPlugin.Utils
 
         private static readonly Dictionary< string, AbilityData > cardsWithParams = new();
 
-        private static Texture2D LoadTexture2D( string image )
-            => String.IsNullOrEmpty( image ) ? null : new Texture2D( 2, 2 ).WithImage( image );
-
         private static T TryLog<T>( Func<T> func, string message )
         {
             try
@@ -32,6 +29,9 @@ namespace JLPlugin.Utils
 
             return default;
         }
+
+        private static Texture2D LoadTexture2D( string image )
+            => String.IsNullOrEmpty( image ) && TryLog( () => image.Substring(image.Length - 4) is not ".png", $"\"{ image }\" must be a .png file" ) ? null : new Texture2D( 2, 2 ).WithImage( image );
 
         #region Assignment Helpers
 
