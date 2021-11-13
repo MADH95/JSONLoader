@@ -13,6 +13,8 @@ namespace JLPlugin
         [HarmonyPrefix]
         public static bool Prefix( ref DeckInfo __instance )
         {
+            Plugin.Log.LogWarning( "Getting TestDeck Cards" );
+
             Plugin p = new();
             if ( !p.GetTestDeck() )
                 return true;

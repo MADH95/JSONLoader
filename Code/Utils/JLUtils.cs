@@ -1,10 +1,10 @@
 ﻿using System;
-using System.Linq;
+using System.IO;
 using System.Collections.Generic;
 
 using UnityEngine;
 
-using DiskCardGame;
+using APIPlugin;
 
 namespace JLPlugin.Utils
 {
@@ -12,103 +12,211 @@ namespace JLPlugin.Utils
 
     public static class JLUtils
     {
-        private record struct AbilityData( EvolveData evolveData, TailData tailData, IceCubeData iceCubeData );
-
-        private static readonly Dictionary< string, AbilityData > cardsWithParams = new();
-
-        private static bool ValidateTexture( string texture )
-            => TryLog( () => texture.Substring( texture.Length - 4 ) is not ".png" ? throw new Exception() : true, $"\"{ texture }\" is not a .png file" );
-
-
         private static Texture2D LoadTexture2D( string image )
-            => !string.IsNullOrEmpty( image ) && ValidateTexture( image ) ? new Texture2D( 2, 2 ).WithImage( image ) : null;
-
-        private static T TryLog<T>( Func<T> func, string message )
         {
-            try
+            byte[] imgBytes = File.ReadAllBytes( Path.Combine( Plugin.ArtPath, image ) );
+
+            Texture2D texture = new( 2, 2 );
+
+            if ( texture.LoadImage( imgBytes ) )
             {
-                return func();
-            }
-            catch
-            {
-                Plugin.Log.LogError( message );
+                return texture;
             }
 
-            return default;
+            Plugin.Log.LogError( $"{ ErrorUtil.Card } - Couldn't find texture \"{ image }\" to load into { ErrorUtil.Field }" );
+
+            return null;
         }
 
-        #region Assignment Helpers
-
-        private static string Message( string cardName, string value, string field )
-            => $"{ cardName } - \"{ value }\" is an invalid value for { field }";
-
-
-        public static List<T> Assign<T>( CardData card, List<string> fieldData, string fieldName, Dictionary<string, T> dict ) where T : struct, IConvertible
-            => fieldData?.AsEnum( dict, v => Message( card.name, v, fieldName ) );
-
-        public static T Assign<T>( CardData card, string fieldData, string fieldName, Dictionary<string, T> dict ) where T : struct, IConvertible
-            => string.IsNullOrEmpty( fieldData ) ? default : TryLog( () => dict[ fieldData ], Message( card.name, fieldData, fieldName ) );
-
-        public static Texture2D Assign( CardData card, string fieldData, string fieldName )
-            => TryLog( () => LoadTexture2D( fieldData ), Message( card.name, fieldData, fieldName ) );
-
-        public static List<Texture> Assign( CardData card, List<string> fieldData, string fieldName )
-            => fieldData?.Select( elem => TryLog( () => ( Texture ) LoadTexture2D( elem ), Message( card.name, elem, fieldName ) ) ).ToList();
-
-
-        //CustomCards need to be checked before assignment
-        public static List<T> CheckThenAssign<T>( CardData card, List<string> fieldData, string fieldName, Dictionary<string, T> dict ) where T : struct, IConvertible
-            => card.fieldsToEdit.Contains( fieldName ) ? Assign( card, fieldData, fieldName, dict ) : null;
-
-        public static T? CheckThenAssign<T>( CardData card, string fieldData, string fieldName, Dictionary<string, T> dict ) where T : struct, IConvertible
-            => card.fieldsToEdit.Contains( fieldName ) ? Assign( card, fieldData, fieldName, dict ) : null;
-
-        public static Texture2D CheckThenAssign( CardData card, string fieldData, string fieldName )
-            => card.fieldsToEdit.Contains( fieldName ) ? Assign( card, fieldData, fieldName ) : null;
-
-        public static List<Texture> CheckThenAssign( CardData card, List<string> fieldData, string fieldName )
-            => card.fieldsToEdit.Contains( fieldName ) ? Assign( card, fieldData, fieldName ) : null;
-
-        #endregion
-
-        public static void AssignAbilityData( CardData card )
-            => cardsWithParams.Add( card.name, new( EvolveData.Generate( card ), TailData.Generate( card ), IceCubeData.Generate( card ) ) );
-        
-        public static void ProcessAbilityData()
+        public static T Assign<T>( string data, string field, Dictionary<string, T> dict )
         {
-            foreach ( var cardToMod in cardsWithParams.ToList() )
-            {
-                CardInfo card = ScriptableObjectLoader<CardInfo>.AllData.Find( elem => elem.name == cardToMod.Key );
+            ErrorUtil.Field = field;
 
-                if ( card is null )
+
+            if ( string.IsNullOrEmpty( data ) )
+                return default;
+
+            if ( !dict.ContainsKey( data ) )
+            {
+                ErrorUtil.Log( data );
+                return default;
+            }
+
+            Plugin.Log.LogWarning( $"Assigning { field }" );
+            return dict[ data ];
+        }
+
+        public static List<T> Assign<T>( List<string> list, string field, Dictionary<string, T> dict )
+        {
+            ErrorUtil.Field = field;
+
+
+            if ( list is null || list.Count == 0 )
+                return null;
+
+            List<T> output = new();
+
+            foreach(string value in list)
+            {
+                if ( !dict.ContainsKey( value ) )
                 {
-                    Plugin.Log.LogError( $"Couldn't find \"{ cardToMod.Key }\" to add Evolve/Tail/IceCube params to" );
+                    ErrorUtil.Log( value );
                     continue;
                 }
 
-                card.evolveParams = cardToMod.Value.evolveData?.AsParams( card.name );
-
-                card.tailParams = cardToMod.Value.tailData?.AsParams( card.name );
-
-                card.iceCubeParams = cardToMod.Value.iceCubeData?.AsParams( card.name );
+                output.Add( dict[ value ] );
             }
 
-            cardsWithParams.Clear();
+            if ( output.Count == 0 )
+            {
+                return null;
+            }
+
+            Plugin.Log.LogWarning( $"Assigning { field }" );
+            return output;
         }
 
-        public static void CheckValidFields( CardData card )
+        public static Texture2D Assign( string image, string field )
         {
-            foreach ( string field in card.fieldsToEdit )
+            ErrorUtil.Field = field;
+
+            Plugin.Log.LogWarning( $"Assigning { field }" );
+
+            if ( string.IsNullOrEmpty( image ) )
+                return null;
+
+            if ( !image.EndsWith( ".png" ) )
+            {
+                ErrorUtil.Log( image, ", it must be a .png" );
+                return null;
+            }
+
+            return LoadTexture2D( image );
+        }
+
+        public static List<Texture> Assign( List<string> list, string field )
+        {
+            ErrorUtil.Field = field;
+
+
+            if ( list is null || list.Count == 0 )
+                return null;
+
+            List<Texture> output = new();
+
+            foreach ( string image in list )
+            {
+                if ( string.IsNullOrEmpty( image ) )
+                    continue;
+
+                if ( !image.EndsWith( ".png" ) )
+                {
+                    ErrorUtil.Log( image, ", it must be a .png" );
+                    continue;
+                }
+
+                output.Add( LoadTexture2D( image ) );
+            }
+
+            if ( output.Count == 0 )
+                return null;
+
+            Plugin.Log.LogWarning( $"Assigning { field }" );
+            return output;
+        }
+
+        public static void CheckValidFields( List<string> fields )
+        {
+            foreach ( string field in fields )
             {
                 if ( String.IsNullOrEmpty( field ) )
                 {
-                    Plugin.Log.LogError( $"{ card.name } - fieldsToEdit cannot contain an empty string" );
+                    Plugin.Log.LogError( $"{ ErrorUtil.Card } - fieldsToEdit cannot contain an empty string" );
                     continue;
                 }
 
                 if ( !Dicts.CardDataFields.Contains( field ) )
-                    Plugin.Log.LogError( $"{ card.name } - \"{ field }\" is an invalid field name" );
+                    Plugin.Log.LogError( $"{ ErrorUtil.Card } - \"{ field }\" is an invalid field name" );
             }
+        }
+
+        public static EvolveIdentifier GenerateEvolveIdentifier( CardData card )
+        {
+            if ( card.evolution is null )
+            {
+                if ( string.IsNullOrEmpty( card.evolve_evolutionName ) )
+                {
+                    return null;
+                }
+
+                return new(
+                    name: card.evolve_evolutionName,
+                    turnsToEvolve: card.evolve_turnsToEvolve == 0 ? 1 : card.evolve_turnsToEvolve
+                );
+            }
+
+            if ( string.IsNullOrEmpty( card.evolution.name ) )
+            {
+                Plugin.Log.LogError( $"{ card.name } - { nameof( card.evolution ) } must have a name" );
+                return null;
+            }
+
+            return new(
+                name: card.evolution.name,
+                turnsToEvolve: card.evolution.turnsToEvolve == 0 ? 1 : card.evolution.turnsToEvolve
+            );
+        }
+
+        public static TailIdentifier GenerateTailIdentifier( CardData card )
+        {
+            if ( card.tail is null )
+            {
+                if ( string.IsNullOrEmpty( card.tail_cardName ) )
+                {
+                    return null;
+                }
+
+                return new(
+                    name: card.tail_cardName,
+                    tailLostTex: Assign( card.tail_tailLostPortrait, nameof( card.tail_tailLostPortrait ) )
+                );
+            }
+
+            if ( string.IsNullOrEmpty( card.tail.name ) )
+            {
+                Plugin.Log.LogError( $"{ card.name } - { nameof( card.tail ) } must have a name" );
+                return null;
+            }
+
+            return new(
+                name: card.tail.name,
+                tailLostTex: Assign( card.tail.tailLostPortrait, nameof( card.tail.tailLostPortrait ) )
+            );
+        }
+
+        public static IceCubeIdentifier GenerateIceCubeIdentifier( CardData card )
+        {
+            if ( card.iceCube is null )
+            {
+                if ( string.IsNullOrEmpty( card.iceCube_creatureWithin ) )
+                {
+                    return null;
+                }
+
+                return new(
+                    name: card.iceCube_creatureWithin
+                );
+            }
+
+            if ( string.IsNullOrEmpty( card.iceCube.creatureWithin ) )
+            {
+                Plugin.Log.LogError( $"{ card.name } - { nameof( card.iceCube ) } must have a { nameof( card.iceCube.creatureWithin ) }" );
+                return null;
+            }
+
+            return new(
+                name: card.iceCube.creatureWithin
+            );
         }
     }
 }

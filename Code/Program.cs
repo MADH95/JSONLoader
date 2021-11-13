@@ -13,16 +13,13 @@ using APIPlugin;
 
 namespace JLPlugin
 {
-    using Data;
-    using Utils;
-
     [BepInPlugin( PluginGuid, PluginName, PluginVersion )]
     [BepInDependency( "cyantist.inscryption.api", BepInDependency.DependencyFlags.HardDependency )]
     public class Plugin : BaseUnityPlugin
     {
         private const string PluginGuid = "MADH.inscryption.JSONCardLoader";
         private const string PluginName = "JSONCardLoader";
-        private const string PluginVersion = "1.4.0.0";
+        private const string PluginVersion = "1.5.0.0";
 
         internal static ManualLogSource Log;
 
@@ -55,7 +52,7 @@ namespace JLPlugin
             {
                 string fileName = file.Substring(file.LastIndexOf(Path.DirectorySeparatorChar) + 1);
 
-                CardData card = CDUtils.CreateFromJSON(File.ReadAllText(file));
+                Data.CardData card = Data.CardData.CreateFromJSON( File.ReadAllText( file ) );
 
                 if ( card is not null )
                 {
@@ -63,7 +60,7 @@ namespace JLPlugin
                     {
                         Log.LogInfo( $"Editing from { fileName }..." );
 
-                        CDUtils.EditExistingCard( card );
+                        card.Edit();
 
                         Log.LogInfo( $"Edited from { fileName }!" );
 
@@ -73,7 +70,7 @@ namespace JLPlugin
                     {
                         Log.LogInfo( $"Loading from { fileName }..." );
 
-                        CDUtils.GenerateNewCard( card );
+                        card.GenerateNew();
 
                         //Log.LogInfo( $"Loaded from { fileName }!" ); // Commented because API Logs when successful
 
@@ -102,7 +99,5 @@ namespace JLPlugin
                 Traverse.Create( typeof( ScriptableObjectLoader<CardInfo> ) ).Field( "allData" ).SetValue( null );
             }
         }
-
-        
     }
 }

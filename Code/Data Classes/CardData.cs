@@ -3,7 +3,7 @@
 namespace JLPlugin.Data
 {
     [System.Serializable]
-    public class CardData
+    public partial class CardData
     {
         public List<string> fieldsToEdit;
         public string name, displayedName, description;
@@ -27,13 +27,16 @@ namespace JLPlugin.Data
         public List<string> specialAbilities;
         public string specialStatIcon;
 
+        public EvolveData evolution;
         public string evolve_evolutionName;
         public int evolve_turnsToEvolve;
         public string defaultEvolutionName;
 
+        public TailData tail;
         public string tail_cardName;
         public string tail_tailLostPortrait;
 
+        public IceCubeData iceCube;
         public string iceCube_creatureWithin;
         
         public bool flipPortraitForStrafe;
