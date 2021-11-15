@@ -47,13 +47,11 @@ Cards have lots of fields that can be filled - this is a list of all field names
 | tribes | **[Optional]** An string array for the tribes the card belongs to (See *Enums.txt* for a list of tribes) |
 | traits | **[Optional]** An string array for the traits a card has (See *Enums.txt* for a list of traits) |
 | specialAbilities | **[Optional]** A string array for the special abilities a card has (See *Enums.txt* for a list of special abilities) |
-| abilities | **[Optional]** A string array for the sigils a card has. (See *Enums.txt* for a list of sigil abilities).
-| evolve_evolutionName | **[Optional]** The name field of the card this will evolve into (See *Card Names.txt* for a list of ingame card names) |
-| evolve_turnsToEvolve | **[Optional]** The number of turns the card will take to evolve. The game only supports are for 1-3 but can permit higher numbers |
+| abilities | **[Optional]** A string array for the sigils a card has. (See *Enums.txt* for a list of sigil abilities). |
+| evolution | **[Optional]** A json object for the evolveParams of the card. (It's children are in the table below this one) |
 | defaultEvolutionName | **[Optional]** The name the card will have when it evolves (when it doesn't have evolve_ fields set) |
-| tail_cardName | **[Optional]** The name field of the tail card this will produce (See *Card Names.txt* for a list of ingame card names) |
-| tail_tailLostPortrait | **[Optional]** The portrait the card should have once it's tail is lost |
-| iceCube_creatureWithin | **[Optional]** The name field of the creature the card should turn into when it perishes (See *Card Names.txt* for a list of ingame card names) |
+| tail | **[Optional]** A json object for the tailParams of the card. (It's children are in the table below this one) |
+| iceCube | **[Optional]** A json object for the iceCubeParams of the card. (It's children are in the table below this one) |
 | flipPortraitForStrafe | **[Optional]** A boolean to determine if the cards portrait should flip when it uses one of the strafe sigils |
 | onePerDeck | **[Optional]** A boolean value that toggles if there can be only one of the card per deck |
 | appearanceBehaviour | **[Optional]** A string array for the behaviours the cards appearance should have (See enums.txt for a list of appearance behaviours) |
@@ -63,6 +61,27 @@ Cards have lots of fields that can be filled - this is a list of all field names
 | pixelTexture | **[Optional]** A string for the name of the card's act2 image (including file extension) |
 | animatedPortrait | **[Unavailable]** |
 | decals | **[Optional]** A string array for the texture names of a card decals (including file extension) |
+
+___
+### Evolution fields
+
+| Field | Description |
+|-|-|
+| name | The name of the card this card evolves into (See *Card Names.txt* for a list of ingame card names) |
+| turnsToEvolve | The number of turns til the card evolves (The game supports sigil art for up to 3 turns) |
+
+___
+### Tail fields
+| Field | Description |
+|-|-|
+| name | The name of the tail card this will produce (See *Card Names.txt* for a list of ingame card names) |
+| tailLostPortrait | The portrait the card should have once it's tail is lost |
+
+### IceCube fields
+| Field | Description |
+|-|-|
+| creatureWithin | The name of the creature the card should turn into when it perishes (See *Card Names.txt* for a list of ingame card names) |
+
 
 ## Debugging
 The easiest way to check if the plugin is working properly or to debug an error is to enable the console. This can be done by changing
