@@ -18,11 +18,22 @@
 	"traits": [],
 	"specialAbilities": [],
 	"abilities": [],
+	"evolution": {
+		"name": "",
+		"turnsToEvolve": 0
+	},
 	"evolve_evolutionName": "",
 	"evolve_turnsToEvolve": 0,
 	"defaultEvolutionName": "Double Example",
+	"tail": {
+		"name": "",
+		"tailLostPortrait": ""
+	},
 	"tail_cardName": "",
 	"tail_tailLostPortrait": "",
+	"iceCube": {
+		"creatureWithin": ""
+	},
 	"iceCube_creatureWithin": "",
 	"flipPortaitForStrafe": false,
 	"onePerDeck": false,
