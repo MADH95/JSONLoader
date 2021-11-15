@@ -5,6 +5,6 @@
 	"description": "This is a BepInEx plugin made for Incryption to create custom cards using JSON files and the API by Cyantist. It can currently parse custom cards and pass them to APIPlugin to load them into the game.",
 	"dependencies": [
 		"BepInEx-BepInExPack_Inscryption-5.4.1701",
-		"API_dev-API-1.10.1"
+		"API_dev-API-1.11.1"
 	]
 }
