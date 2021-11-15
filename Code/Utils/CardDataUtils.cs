@@ -28,11 +28,6 @@ namespace JLPlugin.Data
 
             List<CardMetaCategory> metaCategories = JLUtils.Assign( this.metaCategories, nameof( this.metaCategories ), Dicts.MetaCategory );
 
-            if (metaCategories is null)
-            {
-                metaCategories = CardUtils.getNormalCardMetadata;
-            }
-
             NewCard.Add(
                 name:                   this.name,
                 displayedName:          this.displayedName ?? "",
@@ -42,7 +37,7 @@ namespace JLPlugin.Data
                 baseHealth:             this.baseHealth,
                 hideAttackAndHealth:    this.hideAttackAndHealth,
                 
-                metaCategories:         metaCategories,
+                metaCategories:         metaCategories ?? new(),
                 onePerDeck:             this.onePerDeck,
                 flipPortraitForStrafe:  this.flipPortraitForStrafe,
                 defaultEvolutionName:   this.defaultEvolutionName,
