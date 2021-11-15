@@ -9,7 +9,7 @@ It can parse custom cards and pass them to APIPlugin to load them into the game.
 
 To install this plugin you first need to install BepInEx as a mod loader for Inscryption. A guide to do this can be found [here](https://docs.bepinex.dev/articles/user_guide/installation/index.html#where-to-download-bepinex)
 
-You will also need version 1.10+ of the [InscryptionAPI](https://github.com/ScottWilson0903/InscryptionAPI) plugin.
+You will also need version 1.11+ of the [InscryptionAPI](https://github.com/ScottWilson0903/InscryptionAPI) plugin.
 
 To install this mod, you simply need to put the **JSONLoader** folder in **BepInEx/plugins**.
 
