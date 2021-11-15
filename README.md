@@ -1,4 +1,4 @@
-# JSON Card Loader
+# JSON Loader
 
 This is a BepInEx plugin made for Incryption to create custom cards using JSON files and the API by Cyantist.
 It can parse custom cards and pass them to APIPlugin to load them into the game.
