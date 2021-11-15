@@ -40,6 +40,9 @@ namespace JLPlugin
             return list;
         }
 
+
+        public static bool cantLoadDeck = false;
+
         private void Awake()
         {
             Logger.LogInfo( $"Loaded {PluginName}!" );
@@ -93,6 +96,7 @@ namespace JLPlugin
                          ScriptableObjectLoader<CardInfo>.AllData.Find( elem => elem.name == name ) is null )
                     {
                         Logger.LogError( $"Can't find card with name \"{name}\" to add to deck" );
+                        cantLoadDeck = true;
                     }
                 }
 

@@ -1,8 +1,9 @@
-﻿using System;
+﻿using System.Collections.Generic;
 
 using DiskCardGame;
 
 using APIPlugin;
+using CardLoaderPlugin.lib;
 
 using TinyJson;
 
@@ -20,15 +21,28 @@ namespace JLPlugin.Data
             ErrorUtil.Card = this.name;
             ErrorUtil.Message = "{0} - {2} is an invalid value for {1}";
 
+            if (this.baseHealth == 0)
+            {
+                this.baseHealth = 1;
+            }
+
+            List<CardMetaCategory> metaCategories = JLUtils.Assign( this.metaCategories, nameof( this.metaCategories ), Dicts.MetaCategory );
+
+            if (metaCategories is null)
+            {
+                metaCategories = CardUtils.getNormalCardMetadata;
+            }
+
             NewCard.Add(
                 name:                   this.name,
                 displayedName:          this.displayedName ?? "",
                 description:            this.description ?? "",
 
                 baseAttack:             this.baseAttack,
-                baseHealth:             this.baseHealth == 0 ? 1 : this.baseHealth,
+                baseHealth:             this.baseHealth,
                 hideAttackAndHealth:    this.hideAttackAndHealth,
                 
+                metaCategories:         metaCategories,
                 onePerDeck:             this.onePerDeck,
                 flipPortraitForStrafe:  this.flipPortraitForStrafe,
                 defaultEvolutionName:   this.defaultEvolutionName,
@@ -38,7 +52,6 @@ namespace JLPlugin.Data
                 energyCost:             this.energyCost,
                 gemsCost:               JLUtils.Assign( this.gemsColour,          nameof( this.gemsColour ),          Dicts.GemColour           ),
                                                                                                                       
-                metaCategories:         JLUtils.Assign( this.metaCategories,      nameof( this.metaCategories ),      Dicts.MetaCategory        ),
                 cardComplexity:         JLUtils.Assign( this.cardComplexity,      nameof( this.cardComplexity ),      Dicts.Complexity          ),
                 temple:                 JLUtils.Assign( this.temple,              nameof( this.metaCategories ),      Dicts.Temple              ),
                 tribes:                 JLUtils.Assign( this.tribes,              nameof( this.tribes ),              Dicts.Tribes              ),
@@ -69,6 +82,7 @@ namespace JLPlugin.Data
         public void Edit()
         {
             ErrorUtil.Card = this.name;
+            ErrorUtil.Message = "{0} - Can't change {1} to {2}";
 
             JLUtils.CheckValidFields( this.fieldsToEdit );
 
@@ -131,7 +145,7 @@ namespace JLPlugin.Data
                 decals                = check( nameof( this.decals ) )         ? JLUtils.Assign( this.decals,                 nameof( this.decals ) )       : null
             };
 
-            
+            ErrorUtil.Clear();
         }
     }
 }

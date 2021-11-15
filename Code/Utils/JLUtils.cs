@@ -32,7 +32,6 @@ namespace JLPlugin.Utils
         {
             ErrorUtil.Field = field;
 
-
             if ( string.IsNullOrEmpty( data ) )
                 return default;
 
@@ -42,14 +41,12 @@ namespace JLPlugin.Utils
                 return default;
             }
 
-            Plugin.Log.LogWarning( $"Assigning { field }" );
             return dict[ data ];
         }
 
         public static List<T> Assign<T>( List<string> list, string field, Dictionary<string, T> dict )
         {
             ErrorUtil.Field = field;
-
 
             if ( list is null || list.Count == 0 )
                 return null;
@@ -72,7 +69,6 @@ namespace JLPlugin.Utils
                 return null;
             }
 
-            Plugin.Log.LogWarning( $"Assigning { field }" );
             return output;
         }
 
@@ -80,10 +76,10 @@ namespace JLPlugin.Utils
         {
             ErrorUtil.Field = field;
 
-            Plugin.Log.LogWarning( $"Assigning { field }" );
-
             if ( string.IsNullOrEmpty( image ) )
+            {
                 return null;
+            }
 
             if ( !image.EndsWith( ".png" ) )
             {
@@ -121,7 +117,6 @@ namespace JLPlugin.Utils
             if ( output.Count == 0 )
                 return null;
 
-            Plugin.Log.LogWarning( $"Assigning { field }" );
             return output;
         }
 

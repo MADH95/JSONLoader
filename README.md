@@ -5,6 +5,8 @@ It can parse custom cards and pass them to APIPlugin to load them into the game.
 
 ## Installation
 
+***Warning:*** Incompatible with thunderstore mod loader
+
 To install this plugin you first need to install BepInEx as a mod loader for Inscryption. A guide to do this can be found [here](https://docs.bepinex.dev/articles/user_guide/installation/index.html#where-to-download-bepinex)
 
 You will also need version 1.10+ of the [InscryptionAPI](https://github.com/ScottWilson0903/InscryptionAPI) plugin.
