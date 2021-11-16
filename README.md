@@ -137,6 +137,4 @@ If you want help debugging you can find me on [Inscryption modding discord](http
 ## Development
 
 Plans for the future:
- - Add functionality for adding custom sigils loaded by other mods
  - Implement support for Thunderstore mod loader
- - Use a better Parser to allow for more Natural json files (i.e. param fields are objects with their own fields)
