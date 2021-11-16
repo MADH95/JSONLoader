@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://github.com/MADH95/JSONLoaderPlugin/blob/master/JSONLoader/Cards/8%20more%20fucking%20bears.json",
+  "$id": "https://github.com/MADH95/JSONLoaderPlugin/blob/master/Schema.json",
   "title": "New Card Schema",
   "Description": "Schema to verify the input data for a new card",
   "type": "object",
