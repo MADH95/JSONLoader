@@ -1,4 +1,7 @@
 
+##v1.6.1
+- Fixed error if abilities array is present but empty
+
 ## v1.6.0
 - Added support for adding custom abilities implemented by other mods
 

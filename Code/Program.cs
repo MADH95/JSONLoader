@@ -19,7 +19,7 @@ namespace JLPlugin
     {
         private const string PluginGuid = "MADH.inscryption.JSONLoader";
         private const string PluginName = "JSONLoader";
-        private const string PluginVersion = "1.6.0.0";
+        private const string PluginVersion = "1.6.1.0";
 
         internal static ManualLogSource Log;
 

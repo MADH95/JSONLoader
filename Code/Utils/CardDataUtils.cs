@@ -27,7 +27,7 @@ namespace JLPlugin.Data
 
             List<CardMetaCategory> metaCategories = JLUtils.Assign( this.metaCategories, nameof( this.metaCategories ), Dicts.MetaCategory );
 
-            if (this.abilities is not null && this.abilities[ 0 ] == "None" )
+            if (this.abilities is not null && ( this.abilities.Count == 0 || this.abilities[ 0 ] == "None" ) )
                 this.abilities = null;
 
             NewCard.Add(
