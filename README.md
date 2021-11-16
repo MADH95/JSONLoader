@@ -20,7 +20,7 @@ To create your own cards you just create a .json file and fill in all the fields
 To edit existing cards, you similarly create a .json file and fill in the fields you want to edit on the card. You must include both the *name* field and the *fieldsToEdit* field with at least 1 field name in it (explained more on the table). Any fields you don't include in *fieldsToEdit* will not be changed from the base card.
 
 You can use this [online JSON Schema validator](https://www.jsonschemavalidator.net/s/vGGNV7fO) to avoid syntax errors, and make sure the fields are correct in your json files.
-There is also a [GUI](https://tinyurl.com/d4dmpa2z) based verion that is an option, just copy the json from the right hand panel when done!
+There is also a [GUI](https://tinyurl.com/asxfrfbc) based verion that is an option, just copy the json from the right hand panel when done!
 
 All cards (custom or edited) must have their json files in the **Cards** folder, and their art in the **Artwork** folder in the **JSONLoader** folder.
 
