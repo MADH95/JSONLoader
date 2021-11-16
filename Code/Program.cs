@@ -17,26 +17,26 @@ namespace JLPlugin
     [BepInDependency( "cyantist.inscryption.api", BepInDependency.DependencyFlags.HardDependency )]
     public class Plugin : BaseUnityPlugin
     {
-        private const string PluginGuid = "MADH.inscryption.JSONCardLoader";
-        private const string PluginName = "JSONCardLoader";
-        private const string PluginVersion = "1.5.3.0";
+        private const string PluginGuid = "MADH.inscryption.JSONLoader";
+        private const string PluginName = "JSONLoader";
+        private const string PluginVersion = "1.6.0.0";
 
         internal static ManualLogSource Log;
 
-        static readonly string[] artPaths = { Paths.PluginPath, "JSONLoader", "Artwork" };
-        static readonly string[] jsonPaths = { Paths.PluginPath, "JSONLoader", "Cards" };
+        static readonly string[] artPaths = { Paths.PluginPath, PluginName, "Artwork" };
+        static readonly string[] jsonPaths = { Paths.PluginPath, PluginName, "Cards" };
 
         public static readonly string ArtPath = Path.Combine(artPaths);
         private static readonly string JSONPath = Path.Combine(jsonPaths);
-        public bool GetTestDeck() => Config.Bind( "JSONCardLoader", "TestDeck", false, new ConfigDescription( "Load start deck with specified cards" ) ).Value;
+        public bool GetTestDeck() => Config.Bind( PluginName, "TestDeck", false, new ConfigDescription( "Load start deck with specified cards" ) ).Value;
 
         public List<string> GetCards()
         {
             List<string> list = new(4);
-            list.Add( Config.Bind( "JSONCardLoader", "Card1", "Wolf" ).Value );
-            list.Add( Config.Bind( "JSONCardLoader", "Card2", "Opossum" ).Value );
-            list.Add( Config.Bind( "JSONCardLoader", "Card3", "Stoat_Talking" ).Value );
-            list.Add( Config.Bind( "JSONCardLoader", "Card4", "Bullfrog" ).Value );
+            list.Add( Config.Bind( PluginName, "Card1", "Wolf" ).Value );
+            list.Add( Config.Bind( PluginName, "Card2", "Opossum" ).Value );
+            list.Add( Config.Bind( PluginName, "Card3", "Stoat_Talking" ).Value );
+            list.Add( Config.Bind( PluginName, "Card4", "Bullfrog" ).Value );
             return list;
         }
 
@@ -100,7 +100,7 @@ namespace JLPlugin
                     }
                 }
 
-                Traverse.Create( typeof( ScriptableObjectLoader<CardInfo> ) ).Field( "allData" ).SetValue( null );
+                ScriptableObjectLoader<CardInfo>.allData = null;
             }
         }
     }

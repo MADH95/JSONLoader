@@ -1,0 +1,14 @@
+{
+  "name": "CustomTest",
+  "displayedName": "Custom Test",
+  "customAbilities": [
+    {
+      "name": "Transient",
+      "GUID": "cyantist.inscryption.sigiladay"
+    },
+    {
+      "name": "Regen",
+      "GUID": "cyantist.inscryption.sigiladay"
+    }
+  ]
+}

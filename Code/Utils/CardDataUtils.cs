@@ -3,7 +3,6 @@
 using DiskCardGame;
 
 using APIPlugin;
-using CardLoaderPlugin.lib;
 
 using TinyJson;
 
@@ -27,6 +26,9 @@ namespace JLPlugin.Data
             }
 
             List<CardMetaCategory> metaCategories = JLUtils.Assign( this.metaCategories, nameof( this.metaCategories ), Dicts.MetaCategory );
+
+            if (this.abilities is not null && this.abilities[ 0 ] == "None" )
+                this.abilities = null;
 
             NewCard.Add(
                 name:                   this.name,
@@ -68,7 +70,8 @@ namespace JLPlugin.Data
                 
                 evolveId:               JLUtils.GenerateEvolveIdentifier( this ),
                 tailId:                 JLUtils.GenerateTailIdentifier( this ),
-                iceCubeId:              JLUtils.GenerateIceCubeIdentifier( this )
+                iceCubeId:              JLUtils.GenerateIceCubeIdentifier( this ),
+                abilityIds:             JLUtils.GenerateAbilityIdentifiers( this.customAbilities )
             );
 
             ErrorUtil.Clear();
@@ -83,15 +86,17 @@ namespace JLPlugin.Data
 
             bool check( string fieldName ) => this.fieldsToEdit.Contains( fieldName );
 
+            bool hasCustomAbilities = check( nameof( customAbilities ) );
             bool hasEvolveData = check( nameof( this.evolution ) ) || check( nameof( this.evolve_evolutionName ) );
             bool hasTailData = check( nameof( this.tail ) ) || check( nameof( this.tail_cardName ) );
             bool hasIceCubeData = check( nameof( this.iceCube ) ) || check( nameof( this.iceCube_creatureWithin ) );
 
             var _ = new CustomCard(
                 name: this.name,
-                evolveId:  hasEvolveData  ? JLUtils.GenerateEvolveIdentifier( this )  : null,
-                tailId:    hasTailData    ? JLUtils.GenerateTailIdentifier( this )    : null,
-                iceCubeId: hasIceCubeData ? JLUtils.GenerateIceCubeIdentifier( this ) : null
+                abilityId: hasCustomAbilities ? JLUtils.GenerateAbilityIdentifiers( this.customAbilities ) : null,
+                evolveId:  hasEvolveData      ? JLUtils.GenerateEvolveIdentifier( this )                   : null,
+                tailId:    hasTailData        ? JLUtils.GenerateTailIdentifier( this )                     : null,
+                iceCubeId: hasIceCubeData     ? JLUtils.GenerateIceCubeIdentifier( this )                  : null
                 )
             {
                 displayedName         = check( nameof( this.displayedName ) )         ? this.displayedName         : null,

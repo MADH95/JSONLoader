@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using System.Collections.Generic;
 
 using UnityEngine;
@@ -213,5 +214,8 @@ namespace JLPlugin.Utils
                 name: card.iceCube.creatureWithin
             );
         }
+
+        public static List<AbilityIdentifier> GenerateAbilityIdentifiers( List<AbilityData> list )
+            => list is not null ? list.Select( elem => AbilityIdentifier.GetAbilityIdentifier( elem.GUID, elem.name ) ).ToList() : null;
     }
 }

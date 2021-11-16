@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using APIPlugin;
+
+using System.Collections.Generic;
 
 namespace JLPlugin.Data
 {
@@ -22,10 +24,11 @@ namespace JLPlugin.Data
         public List<string> gemsColour;
 
         public List<string> abilities;
-        public List<string> customAbilities;
         public List<string> traits;
         public List<string> specialAbilities;
         public string specialStatIcon;
+
+        public List<AbilityData> customAbilities;
 
         public EvolveData evolution;
         public string evolve_evolutionName;

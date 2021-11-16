@@ -13,7 +13,6 @@
     "name": "Grizzly",
     "turnsToEvolve": 1
   },
-  "fish": "food",
   "appearanceBehaviour": [ "RareCardColors" ],
   "texture": "eightfuckingbears.png"
 }

@@ -1,9 +1,9 @@
 ﻿using System;
+using System.Text;
 using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Runtime.Serialization;
-using System.Text;
 
 namespace TinyJson
 {

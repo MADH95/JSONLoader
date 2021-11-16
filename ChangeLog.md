@@ -1,4 +1,7 @@
 
+## v1.6.0
+- Added support for adding custom abilities implemented by other mods
+
 ## v1.5.3
 - Changed default "metaCategories" to be an empty list
 - Added ChangeLog.md
