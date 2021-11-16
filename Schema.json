@@ -1,0 +1,431 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/MADH95/JSONLoaderPlugin/blob/master/JSONLoader/Cards/8%20more%20fucking%20bears.json",
+  "title": "New Card Schema",
+  "Description": "Schema to verify the input data for a new card",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [ "name" ],
+  "properties": {
+    "name": {
+      "description": "A name for the card",
+      "type": "string",
+      "minLength": 1,
+      "pattern": "^[a-zA-Z\\d_]+$"
+    },
+    "displayedName": {
+      "description": "The name the card has in game",
+      "type": "string"
+    },
+    "description": {
+      "description": "The description Leshy will say when the card is found",
+      "type": "string"
+    },
+    "metaCategories": {
+      "description": "Defines where the card will show up",
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "ChoiceNode",
+          "TraderOffer",
+          "Part3Random",
+          "Rare",
+          "GBCPack",
+          "GBCPlayable"
+        ]
+      },
+      "uniqueItems": true
+    },
+    "cardComplexity": {
+      "description": "How common the card is",
+      "default": "Vanilla",
+      "type": "string",
+      "enum": [
+        "Vanilla",
+        "Simple",
+        "Intermediate",
+        "Advanced"
+      ]
+    },
+    "temple": {
+      "description": "Which Scrybe the card belongs to",
+      "default": "Nature",
+      "type": "string",
+      "enum": [
+        "Nature",
+        "Undead",
+        "Tech",
+        "Wizard"
+      ]
+    },
+    "baseAttack": {
+      "description": "The base attack value of the card",
+      "type": "integer",
+      "default": 0,
+      "minimum": 0
+    },
+    "baseHealth": {
+      "description": "The base health value of the card",
+      "type": "integer",
+      "default": 1,
+      "minimum": 1
+    },
+    "hideAttackAndHealth": {
+      "description": "Hide the attack and health of the card",
+      "type": "boolean",
+      "default": "false"
+    },
+    "cost": {
+      "description": "The sacrifice cost of the card",
+      "type": "integer",
+      "default": 0,
+      "minimum": 0
+    },
+    "bonesCost": {
+      "description": "The bones cost of the card",
+      "type": "integer",
+      "default": 0,
+      "minimum": 0
+    },
+    "evergyCost": {
+      "description": "The energy cost of the card",
+      "type": "integer",
+      "default": 0,
+      "minimum": 0
+    },
+    "gemsCost": {
+      "description": "The gems cost of the card",
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "Green",
+          "Orange",
+          "Blue"
+        ]
+      },
+      "uniqueItems": true
+    },
+    "specialStatIcon": {
+      "description": "The icon to show in place of attack",
+      "type": "string",
+      "enum": [
+        "Ants",
+        "Bones",
+        "Mirror",
+        "Bell",
+        "GreenGems",
+        "CardsInHand"
+      ]
+    },
+    "tribes": {
+      "description": "A list of tribes the card belongs to",
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "Squirrel",
+          "Bird",
+          "Canine",
+          "Hooved",
+          "Reptile",
+          "Insect"
+        ]
+      },
+      "uniqueItems": true
+    },
+    "traits": {
+      "description": "A list of traits the card has",
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "EatsWarrens",
+          "FeedsStoat",
+          "LikesHoney",
+          "Wolf",
+          "Bear",
+          "Juvenile",
+          "ProtectsCub",
+          "Undead",
+          "Structure",
+          "Blind",
+          "Ant",
+          "Terrain",
+          "Pelt",
+          "Uncuttable ",
+          "SatisfiesRingTrial",
+          "Giant",
+          "Gem",
+          "Fused",
+          "KillsSurvivors",
+          "Goat",
+          "DeathcardCreationNonOption"
+        ]
+      },
+      "uniqueItems": true
+    },
+    "specialAbilities": {
+      "description": "A list of special abilities the card has",
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "Cat",
+          "EMPTY3",
+          "EMPTY4",
+          "EMPTY5",
+          "EMPTY6",
+          "Ant",
+          "RandomCard",
+          "Lammergeier",
+          "TalkingCardChooser",
+          "PackMule",
+          "Mirror",
+          "BellProximity",
+          "CagedWolf",
+          "TrapSpawner",
+          "GiantCard",
+          "GiantMoon",
+          "GreenMage",
+          "JerseyDevil",
+          "Daus",
+          "BountyHunter",
+          "BrokenCoinLeft",
+          "BrokenCoinRight",
+          "CardsInHand",
+          "Ouroboros"
+        ]
+      },
+      "uniqueItems": true
+    },
+    "abilities": {
+      "description": "A list of abilities the card has",
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "None",
+          "DrawRabbits",
+          "BeesOnHit",
+          "Strafe",
+          "Deathtouch",
+          "Evolve",
+          "CreateDams",
+          "Tutor",
+          "WhackAMole",
+          "DrawCopy",
+          "TailOnHit",
+          "CorpseEater",
+          "QuadrupleBones",
+          "Submerge",
+          "DrawCopyOnDeath",
+          "Sharp",
+          "StrafePush",
+          "DrawAnt",
+          "GuardDog",
+          "Flying",
+          "Sacrificial",
+          "PreventAttack",
+          "TripleBlood",
+          "Reach",
+          "SplitStrike",
+          "TriStrike",
+          "IceCube",
+          "Sinkhole",
+          "BoneDigger",
+          "RandomConsumable",
+          "SteelTrap",
+          "RandomAbility",
+          "SquirrelOrbit",
+          "AllStrike",
+          "BuffNeighbours",
+          "Brittle",
+          "SkeletonStrafe",
+          "GainGemGreen",
+          "GainGemOrange",
+          "GainGemBlue",
+          "BuffGems",
+          "DropRubyOnDeath",
+          "GemsDraw",
+          "GemDependant",
+          "GainGemTriple",
+          "DrawNewHand",
+          "SquirrelStrafe",
+          "ConduitBuffAttack",
+          "ConduitFactory",
+          "ConduitHeal",
+          "ConduitNull",
+          "GainBattery",
+          "ExplodeOnDeath",
+          "Sniper",
+          "DeathShield",
+          "PermaDeath",
+          "LatchExplodeOnDeath",
+          "LatchBrittle",
+          "LatchDeathShield",
+          "FileSizeDamage",
+          "DeleteFile",
+          "Transformer",
+          "Sentry",
+          "ExplodeGems",
+          "ShieldGems",
+          "DrawVesselOnHit",
+          "ConduitEnergy",
+          "BombSpawner",
+          "DoubleDeath",
+          "ActivatedRandomPowerEnergy",
+          "ActivatedRandomPowerBone  ",
+          "ActivatedStatsUp",
+          "SwapStats",
+          "ActivatedDrawSkeleton",
+          "ActivatedDealDamage",
+          "CreateBells",
+          "BuffEnemy",
+          "ConduitSpawnGems",
+          "DrawRandomCardOnDeath",
+          "Loot",
+          "ActivatedSacrificeDrawCards",
+          "ActivatedStatsUpEnergy",
+          "ActivatedHeal",
+          "DebuffEnemy",
+          "CellBuffSelf",
+          "CellDrawRandomCardOnDeath",
+          "CellTriStrike",
+          "ActivatedEnergyToBones",
+          "MoveBeside",
+          "SubmergeSquid",
+          "BloodGuzzler",
+          "Haunter",
+          "ExplodingCorpse",
+          "Apparition",
+          "VirtualReality",
+          "EdaxioHead",
+          "EdaxioArms",
+          "EdaxioLegs",
+          "EdaxioTorso"
+        ]
+      },
+      "uniqueItems": true
+    },
+    "evolution": {
+      "description": "Object for evolution information",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "description": "The name of the card to evolve into",
+          "type": "string",
+          "pattern": "^[a-zA-Z\\d_]+$"
+        },
+        "turnsToEvolve": {
+          "description": "The number of turns until the card evolves",
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 3
+        }
+      },
+      "required": [ "name", "turnsToEvolve" ]
+    },
+    "defaultEvolutionName": {
+      "description": "The cards name after evolving, in place of Elder [cardname]",
+      "type": "string"
+    },
+    "tail": {
+      "description": "Object for tail information",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "description": "The name of the tail card",
+          "type": "string",
+          "pattern": "^[a-zA-Z\\d_]+$"
+        },
+        "tailLostPortrait": {
+          "description": "The image to replace the card's when the tail is lost",
+          "type": "string",
+          "pattern": ".png$"
+        }
+      },
+      "required": [ "name" ]
+    },
+    "iceCube": {
+      "description": "Object for iceCube information",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "creatureWithin": {
+          "description": "The name of the card that will summon on death",
+          "type": "string",
+          "pattern": "^[a-zA-Z\\d_]+$"
+        }
+      },
+      "required": [ "creatureWithin" ]
+    },
+    "flipPortraitForStrafe": {
+      "description": "determines if the card art is flipped when the card changes it's strafe direction",
+      "type": "boolean",
+      "default": "false"
+    },
+    "onePerDeck": {
+      "description": "determines if the card should be limited to 1 per deck",
+      "type": "boolean",
+      "default": false
+    },
+    "appearanceBehaviour": {
+      "description": "A list of appearance behaviours the cards have",
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "StaticGlitch",
+          "FullCardPortrait",
+          "TerrainBackground",
+          "RareCardColors",
+          "AddSnelkDecals",
+          "AnimatedPortrait",
+          "GoldEmission",
+          "RareCardBackground",
+          "AlternatingBloodDecal",
+          "TerrainLayout",
+          "DynamicPortrait",
+          "GiantAnimatedPortrait",
+          "HologramPortrait",
+          "SexyGoat"
+        ]
+      },
+      "uniqueItems": true
+    },
+    "texture": {
+      "description": "The image to use for the card art",
+      "type": "string",
+      "pattern": "^[a-zA-Z\\d_]+.png$"
+    },
+    "altTexture": {
+      "description": "The image to use for the card art",
+      "type": "string",
+      "pattern": "^[a-zA-Z\\d_]+.png$"
+    },
+    "pixeldex": {
+      "description": "The image to use for the card art",
+      "type": "string",
+      "pattern": "^[a-zA-Z\\d_]+.png$"
+    },
+    "titleGraphic": {
+      "description": "The image to use for the card title",
+      "type": "string",
+      "pattern": "^[a-zA-Z\\d_]+.png$"
+    },
+    "decals": {
+      "description": "An array of decals to add to the card",
+      "type": "array",
+      "items": {
+        "description": "The path for the decal",
+        "type": "string",
+        "pattern": "^[a-zA-Z\\d_]+.png$"
+      },
+      "uniqueItems": true
+    }
+  }
+}
