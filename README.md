@@ -49,6 +49,7 @@ Cards have lots of fields that can be filled - this is a list of all field names
 | traits | **[Optional]** An string array for the traits a card has (See *Enums.txt* for a list of traits) |
 | specialAbilities | **[Optional]** A string array for the special abilities a card has (See *Enums.txt* for a list of special abilities) |
 | abilities | **[Optional]** A string array for the sigils a card has. (See *Enums.txt* for a list of sigil abilities). |
+| customAbilities | **[Optional]** An array of objects for the custom ability name and mod GUID (It's children are in the table below this one) |
 | evolution | **[Optional]** A json object for the evolveParams of the card. (It's children are in the table below this one) |
 | defaultEvolutionName | **[Optional]** The name the card will have when it evolves (when it doesn't have evolve_ fields set) |
 | tail | **[Optional]** A json object for the tailParams of the card. (It's children are in the table below this one) |
@@ -62,6 +63,14 @@ Cards have lots of fields that can be filled - this is a list of all field names
 | pixelTexture | **[Optional]** A string for the name of the card's act2 image (including file extension) |
 | animatedPortrait | **[Unavailable]** |
 | decals | **[Optional]** A string array for the texture names of a card decals (including file extension) |
+___
+
+### Custom Ability fields
+
+| Field | Description |
+|-|-|
+| name | The name of the ability. This may be seperate form the name that appears in the book, check the mod description or ask in the discord for specifics |
+| GUID | The GUID the mod maker made for their mod. This may be found in the mod description. It is usually in the layout of "MakerName.inscryption.ModName" |
 
 ___
 ### Evolution fields
