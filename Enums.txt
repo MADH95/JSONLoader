@@ -1,211 +1,219 @@
-
 Meta Categories
-ChoiceNode
-TraderOffer
-Part3Random
-Rare
-GBCPack
-GBCPlayable
+  ChoiceNode
+  GBCPack
+  GBCPlayable
+  Part3Random
+  Rare
+  TraderOffer
+
 
 Complexity
-Vanilla
-Simple
-Intermediate
-Advanced
+  Vanilla
+  Simple
+  Intermediate
+  Advanced
+
 
 Temple
-Nature
-Undead
-Tech
-Wizard
+  Nature
+  Undead
+  Tech
+  Wizard
+
 
 GemType
-Green
-Orange
-Blue
+  Blue
+  Green
+  Orange
+
 
 SpecialIcon
-None
-Ants
-Bones
-Mirror
-Bell
-GreenGems
-CardsInHand
+  None
+  Ants
+  Bell
+  Bones
+  CardsInHand
+  GreenGems
+  Mirror
+
 
 Tribe
-None
-Squirrel
-Bird
-Canine
-Hooved
-Reptile
-Insect
+  None
+  Bird
+  Canine
+  Hooved
+  Insect
+  Reptile
+  Squirrel
+
 
 Trait
-None
-EatsWarrens
-FeedsStoat
-LikesHoney
-Wolf
-Bear
-Juvenile
-ProtectsCub
-Undead
-Structure
-Blind
-Ant
-Terrain
-Pelt
-Uncuttable
-SatisfiesRingTrial
-Giant
-Gem
-Fused
-KillsSurvivors
-Goat
-DeathcardCreationNonOption
+  None
+  Ant
+  Bear
+  Blind
+  DeathcardCreationNonOption
+  EatsWarrens
+  FeedsStoat
+  Fused
+  Gem
+  Giant
+  Goat
+  Juvenile
+  KillsSurvivors
+  LikesHoney
+  Pelt
+  ProtectsCub
+  SatisfiesRingTrial
+  Structure
+  Terrain
+  Uncuttable
+  Undead
+  Wolf
+
 
 SpecialAbilities
-None
-Cat
-EMPTY3
-EMPTY4
-EMPTY5
-EMPTY6
-Ant
-RandomCard
-Lammergeier
-TalkingCardChooser
-PackMule
-Mirror
-BellProximity
-CagedWolf
-TrapSpawner
-GiantCard
-GiantMoon
-GreenMage
-JerseyDevil
-Daus
-BountyHunter
-BrokenCoinLeft
-BrokenCoinRight
-CardsInHand
-Ouroboros
+  None
+  Ant
+  BellProximity
+  BountyHunter
+  BrokenCoinLeft
+  BrokenCoinRight
+  CagedWolf
+  CardsInHand
+  Cat
+  Daus
+  EMPTY3
+  EMPTY4
+  EMPTY5
+  EMPTY6
+  GiantCard
+  GiantMoon
+  GreenMage
+  JerseyDevil
+  Lammergeier
+  Mirror
+  Ouroboros
+  PackMule
+  RandomCard
+  TalkingCardChooser
+  TrapSpawner
+
 
 Abilities
-None
-DrawRabbits
-BeesOnHit
-Strafe
-Deathtouch
-Evolve
-CreateDams
-Tutor
-WhackAMole
-DrawCopy
-TailOnHit
-CorpseEater
-QuadrupleBones
-Submerge
-DrawCopyOnDeath
-Sharp
-StrafePush
-DrawAnt
-GuardDog
-Flying
-Sacrificial
-PreventAttack
-TripleBlood
-Reach
-SplitStrike
-TriStrike
-IceCube
-Sinkhole
-BoneDigger
-RandomConsumable
-SteelTrap
-RandomAbility
-SquirrelOrbit
-AllStrike
-BuffNeighbours
-Brittle
-SkeletonStrafe
-GainGemGreen
-GainGemOrange
-GainGemBlue
-BuffGems
-DropRubyOnDeath
-GemsDraw
-GemDependant
-GainGemTriple
-DrawNewHand
-SquirrelStrafe
-ConduitBuffAttack
-ConduitFactory
-ConduitHeal
-ConduitNull
-GainBattery
-ExplodeOnDeath
-Sniper
-DeathShield
-PermaDeath
-LatchExplodeOnDeath
-LatchBrittle
-LatchDeathShield
-FileSizeDamage
-DeleteFile
-Transformer
-Sentry
-ExplodeGems
-ShieldGems
-DrawVesselOnHit
-ConduitEnergy
-BombSpawner
-DoubleDeath
-ActivatedRandomPowerEnergy
-ActivatedRandomPowerBone
-ActivatedStatsUp
-SwapStats
-ActivatedDrawSkeleton
-ActivatedDealDamage
-CreateBells
-BuffEnemy
-ConduitSpawnGems
-DrawRandomCardOnDeath
-Loot
-ActivatedSacrificeDrawCards
-ActivatedStatsUpEnergy
-ActivatedHeal
-DebuffEnemy
-CellBuffSelf
-CellDrawRandomCardOnDeath
-CellTriStrike
-ActivatedEnergyToBones
-MoveBeside
-SubmergeSquid
-BloodGuzzler
-Haunter 
-ExplodingCorpse
-Apparition
-VirtualReality
-EdaxioHead
-EdaxioArms
-EdaxioLegs
-EdaxioTorso
+  None
+  ActivatedDealDamage
+  ActivatedDrawSkeleton
+  ActivatedEnergyToBones
+  ActivatedHeal
+  ActivatedRandomPowerBone
+  ActivatedRandomPowerEnergy
+  ActivatedSacrificeDrawCards
+  ActivatedStatsUp
+  ActivatedStatsUpEnergy
+  AllStrike
+  Apparition
+  BeesOnHit
+  BloodGuzzler
+  BombSpawner
+  BoneDigger
+  Brittle
+  BuffEnemy
+  BuffGems
+  BuffNeighbours
+  CellBuffSelf
+  CellDrawRandomCardOnDeath
+  CellTriStrike
+  ConduitBuffAttack
+  ConduitEnergy
+  ConduitFactory
+  ConduitHeal
+  ConduitNull
+  ConduitSpawnGems
+  CorpseEater
+  CreateBells
+  CreateDams
+  DeathShield
+  Deathtouch
+  DebuffEnemy
+  DeleteFile
+  DoubleDeath
+  DrawAnt
+  DrawCopy
+  DrawCopyOnDeath
+  DrawNewHand
+  DrawRabbits
+  DrawRandomCardOnDeath
+  DrawVesselOnHit
+  DropRubyOnDeath
+  EdaxioArms
+  EdaxioHead
+  EdaxioLegs
+  EdaxioTorso
+  Evolve
+  ExplodeGems
+  ExplodeOnDeath
+  ExplodingCorpse
+  FileSizeDamage
+  Flying
+  GainBattery
+  GainGemBlue
+  GainGemGreen
+  GainGemOrange
+  GainGemTriple
+  GemDependant
+  GemsDraw
+  GuardDog
+  Haunter
+  IceCube
+  LatchBrittle
+  LatchDeathShield
+  LatchExplodeOnDeath
+  Loot
+  MoveBeside
+  PermaDeath
+  PreventAttack
+  QuadrupleBones
+  RandomAbility
+  RandomConsumable
+  Reach
+  Sacrificial
+  Sentry
+  Sharp
+  ShieldGems
+  Sinkhole
+  SkeletonStrafe
+  Sniper
+  SplitStrike
+  SquirrelOrbit
+  SquirrelStrafe
+  SteelTrap
+  Strafe
+  StrafePush
+  Submerge
+  SubmergeSquid
+  SwapStats
+  TailOnHit
+  Transformer
+  TriStrike
+  TripleBlood
+  Tutor
+  VirtualReality
+  WhackAMole
+
 
 AppearanceBehaviour
-StaticGlitch
-FullCardPortrait
-TerrainBackground
-RareCardColors
-AddSnelkDecals
-AnimatedPortrait
-GoldEmission
-RareCardBackground
-AlternatingBloodDecal
-TerrainLayout
-DynamicPortrait
-GiantAnimatedPortrait
-HologramPortrait
-SexyGoat
+  AddSnelkDecals
+  AlternatingBloodDecal
+  AnimatedPortrait
+  DynamicPortrait
+  FullCardPortrait
+  GiantAnimatedPortrait
+  GoldEmission
+  HologramPortrait
+  RareCardBackground
+  RareCardColors
+  SexyGoat
+  StaticGlitch
+  TerrainBackground
+  TerrainLayout
