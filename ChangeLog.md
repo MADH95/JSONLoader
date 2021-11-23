@@ -1,4 +1,12 @@
 
+## 1.7.0
+- Fixed error when assigning temple on custom cards
+- Removed TestDeck to be released as an individual mods
+- Support for customSpecialAbilities in API v1.12
+- Support for mod manager with custom .jldr extension on card files
+- Refactored JLUtils into clearer classes
+- Removed redundant variables (evolve_evolutionName, etc.)
+
 ##v1.6.1
 - Fixed error if abilities array is present but empty
 

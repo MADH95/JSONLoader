@@ -17,7 +17,19 @@
 	"tribes": [],
 	"traits": [],
 	"specialAbilities": [],
+	"customSpecialAbilities [
+		{
+			"GUID": "",
+			"name": ""
+		}
+	],
 	"abilities": [],
+	"customAbilities [
+		{
+			"GUID": "",
+			"name": ""
+		}
+	],
 	"evolution": {
 		"name": "",
 		"turnsToEvolve": 0
@@ -40,6 +52,7 @@
 	"appearanceBehaviour": [],
 	"texture": "",
 	"altTexture": "",
+	"emissionTexture": "",
 	"titleGraphic": "",
 	"pixelTexture": "",
 	"animatedPortrait": "",

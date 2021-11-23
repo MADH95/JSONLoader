@@ -20,7 +20,7 @@ namespace JLPlugin.Data
         public int baseHealth;
         public bool hideAttackAndHealth;
 
-        public int cost, bonesCost, energyCost;
+        public int bloodCost, bonesCost, energyCost;
         public List<string> gemsColour;
 
         public List<string> abilities;
@@ -29,18 +29,14 @@ namespace JLPlugin.Data
         public string specialStatIcon;
 
         public List<AbilityData> customAbilities;
+        public List<SpecialAbilityData> customSpecialAbilities;
 
         public EvolveData evolution;
-        public string evolve_evolutionName;
-        public int evolve_turnsToEvolve;
         public string defaultEvolutionName;
 
         public TailData tail;
-        public string tail_cardName;
-        public string tail_tailLostPortrait;
 
         public IceCubeData iceCube;
-        public string iceCube_creatureWithin;
         
         public bool flipPortraitForStrafe;
         public bool onePerDeck;
@@ -50,6 +46,7 @@ namespace JLPlugin.Data
         public string titleGraphic;
         public string pixelTexture;
         public string animatedPortrait;
+        public string emissionTexture;
         public List<string> decals;
     }
 }

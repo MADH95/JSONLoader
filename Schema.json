@@ -188,6 +188,28 @@
       },
       "uniqueItems": true
     },
+    "customSpecialAbilities": {
+      "description": "A list of custom special abilities added by other mods",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [ "name", "GUID" ],
+        "properties": {
+          "name": {
+            "description": "The name of the special ability",
+            "type": "string",
+            "pattern": "^[a-zA-Z\\d_]+$"
+          },
+          "GUID": {
+            "description": "The GUID of the mod that adds the  special ability",
+            "type": "string",
+            "pattern": "^[a-zA-Z\\d_]+\\.[iI]nscryption\\.[a-zA-Z\\d_]+$"
+          }
+        }
+      },
+      "uniqueItems": true
+    },
     "specialAbilities": {
       "description": "A list of special abilities the card has",
       "type": "array",
@@ -427,6 +449,11 @@
     },
     "altTexture": {
       "description": "The image to use for the card art",
+      "type": "string",
+      "pattern": "^[a-zA-Z\\d_]+.png$"
+    },
+    "emissionTexture": {
+      "description": "The emission texture the card uses when a sigil's sacrificed on it",
       "type": "string",
       "pattern": "^[a-zA-Z\\d_]+.png$"
     },
