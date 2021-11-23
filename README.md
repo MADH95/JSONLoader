@@ -3,6 +3,10 @@
 This is a BepInEx plugin made for Incryption to create custom cards using JSON files and the API by Cyantist.
 It can parse custom cards and pass them to APIPlugin to load them into the game.
 
+## Converting Existing Cards
+
+In order to have compatability with mod manager, version 1.7.0 breaks backwards compatability. Don't worry though! all the contents of your files are fine, the only change is the extension on the end. the new extension jsonlaoder looks for is .jldr, so you'll need to start making cards with that extension instead of .json (again, the **contents** are still in the json format). If you have a lot of cards to change, you can use the json to jldr converter utility (coming soon) to convert all cards in a directory from .json to .jldr!
+
 ## Installation
 
 ### Automatic
