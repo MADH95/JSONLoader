@@ -5,7 +5,7 @@ It can parse custom cards and pass them to APIPlugin to load them into the game.
 
 ## Converting Existing Cards
 
-In order to have compatability with mod manager, version 1.7.0 breaks backwards compatability. Don't worry though! all the contents of your files are fine, the only change is the extension on the end. the new extension jsonlaoder looks for is .jldr, so you'll need to start making cards with that extension instead of .json (again, the **contents** are still in the json format). If you have a lot of cards to change, you can use the json to jldr converter utility (coming soon) to convert all cards in a directory from .json to .jldr!
+In order to have compatability with mod manager, version 1.7.0 breaks backwards compatability. Don't worry though! all the contents of your files are fine, the only change is the extension on the end. the new extension jsonlaoder looks for is .jldr, so you'll need to start making cards with that extension instead of .json (again, the **contents** are still in the json format). If you have a lot of cards to change, you can use the json to jldr [converter utility](https://inscryption.thunderstore.io/package/MADH95Mods/JSONRenameUtility/) to convert all cards in a directory from .json to .jldr!
 
 ## Installation
 
@@ -44,7 +44,7 @@ Cards have lots of fields that can be filled - this is a list of all field names
 | baseAttack | **[Optional]** **[Default: 0]** An integer value for the attack of a card |
 | baseHealth | **[Optional]** **[Default: 1]** An integer value for the health of a card |
 | hideAttackAndHealth | **[Default: false]** A boolean value to toggle if the cards attack and health are visible |
-| cost | **[Optional]** **[Default: 0]** An integer value for the blood cost of a card |
+| bloodCost | **[Optional]** **[Default: 0]** An integer value for the blood cost of a card |
 | bonesCost | **[Optional]** An integer value for the bones cost of a card |
 | energyCost | **[Optional]** An integer value for the energy cost of a card |
 | gemsCost | **[Optional]** A string array for the gems cost of a card (See *Enums.txt* for a list of gems) |
@@ -128,7 +128,7 @@ in **Inscryption/BepInEx/Config/BepInEx.cfg**
 
 ___
 
-To add cards to your starting hand to test if your cards work, you can download my deck building mod (soon TM)
+To add cards to your starting hand to test if your cards work, you can download my [deck building mod](https://inscryption.thunderstore.io/package/MADH95Mods/DeckbuilderMod/)
 
 ___
 

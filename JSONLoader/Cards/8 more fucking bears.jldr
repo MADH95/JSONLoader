@@ -7,7 +7,7 @@
   "temple": "Nature",
   "baseAttack": 2,
   "baseHealth": 3,
-  "cost": 1,
+  "bloodCost": 1,
   "abilities": [ "Sharp", "Evolve" ],
   "evolution": {
     "name": "Grizzly",

@@ -76,7 +76,7 @@
       "type": "boolean",
       "default": "false"
     },
-    "cost": {
+    "bloodCost": {
       "description": "The sacrifice cost of the card",
       "type": "integer",
       "default": 0,

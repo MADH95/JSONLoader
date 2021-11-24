@@ -1,4 +1,7 @@
 
+## 1.7.1
+- Fixed discrepancies in ancillary files
+
 ## 1.7.0
 - Fixed error when assigning temple on custom cards
 - Removed TestDeck to be released as an individual mods
