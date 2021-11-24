@@ -43,8 +43,8 @@ ___
 |Mirror | Displays the Mirror icon for the cards attack                       |
 ___
 ### Tribe
-|Value | Description |
-|-|-|
+|Value |
+|-|
 | Bird     |
 | Canine   |
 | Hooved   |
