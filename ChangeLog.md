@@ -6,6 +6,7 @@
 - Support for mod manager with custom .jldr extension on card files
 - Refactored JLUtils into clearer classes
 - Removed redundant variables (evolve_evolutionName, etc.)
+- Alphabetized Card Names.txt
 
 ##v1.6.1
 - Fixed error if abilities array is present but empty
