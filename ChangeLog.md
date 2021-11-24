@@ -7,6 +7,7 @@
 - Removed TestDeck to be released as an individual mods
 - Support for customSpecialAbilities in API v1.12
 - Support for mod manager with custom .jldr extension on card files
+- cost changed to bloodCost in accordance with API
 - Refactored JLUtils into clearer classes
 - Removed redundant variables (evolve_evolutionName, etc.)
 - Alphabetized Card Names.txt
