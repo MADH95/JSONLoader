@@ -88,7 +88,7 @@
       "default": 0,
       "minimum": 0
     },
-    "evergyCost": {
+    "energyCost": {
       "description": "The energy cost of the card",
       "type": "integer",
       "default": 0,
