@@ -7,6 +7,7 @@
 - Refactored JLUtils into clearer classes
 - Removed redundant variables (evolve_evolutionName, etc.)
 - Alphabetized Card Names.txt
+- Made Enums.md more infomrative
 
 ##v1.6.1
 - Fixed error if abilities array is present but empty
