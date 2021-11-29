@@ -5,7 +5,7 @@ It can parse custom cards and pass them to APIPlugin to load them into the game.
 
 ## Converting Existing Cards
 
-In order to have compatability with mod manager, version 1.7.0 breaks backwards compatability. Don't worry though! all the contents of your files are fine, the only change is the extension on the end. the new extension jsonlaoder looks for is .jldr, so you'll need to start making cards with that extension instead of .json (again, the **contents** are still in the json format). If you have a lot of cards to change, you can use the json to jldr [converter utility](https://inscryption.thunderstore.io/package/MADH95Mods/JSONRenameUtility/) to convert all cards in a directory from .json to .jldr!
+In order to have compatability with mod manager, version 1.7.0 breaks backwards compatability. Don't worry though! all the contents of your files are fine, the only change is the extension on the end. the new extension JSONLoader looks for is .jldr, so you'll need to start making cards with that extension instead of .json (again, the **contents** are still in the json format). If you have a lot of cards to change, you can use the json to jldr [converter utility](https://inscryption.thunderstore.io/package/MADH95Mods/JSONRenameUtility/) to convert all cards in a directory from .json to .jldr!
 
 ## Installation
 
@@ -105,6 +105,39 @@ ___
 | Field | Description |
 |-|-|
 | creatureWithin | The name of the creature the card should turn into when it perishes (See *Card Names.txt* for a list of ingame card names) |
+
+## Custom Encounters
+
+**TODO**
+
+| Field | Description |
+|------|-------------|
+| name | **[Required]** A string for the name the API will use to identify the encounter |
+| regions | **[Required]** A string array of the regions this encounter will appear in (See *Enums.txt* for a list of regions) |
+| dominantTribes | **[Optional]** A string array tribes mainly appearing in this encounter. Used for determining the totem in totem encounters |
+| minDifficulty | **[Optional]** **[Default: 0]** The minimum difficulty at which this encounter will appear |
+| maxDifficulty | **[Optional]** **[Default: 30]** The maximum difficulty at which this encounter will appear |
+| turns | **[Optional]** A 2-dimensional array of CardBlueprint json objects for cards played each turn |
+| randomReplacementCards | **[Optional]** A string array of cards that randomly replace the cards that have a randomReplacementChance larger than 0 |
+| regular | **[Optional]** **[Default: opposite of bossPrep]** A boolean to determine whether this encounter appears in regular encounters |
+| bossPrep | **[Optional]** **[Default: false]** A boolean to determine whether this encounter appears as the boss prep encounter of the given regions (the final encounter before the boss, if the requirements are met) |
+| turnMods | **[Optional]** **[Undocumented]** |
+| redundantAbilities | **[Optional]** **[Undocumented]** |
+| unlockedCardPrerequisites | **[Optional]** **[Undocumented]** |
+___
+
+### CardBlueprint fields
+| Field | Description |
+|-|-|
+| card | **[Optional]** The name of the card that will be played (See *Card Names.txt* for a list of ingame card names) |
+| replacement | **[Optional]** A json object for the replacement of the card |
+| randomReplaceChance | **[Optional]** The percentage chance that this card will be replaced by a card from *randomReplacementCards*  |
+
+### Replacement fields
+| Field | Description |
+|-|-|
+| card | The name of the card that will replace the original one (See *Card Names.txt* for a list of ingame card names) |
+| randomReplaceChance | The minimum difficulty at which this encounter will replace the original one |
 
 
 ## Debugging
