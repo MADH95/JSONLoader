@@ -11,8 +11,6 @@ namespace JLPlugin.Data
         public string name;
 
         public List<string> regions;
-        public List<string> encounterType;
-        public List<string> bossReplacements;
 
         public List<string> dominantTribes;
         public int minDifficulty;

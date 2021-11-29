@@ -1,0 +1,28 @@
+#ignore
+{
+  "name": "Squirrel_Template",
+  "regions": [ "Forest", "Wetlands", "Alpine" ],
+  "bossPrep": true,
+  "regular": true,
+  "dominantTribes": [ "Squirrel" ],
+  "minDifficulty": 0,
+  "maxDifficulty": 30,
+  "turns": [
+    [
+	  { "card": "Squirrel", "randomReplaceChance": 50 },
+	  { "card": "Rabbit", "replacement": { "card": "Squirrel", "difficultyReq": 2 } },
+	  { "card": "Rabbit", "replacement": { "card": "Squirrel", "difficultyReq": 3 }, "randomReplaceChance": 50 }
+    ],
+    [
+	  { "card": "Squirrel", "randomReplaceChance": 50 },
+	  { "card": "Rabbit", "replacement": { "card": "Squirrel", "difficultyReq": 4 } },
+	  { "card": "Rabbit", "replacement": { "card": "Squirrel", "difficultyReq": 5 } }
+    ],
+	[
+	  { "card": "Rabbit" },
+	  { "card": "Rabbit", "replacement": { "card": "Squirrel", "difficultyReq": 6 } },
+	  { "card": "Rabbit", "replacement": { "card": "Eight_Bears2", "difficultyReq": 7 } }
+    ]
+  ],
+  "randomReplacementCards": [ "Goat" ]
+}

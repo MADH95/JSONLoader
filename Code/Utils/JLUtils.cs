@@ -20,30 +20,35 @@ namespace JLPlugin.Utils
             {
                 string filename = file.Substring( file.LastIndexOf( Path.DirectorySeparatorChar ) + 1 );
 
-                Data.CardData card = CreateCardFromJSON( File.ReadAllText( file ) );
+                string text = File.ReadAllText( file );
 
-                if ( card is null )
+                if ( !text.ToLowerInvariant().StartsWith( "#ignore" ) && !text.ToLowerInvariant().StartsWith( "# ignore" ) )
                 {
-                    Plugin.Log.LogWarning( $"Failed to load card { filename }" );
+                    Data.CardData card = CreateCardFromJSON( text );
 
-                    continue;
-                }
-                else
-                {
-                    if ( !filename.EndsWith( "_card.jldr" ) )
+                    if ( card is null )
                     {
-                        Plugin.Log.LogWarning( $"Card { filename } does not have the '_card' postfix. Cards without this postfix will be unsupported in the future." );
+                        Plugin.Log.LogWarning( $"Failed to load card { filename }" );
+
+                        continue;
+                    }
+                    else
+                    {
+                        if ( !filename.EndsWith( "_card.jldr" ) )
+                        {
+                            Plugin.Log.LogWarning( $"Card { filename } does not have the '_card' postfix. Cards without this postfix will be unsupported in the future." );
+                        }
+
                     }
 
-                }
+                    if ( card.fieldsToEdit is null )
+                    {
+                        card.GenerateNew();
+                        continue;
+                    }
 
-                if ( card.fieldsToEdit is null )
-                {
-                    card.GenerateNew();
-                    continue;
+                    card.Edit();
                 }
-
-                card.Edit();
             }
         }
 
@@ -53,16 +58,21 @@ namespace JLPlugin.Utils
             {
                 string filename = file.Substring( file.LastIndexOf( Path.DirectorySeparatorChar ) + 1 );
 
-                Data.CustomEncounterData encounter = CreateEncounterFromJSON( File.ReadAllText( file ) );
+                string text = File.ReadAllText( file );
 
-                if ( encounter is null )
+                if ( !text.ToLowerInvariant().StartsWith( "#ignore" ) && !text.ToLowerInvariant().StartsWith( "# ignore" ) )
                 {
-                    Plugin.Log.LogWarning( $"Failed to load encounter { filename }" );
+                    Data.CustomEncounterData encounter = CreateEncounterFromJSON(  text );
 
-                    continue;
+                    if ( encounter is null )
+                    {
+                        Plugin.Log.LogWarning( $"Failed to load encounter { filename }" );
+
+                        continue;
+                    }
+
+                    encounter.GenerateNew();
                 }
-
-                encounter.GenerateNew();
             }
         }
 
