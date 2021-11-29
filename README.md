@@ -132,13 +132,13 @@ ___
 |-|-|
 | card | **[Optional]** The name of the card that will be played (See *Card Names.txt* for a list of ingame card names) |
 | replacement | **[Optional]** A json object for the replacement of the card |
-| randomReplaceChance | **[Optional]** The percentage chance that this card will be replaced by a card from *randomReplacementCards*  |
+| randomReplaceChance | **[Optional]** **[Default: 0]** The interger percentage chance that this card will be replaced by a card from *randomReplacementCards*  |
 
 ### Replacement fields
 | Field | Description |
 |-|-|
 | card | The name of the card that will replace the original one (See *Card Names.txt* for a list of ingame card names) |
-| randomReplaceChance | The minimum difficulty at which this encounter will replace the original one |
+| randomReplaceChance | **[Default: 0]** The minimum difficulty at which this encounter will replace the original one |
 
 
 ## Debugging
@@ -171,4 +171,5 @@ If you want help debugging you can ask in the #card-creation channel in the [Ins
 ## Development
 
 Plans for the future:
+ - Boss encounters
  - Custom regions
