@@ -15,7 +15,7 @@ Simply download with Thunderstore Mod Manager!
 ### Manual
 To install this plugin you first need to install BepInEx as a mod loader for Inscryption. A guide to do this can be found [here](https://docs.bepinex.dev/articles/user_guide/installation/index.html#where-to-download-bepinex)
 
-You will also need version 1.12+ of the [InscryptionAPI](https://github.com/ScottWilson0903/InscryptionAPI) plugin.
+You will also need version 1.13+ of the [InscryptionAPI](https://github.com/ScottWilson0903/InscryptionAPI) plugin.
 
 Finally, you simply need to put the **JSONLoader.dll** folder in **BepInEx/plugins**.
 
@@ -28,7 +28,8 @@ To edit existing cards, you similarly create a .jldr file and fill in the fields
 You can use this [online JSON Schema validator](https://www.jsonschemavalidator.net/s/D3dmDn7L) to avoid syntax errors, and make sure the fields are correct in your json files.
 There is also a [GUI](https://tinyurl.com/asxfrfbc) based verion that is an option, just copy the json from the right hand panel when done!
 
-Files go anywhere in the plugins folder, along with  the artwork required for the card.
+Files go anywhere in the plugins folder, along with the artwork required for the card.<br>
+**Since version 1.8.0, cards are required to have a '\_card' postfix *(e.g. MyCard_card.jldr)*. Cards without this postfix will still work, but will no longer be supported in the future.**
 
 Cards have lots of fields that can be filled - this is a list of all field names and their purpose. The fields you wish to include in the .jldr file should be copied exactly from this table, and any fields that refer to *Enums.md* or *Card Names.txt* should have their strings be copied exactly from there.
 
@@ -170,4 +171,4 @@ If you want help debugging you can ask in the #card-creation channel in the [Ins
 ## Development
 
 Plans for the future:
- - Up to date!
+ - Custom regions
