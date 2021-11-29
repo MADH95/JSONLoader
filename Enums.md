@@ -219,3 +219,12 @@ ___
 |StaticGlitch | Renders the card with the static animation                                                                                          |
 |TerrainBackground | Renders the card with terrain border                                                                               |
 |TerrainLayout | Renders card with terrain card layout                                                                                                 |
+___
+### Region
+|Value |
+|-|
+| Forest   |
+| Wetlands |
+| Alpine   |
+| Midnight |
+___
