@@ -10,6 +10,9 @@ namespace JLPlugin.Utils
 
     public static class Dicts
     {
+
+        // Cards
+
         public static readonly Dictionary<string, CardMetaCategory> MetaCategory
             = Enum.GetValues(typeof(CardMetaCategory))
                     .Cast<CardMetaCategory>()
@@ -62,6 +65,14 @@ namespace JLPlugin.Utils
 
         public static readonly List<string> CardDataFields
             = typeof(CardData).GetFields()
+                                .Select(elem => elem.Name)
+                                .ToList();
+
+
+        // Encounters
+
+        public static readonly List<string> EncounterDataFields
+            = typeof(CustomEncounterData).GetFields()
                                 .Select(elem => elem.Name)
                                 .ToList();
     }

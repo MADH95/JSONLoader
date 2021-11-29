@@ -10,22 +10,31 @@ using TinyJson;
 namespace JLPlugin.Utils
 {
     using Data;
+    using System;
 
     public static class JLUtils
     {
         public static void LoadCardsFromFiles()
         {
-            foreach ( string file in Directory.EnumerateFiles( Paths.PluginPath, "*.jldr", SearchOption.AllDirectories ) )
+            foreach ( string file in Directory.EnumerateFiles( Paths.PluginPath, "*.jldr", SearchOption.AllDirectories ).Where( file => !file.EndsWith( "_encounter.jldr" ) ) )
             {
                 string filename = file.Substring( file.LastIndexOf( Path.DirectorySeparatorChar ) + 1 );
 
-                Data.CardData card = CreateFromJSON( File.ReadAllText( file ) );
+                Data.CardData card = CreateCardFromJSON( File.ReadAllText( file ) );
 
                 if ( card is null )
                 {
-                    Plugin.Log.LogWarning( $"Failed to load { filename }" );
+                    Plugin.Log.LogWarning( $"Failed to load card { filename }" );
 
                     continue;
+                }
+                else
+                {
+                    if ( !filename.EndsWith( "_card.jldr" ) )
+                    {
+                        Plugin.Log.LogWarning( $"Card { filename } does not have the '_card' postfix. Cards without this postfix will be unsupported in the future." );
+                    }
+
                 }
 
                 if ( card.fieldsToEdit is null )
@@ -38,8 +47,30 @@ namespace JLPlugin.Utils
             }
         }
 
-        public static CardData CreateFromJSON( string jsonString )
+        public static void LoadEncountersFromFiles()
+        {
+            foreach ( string file in Directory.EnumerateFiles( Paths.PluginPath, "*_encounter.jldr", SearchOption.AllDirectories ) )
+            {
+                string filename = file.Substring( file.LastIndexOf( Path.DirectorySeparatorChar ) + 1 );
+
+                Data.CustomEncounterData encounter = CreateEncounterFromJSON( File.ReadAllText( file ) );
+
+                if ( encounter is null )
+                {
+                    Plugin.Log.LogWarning( $"Failed to load encounter { filename }" );
+
+                    continue;
+                }
+
+                encounter.GenerateNew();
+            }
+        }
+
+        public static CardData CreateCardFromJSON( string jsonString )
             => JSONParser.FromJson<CardData>( jsonString );
+
+        public static CustomEncounterData CreateEncounterFromJSON( string jsonString )
+            => JSONParser.FromJson<CustomEncounterData>( jsonString );
 
         public static Texture2D LoadTexture2D( string image )
         {
