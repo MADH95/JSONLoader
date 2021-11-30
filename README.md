@@ -21,7 +21,7 @@ Finally, you simply need to put the **JSONLoader.dll** folder in **BepInEx/plugi
 
 ## Custom Cards
 
-To create your own cards you just create a .jldr file (written in json) and fill in all the fields you want your card to have (fields you don't include will be defaulted). The *name* field is required, and the rest are optional with default values (though that would be a boring card). Those fields and their values are specified in the table below. For reference, an example custom card (8 f\*cking bears.jldr) is included in the **Cards** folder in this repo.
+To create your own cards you just create a .jldr file (written in JSON) and fill in all the fields you want your card to have (fields you don't include will be defaulted). The *name* field is required, and the rest are optional with default values (though that would be a boring card). Those fields and their values are specified in the table below. For reference, an example custom card (8 f\*cking bears_card.jldr) is included in the **Cards** folder in this repo.
 
 To edit existing cards, you similarly create a .jldr file and fill in the fields you want to edit on the card. You must include both the *name* field and the *fieldsToEdit* field with at least 1 field name in it (explained more on the table). Any fields you don't include in *fieldsToEdit* will not be changed from the base card.
 
@@ -109,22 +109,24 @@ ___
 
 ## Custom Encounters
 
-**TODO**
+Creating custom encounters works similar to creating custom cards. You create a .jldr file with the '\_encounter' postfix and fill in the desired fields. The *name* and *regions* values are required, the other fields are optional. You can find the list of fields in the table below. Currently, encounters can only be added to Act 1. For reference, an example custom encounter (squirrel template_encounter.jldr) is included in the **Encounters** folder in this repo.
 
 | Field | Description |
 |------|-------------|
 | name | **[Required]** A string for the name the API will use to identify the encounter |
-| regions | **[Required]** A string array of the regions this encounter will appear in (See *Enums.txt* for a list of regions) |
+| regions | **[Required\*]** A string array of the regions this encounter will appear in (See *Enums.txt* for a list of regions) |
 | dominantTribes | **[Optional]** A string array tribes mainly appearing in this encounter. Used for determining the totem in totem encounters |
 | minDifficulty | **[Optional]** **[Default: 0]** The minimum difficulty at which this encounter will appear |
 | maxDifficulty | **[Optional]** **[Default: 30]** The maximum difficulty at which this encounter will appear |
 | turns | **[Optional]** A 2-dimensional array of CardBlueprint json objects for cards played each turn |
-| randomReplacementCards | **[Optional]** A string array of cards that randomly replace the cards that have a randomReplacementChance larger than 0 |
+| randomReplacementCards | **[Optional]** A string array of cards that randomly replace the cards that have a randomReplacementChance larger than 0. Cards in this list need to be unlocked to appear |
 | regular | **[Optional]** **[Default: opposite of bossPrep]** A boolean to determine whether this encounter appears in regular encounters |
 | bossPrep | **[Optional]** **[Default: false]** A boolean to determine whether this encounter appears as the boss prep encounter of the given regions (the final encounter before the boss, if the requirements are met) |
-| turnMods | **[Optional]** **[Undocumented]** |
-| redundantAbilities | **[Optional]** **[Undocumented]** |
-| unlockedCardPrerequisites | **[Optional]** **[Undocumented]** |
+| turnMods | **[Unsupported/Act 3 only]** An array of TurnMod json objects |
+| redundantAbilities | **[Optional]** A string array of abilities that will not show up on totems for this encounter (Note that tribes have specific redundant abilities by default) |
+| unlockedCardPrerequisites | **[Optional]** A string array of cards that need to be unlocked for this encounter to appear |
+
+*\* You can leave regions empty, but if you do so, the encounter will never appear.*
 ___
 
 ### CardBlueprint fields
@@ -139,6 +141,14 @@ ___
 |-|-|
 | card | The name of the card that will replace the original one (See *Card Names.txt* for a list of ingame card names) |
 | randomReplaceChance | **[Default: 0]** The minimum difficulty at which this encounter will replace the original one |
+___
+
+### TurnMod fields [Unsupported/Act 3 only]
+| Field | Description |
+|-|-|
+| turn | **[Optional]** **[Default: 0]** The turn at which this mod is applied  |
+| applyAtDifficulty | **[Optional]** **[Default: 0]** The minimum difficulty at which this mod will apply |
+| overclockCards | **[Optional]**  A boolean to determine whether cards this turn are overclocked |
 
 
 ## Debugging
