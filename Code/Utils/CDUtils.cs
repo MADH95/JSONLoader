@@ -1,4 +1,4 @@
-﻿using DiskCardGame;
+﻿
 using System.Collections.Generic;
 
 using UnityEngine;
@@ -13,12 +13,12 @@ namespace JLPlugin.Utils
             {
                 if ( string.IsNullOrEmpty( field ) )
                 {
-                    Plugin.Log.LogError( $"{ ErrorUtil.Card } - fieldsToEdit cannot contain an empty string" );
+                    Plugin.Log.LogError( $"{ ErrorUtil.Identifier } - fieldsToEdit cannot contain an empty string" );
                     continue;
                 }
 
                 if ( !Dicts.CardDataFields.Contains( field ) )
-                    Plugin.Log.LogError( $"{ ErrorUtil.Card } - \"{ field }\" is an invalid field name" );
+                    Plugin.Log.LogError( $"{ ErrorUtil.Identifier } - \"{ field }\" is an invalid field name" );
             }
         }
 
@@ -31,7 +31,7 @@ namespace JLPlugin.Utils
 
             if ( !dict.ContainsKey( data ) )
             {
-                ErrorUtil.LogCard( data );
+                ErrorUtil.Log( data );
                 return default;
             }
 
@@ -51,7 +51,7 @@ namespace JLPlugin.Utils
             {
                 if ( !dict.ContainsKey( value ) )
                 {
-                    ErrorUtil.LogCard( value );
+                    ErrorUtil.Log( value );
                     continue;
                 }
 
@@ -73,7 +73,7 @@ namespace JLPlugin.Utils
 
             if ( !image.EndsWith( ".png" ) )
             {
-                ErrorUtil.LogCard( image, ", it must be a .png" );
+                ErrorUtil.Log( image, ", it must be a .png" );
                 return null;
             }
 
@@ -97,7 +97,7 @@ namespace JLPlugin.Utils
 
                 if ( !image.EndsWith( ".png" ) )
                 {
-                    ErrorUtil.LogCard( image, ", it must be a .png" );
+                    ErrorUtil.Log( image, ", it must be a .png" );
                     continue;
                 }
 

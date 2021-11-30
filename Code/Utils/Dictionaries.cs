@@ -1,4 +1,5 @@
-﻿using System;
+﻿
+using System;
 using System.Linq;
 using System.Collections.Generic;
 
@@ -72,7 +73,7 @@ namespace JLPlugin.Utils
         // Encounters
 
         public static readonly List<string> EncounterDataFields
-            = typeof(CustomEncounterData).GetFields()
+            = typeof(EncounterData).GetFields()
                                 .Select(elem => elem.Name)
                                 .ToList();
     }

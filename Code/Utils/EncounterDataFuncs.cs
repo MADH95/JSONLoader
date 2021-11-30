@@ -1,8 +1,4 @@
-﻿using System.Collections.Generic;
-
-using DiskCardGame;
-using static DiskCardGame.EncounterBlueprintData;
-
+﻿
 using APIPlugin;
 
 namespace JLPlugin.Data
@@ -10,11 +6,11 @@ namespace JLPlugin.Data
     using System.Linq;
     using Utils;
 
-    public partial class CustomEncounterData
+    public partial class EncounterData
     {
         public void GenerateNew()
         {
-            ErrorUtil.Encounter = this.name;
+            ErrorUtil.Identifier = this.name;
             ErrorUtil.Message = "Encounter {0} - {2} is an invalid value for {1}";
 
             bool regionSpecific = ( this.regions.Count <= 1 );
@@ -27,16 +23,16 @@ namespace JLPlugin.Data
                     minDifficulty:      this.minDifficulty,
                     maxDifficulty:      maxDifficulty == 0 ? this.maxDifficulty : 30,
 
-                    dominantTribes:     CustomEncounterUtils.Assign(    this.dominantTribes,        nameof( this.dominantTribes     ),      Dicts.Tribes        ),
-                    redundantAbilities: CustomEncounterUtils.Assign(    this.redundantAbilities,    nameof( this.redundantAbilities ),      Dicts.Abilities     ),
+                    dominantTribes:     EDUtils.Assign(    this.dominantTribes,        nameof( this.dominantTribes     ),      Dicts.Tribes        ),
+                    redundantAbilities: EDUtils.Assign(    this.redundantAbilities,    nameof( this.redundantAbilities ),      Dicts.Abilities     ),
 
-                    unlockedCardPrerequisites:  CustomEncounterUtils.GetCardInfos( this.unlockedCardPrerequisites ),
-                    randomReplacementCards:     CustomEncounterUtils.GetCardInfos( this.randomReplacementCards ),
-                    turns:                      CustomEncounterUtils.GetCardBlueprints( this.turns ),
+                    unlockedCardPrerequisites:  EDUtils.GetCardInfos( this.unlockedCardPrerequisites ),
+                    randomReplacementCards:     EDUtils.GetCardInfos( this.randomReplacementCards ),
+                    turns:                      EDUtils.GetCardBlueprints( this.turns ),
 
-                    turnMods:           CustomEncounterUtils.GetTurnMods( this.turnMods ),
+                    turnMods:           EDUtils.GetTurnMods( this.turnMods ),
 
-                    regular:            this.bossPrep ? this.regular : true,
+                    regular:            !this.bossPrep || this.regular,
                     bossPrep:           this.bossPrep,
 
                     oldPreviewDifficulty: 0 // Unused

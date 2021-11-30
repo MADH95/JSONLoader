@@ -1,10 +1,8 @@
-﻿using APIPlugin;
-
+﻿
 using System.Collections.Generic;
 
 namespace JLPlugin.Data
 {
-    [System.Serializable]
     public partial class CardData
     {
         public List<string> fieldsToEdit;

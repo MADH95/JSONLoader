@@ -20,9 +20,15 @@ namespace JLPlugin.Utils
                 return null;
             }
 
+            if ( card.evolution.turnsToEvolve < 1 || card.evolution.turnsToEvolve > 3 )
+            {
+                Plugin.Log.LogError( $"{ card.name } - { nameof( card.evolution.turnsToEvolve ) } cannot be { card.evolution.turnsToEvolve }, defaulting to 1" );
+                card.evolution.turnsToEvolve = 1;
+            }
+
             return new(
                 name: card.evolution.name,
-                turnsToEvolve: card.evolution.turnsToEvolve == 0 ? 1 : card.evolution.turnsToEvolve
+                turnsToEvolve: card.evolution.turnsToEvolve
             );
         }
 

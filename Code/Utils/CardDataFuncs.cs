@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿
+using System.Collections.Generic;
 
 using DiskCardGame;
 
@@ -12,10 +13,10 @@ namespace JLPlugin.Data
     {
         public void GenerateNew()
         {
-            ErrorUtil.Card = this.name;
-            ErrorUtil.Message = "{0} - {2} is an invalid value for {1}";
+            ErrorUtil.Identifier = this.name;
+            ErrorUtil.Message = "Card {0} - {2} is an invalid value for {1}";
 
-            if (this.baseHealth == 0)
+            if ( this.baseHealth == 0 )
                 this.baseHealth = 1;
 
             List<CardMetaCategory> metaCategories = CDUtils.Assign( this.metaCategories, nameof( this.metaCategories ), Dicts.MetaCategory );
@@ -74,12 +75,20 @@ namespace JLPlugin.Data
 
         public void Edit()
         {
-            ErrorUtil.Card = this.name;
+            ErrorUtil.Identifier = this.name;
             ErrorUtil.Message = "Card {0} - Can't change {1} to {2}";
 
             CDUtils.CheckValidFields( this.fieldsToEdit );
 
             bool check( string fieldName ) => this.fieldsToEdit.Contains( fieldName );
+
+            if ( this.baseHealth == 0 )
+                this.baseHealth = 1;
+
+            List<CardMetaCategory> metaCategories = CDUtils.Assign( this.metaCategories, nameof( this.metaCategories ), Dicts.MetaCategory );
+
+            if ( this.abilities is not null && ( this.abilities.Count == 0 || this.abilities[ 0 ] == "None" ) )
+                this.abilities = null;
 
             bool hasCustomAbilities         = check( nameof( this.customAbilities ) );
             bool hasCustomSpecialAbilities  = check( nameof( this.customSpecialAbilities ) );
@@ -97,25 +106,24 @@ namespace JLPlugin.Data
                 iceCubeId:              hasIceCubeData              ? IDUtils.GenerateIceCubeIdentifier( this )                                 : null
                 )
             {
-                displayedName         = check( nameof( this.displayedName ) )         ? this.displayedName         : null,
-                description           = check( nameof( this.description ) )           ? this.description           : null,
+                displayedName         = check( nameof( this.displayedName ) )         ?   this.displayedName         : null,
+                description           = check( nameof( this.description ) )           ?   this.description           : null,
                                       
-                baseAttack            = check( nameof( this.baseAttack ) )            ? this.baseAttack            : null,
-                baseHealth            = check( nameof( this.baseHealth ) )            ? this.baseHealth            : null,
-                hideAttackAndHealth   = check( nameof( this.hideAttackAndHealth ) )   ? this.hideAttackAndHealth   : null,
-                                                                                        
-                onePerDeck            = check( nameof( this.onePerDeck ) )            ? this.onePerDeck            : null,
-                flipPortraitForStrafe = check( nameof( this.flipPortraitForStrafe ) ) ? this.flipPortraitForStrafe : null,
-                defaultEvolutionName  = check( nameof( this.defaultEvolutionName ) )  ? this.defaultEvolutionName  : null,
-                                                                                        
-                cost                  = check( nameof( this.bloodCost  ) )            ? this.bloodCost             : null,
-                bonesCost             = check( nameof( this.bonesCost  ) )            ? this.bonesCost             : null,
-                energyCost            = check( nameof( this.energyCost ) )            ? this.energyCost            : null,
+                baseAttack            = check( nameof( this.baseAttack ) )            ?   this.baseAttack            : null,
+                baseHealth            = check( nameof( this.baseHealth ) )            ?   this.baseHealth            : null,
+                hideAttackAndHealth   = check( nameof( this.hideAttackAndHealth ) )   ?   this.hideAttackAndHealth   : null,
+                                                                                          
+                metaCategories        = check( nameof( this.metaCategories ) )        ?   metaCategories             : null,
+                onePerDeck            = check( nameof( this.onePerDeck ) )            ?   this.onePerDeck            : null,
+                flipPortraitForStrafe = check( nameof( this.flipPortraitForStrafe ) ) ?   this.flipPortraitForStrafe : null,
+                defaultEvolutionName  = check( nameof( this.defaultEvolutionName ) )  ?   this.defaultEvolutionName  : null,
+                                                                                          
+                cost                  = check( nameof( this.bloodCost  ) )            ?   this.bloodCost             : null,
+                bonesCost             = check( nameof( this.bonesCost  ) )            ?   this.bonesCost             : null,
+                energyCost            = check( nameof( this.energyCost ) )            ?   this.energyCost            : null,
                 gemsCost              = check( nameof( this.gemsColour ) )            ?
                                             CDUtils.Assign( this.gemsColour,              nameof( this.gemsColour ),           Dicts.GemColour )                : null,
                                                                                                       
-                metaCategories        = check( nameof( this.metaCategories ) )        ?
-                                            CDUtils.Assign( this.metaCategories,          nameof( this.metaCategories ),       Dicts.MetaCategory )             : null,
                 cardComplexity        = check( nameof( this.cardComplexity ) )        ?
                                             CDUtils.Assign( this.cardComplexity,          nameof( this.cardComplexity ),       Dicts.Complexity )               : null,
                 temple                = check( nameof( this.temple ) )                ?

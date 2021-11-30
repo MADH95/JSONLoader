@@ -1,4 +1,16 @@
 
+## 1.8.1
+ - Changed cards to *require* the \_cards postfix
+ - removed unecessary usings
+ - removed unecessary attributes
+ - Generalised ErrorUtils and the code that uses it
+ - Added dedundancy checks for:
+	- Custom card baseHealth
+	- Custom card metaCategories
+	- Custom card abilities
+- GenerateEvolveIdentifier now logs error if turnsToEvolve less than 1 or greater than 3 and sets it to 1 by default
+- Renamed CustomEncounterData to EncounterData to fit the existing naming scheme
+
 ## 1.8.0
 - Added support for custom encounters
 - Template files now have a #ignore tag to prevent them from being loaded

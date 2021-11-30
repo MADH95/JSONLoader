@@ -1,4 +1,5 @@
-﻿namespace JLPlugin.Data
+﻿
+namespace JLPlugin.Data
 {
     public class TurnModData
     {

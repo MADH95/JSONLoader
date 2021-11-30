@@ -1,15 +1,19 @@
-﻿using APIPlugin;
-using DiskCardGame;
-using JLPlugin.Data;
-using System;
-using System.Collections.Generic;
+﻿
 using System.Linq;
-using UnityEngine;
-using static DiskCardGame.EncounterBlueprintData;
+using System.Collections.Generic;
+
+using DiskCardGame;
+
+using APIPlugin;
+
 
 namespace JLPlugin.Utils
 {
-    public static class CustomEncounterUtils
+    using Data;
+
+    using static DiskCardGame.EncounterBlueprintData;
+
+    public static class EDUtils
     {
         public static List<CardInfo> GetCardInfos( List<string> cards )
         {
@@ -17,13 +21,13 @@ namespace JLPlugin.Utils
             {
                 return null;
             }
-            List<CardInfo> cardInfos = new List<CardInfo>();
+            List<CardInfo> cardInfos = new();
             foreach ( string card in cards )
             {
                 CardInfo cardInfo = GetCardByName( card );
                 if ( cardInfo == null )
                 {
-                    Plugin.Log.LogError( $"{ ErrorUtil.Encounter } - card { card } does not exist" );
+                    Plugin.Log.LogError( $"{ ErrorUtil.Identifier } - card { card } does not exist" );
                 }
                 else
                 {
@@ -42,7 +46,7 @@ namespace JLPlugin.Utils
 
             if ( !dict.ContainsKey( data ) )
             {
-                ErrorUtil.LogEncounter( data );
+                ErrorUtil.Log( data );
                 return default;
             }
 
@@ -62,7 +66,7 @@ namespace JLPlugin.Utils
             {
                 if ( !dict.ContainsKey( value ) )
                 {
-                    ErrorUtil.LogEncounter( value );
+                    ErrorUtil.Log( value );
                     continue;
                 }
 
@@ -81,7 +85,7 @@ namespace JLPlugin.Utils
             {
                 return null;
             }
-            List<TurnModBlueprint> blueprints = new List<TurnModBlueprint>();
+            List<TurnModBlueprint> blueprints = new();
             foreach ( TurnModData mod in mods )
             {
                 blueprints.Add( new TurnModBlueprint()
@@ -111,7 +115,7 @@ namespace JLPlugin.Utils
                     CardInfo info1 = GetCardByName( card );
                     if ( info1 == null )
                     {
-                        Plugin.Log.LogError( $"{ ErrorUtil.Encounter } - card { card } does not exist" );
+                        Plugin.Log.LogError( $"{ ErrorUtil.Identifier } - card { card } does not exist" );
                         continue;
                     }
                     CardInfo info2 = null;
@@ -120,7 +124,7 @@ namespace JLPlugin.Utils
                         info2 = GetCardByName( blueprint.replacement.card );
                         if ( info2 == null )
                         {
-                            Plugin.Log.LogError( $"{ ErrorUtil.Encounter } - card { blueprint.replacement.card } does not exist" );
+                            Plugin.Log.LogError( $"{ ErrorUtil.Identifier } - card { blueprint.replacement.card } does not exist" );
                             continue;
                         }
                     }

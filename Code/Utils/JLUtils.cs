@@ -1,6 +1,5 @@
 ﻿using System.IO;
-using System.Linq;
-using System.Collections.Generic;
+
 using UnityEngine;
 
 using BepInEx;
@@ -10,45 +9,31 @@ using TinyJson;
 namespace JLPlugin.Utils
 {
     using Data;
-    using System;
 
     public static class JLUtils
     {
         public static void LoadCardsFromFiles()
         {
-            foreach ( string file in Directory.EnumerateFiles( Paths.PluginPath, "*.jldr", SearchOption.AllDirectories ).Where( file => !file.EndsWith( "_encounter.jldr" ) ) )
+            foreach ( string file in Directory.EnumerateFiles( Paths.PluginPath, "*_card.jldr", SearchOption.AllDirectories ) )
             {
                 string filename = file.Substring( file.LastIndexOf( Path.DirectorySeparatorChar ) + 1 );
 
-                string text = File.ReadAllText( file );
+                CardData card = CreateCardFromJSON( File.ReadAllText( file ) );
 
-                if ( !text.ToLowerInvariant().StartsWith( "#ignore" ) && !text.ToLowerInvariant().StartsWith( "# ignore" ) )
+                if ( card is null )
                 {
-                    Data.CardData card = CreateCardFromJSON( text );
+                    Plugin.Log.LogWarning( $"Failed to load card { filename }" );
 
-                    if ( card is null )
-                    {
-                        Plugin.Log.LogWarning( $"Failed to load card { filename }" );
-
-                        continue;
-                    }
-                    else
-                    {
-                        if ( !filename.EndsWith( "_card.jldr" ) )
-                        {
-                            Plugin.Log.LogWarning( $"Card { filename } does not have the '_card' postfix. Cards without this postfix will be unsupported in the future." );
-                        }
-
-                    }
-
-                    if ( card.fieldsToEdit is null )
-                    {
-                        card.GenerateNew();
-                        continue;
-                    }
-
-                    card.Edit();
+                    continue;
                 }
+
+                if ( card.fieldsToEdit is null )
+                {
+                    card.GenerateNew();
+                    continue;
+                }
+
+                card.Edit();
             }
         }
 
@@ -58,29 +43,24 @@ namespace JLPlugin.Utils
             {
                 string filename = file.Substring( file.LastIndexOf( Path.DirectorySeparatorChar ) + 1 );
 
-                string text = File.ReadAllText( file );
+                EncounterData encounter = CreateEncounterFromJSON( File.ReadAllText( file ) );
 
-                if ( !text.ToLowerInvariant().StartsWith( "#ignore" ) && !text.ToLowerInvariant().StartsWith( "# ignore" ) )
+                if ( encounter is null )
                 {
-                    Data.CustomEncounterData encounter = CreateEncounterFromJSON(  text );
+                    Plugin.Log.LogWarning( $"Failed to load encounter { filename }" );
 
-                    if ( encounter is null )
-                    {
-                        Plugin.Log.LogWarning( $"Failed to load encounter { filename }" );
-
-                        continue;
-                    }
-
-                    encounter.GenerateNew();
+                    continue;
                 }
+
+                encounter.GenerateNew();
             }
         }
 
         public static CardData CreateCardFromJSON( string jsonString )
             => JSONParser.FromJson<CardData>( jsonString );
 
-        public static CustomEncounterData CreateEncounterFromJSON( string jsonString )
-            => JSONParser.FromJson<CustomEncounterData>( jsonString );
+        public static EncounterData CreateEncounterFromJSON( string jsonString )
+            => JSONParser.FromJson<EncounterData>( jsonString );
 
         public static Texture2D LoadTexture2D( string image )
         {
@@ -88,13 +68,13 @@ namespace JLPlugin.Utils
 
             if ( imagePaths.Length == 0 )
             {
-                Plugin.Log.LogError( $"{ ErrorUtil.Card } - Couldn't find texture \"{ image }\" to load into { ErrorUtil.Field }" );
+                Plugin.Log.LogError( $"{ ErrorUtil.Identifier } - Couldn't find texture \"{ image }\" to load into { ErrorUtil.Field }" );
                 return null;
             }
 
             if ( imagePaths.Length > 1 )
             {
-                Plugin.Log.LogError( $"{ ErrorUtil.Card } - Couldn't load \"{ image }\" into { ErrorUtil.Field }, more than one file with that name found in the plugins folder" );
+                Plugin.Log.LogError( $"{ ErrorUtil.Identifier } - Couldn't load \"{ image }\" into { ErrorUtil.Field }, more than one file with that name found in the plugins folder" );
                 return null;
             }
 
@@ -104,7 +84,7 @@ namespace JLPlugin.Utils
 
             if ( !texture.LoadImage( imgBytes ) )
             {
-                Plugin.Log.LogError( $"{ ErrorUtil.Card } - Couldn't load \"{ image }\" into { ErrorUtil.Field }" );
+                Plugin.Log.LogError( $"{ ErrorUtil.Identifier } - Couldn't load \"{ image }\" into { ErrorUtil.Field }" );
                 return null;
             }
 
