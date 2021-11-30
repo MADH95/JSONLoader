@@ -11,7 +11,7 @@ namespace JLPlugin
     {
         private const string PluginGuid = "MADH.inscryption.JSONLoader";
         private const string PluginName = "JSONLoader";
-        private const string PluginVersion = "1.7.0.0";
+        private const string PluginVersion = "1.8.0.0";
 
         internal static ManualLogSource Log;
 
@@ -26,6 +26,7 @@ namespace JLPlugin
             Log.LogWarning( "Note: JSONLoader now uses .jldr files, not .json files" );
 
             Utils.JLUtils.LoadCardsFromFiles();
+            Utils.JLUtils.LoadEncountersFromFiles();
         }
     }
 }

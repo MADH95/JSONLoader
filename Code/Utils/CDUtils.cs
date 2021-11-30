@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using DiskCardGame;
+using System.Collections.Generic;
 
 using UnityEngine;
 
@@ -30,7 +31,7 @@ namespace JLPlugin.Utils
 
             if ( !dict.ContainsKey( data ) )
             {
-                ErrorUtil.Log( data );
+                ErrorUtil.LogCard( data );
                 return default;
             }
 
@@ -50,7 +51,7 @@ namespace JLPlugin.Utils
             {
                 if ( !dict.ContainsKey( value ) )
                 {
-                    ErrorUtil.Log( value );
+                    ErrorUtil.LogCard( value );
                     continue;
                 }
 
@@ -72,7 +73,7 @@ namespace JLPlugin.Utils
 
             if ( !image.EndsWith( ".png" ) )
             {
-                ErrorUtil.Log( image, ", it must be a .png" );
+                ErrorUtil.LogCard( image, ", it must be a .png" );
                 return null;
             }
 
@@ -96,7 +97,7 @@ namespace JLPlugin.Utils
 
                 if ( !image.EndsWith( ".png" ) )
                 {
-                    ErrorUtil.Log( image, ", it must be a .png" );
+                    ErrorUtil.LogCard( image, ", it must be a .png" );
                     continue;
                 }
 

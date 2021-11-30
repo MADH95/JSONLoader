@@ -1,4 +1,8 @@
 
+## 1.8.0
+- Added support for custom encounters
+- Template files now have a #ignore tag to prevent them from being loaded
+
 ## 1.7.1
 - Fixed discrepancies in ancillary files
 
@@ -13,7 +17,7 @@
 - Alphabetized Card Names.txt
 - Made Enums.md more infomrative
 
-##v1.6.1
+## v1.6.1
 - Fixed error if abilities array is present but empty
 
 ## v1.6.0

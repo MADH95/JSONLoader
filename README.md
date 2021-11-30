@@ -5,7 +5,7 @@ It can parse custom cards and pass them to APIPlugin to load them into the game.
 
 ## Converting Existing Cards
 
-In order to have compatability with mod manager, version 1.7.0 breaks backwards compatability. Don't worry though! all the contents of your files are fine, the only change is the extension on the end. the new extension jsonlaoder looks for is .jldr, so you'll need to start making cards with that extension instead of .json (again, the **contents** are still in the json format). If you have a lot of cards to change, you can use the json to jldr [converter utility](https://inscryption.thunderstore.io/package/MADH95Mods/JSONRenameUtility/) to convert all cards in a directory from .json to .jldr!
+In order to have compatability with mod manager, version 1.7.0 breaks backwards compatability. Don't worry though! all the contents of your files are fine, the only change is the extension on the end. the new extension JSONLoader looks for is .jldr, so you'll need to start making cards with that extension instead of .json (again, the **contents** are still in the json format). If you have a lot of cards to change, you can use the json to jldr [converter utility](https://inscryption.thunderstore.io/package/MADH95Mods/JSONRenameUtility/) to convert all cards in a directory from .json to .jldr!
 
 ## Installation
 
@@ -15,20 +15,21 @@ Simply download with Thunderstore Mod Manager!
 ### Manual
 To install this plugin you first need to install BepInEx as a mod loader for Inscryption. A guide to do this can be found [here](https://docs.bepinex.dev/articles/user_guide/installation/index.html#where-to-download-bepinex)
 
-You will also need version 1.12+ of the [InscryptionAPI](https://github.com/ScottWilson0903/InscryptionAPI) plugin.
+You will also need version 1.13+ of the [InscryptionAPI](https://github.com/ScottWilson0903/InscryptionAPI) plugin.
 
 Finally, you simply need to put the **JSONLoader.dll** folder in **BepInEx/plugins**.
 
 ## Custom Cards
 
-To create your own cards you just create a .jldr file (written in json) and fill in all the fields you want your card to have (fields you don't include will be defaulted). The *name* field is required, and the rest are optional with default values (though that would be a boring card). Those fields and their values are specified in the table below. For reference, an example custom card (8 f\*cking bears.jldr) is included in the **Cards** folder in this repo.
+To create your own cards you just create a .jldr file (written in JSON) and fill in all the fields you want your card to have (fields you don't include will be defaulted). The *name* field is required, and the rest are optional with default values (though that would be a boring card). Those fields and their values are specified in the table below. For reference, an example custom card (8 f\*cking bears_card.jldr) is included in the **Cards** folder in this repo.
 
 To edit existing cards, you similarly create a .jldr file and fill in the fields you want to edit on the card. You must include both the *name* field and the *fieldsToEdit* field with at least 1 field name in it (explained more on the table). Any fields you don't include in *fieldsToEdit* will not be changed from the base card.
 
 You can use this [online JSON Schema validator](https://www.jsonschemavalidator.net/s/D3dmDn7L) to avoid syntax errors, and make sure the fields are correct in your json files.
 There is also a [GUI](https://tinyurl.com/asxfrfbc) based verion that is an option, just copy the json from the right hand panel when done!
 
-Files go anywhere in the plugins folder, along with  the artwork required for the card.
+Files go anywhere in the plugins folder, along with the artwork required for the card.<br>
+**Since version 1.8.0, cards are required to have a '\_card' postfix *(e.g. MyCard_card.jldr)*. Cards without this postfix will still work, but will no longer be supported in the future.**
 
 Cards have lots of fields that can be filled - this is a list of all field names and their purpose. The fields you wish to include in the .jldr file should be copied exactly from this table, and any fields that refer to *Enums.md* or *Card Names.txt* should have their strings be copied exactly from there.
 
@@ -106,6 +107,49 @@ ___
 |-|-|
 | creatureWithin | The name of the creature the card should turn into when it perishes (See *Card Names.txt* for a list of ingame card names) |
 
+## Custom Encounters
+
+Creating custom encounters works similar to creating custom cards. You create a .jldr file with the '\_encounter' postfix and fill in the desired fields. The *name* and *regions* values are required, the other fields are optional. You can find the list of fields in the table below. Currently, encounters can only be added to Act 1. For reference, an example custom encounter (squirrel template_encounter.jldr) is included in the **Encounters** folder in this repo.
+
+| Field | Description |
+|------|-------------|
+| name | **[Required]** A string for the name the API will use to identify the encounter |
+| regions | **[Required\*]** A string array of the regions this encounter will appear in (See *Enums.txt* for a list of regions) |
+| dominantTribes | **[Optional]** A string array tribes mainly appearing in this encounter. Used for determining the totem in totem encounters |
+| minDifficulty | **[Optional]** **[Default: 0]** The minimum difficulty at which this encounter will appear |
+| maxDifficulty | **[Optional]** **[Default: 30]** The maximum difficulty at which this encounter will appear |
+| turns | **[Optional]** A 2-dimensional array of CardBlueprint json objects for cards played each turn |
+| randomReplacementCards | **[Optional]** A string array of cards that randomly replace the cards that have a randomReplacementChance larger than 0. Cards in this list need to be unlocked to appear |
+| regular | **[Optional]** **[Default: opposite of bossPrep]** A boolean to determine whether this encounter appears in regular encounters |
+| bossPrep | **[Optional]** **[Default: false]** A boolean to determine whether this encounter appears as the boss prep encounter of the given regions (the final encounter before the boss, if the requirements are met) |
+| turnMods | **[Unsupported/Act 3 only]** An array of TurnMod json objects |
+| redundantAbilities | **[Optional]** A string array of abilities that will not show up on totems for this encounter (Note that tribes have specific redundant abilities by default) |
+| unlockedCardPrerequisites | **[Optional]** A string array of cards that need to be unlocked for this encounter to appear |
+
+*\* You can leave regions empty, but if you do so, the encounter will never appear.*
+___
+
+### CardBlueprint fields
+| Field | Description |
+|-|-|
+| card | **[Optional]** The name of the card that will be played (See *Card Names.txt* for a list of ingame card names) |
+| replacement | **[Optional]** A json object for the replacement of the card |
+| randomReplaceChance | **[Optional]** **[Default: 0]** The interger percentage chance that this card will be replaced by a card from *randomReplacementCards*  |
+
+### Replacement fields
+| Field | Description |
+|-|-|
+| card | The name of the card that will replace the original one (See *Card Names.txt* for a list of ingame card names) |
+| randomReplaceChance | **[Default: 0]** The minimum difficulty at which this encounter will replace the original one |
+___
+
+### TurnMod fields [Unsupported/Act 3 only]
+| Field | Description |
+|-|-|
+| turn | **[Optional]** **[Default: 0]** The turn at which this mod is applied  |
+| applyAtDifficulty | **[Optional]** **[Default: 0]** The minimum difficulty at which this mod will apply |
+| overclockCards | **[Optional]**  A boolean to determine whether cards this turn are overclocked |
+
 
 ## Debugging
 The easiest way to check if the plugin is working properly or to debug an error is to enable the console. This can be done by changing
@@ -137,4 +181,5 @@ If you want help debugging you can ask in the #card-creation channel in the [Ins
 ## Development
 
 Plans for the future:
- - Up to date!
+ - Boss encounters
+ - Custom regions

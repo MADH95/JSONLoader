@@ -59,7 +59,7 @@ namespace JLPlugin.Data
                 emissionTex:                CDUtils.Assign( this.emissionTexture,       nameof( this.emissionTexture ) ),
                 titleGraphic:               CDUtils.Assign( this.titleGraphic,          nameof( this.titleGraphic )    ),
                 pixelTex:                   CDUtils.Assign( this.pixelTexture,          nameof( this.pixelTexture )    ),
-                decals: CDUtils.Assign( this.decals,                nameof( this.decals )          ),
+                decals:                     CDUtils.Assign( this.decals,                nameof( this.decals )          ),
                 animatedPortrait:           null, //TODO: implement       
 
                 evolveId:                   IDUtils.GenerateEvolveIdentifier( this ),
@@ -67,8 +67,7 @@ namespace JLPlugin.Data
                 iceCubeId:                  IDUtils.GenerateIceCubeIdentifier( this ),
                 abilityIdsParam:            IDUtils.GenerateAbilityIdentifiers( this.customAbilities ),
                 specialAbilitiesIdsParam:   IDUtils.GenerateSpecialAbilityIdentifiers( this.customSpecialAbilities )
-            )
-            ;
+            );
 
             ErrorUtil.Clear();
         }
@@ -76,7 +75,7 @@ namespace JLPlugin.Data
         public void Edit()
         {
             ErrorUtil.Card = this.name;
-            ErrorUtil.Message = "{0} - Can't change {1} to {2}";
+            ErrorUtil.Message = "Card {0} - Can't change {1} to {2}";
 
             CDUtils.CheckValidFields( this.fieldsToEdit );
 
