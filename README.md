@@ -21,15 +21,14 @@ Finally, you simply need to put the **JSONLoader.dll** folder in **BepInEx/plugi
 
 ## Custom Cards
 
-To create your own cards you just create a .jldr file (written in JSON) and fill in all the fields you want your card to have (fields you don't include will be defaulted). The *name* field is required, and the rest are optional with default values (though that would be a boring card). Those fields and their values are specified in the table below. For reference, an example custom card (8 f\*cking bears_card.jldr) is included in the **Cards** folder in this repo.
+To create your own cards you just create a .jldr file (written in JSON) with the '\_card' postfix *(e.g. MyCard_card.jldr)* and fill in all the fields you want your card to have (fields you don't include will be defaulted). The *name* field is required, and the rest are optional with default values (though that would be a boring card). Those fields and their values are specified in the table below. For reference, an example custom card (NewCard_card_example.jldr) is included in the **Cards** folder in this repo.
 
 To edit existing cards, you similarly create a .jldr file and fill in the fields you want to edit on the card. You must include both the *name* field and the *fieldsToEdit* field with at least 1 field name in it (explained more on the table). Any fields you don't include in *fieldsToEdit* will not be changed from the base card.
 
 You can use this [online JSON Schema validator](https://www.jsonschemavalidator.net/s/D3dmDn7L) to avoid syntax errors, and make sure the fields are correct in your json files.
 There is also a [GUI](https://tinyurl.com/asxfrfbc) based verion that is an option, just copy the json from the right hand panel when done!
 
-Files go anywhere in the plugins folder, along with the artwork required for the card.<br>
-**Since version 1.8.0, cards are required to have a '\_card' postfix *(e.g. MyCard_card.jldr)*. Cards without this postfix will still work, but will no longer be supported in the future.**
+Files go anywhere in the plugins folder, along with the artwork required for the card.
 
 Cards have lots of fields that can be filled - this is a list of all field names and their purpose. The fields you wish to include in the .jldr file should be copied exactly from this table, and any fields that refer to *Enums.md* or *Card Names.txt* should have their strings be copied exactly from there.
 
@@ -109,7 +108,7 @@ ___
 
 ## Custom Encounters
 
-Creating custom encounters works similar to creating custom cards. You create a .jldr file with the '\_encounter' postfix and fill in the desired fields. The *name* and *regions* values are required, the other fields are optional. You can find the list of fields in the table below. Currently, encounters can only be added to Act 1. For reference, an example custom encounter (squirrel template_encounter.jldr) is included in the **Encounters** folder in this repo.
+Creating custom encounters works similar to creating custom cards. You create a .jldr file with the '\_encounter' postfix and fill in the desired fields. The *name* and *regions* values are required, the other fields are optional. You can find the list of fields in the table below. Currently, encounters can only be added to Act 1. For reference, an example custom encounter (squirrel template_encounter_example.jldr) is included in the **Encounters** folder in this repo.
 
 | Field | Description |
 |------|-------------|
