@@ -1,0 +1,60 @@
+{
+	"fieldsToEdit": [],
+	"name": "Example",
+	"displayedName": "Example Card",
+	"description": "Example Card description",
+	"metaCategories": [],
+	"cardComplexity": "Vanilla",
+	"temple": "Nature",
+	"baseAttack": 0,
+	"baseHealth": 1,
+	"hideAttackAndHealth": false,
+	"bloodCost": 0,
+	"bonesCost": 0,
+	"energyCost": 0,
+	"gemsCost": [],
+	"specialStatIcon": "",
+	"tribes": [],
+	"traits": [],
+	"specialAbilities": [],
+	"customSpecialAbilities [
+		{
+			"GUID": "",
+			"name": ""
+		}
+	],
+	"abilities": [],
+	"customAbilities [
+		{
+			"GUID": "",
+			"name": ""
+		}
+	],
+	"evolution": {
+		"name": "",
+		"turnsToEvolve": 0
+	},
+	"evolve_evolutionName": "",
+	"evolve_turnsToEvolve": 0,
+	"defaultEvolutionName": "Double Example",
+	"tail": {
+		"name": "",
+		"tailLostPortrait": ""
+	},
+	"tail_cardName": "",
+	"tail_tailLostPortrait": "",
+	"iceCube": {
+		"creatureWithin": ""
+	},
+	"iceCube_creatureWithin": "",
+	"flipPortaitForStrafe": false,
+	"onePerDeck": false,
+	"appearanceBehaviour": [],
+	"texture": "",
+	"altTexture": "",
+	"emissionTexture": "",
+	"titleGraphic": "",
+	"pixelTexture": "",
+	"animatedPortrait": "",
+	"decals": []
+}

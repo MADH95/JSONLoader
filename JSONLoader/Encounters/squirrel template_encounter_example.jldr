@@ -1,4 +1,3 @@
-#ignore
 {
   "name": "Squirrel_Template",
   "regions": [ "Forest", "Wetlands", "Alpine" ],

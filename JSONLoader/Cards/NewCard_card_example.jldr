@@ -1,0 +1,18 @@
+{
+  "name": "Eight_Bears2",
+  "displayedName": "8 more fucking bears!",
+  "description": "Kill this other abomination please",
+  "metaCategories": [ "Rare" ],
+  "cardComplexity": "Intermediate",
+  "temple": "Nature",
+  "baseAttack": 2,
+  "baseHealth": 3,
+  "bloodCost": 1,
+  "abilities": [ "Sharp", "Evolve" ],
+  "evolution": {
+    "name": "Grizzly",
+    "turnsToEvolve": 1
+  },
+  "appearanceBehaviour": [ "RareCardColors" ],
+  "texture": "eightfuckingbears.png"
+}
