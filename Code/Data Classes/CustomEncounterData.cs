@@ -18,7 +18,7 @@ namespace JLPlugin.Data
 
         public List<List<CardBlueprintData>> turns;
         public List<string> randomReplacementCards;
-        public List<TurnModBlueprint> turnMods;
+        public List<TurnModData> turnMods;
 
         public List<string> redundantAbilities;
         public List<string> unlockedCardPrerequisites;

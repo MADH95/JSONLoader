@@ -75,6 +75,21 @@ namespace JLPlugin.Utils
             return output;
         }
 
+        internal static List<TurnModBlueprint> GetTurnMods( List<TurnModData> mods )
+        {
+            List<TurnModBlueprint> blueprints = new List<TurnModBlueprint>();
+            foreach ( TurnModData mod in mods )
+            {
+                blueprints.Add( new TurnModBlueprint()
+                {
+                    turn = mod.turn,
+                    applyAtDifficulty = mod.applyAtDifficulty,
+                    overlockCards = mod.overclockCards
+                });
+            }
+            return blueprints;
+        }
+
         public static List<List<CardBlueprint>> GetCardBlueprints( List<List<CardBlueprintData>> cards )
         {
             if ( cards == null )

@@ -23,7 +23,6 @@ namespace JLPlugin.Data
                 NewEncounter.Add(
                     name:               this.name,
                     regionName:         regionName,
-                    turnMods:           this.turnMods,
                     regionSpecific:     regionSpecific,
                     minDifficulty:      this.minDifficulty,
                     maxDifficulty:      maxDifficulty == 0 ? this.maxDifficulty : 30,
@@ -34,6 +33,8 @@ namespace JLPlugin.Data
                     unlockedCardPrerequisites:  CustomEncounterUtils.GetCardInfos( this.unlockedCardPrerequisites ),
                     randomReplacementCards:     CustomEncounterUtils.GetCardInfos( this.randomReplacementCards ),
                     turns:                      CustomEncounterUtils.GetCardBlueprints( this.turns ),
+
+                    turnMods: CustomEncounterUtils.GetTurnMods(this.turnMods),
 
                     regular:            this.bossPrep ? this.regular : true,
                     bossPrep:           this.bossPrep,
