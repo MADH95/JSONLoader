@@ -34,7 +34,7 @@ namespace JLPlugin.Data
                     randomReplacementCards:     CustomEncounterUtils.GetCardInfos( this.randomReplacementCards ),
                     turns:                      CustomEncounterUtils.GetCardBlueprints( this.turns ),
 
-                    turnMods: CustomEncounterUtils.GetTurnMods(this.turnMods),
+                    turnMods:           CustomEncounterUtils.GetTurnMods( this.turnMods ),
 
                     regular:            this.bossPrep ? this.regular : true,
                     bossPrep:           this.bossPrep,

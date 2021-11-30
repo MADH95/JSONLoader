@@ -77,6 +77,10 @@ namespace JLPlugin.Utils
 
         internal static List<TurnModBlueprint> GetTurnMods( List<TurnModData> mods )
         {
+            if (mods == null)
+            {
+                return null;
+            }
             List<TurnModBlueprint> blueprints = new List<TurnModBlueprint>();
             foreach ( TurnModData mod in mods )
             {
