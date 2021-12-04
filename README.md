@@ -167,7 +167,7 @@ If not defined, the default values of the vanilla region of the given tier will 
 | fogEnabled | **[Optional]** **[Default: false]** A boolean to determine whether to enable fog |
 | fogAlpha | **[Optional]** A float to determine the alpha value of the fog |
 | mapEmission | **[Optional]** A string for the texture of the emitted particles on the map (must be .png) |
-| mapEmissionColor | **[Optional]** The hexadecimal RGBA color of the emitted particles |
+| mapEmissionColor | **[Optional]** The hexadecimal RGBA color of the emitted particles, prefixed by '#' |
 | silenceCabinAmbience | **[Optional]** A boolean to determine whether the 'silence cabin ambience' is played |
 ___
 
