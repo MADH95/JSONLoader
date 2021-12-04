@@ -150,6 +150,28 @@ ___
 | applyAtDifficulty | **[Optional]** **[Default: 0]** The minimum difficulty at which this mod will apply |
 | overclockCards | **[Optional]**  A boolean to determine whether cards this turn are overclocked |
 
+## Custom Regions
+
+**TODO**
+Regions use the '\_region' postfix.
+If not defined, the default values of the vanilla region of the given tier will be used.
+| Field | Description |
+|------|-------------|
+| name | **[Required]** A string for the name the API will use to identify the region |
+| tier | **[Required]** The tier this region will be added to, where 0 is the first map and 3 is the cabin |
+| terrainCards | **[Optional]** A string array of cards that randomly appear on the board Cards in this list need to have the Terrain trait to appear |
+| likelyCards | **[Optional]** A string array of cards that appear more often in choice nodes. Cards in this list need to have the ChoiceNode metacategory to appear |
+| boardLightColor | **[Optional]** The hexadecimal RGBA color of the board light, prefixed by '#' |
+| cardsLightColor | **[Optional]** The hexadecimal RGBA color of the cards light, prefixed by '#' |
+| dustParticlesDisabled | **[Optional]** **[Default: false]** A boolean to determine whether to disable the dust particles |
+| fogEnabled | **[Optional]** **[Default: false]** A boolean to determine whether to enable fog |
+| fogAlpha | **[Optional]** A float to determine the alpha value of the fog |
+| mapEmission | **[Optional]** A string for the texture of the emitted particles on the map (must be .png) |
+| mapEmissionColor | **[Optional]** The hexadecimal RGBA color of the emitted particles |
+| silenceCabinAmbience | **[Optional]** A boolean to determine whether the 'silence cabin ambience' is played |
+___
+
+
 
 ## Debugging
 The easiest way to check if the plugin is working properly or to debug an error is to enable the console. This can be done by changing
