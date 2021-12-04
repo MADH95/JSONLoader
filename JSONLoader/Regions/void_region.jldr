@@ -1,0 +1,10 @@
+#ignore
+{
+  "name": "The_Void",
+  "tier": 0,
+  "dominantTribes": [ "Hooved" ],
+  "boardLightColor": "#1F1F1FFF",
+  "cardsLightColor": "#1F1F1FFF",
+  "likelyCards": [ "Goat" ],
+  "terrainCards": [ "Tree" ]
+}

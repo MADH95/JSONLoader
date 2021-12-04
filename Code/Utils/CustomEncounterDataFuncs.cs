@@ -1,8 +1,6 @@
 ﻿using System.Collections.Generic;
 
 using DiskCardGame;
-using static DiskCardGame.EncounterBlueprintData;
-
 using APIPlugin;
 
 namespace JLPlugin.Data

@@ -11,11 +11,16 @@ namespace JLPlugin.Utils
 
         public static string Message { get; set; }
 
+        public static string Region { get; set; }
+
         public static void LogCard( string Data, string addition = "" )
             => Plugin.Log.LogError( string.Format( string.Concat( Message, addition ), Card, Field, Data ) );
 
         public static void LogEncounter( string Data, string addition = "" )
             => Plugin.Log.LogError( string.Format( string.Concat( Message, addition ), Encounter, Field, Data ) );
+
+        public static void LogRegion(string Data, string addition = "")
+            => Plugin.Log.LogError( string.Format( string.Concat( Message, addition ), Region, Field, Data ) );
 
         public static void Clear()
         {

@@ -1,13 +1,12 @@
 ﻿using APIPlugin;
 using System;
 using System.Collections.Generic;
-using static DiskCardGame.EncounterBlueprintData;
-
 namespace JLPlugin.Data
 {
     [System.Serializable]
     public partial class CustomEncounterData
     {
+
         public string name;
 
         public List<string> regions;

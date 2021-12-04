@@ -16,7 +16,7 @@ namespace JLPlugin.Utils
     {
         public static void LoadCardsFromFiles()
         {
-            foreach ( string file in Directory.EnumerateFiles( Paths.PluginPath, "*.jldr", SearchOption.AllDirectories ).Where( file => !file.EndsWith( "_encounter.jldr" ) ) )
+            foreach ( string file in Directory.EnumerateFiles( Paths.PluginPath, "*.jldr", SearchOption.AllDirectories ).Where( file => ( !file.EndsWith( "_encounter.jldr" ) && !file.EndsWith("_region.jldr") ) ) )
             {
                 string filename = file.Substring( file.LastIndexOf( Path.DirectorySeparatorChar ) + 1 );
 
@@ -52,6 +52,30 @@ namespace JLPlugin.Utils
             }
         }
 
+        public static void LoadRegionsFromFiles()
+        {
+            foreach ( string file in Directory.EnumerateFiles( Paths.PluginPath, "*_region.jldr", SearchOption.AllDirectories ) )
+            {
+                string filename = file.Substring( file.LastIndexOf( Path.DirectorySeparatorChar ) + 1 );
+
+                string text = File.ReadAllText (file );
+
+                if ( !text.ToLowerInvariant().StartsWith( "#ignore" ) && !text.ToLowerInvariant().StartsWith( "# ignore" ) )
+                {
+                    Data.CustomRegionData region = CreateRegionFromJSON( text );
+
+                    if (region is null)
+                    {
+                        Plugin.Log.LogWarning( $"Failed to load region { filename }" );
+
+                        continue;
+                    }
+
+                    region.GenerateNew();
+                }
+            }
+        }
+
         public static void LoadEncountersFromFiles()
         {
             foreach ( string file in Directory.EnumerateFiles( Paths.PluginPath, "*_encounter.jldr", SearchOption.AllDirectories ) )
@@ -81,6 +105,9 @@ namespace JLPlugin.Utils
 
         public static CustomEncounterData CreateEncounterFromJSON( string jsonString )
             => JSONParser.FromJson<CustomEncounterData>( jsonString );
+
+        public static CustomRegionData CreateRegionFromJSON( string jsonString )
+            => JSONParser.FromJson<CustomRegionData>( jsonString );
 
         public static Texture2D LoadTexture2D( string image )
         {
