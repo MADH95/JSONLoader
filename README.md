@@ -1,7 +1,7 @@
 # JSON Loader
 
-This is a BepInEx plugin made for Incryption to create custom cards using JSON files and the API by Cyantist.
-It can parse custom cards and pass them to APIPlugin to load them into the game.
+This is a BepInEx plugin made for Incryption to create custom cards, encounters, and regions using JSON files and the API by Cyantist.
+It can parse custom cards, encounters, and regions, passing them to APIPlugin to load them into the game.
 
 ## Converting Existing Cards
 
@@ -109,7 +109,7 @@ ___
 
 ## Custom Encounters
 
-Creating custom encounters works similar to creating custom cards. You create a .jldr file with the '\_encounter' postfix and fill in the desired fields. The *name* and *regions* values are required, the other fields are optional. You can find the list of fields in the table below. Currently, encounters can only be added to Act 1. For reference, an example custom encounter (squirrel template_encounter.jldr) is included in the **Encounters** folder in this repo.
+For custom encounters, you create a .jldr file with the '\_encounter' postfix and fill in the desired fields. The *name* and *regions* values are required, the other fields are optional. You can find the list of fields in the table below. Currently, encounters can only be added to Act 1. For reference, an example custom encounter (squirrel template_encounter.jldr) is included in the **Encounters** folder in this repo.
 
 | Field | Description |
 |------|-------------|
@@ -152,8 +152,7 @@ ___
 
 ## Custom Regions
 
-**TODO**
-Regions use the '\_region' postfix.
+For custom regions, you create a .jldr file with the '\_region' postfix and fill in the desired fields. The *name* and *tier* values are required, the other fields are optional. You can find the list of fields in the table below. Only Act 1 regions are supported. For reference, an example region (void_region.jldr) is included in the **Regions** folder in this repo, as well as a encounter for this region (void_encounter.jldr) in the **Encounters** folder.  
 If not defined, the default values of the vanilla region of the given tier will be used.
 | Field | Description |
 |------|-------------|
@@ -204,4 +203,4 @@ If you want help debugging you can ask in the #card-creation channel in the [Ins
 
 Plans for the future:
  - Boss encounters
- - Custom regions
+ - Modular abilities
