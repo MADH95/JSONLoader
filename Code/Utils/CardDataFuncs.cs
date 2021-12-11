@@ -7,7 +7,10 @@ using APIPlugin;
 
 namespace JLPlugin.Data
 {
+    using JSONLoader.DynamicClasses;
+    using System;
     using Utils;
+    using static JSONLoader.DynamicClasses.TalkingCards;
 
     public partial class CardData
     {
@@ -70,8 +73,11 @@ namespace JLPlugin.Data
                 specialAbilitiesIdsParam:   IDUtils.GenerateSpecialAbilityIdentifiers( this.customSpecialAbilities )
             );
 
+            HandleDialogues( this );
+
             ErrorUtil.Clear();
         }
+
 
         public void Edit()
         {
@@ -97,7 +103,7 @@ namespace JLPlugin.Data
             bool hasTailData                = check( nameof( this.tail ) );
             bool hasIceCubeData             = check( nameof( this.iceCube ) );
 
-            var _ = new CustomCard(
+            CustomCard card = new CustomCard(
                 name: this.name,
                 abilityIdParam:         hasCustomAbilities          ? IDUtils.GenerateAbilityIdentifiers( this.customAbilities )                : null,
                 specialAbilityIdParam:  hasCustomSpecialAbilities   ? IDUtils.GenerateSpecialAbilityIdentifiers( this.customSpecialAbilities )  : null,
@@ -152,7 +158,61 @@ namespace JLPlugin.Data
                 decals                = check( nameof( this.decals ) )          ? CDUtils.Assign( this.decals,                 nameof( this.decals ) )          : null
             };
 
+            HandleDialogues( this );
+
             ErrorUtil.Clear();
+        }
+        private void HandleDialogues( CardData card )
+        {
+            List<DialogueData> dialogues = card.dialogues;
+            if ( dialogues != null )
+            {
+                TalkingCards.talkingCards.Add( card );
+                APIPlugin.NewTalkingCard.Add<JSONLoaderDynamicTalkingCard>( this.name );
+                Dictionary<string, DialogueEvent> events = new();
+                foreach ( DialogueData data in dialogues )
+                {
+                    DialogueEvent dialogueEvent = CustomDialogueUtils.GenerateDialogue( this, data );
+                    DialogueID id = CDUtils.Assign( data.id, nameof( data ), Dicts.DialogueIDs );
+                    switch ( id )
+                    {
+                        case DialogueID.OnDrawn:
+                            events.Add( "JSONLoader_DynamicTalkingCard_OnDrawn_" + name, dialogueEvent );
+                            break;
+                        case DialogueID.OnDrawnFallback:
+                            events.Add( "JSONLoader_DynamicTalkingCard_OnDrawnFallback_" + name, dialogueEvent );
+                            break;
+                        case DialogueID.OnPlayFromHand:
+                            events.Add( "JSONLoader_DynamicTalkingCard_OnPlayFromHand_" + name, dialogueEvent );
+                            break;
+                        case DialogueID.OnAttacked:
+                            events.Add( "JSONLoader_DynamicTalkingCard_OnAttacked_" + name, dialogueEvent );
+                            break;
+                        case DialogueID.OnBecomeSelectablePositive:
+                            events.Add( "JSONLoader_DynamicTalkingCard_OnBecomeSelectablePositive_" + name, dialogueEvent );
+                            break;
+                        case DialogueID.OnBecomeSelectableNegative:
+                            events.Add( "JSONLoader_DynamicTalkingCard_OnBecomeSelectableNegative_" + name, dialogueEvent );
+                            break;
+                        case DialogueID.OnSacrificed:
+                            events.Add( "JSONLoader_DynamicTalkingCard_OnSacrificedDialogue_" + name, dialogueEvent );
+                            break;
+                        case DialogueID.OnSelectedForCardMerge:
+                            events.Add( "JSONLoader_DynamicTalkingCard_OnSelectedForCardMerge_" + name, dialogueEvent );
+                            break;
+                        case DialogueID.OnSelectedForCardRemove:
+                            events.Add( "JSONLoader_DynamicTalkingCard_OnSelectedForCardRemove_" + name, dialogueEvent );
+                            break;
+                        case DialogueID.OnSelectedForDeckTrial:
+                            events.Add( "JSONLoader_DynamicTalkingCard_OnSelectedForDeckTrial_" + name, dialogueEvent );
+                            break;
+                        case DialogueID.OnDiscoveredInExploration:
+                            events.Add( "JSONLoader_DynamicTalkingCard_OnDiscoveredInExploration_" + name, dialogueEvent );
+                            break;
+                    }
+                }
+                APIPlugin.NewDialogue.AddAll( events );
+            }
         }
     }
 }
