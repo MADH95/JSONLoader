@@ -1,4 +1,7 @@
 
+## 1.7.2
+- Added check for "_example" on the end of file name to remove example files from loading
+
 ## 1.7.1
 - Fixed discrepancies in ancillary files
 
