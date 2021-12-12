@@ -20,7 +20,7 @@ namespace JLPlugin.Utils
 
             if ( !dict.ContainsKey( data ) )
             {
-                ErrorUtil.LogRegion( data );
+                ErrorUtil.Log( data );
                 return default;
             }
 
@@ -40,7 +40,7 @@ namespace JLPlugin.Utils
             {
                 if ( !dict.ContainsKey( value ) )
                 {
-                    ErrorUtil.LogRegion( value );
+                    ErrorUtil.Log( value );
                     continue;
                 }
 
@@ -62,7 +62,7 @@ namespace JLPlugin.Utils
 
             if ( !image.EndsWith( ".png" ) )
             {
-                ErrorUtil.LogRegion( image, ", it must be a .png" );
+                ErrorUtil.Log( image, ", it must be a .png" );
                 return null;
             }
 
