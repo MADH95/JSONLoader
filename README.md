@@ -64,11 +64,13 @@ Cards have lots of fields that can be filled - this is a list of all field names
 | appearanceBehaviour | **[Optional]** A string array for the behaviours the cards appearance should have (See enums.txt for a list of appearance behaviours) |
 | texture | **[Optional]** A string for the name of the card's image (must be .png). If it is in a subfolder within *Artwork* the subfolder should preceed the file name seperated by a '/' (or your system equivelent) |
 | altTexture | **[Optional]** A string for the name of the card's alternate image (must be .png) |
-| emissionTexture | **[Optional]** A string for the name of the card's emission image (must be .png) |
+| emissionTexture | **[Optional]** A string for the name of the card's emission image (must be .png). Talking cards do not support this presently |
 | titleGraphic | **[Optional]** A string for the name of the card's title image (must be .png) |
 | pixelTexture | **[Optional]** A string for the name of the card's act2 image (must be .png) |
 | animatedPortrait | **[Unavailable]** |
 | decals | **[Optional]** A string array for the texture names of a card decals (must be .png) |
+| speaker | **[Optional]** **[Default: 0]** An integer value to identify the talking card |
+| dialogues | **[Optional]** An array of DialogueData objects. Requires the card to have the TalkingCardChooser special ability |
 ___
 
 ### Custom Ability fields
@@ -105,6 +107,24 @@ ___
 | Field | Description |
 |-|-|
 | creatureWithin | The name of the creature the card should turn into when it perishes (See *Card Names.txt* for a list of ingame card names) |
+
+___
+### DialogueData fields
+| Field | Description |
+|-|-|
+| id | The id of the dialogue this applies to (See *Enums.txt* for a list of dialogue ids) |
+| mainLines | An array of DialogueLine objects for lines that will be said the first time |
+| repeatLines | A 2-dimensional array of DialogueLine objects for line sets that will be said after the first time |
+
+### DialogueLine fields
+| Field | Description |
+|-|-|
+| text | The string of text to say |
+| string | **[Unsupported]** The emotion that the animated card will play. Unsupported due to animated cards being unsupported |
+| speakerIndex | **[Unsupported]** The index of which card will speak in a multi-speaker dialogue |
+| storyCondition | Which story event needs to be completed for this dialogue to appear. (See *Enums.txt* for a list of story conditions) |
+| storyConditionMustBeMet | A boolean value to determine if the given storyCondition needs to be met |
+
 
 ## Custom Encounters
 
