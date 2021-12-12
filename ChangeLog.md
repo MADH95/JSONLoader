@@ -1,3 +1,7 @@
+## 1.8.2
+- Added support for custom regions
+- Added support for talking cards
+- Encounters now load after all cards are loaded
 
 ## 1.8.1
  - Changed cards to *require* the \_cards postfix
@@ -12,8 +16,10 @@
 - Renamed CustomEncounterData to EncounterData to fit the existing naming scheme
 
 ## 1.8.0
-- Added support for custom encounters and regions
-- Template files now have a #ignore tag to prevent them from being loaded
+- Added support for custom encounters
+
+## 1.7.2
+- Added check for "\_example" on the end of file name to remove example files from loading
 
 ## 1.7.1
 - Fixed discrepancies in ancillary files
