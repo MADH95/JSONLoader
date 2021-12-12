@@ -12,7 +12,7 @@
 - Renamed CustomEncounterData to EncounterData to fit the existing naming scheme
 
 ## 1.8.0
-- Added support for custom encounters
+- Added support for custom encounters and regions
 - Template files now have a #ignore tag to prevent them from being loaded
 
 ## 1.7.1

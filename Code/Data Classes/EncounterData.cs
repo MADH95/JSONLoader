@@ -5,6 +5,7 @@ namespace JLPlugin.Data
 {
     public partial class EncounterData
     {
+
         public string name;
 
         public List<string> regions;

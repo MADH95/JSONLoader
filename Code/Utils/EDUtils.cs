@@ -81,7 +81,7 @@ namespace JLPlugin.Utils
 
         internal static List<TurnModBlueprint> GetTurnMods( List<TurnModData> mods )
         {
-            if (mods == null)
+            if ( mods == null )
             {
                 return null;
             }
@@ -93,7 +93,7 @@ namespace JLPlugin.Utils
                     turn = mod.turn,
                     applyAtDifficulty = mod.applyAtDifficulty,
                     overlockCards = mod.overclockCards
-                });
+                } );
             }
             return blueprints;
         }

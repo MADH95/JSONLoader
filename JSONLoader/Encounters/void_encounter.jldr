@@ -1,0 +1,25 @@
+#ignore
+{
+  "name": "Void_Encounter",
+  "regions": [ "The_Void" ],
+  "dominantTribes": [ "Hooved" ],
+  "minDifficulty": 0,
+  "maxDifficulty": 30,
+  "turns": [
+    [
+	  { "card": "Goat" }
+    ],
+	[
+	  { "card": "Goat" }
+	],
+	[
+	  { "card": "Goat" }
+	],
+	[
+	  { "card": "Goat" }
+	],
+	[
+	  { "card": "Goat" }
+	]
+  ]
+}

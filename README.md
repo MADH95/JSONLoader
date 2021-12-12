@@ -1,7 +1,7 @@
 # JSON Loader
 
-This is a BepInEx plugin made for Incryption to create custom cards using JSON files and the API by Cyantist.
-It can parse custom cards and pass them to APIPlugin to load them into the game.
+This is a BepInEx plugin made for Incryption to create custom cards, encounters, and regions using JSON files and the API by Cyantist.
+It can parse custom cards, encounters, and regions, passing them to APIPlugin to load them into the game.
 
 ## Converting Existing Cards
 
@@ -108,7 +108,7 @@ ___
 
 ## Custom Encounters
 
-Creating custom encounters works similar to creating custom cards. You create a .jldr file with the '\_encounter' postfix and fill in the desired fields. The *name* and *regions* values are required, the other fields are optional. You can find the list of fields in the table below. Currently, encounters can only be added to Act 1. For reference, an example custom encounter (squirrel template_encounter_example.jldr) is included in the **Encounters** folder in this repo.
+For custom encounters, you create a .jldr file with the '\_encounter' postfix and fill in the desired fields. The *name* and *regions* values are required, the other fields are optional. You can find the list of fields in the table below. Currently, encounters can only be added to Act 1. For reference, an example custom encounter (squirrel template_encounter.jldr) is included in the **Encounters** folder in this repo.
 
 | Field | Description |
 |------|-------------|
@@ -149,6 +149,27 @@ ___
 | applyAtDifficulty | **[Optional]** **[Default: 0]** The minimum difficulty at which this mod will apply |
 | overclockCards | **[Optional]**  A boolean to determine whether cards this turn are overclocked |
 
+## Custom Regions
+
+For custom regions, you create a .jldr file with the '\_region' postfix and fill in the desired fields. The *name* and *tier* values are required, the other fields are optional. You can find the list of fields in the table below. Only Act 1 regions are supported. For reference, an example region (void_region.jldr) is included in the **Regions** folder in this repo, as well as a encounter for this region (void_encounter.jldr) in the **Encounters** folder.  
+If not defined, the default values of the vanilla region of the given tier will be used.
+| Field | Description |
+|------|-------------|
+| name | **[Required]** A string for the name the API will use to identify the region |
+| tier | **[Required]** The tier this region will be added to, where 0 is the first map and 3 is the cabin |
+| terrainCards | **[Optional]** A string array of cards that randomly appear on the board Cards in this list need to have the Terrain trait to appear |
+| likelyCards | **[Optional]** A string array of cards that appear more often in choice nodes. Cards in this list need to have the ChoiceNode metacategory to appear |
+| boardLightColor | **[Optional]** The hexadecimal RGBA color of the board light, prefixed by '#' |
+| cardsLightColor | **[Optional]** The hexadecimal RGBA color of the cards light, prefixed by '#' |
+| dustParticlesDisabled | **[Optional]** **[Default: false]** A boolean to determine whether to disable the dust particles |
+| fogEnabled | **[Optional]** **[Default: false]** A boolean to determine whether to enable fog |
+| fogAlpha | **[Optional]** A float to determine the alpha value of the fog |
+| mapEmission | **[Optional]** A string for the texture of the emitted particles on the map (must be .png) |
+| mapEmissionColor | **[Optional]** The hexadecimal RGBA color of the emitted particles, prefixed by '#' |
+| silenceCabinAmbience | **[Optional]** A boolean to determine whether the 'silence cabin ambience' is played |
+___
+
+
 
 ## Debugging
 The easiest way to check if the plugin is working properly or to debug an error is to enable the console. This can be done by changing
@@ -181,4 +202,4 @@ If you want help debugging you can ask in the #card-creation channel in the [Ins
 
 Plans for the future:
  - Boss encounters
- - Custom regions
+ - Modular abilities

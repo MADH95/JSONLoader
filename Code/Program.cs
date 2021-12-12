@@ -24,13 +24,12 @@ namespace JLPlugin
             harmony.PatchAll();
 
             Log.LogWarning( "Note: JSONLoader now uses .jldr files, not .json files" );
-            
-            Utils.JLUtils.LoadCardsFromFiles();
-
         }
 
         private void Start()
         {
+            Utils.JLUtils.LoadCardsFromFiles();
+            Utils.JLUtils.LoadRegionsFromFiles();
             Utils.JLUtils.LoadEncountersFromFiles();
         }
     }

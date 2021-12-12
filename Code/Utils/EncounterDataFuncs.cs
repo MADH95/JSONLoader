@@ -1,9 +1,8 @@
-﻿
 using APIPlugin;
+
 
 namespace JLPlugin.Data
 {
-    using System.Linq;
     using Utils;
 
     public partial class EncounterData
