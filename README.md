@@ -64,13 +64,13 @@ Cards have lots of fields that can be filled - this is a list of all field names
 | appearanceBehaviour | **[Optional]** A string array for the behaviours the cards appearance should have (See enums.txt for a list of appearance behaviours) |
 | texture | **[Optional]** A string for the name of the card's image (must be .png). If it is in a subfolder within *Artwork* the subfolder should preceed the file name seperated by a '/' (or your system equivelent) |
 | altTexture | **[Optional]** A string for the name of the card's alternate image (must be .png) |
-| emissionTexture | **[Optional]** A string for the name of the card's emission image (must be .png) |
+| emissionTexture | **[Optional]** A string for the name of the card's emission image (must be .png). Talking cards do not support this presently |
 | titleGraphic | **[Optional]** A string for the name of the card's title image (must be .png) |
 | pixelTexture | **[Optional]** A string for the name of the card's act2 image (must be .png) |
 | animatedPortrait | **[Unavailable]** |
 | decals | **[Optional]** A string array for the texture names of a card decals (must be .png) |
 | speaker | **[Optional]** **[Default: 0]** An integer value to identify the talking card |
-| dialogues | **[Optional]** An array of DialogueData objects |
+| dialogues | **[Optional]** An array of DialogueData objects. Requires the card to have the TalkingCardChooser special ability |
 ___
 
 ### Custom Ability fields
