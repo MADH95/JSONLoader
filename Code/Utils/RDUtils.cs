@@ -11,24 +11,24 @@ namespace JLPlugin.Data
     using UnityEngine;
     using Utils;
 
-    public partial class CustomRegionData
+    public partial class RegionData
     {
         public void GenerateNew()
         {
             ErrorUtil.Identifier = this.name;
             ErrorUtil.Message = "Region {0} - {2} is an invalid value for {1}";
 
-            RegionData standard = ResourceBank.Get<RegionProgression>("Data/Map/RegionProgression").regions[this.tier][0];
+            DiskCardGame.RegionData standard = ResourceBank.Get<RegionProgression>("Data/Map/RegionProgression").regions[this.tier][0];
 
-            RegionData rd = ScriptableObject.CreateInstance<RegionData>();
+            DiskCardGame.RegionData rd = ScriptableObject.CreateInstance<DiskCardGame.RegionData>();
             rd.ambientLoopId =              standard.ambientLoopId;
-            rd.boardLightColor =            this.boardLightColor != null ? CustomRegionUtils.GetColor( this.boardLightColor ) : standard.boardLightColor;
+            rd.boardLightColor =            this.boardLightColor != null ? RegionUtils.GetColor( this.boardLightColor ) : standard.boardLightColor;
             rd.bosses =                     standard.bosses;
             rd.bossPrepCondition =          standard.bossPrepCondition;
             rd.bossPrepEncounter =          standard.bossPrepEncounter;
-            rd.cardsLightColor =            this.cardsLightColor != null ? CustomRegionUtils.GetColor( this.cardsLightColor ) : standard.cardsLightColor;
+            rd.cardsLightColor =            this.cardsLightColor != null ? RegionUtils.GetColor( this.cardsLightColor ) : standard.cardsLightColor;
             rd.consumableItems =            standard.consumableItems;
-            rd.dominantTribes =             this.dominantTribes != null ? CustomRegionUtils.Assign(   this.dominantTribes,    nameof(this.dominantTribes),    Dicts.Tribes   ) : standard.dominantTribes;
+            rd.dominantTribes =             this.dominantTribes != null ? RegionUtils.Assign(   this.dominantTribes,    nameof(this.dominantTribes),    Dicts.Tribes   ) : standard.dominantTribes;
             rd.dustParticlesDisabled =      this.dustParticlesDisabled;
             rd.encounters =                 new List<EncounterBlueprintData>();
             rd.fillerScenery =              standard.fillerScenery;
@@ -37,8 +37,8 @@ namespace JLPlugin.Data
             rd.fogProfile =                 standard.fogProfile;
             rd.likelyCards =                this.likelyCards != null ? EDUtils.GetCardInfos( this.likelyCards ) : standard.likelyCards;
             rd.mapAlbedo =                  standard.mapAlbedo;
-            rd.mapEmission =                this.mapEmission != null ? CustomRegionUtils.Assign( this.mapEmission, nameof( this.mapEmission ) ) : standard.mapEmission;
-            rd.mapEmissionColor =           this.mapEmissionColor != null ? CustomRegionUtils.GetColor( this.mapEmissionColor ) : standard.mapEmissionColor;
+            rd.mapEmission =                this.mapEmission != null ? RegionUtils.Assign( this.mapEmission, nameof( this.mapEmission ) ) : standard.mapEmission;
+            rd.mapEmissionColor =           this.mapEmissionColor != null ? RegionUtils.GetColor( this.mapEmissionColor ) : standard.mapEmissionColor;
             rd.mapParticlesPrefabs =        standard.mapParticlesPrefabs;
             rd.name =                       this.name;
             rd.predefinedNodes =            standard.predefinedNodes;

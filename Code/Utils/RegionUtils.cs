@@ -9,7 +9,7 @@ using static DiskCardGame.EncounterBlueprintData;
 
 namespace JLPlugin.Utils
 {
-    public static class CustomRegionUtils
+    public static class RegionUtils
     {
         public static T Assign<T>( string data, string field, Dictionary<string, T> dict )
         {

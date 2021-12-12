@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace JLPlugin.Data
 {
-    public class DialogueUtils
+    public class DDUtils
     {
         public static DialogueEvent GenerateDialogue( CardData card, DialogueData data )
         {

@@ -5,7 +5,7 @@ using System.Collections.Generic;
 namespace JLPlugin.Data
 {
     [System.Serializable]
-    public partial class CustomRegionData
+    public partial class RegionData
     {
         public string name;
         public int tier;

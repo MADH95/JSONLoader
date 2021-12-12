@@ -22,7 +22,7 @@ namespace JSONLoader.DynamicClasses
             OnSelectedForCardRemove,
             OnSelectedForDeckTrial,
             OnDiscoveredInExploration
-    }
+        }
 
         public static List<CardData> talkingCards = new();
         public static DialogueEvent.Speaker GetSpeaker( string name )

@@ -47,7 +47,7 @@ namespace JLPlugin.Utils
 
                 if ( !text.ToLowerInvariant().StartsWith( "#ignore" ) && !text.ToLowerInvariant().StartsWith( "# ignore" ) )
                 {
-                    Data.CustomRegionData region = CreateRegionFromJSON( text );
+                    Data.RegionData region = CreateRegionFromJSON( text );
 
                     if (region is null)
                     {
@@ -86,8 +86,8 @@ namespace JLPlugin.Utils
         public static EncounterData CreateEncounterFromJSON( string jsonString )
             => JSONParser.FromJson<EncounterData>( jsonString );
 
-        public static CustomRegionData CreateRegionFromJSON( string jsonString )
-            => JSONParser.FromJson<CustomRegionData>( jsonString );
+        public static RegionData CreateRegionFromJSON( string jsonString )
+            => JSONParser.FromJson<RegionData>( jsonString );
 
         public static Texture2D LoadTexture2D( string image )
         {

@@ -172,7 +172,7 @@ namespace JLPlugin.Data
                 Dictionary<string, DialogueEvent> events = new();
                 foreach ( DialogueData data in dialogues )
                 {
-                    DialogueEvent dialogueEvent = DialogueUtils.GenerateDialogue( this, data );
+                    DialogueEvent dialogueEvent = DDUtils.GenerateDialogue( this, data );
                     DialogueID id = CDUtils.Assign( data.id, nameof( data ), Dicts.DialogueIDs );
                     switch ( id )
                     {
