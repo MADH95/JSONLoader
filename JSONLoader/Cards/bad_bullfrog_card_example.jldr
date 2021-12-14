@@ -13,7 +13,7 @@
   "speaker": 1000,
   "dialogues": [
     {
-      "id": "OnBecomeSelectablePositiveDialogueId",
+      "id": "OnBecomeSelectablePositive",
       "mainLines": [
         {"text": "Please sacrifice me!"}
       ],
@@ -30,7 +30,7 @@
       ]
     },
     {
-      "id": "OnBecomeSelectableNegativeDialogueId",
+      "id": "OnBecomeSelectableNegative",
       "mainLines": [
         {"text": "Please get rid of me!"}
       ],
@@ -47,7 +47,7 @@
       ]
     },
     {
-      "id": "OnSelectedForCardMergeDialogueId",
+      "id": "OnSelectedForCardMerge",
       "mainLines": [
         {"text": "[shake:1]No![w:0.2]"},
         {"text": "That's the[w:0.2] [shake:1]wrong[w:0.2] side!"}
