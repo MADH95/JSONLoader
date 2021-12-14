@@ -8,6 +8,8 @@ using DiskCardGame;
 namespace JLPlugin.Utils
 {
     using Data;
+    using JSONLoader.DynamicClasses;
+    using static JSONLoader.DynamicClasses.TalkingCards;
 
     public static class Dicts
     {
@@ -63,6 +65,21 @@ namespace JLPlugin.Utils
             = Enum.GetValues(typeof(CardAppearanceBehaviour.Appearance))
                     .Cast<CardAppearanceBehaviour.Appearance>()
                     .ToDictionary(t => t.ToString(), t => t);
+
+       public static readonly Dictionary<string, Emotion> Emotions
+            = Enum.GetValues( typeof( Emotion ) )
+                    .Cast<Emotion>()
+                    .ToDictionary( t => t.ToString(), t => t );
+
+       public static readonly Dictionary<string, StoryEvent> StoryEvents
+            = Enum.GetValues( typeof( StoryEvent ) )
+                    .Cast<StoryEvent>()
+                    .ToDictionary( t => t.ToString(), t => t );
+
+        public static readonly Dictionary<string, DialogueID> DialogueIDs
+            = Enum.GetValues( typeof( DialogueID ) )
+                    .Cast<DialogueID>()
+                    .ToDictionary( t => t.ToString(), t => t );
 
         public static readonly List<string> CardDataFields
             = typeof(CardData).GetFields()

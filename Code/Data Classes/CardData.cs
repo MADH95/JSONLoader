@@ -46,5 +46,8 @@ namespace JLPlugin.Data
         public string animatedPortrait;
         public string emissionTexture;
         public List<string> decals;
+
+        public int speaker;
+        public List<DialogueData> dialogues;
     }
 }

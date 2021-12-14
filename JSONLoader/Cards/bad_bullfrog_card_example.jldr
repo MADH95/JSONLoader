@@ -1,0 +1,57 @@
+{
+  "name": "Bad_Bullfrog",
+  "displayedName": "Bad Bullfrog",
+  "metaCategories": [],
+  "cardComplexity": "Simple",
+  "temple": "Nature",
+  "baseAttack": 1,
+  "baseHealth": 1,
+  "bloodCost": 1,
+  "abilities": [ "Reach" ],
+  "specialAbilities": [ "TalkingCardChooser" ],
+  "texture": "bad_bullfrog.png",
+  "speaker": 1000,
+  "dialogues": [
+    {
+      "id": "OnBecomeSelectablePositive",
+      "mainLines": [
+        {"text": "Please sacrifice me!"}
+      ],
+      "repeatLines": [
+        [
+          {"text": "Come on![w:0.5]"},
+          {"text": "You're not going to[w:0.2]"},
+          {"text": "[shake:1]keep me[w:0.2] [shake:1]forever,[w:0.2]"},
+          {"text": "are you?"}
+        ],
+        [
+          {"text": "Please!"}
+        ]
+      ]
+    },
+    {
+      "id": "OnBecomeSelectableNegative",
+      "mainLines": [
+        {"text": "Please get rid of me!"}
+      ],
+      "repeatLines": [
+        [
+          {"text": "Come on![w:0.5]"},
+          {"text": "You're not going to[w:0.2]"},
+          {"text": "[shake:1]keep me[w:0.2] [shake:1]forever,[w:0.2]"},
+          {"text": "are you?"}
+        ],
+        [
+          {"text": "Please!"}
+        ]
+      ]
+    },
+    {
+      "id": "OnSelectedForCardMerge",
+      "mainLines": [
+        {"text": "[shake:1]No![w:0.2]"},
+        {"text": "That's the[w:0.2] [shake:1]wrong[w:0.2] side!"}
+      ]
+    }
+  ]
+}
