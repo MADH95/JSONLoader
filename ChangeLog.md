@@ -1,4 +1,7 @@
 
+## 1.8.0
+- Added support for loading portraits as base64 encoded images.
+
 ## 1.7.2
 - Added check for "_example" on the end of file name to remove example files from loading
 
