@@ -70,9 +70,9 @@ namespace JLPlugin.Utils
             if ( string.IsNullOrEmpty( image ) )
                 return null;
 
-            if ( !image.EndsWith( ".png" ) )
+            if ( !image.EndsWith( ".png" ) || !image.StartsWith( "data:image/png;base64," ) )
             {
-                ErrorUtil.Log( image, ", it must be a .png" );
+                ErrorUtil.Log( image, ", it must be a .png, or base64 encoded .png" );
                 return null;
             }
 

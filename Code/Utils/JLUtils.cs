@@ -43,21 +43,30 @@ namespace JLPlugin.Utils
 
         public static Texture2D LoadTexture2D( string image )
         {
-            string[] imagePaths = Directory.GetFiles( Paths.PluginPath, image, SearchOption.AllDirectories );
+            byte[] imgBytes = [];
 
-            if ( imagePaths.Length == 0 )
+            if ( image.StartsWith( "data:image/png;base64," ) )
             {
-                Plugin.Log.LogError( $"{ ErrorUtil.Card } - Couldn't find texture \"{ image }\" to load into { ErrorUtil.Field }" );
-                return null;
+                imgBytes = Convert.FromBase64String( image.Substring( 22 ) );
             }
-
-            if ( imagePaths.Length > 1 )
+            else
             {
-                Plugin.Log.LogError( $"{ ErrorUtil.Card } - Couldn't load \"{ image }\" into { ErrorUtil.Field }, more than one file with that name found in the plugins folder" );
-                return null;
-            }
+                string[] imagePaths = Directory.GetFiles( Paths.PluginPath, image, SearchOption.AllDirectories );
 
-            byte[] imgBytes = File.ReadAllBytes( imagePaths[0] );
+                if ( imagePaths.Length == 0 )
+                {
+                    Plugin.Log.LogError( $"{ ErrorUtil.Card } - Couldn't find texture \"{ image }\" to load into { ErrorUtil.Field }" );
+                    return null;
+                }
+
+                if ( imagePaths.Length > 1 )
+                {
+                    Plugin.Log.LogError( $"{ ErrorUtil.Card } - Couldn't load \"{ image }\" into { ErrorUtil.Field }, more than one file with that name found in the plugins folder" );
+                    return null;
+                }
+
+                imgBytes = File.ReadAllBytes( imagePaths[0] );
+            }
 
             Texture2D texture = new( 2, 2 );
 
