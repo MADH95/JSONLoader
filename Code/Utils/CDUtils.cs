@@ -81,8 +81,8 @@ namespace JLPlugin.Utils
 
         public static List<Texture> Assign( List<string> list, string field )
         {
+            // vladde: is this necessary?
             ErrorUtil.Field = field;
-
 
             if ( list is null || list.Count == 0 )
                 return null;
@@ -91,16 +91,12 @@ namespace JLPlugin.Utils
 
             foreach ( string image in list )
             {
-                if ( string.IsNullOrEmpty( image ) )
+                Texture2D texture = CDUtils.Assign( image, field );
+
+                if ( texture is null ) 
                     continue;
 
-                if ( !image.EndsWith( ".png" ) )
-                {
-                    ErrorUtil.Log( image, ", it must be a .png" );
-                    continue;
-                }
-
-                output.Add( JLUtils.LoadTexture2D( image ) );
+                output.Add( texture );
             }
 
             if ( output.Count == 0 )
