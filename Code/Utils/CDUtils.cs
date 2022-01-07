@@ -94,12 +94,6 @@ namespace JLPlugin.Utils
                 if ( string.IsNullOrEmpty( image ) )
                     continue;
 
-                if ( !image.EndsWith( ".png" ) )
-                {
-                    ErrorUtil.Log( image, ", it must be a .png" );
-                    continue;
-                }
-
                 output.Add( JLUtils.LoadTexture2D( image ) );
             }
 
