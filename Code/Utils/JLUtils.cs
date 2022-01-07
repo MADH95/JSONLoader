@@ -13,6 +13,8 @@ namespace JLPlugin.Utils
 
     public static class JLUtils
     {
+        private static readonly byte[] PNGMagicNumber = { 0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a };
+        
         public static void LoadCardsFromFiles()
         {
             foreach ( string file in Directory.EnumerateFiles( Paths.PluginPath, "*.jldr", SearchOption.AllDirectories ) )
@@ -58,6 +60,12 @@ namespace JLPlugin.Utils
             }
 
             byte[] imgBytes = File.ReadAllBytes( imagePaths[0] );
+            
+            if ( !imgBytes.ToList().GetRange( 0, 8 ).ToArray().SequenceEqual( PNGMagicNumber ) )
+            {
+                ErrorUtil.Log( image, ", it must be a png image" );
+                return null;
+            }
 
             Texture2D texture = new( 2, 2 );
 
