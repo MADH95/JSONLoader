@@ -1,3 +1,6 @@
+## 1.8.3
+- Fixed gems cost name
+
 ## 1.8.2
 - Added support for custom regions
 - Added support for talking cards

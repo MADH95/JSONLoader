@@ -19,7 +19,7 @@ namespace JLPlugin.Data
         public bool hideAttackAndHealth;
 
         public int bloodCost, bonesCost, energyCost;
-        public List<string> gemsColour;
+        public List<string> gemsCost;
 
         public List<string> abilities;
         public List<string> traits;

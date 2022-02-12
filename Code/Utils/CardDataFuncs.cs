@@ -44,7 +44,7 @@ namespace JLPlugin.Data
                 bloodCost:                  this.bloodCost,
                 bonesCost:                  this.bonesCost,
                 energyCost:                 this.energyCost,
-                gemsCost:                   CDUtils.Assign( this.gemsColour,            nameof( this.gemsColour ),              Dicts.GemColour           ),
+                gemsCost:                   CDUtils.Assign( this.gemsCost,              nameof( this.gemsCost ),                Dicts.GemColour           ),
                 
                 cardComplexity:             CDUtils.Assign( this.cardComplexity,        nameof( this.cardComplexity ),          Dicts.Complexity          ),
                 temple:                     CDUtils.Assign( this.temple,                nameof( this.temple ),                  Dicts.Temple              ),
@@ -127,8 +127,8 @@ namespace JLPlugin.Data
                 cost                  = check( nameof( this.bloodCost  ) )            ?   this.bloodCost             : null,
                 bonesCost             = check( nameof( this.bonesCost  ) )            ?   this.bonesCost             : null,
                 energyCost            = check( nameof( this.energyCost ) )            ?   this.energyCost            : null,
-                gemsCost              = check( nameof( this.gemsColour ) )            ?
-                                            CDUtils.Assign( this.gemsColour,              nameof( this.gemsColour ),           Dicts.GemColour )                : null,
+                gemsCost              = check( nameof( this.gemsCost ) )            ?
+                                            CDUtils.Assign( this.gemsCost,              nameof( this.gemsCost ),           Dicts.GemColour )                : null,
                                                                                                       
                 cardComplexity        = check( nameof( this.cardComplexity ) )        ?
                                             CDUtils.Assign( this.cardComplexity,          nameof( this.cardComplexity ),       Dicts.Complexity )               : null,
