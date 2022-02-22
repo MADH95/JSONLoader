@@ -5,8 +5,10 @@ using APIPlugin;
 
 namespace JLPlugin.Utils
 {
+    using System;
     using Data;
 
+    [Obsolete]
     public static class IDUtils
     {
         public static EvolveIdentifier GenerateEvolveIdentifier( CardData card )

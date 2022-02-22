@@ -1,2 +1,8 @@
 *.zip
 icon.png
+
+bin/
+obj/
+
+# lib is ignored. You have to supply your own game files 
+lib/

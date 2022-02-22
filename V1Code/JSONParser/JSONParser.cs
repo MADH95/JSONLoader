@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Runtime.Serialization;
+using System.Linq;
 
 namespace TinyJson
 {
@@ -157,6 +158,11 @@ namespace TinyJson
                     parseStringBuilder.Append(json[i]);
                 }
                 return parseStringBuilder.ToString();
+            }
+            if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Nullable<>))
+            {
+                var result = Convert.ChangeType(json, type.GetGenericArguments().First(), System.Globalization.CultureInfo.InvariantCulture);
+                return result;
             }
             if (type.IsPrimitive)
             {

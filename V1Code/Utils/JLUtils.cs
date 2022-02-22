@@ -1,16 +1,15 @@
 ﻿using System.IO;
-using System.Linq;
-using System.Collections.Generic;
 using UnityEngine;
-
-using BepInEx;
-
 using TinyJson;
 
 namespace JLPlugin.Utils
 {
+    using System;
+    using BepInEx;
     using Data;
+    using JLPlugin.V2.Data;
 
+    [Obsolete]
     public static class JLUtils
     {
         public static void LoadCardsFromFiles()
@@ -28,13 +27,20 @@ namespace JLPlugin.Utils
                     continue;
                 }
 
-                if ( card.fieldsToEdit is null )
-                {
-                    card.GenerateNew();
-                    continue;
-                }
+                // Convert to JLDR2 and write back for now
+                CardSerializeInfo info = card.ConvertToV2();
+                if (info != null)
+                    info.WriteToFile(file);
+                else   
+                    Plugin.Log.LogError($"{filename} is a JLDR without a valid name");
 
-                card.Edit();
+                // if ( card.fieldsToEdit is null )
+                // {
+                //     card.GenerateNew();
+                //     continue;
+                // }
+
+                // card.Edit();
             }
         }
 

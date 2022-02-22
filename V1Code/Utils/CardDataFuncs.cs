@@ -6,8 +6,10 @@ using APIPlugin;
 
 namespace JLPlugin.Data
 {
+    using System;
     using Utils;
 
+    [Obsolete]
     public partial class CardData
     {
         public void GenerateNew()
