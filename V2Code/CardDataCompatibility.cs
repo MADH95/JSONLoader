@@ -82,7 +82,7 @@ namespace JLPlugin.Data
             if (this.bonesCost > 0 || testFieldsToEdit.Exists(f => f.Equals("energyCost", StringComparison.OrdinalIgnoreCase)))
                 info.energyCost = this.energyCost;
             
-            info.gemsColour = this.gemsColour?.ToArray();
+            info.gemsCost = this.gemsColour?.ToArray();
             info.abilities = Combine(this.abilities, this.customAbilities);
             info.traits = this.traits?.ToArray();
             info.specialAbilities = Combine(this.specialAbilities, this.customSpecialAbilities);

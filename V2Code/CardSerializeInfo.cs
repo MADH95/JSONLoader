@@ -33,7 +33,7 @@ namespace JLPlugin.V2.Data
 
         public int? energyCost;
 
-        public string[] gemsColour;
+        public string[] gemsCost;
         
         public string[] abilities;
 
@@ -132,8 +132,8 @@ namespace JLPlugin.V2.Data
             if (this.energyCost.HasValue)
                 card.energyCost = this.energyCost.Value;
             
-            if (this.gemsColour != null)
-                card.gemsCost = this.gemsColour.Select(s => ParseEnum<GemType>(s)).ToList();
+            if (this.gemsCost != null)
+                card.gemsCost = this.gemsCost.Select(s => ParseEnum<GemType>(s)).ToList();
             
             if (this.abilities != null && this.abilities.Length > 0)
                 card.AddAbilities(this.abilities.Select(s => ParseEnum<Ability>(s)).ToArray());
