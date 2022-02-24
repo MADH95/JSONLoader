@@ -77,7 +77,7 @@ namespace JLPlugin.V2.Data
 
         public string evolveIntoName;
 
-        public int evolveTurns;
+        public int? evolveTurns;
 
         public string defaultEvolutionName;
 
@@ -193,7 +193,7 @@ namespace JLPlugin.V2.Data
                 card.AddTraits(this.traits.Select(s => ParseEnum<Trait>(s)).ToArray());
     
             if (!string.IsNullOrEmpty(this.evolveIntoName))
-                card.SetEvolve(this.evolveIntoName, this.evolveTurns);
+                card.SetEvolve(this.evolveIntoName, this.evolveTurns.HasValue ? this.evolveTurns.Value : 1);
                         
             if (!string.IsNullOrEmpty(this.defaultEvolutionName))
                 card.defaultEvolutionName = this.defaultEvolutionName;
