@@ -1,7 +1,9 @@
 ﻿using BepInEx;
+using BepInEx.Configuration;
 using BepInEx.Logging;
 
 using HarmonyLib;
+using JLPlugin.V2.Data;
 
 namespace JLPlugin
 {
@@ -13,6 +15,8 @@ namespace JLPlugin
         private const string PluginName = "JSONLoader";
         private const string PluginVersion = "1.7.0.0";
 
+        internal static ConfigEntry<bool> betaCompatibility;
+
         internal static ManualLogSource Log;
 
         private void Awake()
@@ -23,9 +27,14 @@ namespace JLPlugin
             Harmony harmony = new(PluginGuid);
             harmony.PatchAll();
 
+            betaCompatibility = Config.Bind("JSONLoader Beta","JDLR Backwards Compatibility",true,"Set to true to enable old-style JSON files (JLDR) to be read and converted to new-style files (JLDR2)");
+
             Log.LogWarning( "Note: JSONLoader now uses .jldr files, not .json files" );
 
-            Utils.JLUtils.LoadCardsFromFiles();
+            if (betaCompatibility.Value)
+                Utils.JLUtils.LoadCardsFromFiles();
+            
+            CardSerializeInfo.LoadAllJLDR2();
         }
     }
 }

@@ -1,0 +1,39 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <AssemblyName>JSONLoader</AssemblyName>
+    <Description>JSON Loader</Description>
+    <Version>2.0</Version>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <LangVersion>9.0</LangVersion>
+    <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="BepInEx.Analyzers" Version="1.*" PrivateAssets="all"  IncludeAssets="compile"/>
+    <PackageReference Include="BepInEx.Core" Version="5.*"  IncludeAssets="compile"/>
+    <PackageReference Include="BepInEx.PluginInfoProps" Version="1.*" IncludeAssets="compile"/>
+    <PackageReference Include="UnityEngine.Modules" Version="2019.4.24" IncludeAssets="compile" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="API" Private="false">
+      <HintPath>lib\InscryptionAPI.dll</HintPath>
+    </Reference>
+    <Reference Include="Assembly-CSharp" Private="false">
+      <HintPath>lib\Assembly-CSharp.dll</HintPath>
+    </Reference>
+    <Reference Include="Sirenix.Serialization" Private="false">
+      <HintPath>lib\Sirenix.Serialization.dll</HintPath>
+    </Reference>
+    <Reference Include="Sirenix.Serialization.Config" Private="false">
+      <HintPath>lib\Sirenix.Serialization.Config.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  
+  <ItemGroup Condition="'$(TargetFramework.TrimEnd(`0123456789`))' == 'net'">
+    <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.2" PrivateAssets="all" />
+  </ItemGroup>
+
+</Project>
