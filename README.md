@@ -103,7 +103,7 @@ Cards have lots of fields that can be filled - this is a list of all field names
 
 | Field | Description |
 |------|-------------|
-| fieldsToEdit | **[Required: Editing]** A string array for the fields you wish to edit. The fields must be the exact names as in the right hand side of this table |
+| fieldsToEdit | **[Required: Editing]** A string array for the fields you wish to edit. The fields must be the exact names as in the left hand side of this table |
 | name | **[Required]** A string for the name the game will use to identify the card - should contain no spaces. When editing, this field must match the card's name (See *Card Names.txt* for a list of ingame card names) |
 | displayedName | **[Optional]** **[Default: ""]** A string for the name displayed on the card |
 | description | **[Optional]** **[Default: ""]** A string for the description Leshy gives when you find the card |
