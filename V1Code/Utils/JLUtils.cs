@@ -43,7 +43,7 @@ namespace JLPlugin.Utils
                 // Convert to JLDR2 and write back for now
                 CardSerializeInfo info = card.ConvertToV2(allCards);
                 if (info != null)
-                    info.WriteToFile(file);
+                    info.WriteToFile(file, false);
                 else   
                     Plugin.Log.LogError($"{file} is a JLDR without a valid name");
             }

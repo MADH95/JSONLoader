@@ -27,9 +27,11 @@ namespace JLPlugin
             Harmony harmony = new(PluginGuid);
             harmony.PatchAll();
 
-            betaCompatibility = Config.Bind("JSONLoader Beta","JDLR Backwards Compatibility",true,"Set to true to enable old-style JSON files (JLDR) to be read and converted to new-style files (JLDR2)");
+            betaCompatibility = Config.Bind("JSONLoader","JDLR Backwards Compatibility",true,"Set to true to enable old-style JSON files (JLDR) to be read and converted to new-style files (JLDR2)");
 
-            Log.LogWarning( "Note: JSONLoader now uses .jldr files, not .json files" );
+            Log.LogWarning( "Note: JSONLoader now uses .jldr2 files, not .json files." );
+            if (betaCompatibility.Value)
+                Log.LogWarning( "Note: Backwards compatibility has been enabled. Old *.jldr files will be converted to *.jldr2 automatically. This will slow down your game loading!" );
 
             if (betaCompatibility.Value)
                 Utils.JLUtils.LoadCardsFromFiles();

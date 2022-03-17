@@ -33,6 +33,9 @@ namespace JLPlugin.Data
         private string GetUpdatedName(string name, List<CardData> allKnownCards)
         {
             // If the name looks like it has a prefix, just return it as is
+            if (string.IsNullOrEmpty(name))
+                return name;
+
             string[] nameSplit = name.Split('_');
             if (nameSplit.Length > 1)
                 return name;
@@ -40,7 +43,7 @@ namespace JLPlugin.Data
             // Okay, lets see if we can find this in the rest of the json cards
             // If we can, it means it's just a bad custom card without a prefix
             
-            if (allKnownCards.Exists(c => c.name.Equals(name)))
+            if (allKnownCards.Exists(c => c != null && !string.IsNullOrEmpty(c.name) && c.name.Equals(name)))
                 return $"{CardSerializeInfo.DEFAULT_MOD_PREFIX}_{name}";
 
             // Well, I guess we'll just assume its one of the game's default cards?

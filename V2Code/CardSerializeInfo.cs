@@ -241,12 +241,14 @@ namespace JLPlugin.V2.Data
             }
         }
 
-        internal void WriteToFile(string filename)
+        internal void WriteToFile(string filename, bool overwrite = true)
         {
             Plugin.Log.LogDebug($"Writing card {this.name ?? "Unnamed"} to {filename}");
             if (!filename.EndsWith("2")) // we now play with jldr2 files
                 filename = filename + "2";
-            File.WriteAllText(filename, this.ToJSON());
+
+            if (overwrite || !File.Exists(filename))
+                File.WriteAllText(filename, this.ToJSON());
         }
 
         private string ToJSON()
