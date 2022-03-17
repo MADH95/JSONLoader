@@ -15,6 +15,8 @@ namespace JLPlugin.V2.Data
 {
     public class CardSerializeInfo
     {
+        public const string DEFAULT_MOD_PREFIX = "JSON";
+
         public string name;
 
         public string modPrefix;
@@ -231,11 +233,11 @@ namespace JLPlugin.V2.Data
             }
             else
             {
-                string localModPrefix = this.modPrefix ?? "JSON";
+                string localModPrefix = this.modPrefix ?? DEFAULT_MOD_PREFIX;
                 CardInfo newCard = ScriptableObject.CreateInstance<CardInfo>();
                 newCard.name = this.name.StartsWith($"{localModPrefix}_") ? this.name : $"{localModPrefix}_{this.name}";
                 this.ApplyCardInfo(newCard);
-                CardManager.Add(newCard, localModPrefix);
+                CardManager.Add(localModPrefix, newCard);
             }
         }
 
