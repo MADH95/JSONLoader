@@ -302,6 +302,13 @@ namespace JLPlugin.V2.Data
             foreach (string file in Directory.EnumerateFiles(Paths.PluginPath, "*.jldr2", SearchOption.AllDirectories))
             {
                 string filename = file.Substring(file.LastIndexOf(Path.DirectorySeparatorChar) + 1);
+
+                if (filename.Contains("_example.jldr"))
+                {
+                    Plugin.Log.LogDebug($"Skipping {filename}");
+                    continue;
+                }
+
                 Plugin.Log.LogDebug($"Loading JLDR2 {filename}");
                 try
                 {

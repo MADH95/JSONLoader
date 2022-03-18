@@ -1,5 +1,6 @@
 {
-  "name": "Eight_Bears2",
+  "name": "sample_Eight_Bears2",
+  "modPrefix": "sample",
   "displayedName": "8 more fucking bears!",
   "description": "Kill this other abomination please",
   "metaCategories": [ "Rare" ],
@@ -9,10 +10,8 @@
   "baseHealth": 3,
   "bloodCost": 1,
   "abilities": [ "Sharp", "Evolve" ],
-  "evolution": {
-    "name": "Grizzly",
-    "turnsToEvolve": 1
-  },
+  "evolveIntoName": "Grizzly",
+  "evolveTurns": 1,
   "appearanceBehaviour": [ "RareCardColors" ],
   "texture": "eightfuckingbears.png"
 }

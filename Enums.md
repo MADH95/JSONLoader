@@ -91,6 +91,7 @@ ___
 |Daus | Functions like Daus                                                                                                                             |
 |GiantCard | Assings to all slots on the board (only works for opponent)                                                                                              |
 |GiantMoon | Renders moon death animation                                                                                                                                             |
+|GiantShip | Exclusive to the Limoncello |
 |GreenMage | Damage is equal to the number of Green Mox cards you control                                                                                                                                   |
 |JerseyDevil | Functions like Child 13 |
 |Lammergeier | The Attack and Health values of this card are equal to the amount of Bones you have, divided by 2                                                                                           |
@@ -98,6 +99,9 @@ ___
 |Ouroboros | Increases ouroborosDeaths in the save file when it dies                                                                                               |
 |PackMule | Grants 4 random cards and a Squirrel when killed.                                                                                                                                               |
 |RandomCard | Transforms into a random card when drawn                                                                                                                                                     |
+|SacrificesThisTurn | Grants attack power based on how many sacrifices were made this turn |
+|ShapeShifter | Exclusive to Ijiraq |
+|SpawnLice | Exclusive to Pelt Lice |
 |TalkingCardChooser | Exclusive to talking cards.                                                                                                                                                           |
 |TrapSpawner | Creates a Steel Trap in its place after it perishes.                                                                                                                                       |
 ___
@@ -134,11 +138,13 @@ ___
 |CorpseEater | When another card dies, this card will be played in its slot                         |
 |CreateBells | When played, will spawn bell cards in adjascent slots                              |
 |CreateDams | When played, will spawn dam cards in adjascent slots                           |
+|CreateEgg | When played, spawns a broken egg in the opposing slot, with a 10% chance to spawn a Raven Egg instead |
 |DeathShield | When this card would take damage for the first time, it does not                      |
 |Deathtouch | When card deals damage to a card, it dies                        |
 |DebuffEnemy | Decrese opposing card's attack by 1                               |
 |DeleteFile | Nothing unless in archavist boss battle                          |
 |DoubleDeath | When another card dies, it dies again                         |
+|DoubleStrike | Makes the card attack the slot across from it an additional time |
 |DrawAnt | When played, add an ant to your hand                               |
 |DrawCopy | When played, will add a copy to your hand                               |
 |DrawCopyOnDeath | When dies, will add a copy to your hand                       |
@@ -157,6 +163,7 @@ ___
 |ExplodingCorpse | Unused                 |
 |FileSizeDamage | Nothing unless in archavist boss battle                        |
 |Flying | When attacking, will attack directly                                  |
+|GainAttackOnKill | Gets +1/+0 for the rest of the battle whenever it kills a creature |
 |GainBattery | When played, increases energy and max energy by 1                       |
 |GainGemBlue | Counts as Blue gem cost                             |
 |GainGemGreen | Counts as Green gem cost                           |
@@ -166,11 +173,14 @@ ___
 |GemsDraw | Unused                       |
 |GuardDog | When a card is played opposite an empty slot, will move there                                |
 |Haunter | Unused                                  |
+|HydraEgg | Bizarre ability that will cause the card to transform into a Hydra if the player's deck contains cards with 1-5 attack, 1-5 health, and one of each of the game's default tribes |
 |IceCube | When card dies, spawns card in slot based on IceCubeParams                             |
 |LatchBrittle | When card dies, you can choose another card to give Brittle                       |
 |LatchDeathShield | When card dies, you can choose another card to give DeathShield                    |
 |LatchExplodeOnDeath | When card dies, you can choose another card to give ExplodeOnDeath                   |
 |Loot | When dealing damage, will draw cards equal to amount                                     |
+|MadeOfStone | Invulnerable to Stinky and Deathtouch |
+|Morsel | When sacrificed to summon another card, the card will add +1/+2 to the summoned card |
 |MoveBeside | Moves to closest space when a card is played                               |
 |PermaDeath | When card dies, it is removed from the deck                           |
 |PreventAttack | Prevents opposing card from attacking it                         |
@@ -191,6 +201,7 @@ ___
 |SteelTrap | When card dies, it kills the opposing card, and adds a pelt to your hand                             |
 |Strafe | At end of turn, card moves                                  |
 |StrafePush | Strafe but will move other cards with it                                 |
+|StrafeSwap | Strafe but will forcibly swap the adjacent card with its current position |
 |Submerge | After attacking, will sumberge, meaning it can't be attacked                              |
 |SubmergeSquid | Waterborne but becomes random tentacle card on resurface                 |
 |SwapStats | When taking damage, will swap attack and health                              |

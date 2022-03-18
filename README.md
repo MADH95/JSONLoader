@@ -107,8 +107,8 @@ Cards have lots of fields that can be filled - this is a list of all field names
 | name | **[Required]** A string for the name the game will use to identify the card - should contain no spaces. When editing, this field must match the card's name (See *Card Names.txt* for a list of ingame card names) |
 | displayedName | **[Optional]** **[Default: ""]** A string for the name displayed on the card |
 | description | **[Optional]** **[Default: ""]** A string for the description Leshy gives when you find the card |
-| metaCategories | **[Optional]** A string array of meta catagories the card has (See *Enums.txt* for a list of catagories) |
-| cardComplexity | **[Optional]** **[Default: Vanilla]** A string for the complexity of the card (See *Enums.txt* for a list of levels of complexity) |
+| metaCategories | **[Optional]** A string array of meta catagories the card has. See *Enums.md* for the list that the game ships with. These can also be fully qualified guid+ability strings if they were added by another mod. |
+| cardComplexity | **[Optional]** **[Default: Vanilla]** A string for the complexity of the card (See *Enums.md* for a list of levels of complexity) |
 | temple | **[Optional]** **[Default: Nature]** A string for which Scrybe created the card |
 | baseAttack | **[Optional]** **[Default: 0]** An integer value for the attack of a card |
 | baseHealth | **[Optional]** **[Default: 1]** An integer value for the health of a card |
@@ -116,12 +116,12 @@ Cards have lots of fields that can be filled - this is a list of all field names
 | bloodCost | **[Optional]** **[Default: 0]** An integer value for the blood cost of a card |
 | bonesCost | **[Optional]** An integer value for the bones cost of a card |
 | energyCost | **[Optional]** An integer value for the energy cost of a card |
-| gemsCost | **[Optional]** A string array for the gems cost of a card (See *Enums.txt* for a list of gems) |
-| specialStatIcon | **[Optional]** An string for which special stat icon the card has (See *Enums.txt* for a list of icons) |
-| tribes | **[Optional]** An string array for the tribes the card belongs to (See *Enums.txt* for a list of tribes) |
-| traits | **[Optional]** An string array for the traits a card has (See *Enums.txt* for a list of traits) |
-| specialAbilities | **[Optional]** A string array for the special abilities a card has (See *Enums.txt* for a list of special abilities) |
-| abilities | **[Optional]** A string array for the sigils a card has. (See *Enums.txt* for a list of sigil abilities). |
+| gemsCost | **[Optional]** A string array for the gems cost of a card (See *Enums.md* for a list of gems) |
+| specialStatIcon | **[Optional]** An string for which special stat icon the card has. See *Enums.md* for the list that the game ships with. These can also be fully qualified guid+ability strings if they were added by another mod. |
+| tribes | **[Optional]** An string array for the tribes the card belongs to. See *Enums.md* for the list that the game ships with. These can also be fully qualified guid+ability strings if they were added by another mod. |
+| traits | **[Optional]** An string array for the traits a card has. See *Enums.md* for the list that the game ships with. These can also be fully qualified guid+ability strings if they were added by another mod. |
+| specialAbilities | **[Optional]** A string array for the special abilities a card has. See *Enums.md* for the list that the game ships with. These can also be fully qualified guid+ability strings if they were added by another mod. |
+| abilities | **[Optional]** A string array for the sigils a card has. See *Enums.md* for the list that the game ships with. These can also be fully qualified guid+ability strings if they were added by another mod. |
 | evolveIntoName | **[Optional]** The name of the card that this card will evolve into when it has the Evolve sigil |
 | evolveTurns | **[Optional]** The number of turns to evolve |
 | defaultEvolutionName | **[Optional]** The name the card will have when it evolves (when it doesn't have evolve_ fields set) |
@@ -130,7 +130,7 @@ Cards have lots of fields that can be filled - this is a list of all field names
 | iceCubeName | **[Optional]** The name of the card generated when the card has the IceCube ability |
 | flipPortraitForStrafe | **[Optional]** A boolean to determine if the cards portrait should flip when it uses one of the strafe sigils |
 | onePerDeck | **[Optional]** A boolean value that toggles if there can be only one of the card per deck |
-| appearanceBehaviour | **[Optional]** A string array for the behaviours the cards appearance should have (See enums.txt for a list of appearance behaviours) |
+| appearanceBehaviour | **[Optional]** A string array for the behaviours the cards appearance should have. See *Enums.md* for the list that the game ships with. These can also be fully qualified guid+ability strings if they were added by another mod. |
 | texture | **[Optional]** A string for the name of the card's image (must be .png). If it is in a subfolder within *Artwork* the subfolder should preceed the file name seperated by a '/' (or your system equivelent) |
 | altTexture | **[Optional]** A string for the name of the card's alternate image (must be .png) |
 | emissionTexture | **[Optional]** A string for the name of the card's emission image (must be .png) |
