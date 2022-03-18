@@ -1,4 +1,7 @@
 
+## 2.0.0
+- Updated to align with API 2.0
+
 ## 1.7.2
 - Added check for "_example" on the end of file name to remove example files from loading
 
@@ -16,7 +19,7 @@
 - Alphabetized Card Names.txt
 - Made Enums.md more infomrative
 
-##v1.6.1
+## v1.6.1
 - Fixed error if abilities array is present but empty
 
 ## v1.6.0

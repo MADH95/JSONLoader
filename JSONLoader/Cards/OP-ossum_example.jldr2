@@ -1,14 +1,6 @@
 {
 	"name": "Opossum",
-	"fieldsToEdit": [
-		"displayedName",
-		"description",
-		"metaCategories",
-		"baseAttack",
-		"baseHealth",
-		"abilities",
-		"appearanceBehaviour"
-	],
+    "modPrefix": "Base",
 	"displayedName": "OP-ossum",
 	"description": "It's power level... it's... OVER 9000!",
 	"metaCategories": [ "Rare" ],
