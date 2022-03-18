@@ -30,7 +30,29 @@ namespace JLPlugin.Data
             return retval.ToArray();
         }
 
-        public CardSerializeInfo ConvertToV2()
+        private string GetUpdatedName(string name, List<CardData> allKnownCards)
+        {
+            // If the name looks like it has a prefix, just return it as is
+            if (string.IsNullOrEmpty(name))
+                return name;
+
+            string[] nameSplit = name.Split('_');
+            if (nameSplit.Length > 1)
+                return name;
+
+            // Okay, lets see if we can find this in the rest of the json cards
+            // If we can, it means it's just a bad custom card without a prefix
+            
+            if (allKnownCards.Exists(c => c != null && !string.IsNullOrEmpty(c.name) && c.name.Equals(name)))
+                return $"{CardSerializeInfo.DEFAULT_MOD_PREFIX}_{name}";
+
+            // Well, I guess we'll just assume its one of the game's default cards?
+            // Or its some other card we can't identify.
+            // Either way, we don't know what to do with it
+            return name;
+        }
+
+        public CardSerializeInfo ConvertToV2(List<CardData> allKnownCards)
         {
             if (string.IsNullOrEmpty(this.name))
             {
@@ -43,18 +65,17 @@ namespace JLPlugin.Data
             CardSerializeInfo info = new();
 
             string[] nameSplit = this.name.Split('_');
-
-            if (name.Length == 1)
+            if (nameSplit.Length > 1)
             {
+                info.modPrefix = nameSplit[0];
                 info.name = this.name;
             }
             else
             {
-                info.modPrefix = nameSplit[0];
-                info.name = this.name.Replace($"{nameSplit[0]}_", "");
+                info.modPrefix = CardSerializeInfo.DEFAULT_MOD_PREFIX;
+                info.name = $"{info.modPrefix}_{this.name}";
             }
-
-            info.name = this.name;
+            
             info.displayedName = this.displayedName;
             info.description = this.description;
             info.metaCategories = this.metaCategories?.ToArray();
@@ -87,21 +108,22 @@ namespace JLPlugin.Data
             info.traits = this.traits?.ToArray();
             info.specialAbilities = Combine(this.specialAbilities, this.customSpecialAbilities);
             info.specialStatIcon = this.specialStatIcon;
+            info.defaultEvolutionName = GetUpdatedName(this.defaultEvolutionName, allKnownCards);
 
             if (this.evolution != null)
             {
-                info.evolveIntoName = this.evolution.name;
+                info.evolveIntoName = GetUpdatedName(this.evolution.name, allKnownCards);
                 info.evolveTurns = this.evolution.turnsToEvolve;
             }
 
             if (this.tail != null)
             {
-                info.tailName = this.tail.name;
+                info.tailName = GetUpdatedName(this.tail.name, allKnownCards);
                 info.tailLostPortrait = this.tail.tailLostPortrait;
             }
 
             if (this.iceCube != null)
-                info.iceCubeName = this.iceCube.creatureWithin;
+                info.iceCubeName = GetUpdatedName(this.iceCube.creatureWithin, allKnownCards);
             
             if (this.flipPortraitForStrafe || testFieldsToEdit.Exists(f => f.Equals("flipPortraitForStrafe", StringComparison.OrdinalIgnoreCase)))
                 info.flipPortraitForStrafe = this.flipPortraitForStrafe;

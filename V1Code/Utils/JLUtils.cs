@@ -5,6 +5,8 @@ using TinyJson;
 namespace JLPlugin.Utils
 {
     using System;
+    using System.Collections.Generic;
+    using System.Linq;
     using BepInEx;
     using Data;
     using JLPlugin.V2.Data;
@@ -14,6 +16,7 @@ namespace JLPlugin.Utils
     {
         public static void LoadCardsFromFiles()
         {
+            Dictionary<string, Data.CardData> loadedJldrs = new();
             foreach ( string file in Directory.EnumerateFiles( Paths.PluginPath, "*.jldr", SearchOption.AllDirectories ) )
             {
                 string filename = file.Substring( file.LastIndexOf( Path.DirectorySeparatorChar ) + 1 );
@@ -27,20 +30,22 @@ namespace JLPlugin.Utils
                     continue;
                 }
 
+                loadedJldrs.Add(file, card);
+            }
+
+            List<Data.CardData> allCards = loadedJldrs.Values.ToList();
+
+            foreach (var item in loadedJldrs)
+            {
+                string file = item.Key;
+                Data.CardData card = item.Value;
+
                 // Convert to JLDR2 and write back for now
-                CardSerializeInfo info = card.ConvertToV2();
+                CardSerializeInfo info = card.ConvertToV2(allCards);
                 if (info != null)
-                    info.WriteToFile(file);
+                    info.WriteToFile(file, false);
                 else   
-                    Plugin.Log.LogError($"{filename} is a JLDR without a valid name");
-
-                // if ( card.fieldsToEdit is null )
-                // {
-                //     card.GenerateNew();
-                //     continue;
-                // }
-
-                // card.Edit();
+                    Plugin.Log.LogError($"{file} is a JLDR without a valid name");
             }
         }
 

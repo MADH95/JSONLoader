@@ -15,6 +15,8 @@ namespace JLPlugin.V2.Data
 {
     public class CardSerializeInfo
     {
+        public const string DEFAULT_MOD_PREFIX = "JSON";
+
         public string name;
 
         public string modPrefix;
@@ -231,20 +233,22 @@ namespace JLPlugin.V2.Data
             }
             else
             {
-                string localModPrefix = this.modPrefix ?? "JSON";
+                string localModPrefix = this.modPrefix ?? DEFAULT_MOD_PREFIX;
                 CardInfo newCard = ScriptableObject.CreateInstance<CardInfo>();
                 newCard.name = this.name.StartsWith($"{localModPrefix}_") ? this.name : $"{localModPrefix}_{this.name}";
                 this.ApplyCardInfo(newCard);
-                CardManager.Add(newCard, localModPrefix);
+                CardManager.Add(localModPrefix, newCard);
             }
         }
 
-        internal void WriteToFile(string filename)
+        internal void WriteToFile(string filename, bool overwrite = true)
         {
             Plugin.Log.LogDebug($"Writing card {this.name ?? "Unnamed"} to {filename}");
             if (!filename.EndsWith("2")) // we now play with jldr2 files
                 filename = filename + "2";
-            File.WriteAllText(filename, this.ToJSON());
+
+            if (overwrite || !File.Exists(filename))
+                File.WriteAllText(filename, this.ToJSON());
         }
 
         private string ToJSON()
