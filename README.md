@@ -165,3 +165,16 @@ To add cards to your starting hand to test if your cards work, you can download 
 ___
 
 If you want help debugging you can ask in the #card-creation channel in the [Inscryption modding discord](https://discord.gg/QrJEF5Denm).
+
+## Changelog 
+
+<details>
+<summary>Changelog</summary>
+
+2.0.1
+- Fixed a defect with converting JLDR to JLDR2 as it relates to editing base game cards
+- Base game cards are now edited directly instead of using the event. This fixes issues where copies of those cards still existed in other places but wouldn't get properly edited (example: Pack Rat).
+
+2.0.0
+- Rewritten to be compatible with API 2.0
+</details>
