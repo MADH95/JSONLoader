@@ -1,15 +1,15 @@
-using DiskCardGame;
-using UnityEngine;
-using InscryptionAPI.Card;
-using System.Collections.Generic;
-using System;
-using InscryptionAPI.Guid;
-using System.Linq;
-using InscryptionAPI.Helpers;
-using System.IO;
-using System.Reflection;
 using BepInEx;
+using DiskCardGame;
+using InscryptionAPI.Card;
+using InscryptionAPI.Guid;
+using InscryptionAPI.Helpers;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Reflection;
 using TinyJson;
+using UnityEngine;
 
 namespace JLPlugin.V2.Data
 {
@@ -36,7 +36,7 @@ namespace JLPlugin.V2.Data
         public int? energyCost;
 
         public string[] gemsCost;
-        
+
         public string[] abilities;
 
         public string[] specialAbilities;
@@ -52,7 +52,7 @@ namespace JLPlugin.V2.Data
         public string temple;
 
         public string titleGraphic;
-        
+
         public string description;
 
         public bool? hideAttackAndHealth;
@@ -88,7 +88,7 @@ namespace JLPlugin.V2.Data
         public string tailLostPortrait;
 
         public string iceCubeName;
-        
+
         public bool? flipPortraitForStrafe;
 
         public Dictionary<string, string> extensionProperties;
@@ -118,25 +118,25 @@ namespace JLPlugin.V2.Data
 
             if (!string.IsNullOrEmpty(this.displayedName))
                 card.displayedName = this.displayedName;
-            
+
             if (this.baseAttack.HasValue)
                 card.baseAttack = this.baseAttack.Value;
-            
+
             if (this.baseHealth.HasValue)
                 card.baseHealth = this.baseHealth.Value;
-            
+
             if (this.bloodCost.HasValue)
                 card.cost = this.bloodCost.Value;
-            
+
             if (this.bonesCost.HasValue)
                 card.bonesCost = this.bonesCost.Value;
-            
+
             if (this.energyCost.HasValue)
                 card.energyCost = this.energyCost.Value;
-            
+
             if (this.gemsCost != null)
                 card.gemsCost = this.gemsCost.Select(s => ParseEnum<GemType>(s)).ToList();
-            
+
             if (this.abilities != null && this.abilities.Length > 0)
                 card.abilities = new (this.abilities.Select(s => ParseEnum<Ability>(s)).ToArray());
             
@@ -145,40 +145,40 @@ namespace JLPlugin.V2.Data
             
             if (!string.IsNullOrEmpty(this.specialStatIcon))
                 card.specialStatIcon = ParseEnum<SpecialStatIcon>(this.specialStatIcon);
-            
+
             if (this.metaCategories != null && this.metaCategories.Length > 0)
                 card.metaCategories = new(this.metaCategories.Select(s => ParseEnum<CardMetaCategory>(s)).ToArray());
             
             if (!string.IsNullOrEmpty(this.cardComplexity))
                 card.cardComplexity = ParseEnum<CardComplexity>(this.cardComplexity);
-            
+
             if (this.onePerDeck.HasValue)
                 card.onePerDeck = this.onePerDeck.Value;
-            
+
             if (!string.IsNullOrEmpty(this.temple))
                 card.temple = ParseEnum<CardTemple>(this.temple);
-            
+
             if (!string.IsNullOrEmpty(this.titleGraphic))
                 card.titleGraphic = TextureHelper.GetImageAsTexture(this.titleGraphic);
-            
+
             if (!string.IsNullOrEmpty(this.description))
                 card.description = this.description;
-            
+
             if (this.hideAttackAndHealth.HasValue)
                 card.hideAttackAndHealth = this.hideAttackAndHealth.Value;
-            
+
             if (this.appearanceBehaviour != null && this.appearanceBehaviour.Length > 0)
                 card.appearanceBehaviour = new(this.appearanceBehaviour.Select(s => ParseEnum<CardAppearanceBehaviour.Appearance>(s)).ToArray());
             
             if (!string.IsNullOrEmpty(this.texture))
                 card.SetPortrait(this.texture);
-            
+
             if (!string.IsNullOrEmpty(this.emissionTexture))
                 card.SetEmissivePortrait(this.emissionTexture);
-            
+
             if (!string.IsNullOrEmpty(this.holoPortraitPrefab))
                 card.holoPortraitPrefab = Resources.Load<GameObject>(this.holoPortraitPrefab);
-            
+
             if (!string.IsNullOrEmpty(this.animatedPortrait))
                 card.animatedPortrait = Resources.Load<GameObject>(this.animatedPortrait);
 
@@ -187,7 +187,7 @@ namespace JLPlugin.V2.Data
 
             if (!string.IsNullOrEmpty(this.pixelTexture))
                 card.SetPixelPortrait(this.pixelTexture);
-      
+
             if (this.tribes != null && this.tribes.Length > 0)
                 card.tribes = new(this.tribes.Select(s => ParseEnum<Tribe>(s)).ToArray());
           
@@ -196,7 +196,7 @@ namespace JLPlugin.V2.Data
     
             if (!string.IsNullOrEmpty(this.evolveIntoName))
                 card.SetEvolve(this.evolveIntoName, this.evolveTurns.HasValue ? this.evolveTurns.Value : 1);
-                        
+
             if (!string.IsNullOrEmpty(this.defaultEvolutionName))
                 card.defaultEvolutionName = this.defaultEvolutionName;
 
@@ -209,12 +209,12 @@ namespace JLPlugin.V2.Data
             if (this.flipPortraitForStrafe.HasValue)
                 card.flipPortraitForStrafe = this.flipPortraitForStrafe.Value;
 
-            
+
             if (this.extensionProperties != null)
                 foreach (var item in this.extensionProperties)
                     card.SetExtendedProperty(item.Key, item.Value);
 
-            
+
             card.SetExtendedProperty("JSONFilePath", this.filePath);
         }
 
@@ -253,7 +253,7 @@ namespace JLPlugin.V2.Data
         {
             string retval = "{\n";
 
-            foreach(FieldInfo field in this.GetType().GetFields(BindingFlags.Instance | BindingFlags.Public))
+            foreach (FieldInfo field in this.GetType().GetFields(BindingFlags.Instance | BindingFlags.Public))
             {
                 if (field.FieldType == typeof(string))
                 {
@@ -285,7 +285,7 @@ namespace JLPlugin.V2.Data
                     if (fieldVal != null && fieldVal.Count > 0)
                     {
                         retval += $"\t\"{field.Name}\": {{\n";
-                        foreach(var val in fieldVal.Where(kvp => !string.IsNullOrEmpty(kvp.Key) && !string.IsNullOrEmpty(kvp.Value)))
+                        foreach (var val in fieldVal.Where(kvp => !string.IsNullOrEmpty(kvp.Key) && !string.IsNullOrEmpty(kvp.Value)))
                             retval += $"\t\t\"{val.Key}\": \"{val.Value}\",\n";
                         retval += $"\t}},\n";
                     }
@@ -301,6 +301,11 @@ namespace JLPlugin.V2.Data
             {
                 string filename = file.Substring(file.LastIndexOf(Path.DirectorySeparatorChar) + 1);
 
+                if (filename.EndsWith("_deck.jldr2"))
+                {
+                    continue;
+                }
+
                 if (filename.Contains("_example.jldr"))
                 {
                     Plugin.Log.LogDebug($"Skipping {filename}");
@@ -313,7 +318,8 @@ namespace JLPlugin.V2.Data
                     CardSerializeInfo cardInfo = JSONParser.FromJson<CardSerializeInfo>(File.ReadAllText(file));
                     cardInfo.Apply();
                     Plugin.Log.LogDebug($"Loaded JSON card {cardInfo.name}");
-                } catch (Exception ex)
+                }
+                catch (Exception ex)
                 {
                     Plugin.Log.LogError($"Failed to load {filename}: {ex.Message}");
                     Plugin.Log.LogError(ex);
