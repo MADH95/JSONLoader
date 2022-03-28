@@ -38,7 +38,7 @@ namespace JLPlugin
                 Utils.JLUtils.LoadCardsFromFiles();
 
             CardSerializeInfo.LoadAllJLDR2();
-            StarterDecksDataMain.LoadAllStarterDecks();
+            StarterDeckList.LoadAllStarterDecks();
         }
     }
 }
