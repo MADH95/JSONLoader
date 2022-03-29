@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
@@ -9,6 +9,14 @@
     <LangVersion>9.0</LangVersion>
     <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
     <IsPackable>false</IsPackable>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <NoWarn>1701;1702;Publicizer001</NoWarn>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <NoWarn>1701;1702;Publicizer001</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>
@@ -28,5 +36,18 @@
       <HintPath>libs\InscryptionAPI.dll</HintPath>
     </Reference>
   </ItemGroup>
+
+<Target Name="CopyFiles" AfterTargets="Build">
+
+		<PropertyGroup>
+			<DestinationFolder>C:\Users\Tobias\AppData\Roaming\Thunderstore Mod Manager\DataFolder\Inscryption\profiles\ownmods\BepInEx\plugins\Unknown-Json_Plus_Sigil\</DestinationFolder>
+		</PropertyGroup>
+		
+		<Message Text="Executing Files task" Importance="High" />
+
+		<Copy SourceFiles="$(TargetDir)$(ProjectName).dll;" DestinationFolder="$(DestinationFolder)" />
+
+		<Message Text="Copied files" Importance="High" />
+	</Target>
 
 </Project>

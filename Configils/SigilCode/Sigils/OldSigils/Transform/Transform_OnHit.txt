@@ -1,0 +1,70 @@
+// Using Inscryption
+using UnityEngine;
+using DiskCardGame;
+
+// Modding Inscryption
+using APIPlugin;
+
+using System.Collections;
+using System.Collections.Generic;
+using System.IO; // Loading Sigil and Card art.
+using System;
+using System.Linq;
+using System.Text.RegularExpressions;
+using JLPlugin.Data;
+
+
+namespace JLPlugin.SigilCode
+{
+
+	public class Transform_OnHit : ConfigurableBase
+	{
+		public static Ability ability;
+
+		public override Ability Ability
+		{
+			get
+			{
+				return ability;
+			}
+		}
+
+		public override int Priority
+		{
+			get
+			{
+				return 1;
+			}
+		}
+
+		public override bool RespondsToTakeDamage(PlayableCard source)
+		{
+			if (source.Attack < base.Card.Health)
+            {
+				return true;
+			}
+			return false;
+		}
+
+		// Token: 0x06001301 RID: 4865 RVA: 0x000433D2 File Offset: 0x000415D2
+		public override IEnumerator OnTakeDamage(PlayableCard source)
+		{
+			String SpecifiedCardName = SigilData.GetArgument<List<String>>(ability_list[0], "cards")[0];
+
+			if (SpecifiedCardName != null)
+            {
+				CardInfo SpecifiedCardInfo = CardLoader.AllData.Find(info => info.name == SpecifiedCardName);
+
+				if (SpecifiedCardInfo != null)
+				{
+					yield return base.Card.TransformIntoCard(SpecifiedCardInfo, null);
+				}
+				else
+				{
+					yield return base.Card.TransformIntoCard(CardLoader.AllData.Find(info => info.name == "Amoeba"), null);
+				}
+			}
+			yield break;
+		}
+	}
+}

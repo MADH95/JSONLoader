@@ -1,7 +1,6 @@
 ﻿using BepInEx;
 using BepInEx.Configuration;
 using BepInEx.Logging;
-
 using HarmonyLib;
 using JLPlugin.Data;
 using JLPlugin.V2.Data;
@@ -12,7 +11,7 @@ namespace JLPlugin
     [BepInDependency("cyantist.inscryption.api", BepInDependency.DependencyFlags.HardDependency)]
     public class Plugin : BaseUnityPlugin
     {
-        public const string PluginGuid = "MADH.inscryption.JSONLoader";
+        private const string PluginGuid = "MADH.inscryption.JSONLoader";
         private const string PluginName = "JSONLoader";
         private const string PluginVersion = "1.7.0.0";
 
@@ -37,8 +36,8 @@ namespace JLPlugin
             if (betaCompatibility.Value)
                 Utils.JLUtils.LoadCardsFromFiles();
 
+            SigilData.LoadAllSigils();
             CardSerializeInfo.LoadAllJLDR2();
-            StarterDeckList.LoadAllStarterDecks();
         }
     }
 }

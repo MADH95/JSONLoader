@@ -95,7 +95,7 @@ namespace JLPlugin.V2.Data
 
         public string filePath;
 
-        private static T ParseEnum<T>(string value) where T : unmanaged, System.Enum
+        public static T ParseEnum<T>(string value) where T : unmanaged, System.Enum
         {
             T result;
             if (Enum.TryParse<T>(value, out result))
@@ -138,17 +138,17 @@ namespace JLPlugin.V2.Data
                 card.gemsCost = this.gemsCost.Select(s => ParseEnum<GemType>(s)).ToList();
 
             if (this.abilities != null && this.abilities.Length > 0)
-                card.abilities = new (this.abilities.Select(s => ParseEnum<Ability>(s)).ToArray());
-            
+                card.AddAbilities(this.abilities.Select(s => ParseEnum<Ability>(s)).ToArray());
+
             if (this.specialAbilities != null && this.specialAbilities.Length > 0)
-                card.specialAbilities = new(this.specialAbilities.Select(s => ParseEnum<SpecialTriggeredAbility>(s)).ToArray());
-            
+                card.AddSpecialAbilities(this.specialAbilities.Select(s => ParseEnum<SpecialTriggeredAbility>(s)).ToArray());
+
             if (!string.IsNullOrEmpty(this.specialStatIcon))
                 card.specialStatIcon = ParseEnum<SpecialStatIcon>(this.specialStatIcon);
 
             if (this.metaCategories != null && this.metaCategories.Length > 0)
-                card.metaCategories = new(this.metaCategories.Select(s => ParseEnum<CardMetaCategory>(s)).ToArray());
-            
+                card.AddMetaCategories(this.metaCategories.Select(s => ParseEnum<CardMetaCategory>(s)).ToArray());
+
             if (!string.IsNullOrEmpty(this.cardComplexity))
                 card.cardComplexity = ParseEnum<CardComplexity>(this.cardComplexity);
 
@@ -168,8 +168,8 @@ namespace JLPlugin.V2.Data
                 card.hideAttackAndHealth = this.hideAttackAndHealth.Value;
 
             if (this.appearanceBehaviour != null && this.appearanceBehaviour.Length > 0)
-                card.appearanceBehaviour = new(this.appearanceBehaviour.Select(s => ParseEnum<CardAppearanceBehaviour.Appearance>(s)).ToArray());
-            
+                card.AddAppearances(this.appearanceBehaviour.Select(s => ParseEnum<CardAppearanceBehaviour.Appearance>(s)).ToArray());
+
             if (!string.IsNullOrEmpty(this.texture))
                 card.SetPortrait(this.texture);
 
@@ -189,11 +189,11 @@ namespace JLPlugin.V2.Data
                 card.SetPixelPortrait(this.pixelTexture);
 
             if (this.tribes != null && this.tribes.Length > 0)
-                card.tribes = new(this.tribes.Select(s => ParseEnum<Tribe>(s)).ToArray());
-          
+                card.AddTribes(this.tribes.Select(s => ParseEnum<Tribe>(s)).ToArray());
+
             if (this.traits != null && this.traits.Length > 0)
-                card.traits = new(this.traits.Select(s => ParseEnum<Trait>(s)).ToArray());
-    
+                card.AddTraits(this.traits.Select(s => ParseEnum<Trait>(s)).ToArray());
+
             if (!string.IsNullOrEmpty(this.evolveIntoName))
                 card.SetEvolve(this.evolveIntoName, this.evolveTurns.HasValue ? this.evolveTurns.Value : 1);
 
@@ -222,12 +222,14 @@ namespace JLPlugin.V2.Data
         {
             if (string.IsNullOrEmpty(this.name))
                 throw new InvalidOperationException("Card cannot have an empty name!");
-            
-            CardInfo baseGameCard = CardManager.BaseGameCards.CardByName(this.name);
-            if (baseGameCard != null)
+            if (CardManager.BaseGameCards.CardByName(this.name) != null)
             {
-                Plugin.Log.LogDebug($"Modifying {this.name} using {this.ToJSON()}");
-                this.ApplyCardInfo(baseGameCard);
+                CardManager.ModifyCardList += delegate (List<CardInfo> cards)
+                {
+                    CardInfo modifyCard = cards.CardByName(this.name);
+                    this.ApplyCardInfo(modifyCard);
+                    return cards;
+                };
             }
             else
             {
@@ -301,14 +303,16 @@ namespace JLPlugin.V2.Data
             {
                 string filename = file.Substring(file.LastIndexOf(Path.DirectorySeparatorChar) + 1);
 
-                if (filename.EndsWith("_deck.jldr2"))
-                {
-                    continue;
-                }
+                //this can be removed as it only searches for jldr2
 
-                if (filename.Contains("_example.jldr"))
+                //if (filename.Contains("_example.jldr"))
+                //{
+                //    Plugin.Log.LogDebug($"Skipping {filename}");
+                //    continue;
+                //}
+
+                if (filename.EndsWith("_sigil.jldr2"))
                 {
-                    Plugin.Log.LogDebug($"Skipping {filename}");
                     continue;
                 }
 
