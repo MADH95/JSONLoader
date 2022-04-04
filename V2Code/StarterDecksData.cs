@@ -32,7 +32,7 @@ namespace JLPlugin.Data
                     StarterDeckList starterDeckInfo = JSONParser.FromJson<StarterDeckList>(File.ReadAllText(file));
 
                     foreach (var deckdata in starterDeckInfo.decks)
-                        StarterDeckManager.New(Plugin.PluginGuid, deckdata.name, deckdata.iconTexture, deckdata.cards, (deckdata.unlockLevel ?? 0));
+                        StarterDeckManager.New(Plugin.PluginGuid, deckdata.name, deckdata.iconTexture, deckdata.cards, deckdata.unlockLevel);
 
                     Plugin.Log.LogDebug($"Loaded JSON starter decks {string.Join(",", starterDeckInfo.decks.Select(s => s.name).ToList())}");
                 }
