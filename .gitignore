@@ -1,6 +1,0 @@
-*.zip
-
-bin/
-obj/
-lib/
-.idea/
