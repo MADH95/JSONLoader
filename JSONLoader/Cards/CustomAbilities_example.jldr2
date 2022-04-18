@@ -1,0 +1,9 @@
+{
+  "name": "CustomTest",
+  "modPrefix": "TEST",
+  "displayedName": "Custom Test",
+  "abilities": [
+    "cyantist.inscryption.sigiladay.Transient",
+    "cyantist.inscryption.sigiladay.Regen"
+  ]
+}
