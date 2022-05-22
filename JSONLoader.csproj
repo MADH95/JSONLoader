@@ -21,6 +21,7 @@
 
   <ItemGroup>
     <None Remove="Configils\Data Classes\SigilData\SubData\condition" />
+    <None Remove="Configils\Data Classes\SigilData\SubData\test.txt" />
   </ItemGroup>
 
   	<ItemGroup>

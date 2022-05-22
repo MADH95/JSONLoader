@@ -1,0 +1,22 @@
+using DiskCardGame;
+
+namespace JSONLoader.Configils.Data_Classes.SigilData.SubData
+{
+    [HarmonyPatch(typeof(RuleBookController), "OpenToAbilityPage")]
+    public class OpenToAbilityPage_patch
+    {
+        [HarmonyPrefix]
+        public void OpenToAbilityPage(ref string abilityName, ref PlayableCard card, ref bool immediate)
+        {
+            if (abilityName == Ability.Brittle.ToString() && card == CardLoader.GetCardByName("your card name"))
+            {
+                Singleton<RuleBookController>.Instance.SetShown(true, Singleton<RuleBookController>.Instance.OffsetViewForCard(card));
+                int pageIndex = Singleton<RuleBookController>.Instance.PageData.IndexOf(Singleton<RuleBookController>.Instance.PageData.Find((RuleBookPageInfo x) => x.abilityPage && x.pageId == yourcustomabilityclass.ability.ToString()));
+                Singleton<RuleBookController>.Instance.StopAllCoroutines();
+                Singleton<RuleBookController>.Instance.StartCoroutine(Singleton<RuleBookController>.Instance.flipper.FlipToPage(pageIndex, immediate ? 0f : 0.2f));
+                return false;
+            }
+            return true;
+        }
+    }
+}
