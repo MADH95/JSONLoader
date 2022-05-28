@@ -182,6 +182,7 @@ ___
 |MadeOfStone | Invulnerable to Stinky and Deathtouch |
 |Morsel | When sacrificed to summon another card, the card will add +1/+2 to the summoned card |
 |MoveBeside | Moves to closest space when a card is played                               |
+|OpponentBones | When any enemy card dies, gain 1 bone                           |
 |PermaDeath | When card dies, it is removed from the deck                           |
 |PreventAttack | Prevents opposing card from attacking it                         |
 |QuadrupleBones | When dies, gain 4 bones                         |
