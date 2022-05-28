@@ -226,6 +226,7 @@ ___
 |HologramPortrait | Renders portrait as hologram                                                                                             |
 |RareCardBackground |  Renders card with rare background                                                                                  |
 |RareCardColors | Renders card with inverted colours                                                                                                    |
+|RedEmission | Makes emission glow red |
 |SexyGoat | Randers alternate texture if you have the goat's eyeball |
 |StaticGlitch | Renders the card with the static animation                                                                                          |
 |TerrainBackground | Renders the card with terrain border                                                                               |
