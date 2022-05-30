@@ -2,7 +2,6 @@
 using DiskCardGame;
 using HarmonyLib;
 using JLPlugin.Data;
-using System.Collections.Generic;
 using System.Linq;
 // Modding Inscryption
 
@@ -15,30 +14,49 @@ namespace JLPlugin.SigilCode
         [HarmonyPostfix]
         public static void Postfix(ref int __result, ref PlayableCard __instance)
         {
-            if (__instance.OnBoard)
+            if (!__instance.OnBoard)
             {
-                foreach (CardSlot slot in Singleton<BoardManager>.Instance.AllSlotsCopy)
+                return;
+            }
+
+            foreach (CardSlot slot in Singleton<BoardManager>.Instance.AllSlotsCopy)
+            {
+                if (slot.Card == null)
                 {
-                    foreach (Ability ability in slot.Card?.Info.abilities ?? new List<Ability>())
+                    continue;
+                }
+
+                foreach (Ability ability in slot.Card.Info.abilities)
+                {
+                    if (!SigilDicts.ArgumentList.ContainsKey(ability))
                     {
-                        if (!SigilDicts.ArgumentList.ContainsKey(ability))
+                        continue;
+                    }
+
+                    foreach (AbilityBehaviourData abilityBehaviour in SigilData.GetAbilityArguments(ability).abilityBehaviour.Where(x => x.trigger?.triggerType == "Passive"))
+                    {
+                        if (abilityBehaviour.buffCards == null)
                         {
                             continue;
                         }
 
-                        foreach (AbilityBehaviourData abilityBehaviour in SigilData.GetAbilityArguments(ability).abilityBehaviour.Where(x => x.trigger.triggerType == "Passive"))
+                        foreach (buffCards buffCards in abilityBehaviour.buffCards)
                         {
-                            foreach (buffCards buffCards in abilityBehaviour.buffCards ?? new List<buffCards>())
+                            SigilData.UpdateVariables(abilityBehaviour, slot.Card);
+
+                            if (slotData.GetSlot(buffCards.slot, abilityBehaviour) == __instance.slot)
                             {
-                                SigilData.UpdateVariables(abilityBehaviour, slot.Card);
-                                if (slotData.GetSlot(buffCards.slot, abilityBehaviour) == __instance.slot)
+                                if (buffCards.addStats != null)
                                 {
-                                    __result += int.Parse(buffCards.stats.Split('/')[1]);
-                                    Plugin.Log.LogWarning((__instance.Info.Health + __result));
-                                    if ((__instance.Info.Health + __result) <= 0)
-                                    {
-                                        BoardManager.Instance.StartCoroutine(__instance.Die(false));
-                                    }
+                                    __result += int.Parse(buffCards.addStats.Split('/')[1]);
+                                }
+                                if (buffCards.setStats != null)
+                                {
+                                    __result = int.Parse(buffCards.setStats.Split('/')[1]);
+                                }
+                                if ((__instance.Info.Health + __result) <= 0)
+                                {
+                                    BoardManager.Instance.StartCoroutine(__instance.Die(false));
                                 }
                             }
                         }

@@ -38,7 +38,7 @@ namespace JLPlugin.Data
                     {
                         slot.Card.ExitBoard(0, new Vector3(0, 0, 0));
                     }
-                    if (slot.Card == null)
+                    if (slot.Card == null || slot.Card.Dead)
                     {
                         CardInfo cardinfo = card.getCard(placecardinfo.card, abilitydata);
                         if (cardinfo != null)

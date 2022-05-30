@@ -13,7 +13,8 @@ namespace JLPlugin.Data
     {
         public string runOnCondition;
         public slotData slot;
-        public string stats;
+        public string addStats;
+        public string setStats;
         public string heal;
         public List<string> abilities;
         public List<string> removeAbilities;
@@ -62,18 +63,29 @@ namespace JLPlugin.Data
                             card.HealDamage(Math.Min(card.Status.damageTaken, int.Parse(SigilData.ConvertArgument(buffcardsinfo.heal, abilitydata))));
                         }
                     }
-                    if (buffcardsinfo.stats != null)
+                    if (buffcardsinfo.addStats != null)
                     {
-                        mod.attackAdjustment += int.Parse(SigilData.ConvertArgument(buffcardsinfo.stats.Split('/')[0], abilitydata));
-                        mod.healthAdjustment += int.Parse(SigilData.ConvertArgument(buffcardsinfo.stats.Split('/')[1], abilitydata));
+                        mod.attackAdjustment += int.Parse(SigilData.ConvertArgument(buffcardsinfo.addStats.Split('/')[0], abilitydata));
+                        mod.healthAdjustment += int.Parse(SigilData.ConvertArgument(buffcardsinfo.addStats.Split('/')[1], abilitydata));
+                    }
+                    if (buffcardsinfo.setStats != null)
+                    {
+                        mod.attackAdjustment += int.Parse(SigilData.ConvertArgument(buffcardsinfo.setStats.Split('/')[0], abilitydata)) - card.Info.Attack;
+                        mod.healthAdjustment += int.Parse(SigilData.ConvertArgument(buffcardsinfo.setStats.Split('/')[1], abilitydata)) - card.Info.Health;
                     }
                     if (buffcardsinfo.removeAbilities != null)
                     {
+                        yield return new WaitForSeconds(0.15f);
+                        card.Anim.PlayTransformAnimation();
+                        yield return new WaitForSeconds(0.15f);
                         mod.negateAbilities = SigilData.ConvertArgument(buffcardsinfo.removeAbilities, abilitydata).Select(s => CardSerializeInfo.ParseEnum<Ability>(s)).ToList();
                         card.Status.hiddenAbilities.AddRange(SigilData.ConvertArgument(buffcardsinfo.removeAbilities, abilitydata).Select(s => CardSerializeInfo.ParseEnum<Ability>(s)));
                     }
                     if (buffcardsinfo.abilities != null)
                     {
+                        yield return new WaitForSeconds(0.15f);
+                        card.Anim.PlayTransformAnimation();
+                        yield return new WaitForSeconds(0.15f);
                         mod.abilities = SigilData.ConvertArgument(buffcardsinfo.abilities, abilitydata).Select(s => CardSerializeInfo.ParseEnum<Ability>(s)).ToList();
                     }
                     card.AddTemporaryMod(mod);

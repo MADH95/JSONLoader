@@ -85,7 +85,7 @@ namespace JLPlugin.Data
             info.canStack = true;
             info.opponentUsable = this.opponentUsable ?? false;
             info.abilityLearnedDialogue = SetAbilityInfoDialogue(this.abilityLearnedDialogue) ?? new DialogueEvent.LineSet();
-            info.activated = this.abilityBehaviour.Select(x => x.trigger.triggerType).Contains("OnActivate");
+            info.activated = this.abilityBehaviour.Select(x => x.trigger?.triggerType).Contains("OnActivate");
 
             SigilDicts.ArgumentList.Add(info.ability, new Tuple<Type, SigilData>(SigilType, this));
         }
