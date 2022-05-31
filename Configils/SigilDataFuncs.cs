@@ -1,93 +1,113 @@
-﻿using BepInEx;
-using DiskCardGame;
-using InscryptionAPI.Card;
+﻿
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using TinyJson;
+using System.Collections;
+using System.Collections.Generic;
+
 using UnityEngine;
+using DiskCardGame;
+
+using BepInEx;
+
+using TinyJson;
+
 using Random = System.Random;
 
 namespace JLPlugin.Data
 {
-    using JLPlugin.SigilCode;
-    using NCalc;
     using System.Text.RegularExpressions;
-    using Utils;
+
+	using InscryptionAPI.Helpers;
+    using InscryptionAPI.Card;
+
+	using NCalc;
+    
+    using SigilCode;
+    
+    using static V2.Data.CardSerializeInfo;
+
     using static InscryptionAPI.Card.SpecialTriggeredAbilityManager;
+
+    using SigilTuple = Tuple<Type, SigilData>;
 
     public partial class SigilData
     {
         public void GenerateNew()
         {
             //Type SigilType = GetType("JLPlugin.SigilCode", this.sigilBase);
+            Type SigilType = typeof(ConfigurableMain);
 
             if (this.isSpecialAbility == true)
             {
+                SigilType = typeof(ConfigurableSpecial);
+
                 FullSpecialTriggeredAbility specialAbility = SpecialTriggeredAbilityManager.Add(
-                    this.GUID ?? "MADH.inscryption.JSONLoader",
+                    this.GUID ?? Plugin.PluginGuid,
                     this.name ?? "",
-                    typeof(ConfigurableSpecial)
+                    SigilType
                     );
 
-                SigilDicts.SpecialArgumentList.Add(specialAbility.Id, new Tuple<Type, SigilData>(typeof(ConfigurableSpecial), this));
+                SigilDicts.SpecialArgumentList.Add(specialAbility.Id, new SigilTuple(SigilType, this));
 
                 return;
             }
 
-            Type SigilType = typeof(ConfigurableMain);
-
-            var values = this.GetType()
-                     .GetFields()
-                     .Select(field => field.GetValue(this))
-                     .ToList();
-
+            // Is this section necessary? reflection is quite expensive so doing this for every ability will slow some things
+            // Still refactored it to use less functions to make it as quick as possible.
             var fields = this.GetType()
-                     .GetFields()
-                     .Select(field => field.Name)
-                     .ToList();
+                     .GetFields();
 
-            List<string> fieldsinfo = new List<string>();
-            foreach (string field in fields)
+            var values = fields.Select(field => field.GetValue(this)).ToList();
+
+            List<string> fieldsinfo = new();
+
+            for (int i = 0; i < fields.Length; ++i )
             {
-                fieldsinfo.Add(field + ": " + values[fields.IndexOf(field)]);
+                Plugin.Log.LogWarning( $"{fields[ i ].Name}: {values[ i ]}\n" );
             }
 
-            Plugin.Log.LogWarning(string.Join("\n", fieldsinfo));
-
-            Texture2D sigilTexture = new Texture2D(49, 49);
-            if (this.texture != null)
-            {
-                sigilTexture = CDUtils.Assign(this.texture, nameof(this.texture));
-            }
-            sigilTexture.filterMode = FilterMode.Point;
-
-            Texture2D sigilPixelTexture = new Texture2D(17, 17);
+            //There probably a more API oriented way of handling this, I'm just very confused how that all works atm
+            Texture2D sigilPixelTexture = new(17, 17);
             if (this.pixelTexture != null)
             {
-                sigilPixelTexture = CDUtils.Assign(this.pixelTexture, nameof(this.pixelTexture));
+                sigilPixelTexture.LoadImage(TextureHelper.ReadArtworkFileAsBytes(this.pixelTexture));
+                sigilPixelTexture.filterMode = FilterMode.Point;
             }
-            sigilPixelTexture.filterMode = FilterMode.Point;
 
             AbilityInfo info = AbilityManager.New(
-                    this.GUID ?? "MADH.inscryption.JSONLoader",
+                    this.GUID ?? Plugin.PluginGuid,
                     this.name ?? "",
                     this.description ?? "",
                     SigilType,
-                    sigilTexture
+                    this.texture
                 );
+
             info.SetPixelAbilityIcon(sigilPixelTexture);
             info.powerLevel = this.powerLevel ?? 3;
-            info.metaCategories = CDUtils.Assign(this.metaCategories, nameof(this.metaCategories), SigilDicts.AbilityMetaCategory) ?? new List<AbilityMetaCategory> { AbilityMetaCategory.Part1Rulebook, AbilityMetaCategory.Part1Modular };
-            info.canStack = true;
-            info.opponentUsable = this.opponentUsable ?? false;
-            info.abilityLearnedDialogue = SetAbilityInfoDialogue(this.abilityLearnedDialogue) ?? new DialogueEvent.LineSet();
-            info.activated = this.abilityBehaviour.Select(x => x.trigger?.triggerType).Contains("OnActivate");
 
-            SigilDicts.ArgumentList.Add(info.ability, new Tuple<Type, SigilData>(SigilType, this));
+            info.AddMetaCategories(this.metaCategories.Select( elem => ParseEnum<AbilityMetaCategory>( elem ) ).ToArray());
+            if (info.metaCategories.Count < 1)
+			{
+                info.SetDefaultPart1Ability();
+			}
+
+            info.canStack = true; // Maybe make this configurable by user?
+            info.opponentUsable = this.opponentUsable ?? false;
+
+            //Is this custom dialogue events? can we not use API?
+            info.abilityLearnedDialogue = SetAbilityInfoDialogue(this.abilityLearnedDialogue) ?? new DialogueEvent.LineSet();
+
+            info.activated = this.abilityBehaviour.Any(x => x.trigger?.triggerType == "OnActivate");
+
+            // Below is an example of the TriggerType enum being used. This current implementation doesn't make good use of it as the enum
+            // would need converted from the string each time. Perhaps there's a method where the list of strings are converted and stored
+            // but this is something for down the line. None the less, the TriggerType enum exists in the same file as the Trigger class.
+
+            //info.activated = this.abilityBehaviour.Any( x => ParseEnum<TriggerType>( x.trigger?.triggerType ) == TriggerType.OnActivate );
+
+            SigilDicts.ArgumentList.Add(info.ability, new SigilTuple(SigilType, this));
         }
 
         public static SigilData GetAbilityArguments(Ability ability)
@@ -102,24 +122,15 @@ namespace JLPlugin.Data
 
         public static void LoadAllSigils()
         {
-            foreach (string file in Directory.EnumerateFiles(Paths.PluginPath, "*.jldr2", SearchOption.AllDirectories))
+            foreach (string file in Directory.EnumerateFiles(Paths.PluginPath, "_sigil.jldr2", SearchOption.AllDirectories))
             {
                 string filename = file.Substring(file.LastIndexOf(Path.DirectorySeparatorChar) + 1);
 
-                if (filename.EndsWith("_sigil_example.jldr2"))
-                {
-                    Plugin.Log.LogDebug($"Skipping {filename}");
-                    continue;
-                }
-
-                if (filename.EndsWith("_sigil.jldr2"))
-                {
-                    Plugin.Log.LogDebug($"Loading JLDR2 (sigil) {filename}");
-                    SigilData sigilInfo = JSONParser.FromJson<SigilData>(File.ReadAllText(file));
-                    Plugin.Log.LogInfo(sigilInfo.name);
-                    sigilInfo.GenerateNew();
-                    Plugin.Log.LogDebug($"Loaded JSON sigil {sigilInfo.name}");
-                }
+                Plugin.Log.LogDebug($"Loading JLDR2 (sigil) {filename}");
+                SigilData sigilInfo = JSONParser.FromJson<SigilData>(File.ReadAllText(file));
+                Plugin.Log.LogInfo(sigilInfo.name);
+                sigilInfo.GenerateNew();
+                Plugin.Log.LogDebug($"Loaded JSON sigil {sigilInfo.name}");
             }
         }
 
@@ -134,9 +145,11 @@ namespace JLPlugin.Data
             });
         }
 
+        //This could be split up, would make for more readable and usable code. I will give it a go next refactor.
         public static string ConvertString(string value, AbilityBehaviourData abilitydata)
         {
             var random = new Random();
+
             if (value.Contains("|"))
             {
                 //regex instead of splitting so it does not mistake the or operator (||) for randomization
