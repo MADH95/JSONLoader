@@ -16,7 +16,7 @@ namespace JLPlugin.Data
         public string addStats;
         public string setStats;
         public string heal;
-        public List<string> abilities;
+        public List<string> addAbilities;
         public List<string> removeAbilities;
         public string self;
 
@@ -81,12 +81,12 @@ namespace JLPlugin.Data
                         mod.negateAbilities = SigilData.ConvertArgument(buffcardsinfo.removeAbilities, abilitydata).Select(s => CardSerializeInfo.ParseEnum<Ability>(s)).ToList();
                         card.Status.hiddenAbilities.AddRange(SigilData.ConvertArgument(buffcardsinfo.removeAbilities, abilitydata).Select(s => CardSerializeInfo.ParseEnum<Ability>(s)));
                     }
-                    if (buffcardsinfo.abilities != null)
+                    if (buffcardsinfo.addAbilities != null)
                     {
                         yield return new WaitForSeconds(0.15f);
                         card.Anim.PlayTransformAnimation();
                         yield return new WaitForSeconds(0.15f);
-                        mod.abilities = SigilData.ConvertArgument(buffcardsinfo.abilities, abilitydata).Select(s => CardSerializeInfo.ParseEnum<Ability>(s)).ToList();
+                        mod.abilities = SigilData.ConvertArgument(buffcardsinfo.addAbilities, abilitydata).Select(s => CardSerializeInfo.ParseEnum<Ability>(s)).ToList();
                     }
                     card.AddTemporaryMod(mod);
                     card.RenderCard();

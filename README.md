@@ -97,7 +97,7 @@ There is also a [GUI](https://tinyurl.com/492ytnj7) based verion that is an opti
 
 Files go anywhere in the plugins folder, along with  the artwork required for the card.
 
-# The JLDR2 File
+### The JLDR2 File
 
 Cards have lots of fields that can be filled - this is a list of all field names and their purpose. The fields you wish to include in the .jldr file should be copied exactly from this table, and any fields that refer to *Enums.md* or *Card Names.txt* should have their strings be copied exactly from there.
 
@@ -139,29 +139,6 @@ Cards have lots of fields that can be filled - this is a list of all field names
 | animatedPortrait | **[Unavailable]** |
 | decals | **[Optional]** A string array for the texture names of a card decals (must be .png) |
 
-## Starter Decks
-
-The latest version of JSON Loader allows you to create starter decks. To do this, your file needs to end in '_deck.jldr2' and should look like this:
-
-```json
-{
-    "decks": [
-        {
-            "name": "DeckName1",
-            "iconTexture": "icon.png",
-            "cards": [ "Card1", "Card2", "Card3" ]
-        },
-        {
-            "name": "DeckName2",
-            "iconTexture": "icon2.png",
-            "cards": [ "Card4", "Card5", "Card6" ]
-        }
-    ]
-}
-```
-
-Note that you can define any number of starter decks in a single '*_deck.jldr2' file, and that the expected format of a '_deck.jldr2' file looks very different than other jldr2 files.
-
 ## Debugging
 The easiest way to check if the plugin is working properly or to debug an error is to enable the console. This can be done by changing
 ```
@@ -188,19 +165,3 @@ To add cards to your starting hand to test if your cards work, you can download 
 ___
 
 If you want help debugging you can ask in the #card-creation channel in the [Inscryption modding discord](https://discord.gg/QrJEF5Denm).
-
-## Changelog 
-
-<details>
-<summary>Changelog</summary>
-
-2.1
-- Added starter deck support with help from Sylvie
-
-2.0.1
-- Fixed a defect with converting JLDR to JLDR2 as it relates to editing base game cards
-- Base game cards are now edited directly instead of using the event. This fixes issues where copies of those cards still existed in other places but wouldn't get properly edited (example: Pack Rat).
-
-2.0.0
-- Rewritten to be compatible with API 2.0
-</details>

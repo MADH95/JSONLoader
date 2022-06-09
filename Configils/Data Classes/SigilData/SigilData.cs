@@ -14,6 +14,7 @@ namespace JLPlugin.Data
 
         public int? priority;
         public bool? opponentUsable;
+        public bool? canStack;
         public bool? isSpecialAbility;
 
         public activationCost activationCost;
