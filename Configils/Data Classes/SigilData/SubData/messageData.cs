@@ -18,7 +18,7 @@ namespace JLPlugin.Data
             messageData data = abilitydata.showMessage;
             yield return Singleton<TextDisplayer>.Instance.ShowThenClear(
                 SigilData.ConvertArgument(data.message, abilitydata) ?? "",
-                int.Parse(SigilData.ConvertArgument(data.lenght, abilitydata) ?? "2"),
+                float.Parse(SigilData.ConvertArgument(data.lenght, abilitydata) ?? "2"),
                 0,
                 SigilDicts.Emotion[data.emotion ?? "Neutral"],
                 SigilDicts.LetterAnimation[data.letterAnimation ?? "Jitter"],

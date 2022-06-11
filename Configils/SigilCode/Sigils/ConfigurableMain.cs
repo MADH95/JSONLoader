@@ -8,10 +8,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using UnityEngine;
+using static JLPlugin.V2.Data.CardSerializeInfo;
 
 namespace JLPlugin.SigilCode
 {
-    public class ConfigurableMain : ConfigurableBase, IOnBellRung, IOnOtherCardAddedToHand
+    public class ConfigurableMain : ConfigurableBase, IOnBellRung, IOnOtherCardAddedToHand, IOnCardAssignedToSlotContext
     {
         public override int BonesCost
         {
@@ -32,17 +33,46 @@ namespace JLPlugin.SigilCode
         public override bool CanActivate()
         {
             AbilityBehaviourData behaviourData = abilityData.abilityBehaviour.Where(x => x.trigger?.triggerType == "OnActivate").ToList()[0];
-            if (behaviourData != null)
+            if (abilityData.activationCost == null || behaviourData == null)
             {
-                SigilData.UpdateVariables(behaviourData, base.PlayableCard);
-                Plugin.Log.LogWarning("can Activate?: " + ((SigilData.ConvertArgument(behaviourData.trigger?.activatesForCardsWithCondition, behaviourData) ?? "false") == "true").ToString());
-                return (SigilData.ConvertArgument(behaviourData.trigger?.activatesForCardsWithCondition, behaviourData) ?? "true") == "true";
+                return false;
             }
-            return false;
+
+            SigilData.UpdateVariables(behaviourData, base.PlayableCard);
+            return (SigilData.ConvertArgument(behaviourData.trigger?.activatesForCardsWithCondition, behaviourData) ?? "true") == "true";
         }
 
         public override IEnumerator Activate()
         {
+            int BloodCost = abilityData.activationCost.bloodCost ?? 0;
+            if (BloodCost > 0)
+            {
+                List<CardSlot> occupiedSlots = Singleton<BoardManager>.Instance.PlayerSlotsCopy.FindAll((CardSlot x) => x.Card != null && x.Card != Card);
+
+                if (Singleton<BoardManager>.Instance != null && Singleton<BoardManager>.Instance.AvailableSacrificeValueInSlots(occupiedSlots) >= BloodCost)
+                {
+                    Singleton<BoardManager>.Instance.CancelledSacrifice = false;
+                    yield return SacrificeHelper.ChooseSacrificesForCard(Singleton<BoardManager>.Instance, occupiedSlots, Card, BloodCost);
+                    if (Singleton<BoardManager>.Instance.CancelledSacrifice)
+                    {
+                        yield break;
+                    }
+                }
+                else
+                {
+                    yield break;
+                }
+            }
+
+            List<GemType> GemCost = abilityData.activationCost.gemCost?.Select(s => ParseEnum<GemType>(s)).ToList() ?? new List<GemType>();
+            foreach (GemType Gem in GemCost)
+            {
+                if (!Singleton<ResourcesManager>.Instance.HasGem(Gem))
+                {
+                    yield break;
+                }
+            }
+
             yield return TriggerSigil("OnActivate");
             yield break;
         }
@@ -192,6 +222,20 @@ namespace JLPlugin.SigilCode
         public IEnumerator OnOtherCardAddedToHand(PlayableCard card)
         {
             yield return TriggerSigil("OnAddedToHand", null, card);
+            yield break;
+        }
+
+        public bool RespondsToCardAssignedToSlotContext(PlayableCard card, CardSlot oldSlot, CardSlot newSlot)
+        {
+            return true;
+        }
+
+        public IEnumerator OnCardAssignedToSlotContext(PlayableCard card, CardSlot oldSlot, CardSlot newSlot)
+        {
+            if (oldSlot != null)
+            {
+                yield return TriggerSigil("OnMove", new Dictionary<string, object>() { ["OldSlot"] = oldSlot }, card);
+            }
             yield break;
         }
 

@@ -1,7 +1,7 @@
 ﻿namespace JLPlugin.Data
 {
     public enum TriggerType
-	{
+    {
         OnDie,
         OnResolveOnBoard,
         OnStruck,
@@ -19,8 +19,8 @@
         OnPreDeath,
         OnPreKill,
         OnMove,
-        Passive,
-	}
+        Passive
+    }
 
     [System.Serializable]
     public class trigger

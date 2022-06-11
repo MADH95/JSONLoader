@@ -161,6 +161,15 @@ namespace JLPlugin.SigilCode
             yield break;
         }
 
+        public IEnumerator OnCardAssignedToSlotContext(PlayableCard card, CardSlot oldSlot, CardSlot newSlot)
+        {
+            if (oldSlot != null)
+            {
+                yield return TriggerSigil("OnMove", new Dictionary<string, object>() { ["OldSlot"] = oldSlot }, card);
+            }
+            yield break;
+        }
+
         public IEnumerator TriggerSigil(string trigger, Dictionary<string, object> variableList = null, PlayableCard cardToCheck = null)
         {
             //cardToCheck kan elke kaart zijn ook base.PlayableCard

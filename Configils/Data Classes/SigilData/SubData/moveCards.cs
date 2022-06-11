@@ -12,6 +12,9 @@ namespace JLPlugin.Data
         public slotData moveToSlot;
         public string replace;
         public string self;
+        public strafeData strafe;
+
+        public bool movingLeft;
 
         public static IEnumerator MoveCards(AbilityBehaviourData abilitydata)
         {
@@ -45,6 +48,11 @@ namespace JLPlugin.Data
                         cardToSet.SetIsOpponentCard(!slotTo.IsPlayerSlot);
                         yield return Singleton<BoardManager>.Instance.AssignCardToSlot(slotFrom.Card, slotTo);
                     }
+                }
+
+                if (movecardinfo.strafe != null)
+                {
+                    movecardinfo.strafe.Strafe(abilitydata, movecardinfo);
                 }
             }
             yield return new WaitForSeconds(0.3f);
