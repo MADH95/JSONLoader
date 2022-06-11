@@ -35,24 +35,27 @@ namespace JLPlugin.Data
                 Singleton<ViewManager>.Instance.SwitchToView(View.Default, false, false);
                 CardSlot slotFrom = slotData.GetSlot(movecardinfo.moveFromSlot, abilitydata);
                 CardSlot slotTo = slotData.GetSlot(movecardinfo.moveToSlot, abilitydata);
-                if (slotFrom?.Card != null && slotTo != null)
+                if (slotFrom?.Card != null)
                 {
-                    if (slotTo.Card != null && (SigilData.ConvertArgument(movecardinfo.replace, abilitydata) ?? "true") == "true")
+                    if (slotTo != null)
                     {
-                        slotTo.Card.ExitBoard(0, new Vector3(0, 0, 0));
-                    }
+                        if (slotTo.Card != null && (SigilData.ConvertArgument(movecardinfo.replace, abilitydata) ?? "true") == "true")
+                        {
+                            slotTo.Card.ExitBoard(0, new Vector3(0, 0, 0));
+                        }
 
-                    if (slotTo.Card == null)
+                        if (slotTo.Card == null)
+                        {
+                            PlayableCard cardToSet = slotFrom.Card;
+                            cardToSet.SetIsOpponentCard(!slotTo.IsPlayerSlot);
+                            yield return Singleton<BoardManager>.Instance.AssignCardToSlot(slotFrom.Card, slotTo);
+                        }
+
+                    }
+                    if (movecardinfo.strafe != null)
                     {
-                        PlayableCard cardToSet = slotFrom.Card;
-                        cardToSet.SetIsOpponentCard(!slotTo.IsPlayerSlot);
-                        yield return Singleton<BoardManager>.Instance.AssignCardToSlot(slotFrom.Card, slotTo);
+                        movecardinfo.strafe.Strafe(abilitydata, movecardinfo, slotFrom);
                     }
-                }
-
-                if (movecardinfo.strafe != null)
-                {
-                    movecardinfo.strafe.Strafe(abilitydata, movecardinfo);
                 }
             }
             yield return new WaitForSeconds(0.3f);

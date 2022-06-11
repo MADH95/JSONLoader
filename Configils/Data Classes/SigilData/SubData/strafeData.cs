@@ -19,7 +19,7 @@ namespace JLPlugin.Data
             right
         }
 
-        public IEnumerator Strafe(AbilityBehaviourData abilityData, moveCards movecardinfo)
+        public IEnumerator Strafe(AbilityBehaviourData abilityData, moveCards movecardinfo, CardSlot SlotToMove)
         {
             StrafeType strafeType = ParseEnum<StrafeType>(movecardinfo.strafe.direction);
             switch (strafeType)
@@ -36,8 +36,8 @@ namespace JLPlugin.Data
                     yield break;
             }
 
-            CardSlot CardSlotLeft = Singleton<BoardManager>.Instance.GetAdjacent(abilityData.self.slot, true);
-            CardSlot CardSlotRight = Singleton<BoardManager>.Instance.GetAdjacent(abilityData.self.Slot, false);
+            CardSlot CardSlotLeft = Singleton<BoardManager>.Instance.GetAdjacent(SlotToMove, true);
+            CardSlot CardSlotRight = Singleton<BoardManager>.Instance.GetAdjacent(SlotToMove, false);
             bool LeftSlotEmpty = CardSlotLeft != null && CardSlotLeft.Card == null;
             bool RightSlotEmpty = CardSlotRight != null && CardSlotRight.Card == null;
             if (this.movingLeft && !LeftSlotEmpty)
@@ -50,31 +50,31 @@ namespace JLPlugin.Data
             }
             CardSlot destination = this.movingLeft ? CardSlotLeft : CardSlotRight;
             bool destinationValid = this.movingLeft ? LeftSlotEmpty : RightSlotEmpty;
-            yield return this.MoveToSlot(abilityData, movecardinfo, destination, destinationValid);
+            yield return this.MoveToSlot(abilityData, movecardinfo, destination, destinationValid, SlotToMove);
             yield break;
         }
 
         // Token: 0x0600159E RID: 5534 RVA: 0x00049972 File Offset: 0x00047B72
-        protected IEnumerator MoveToSlot(AbilityBehaviourData abilityData, moveCards movecardinfo, CardSlot destination, bool destinationValid)
+        public IEnumerator MoveToSlot(AbilityBehaviourData abilityData, moveCards movecardinfo, CardSlot destination, bool destinationValid, CardSlot SlotToMove)
         {
             if ((SigilData.ConvertArgument(movecardinfo.strafe.flipSigil, abilityData) ?? "true") == "true")
             {
-                abilityData.self.RenderInfo.SetAbilityFlipped(abilityData.ability, this.movingLeft);
+                SlotToMove.Card.RenderInfo.SetAbilityFlipped(abilityData.ability, this.movingLeft);
             }
-            abilityData.self.RenderInfo.flippedPortrait = (this.movingLeft && abilityData.self.Info.flipPortraitForStrafe);
-            abilityData.self.RenderCard();
+            SlotToMove.Card.RenderInfo.flippedPortrait = (this.movingLeft && SlotToMove.Card.Info.flipPortraitForStrafe);
+            SlotToMove.Card.RenderCard();
             if (destination != null && destinationValid)
             {
                 //If issues arise with the OnMove trigger then we could always add a variable here
                 //to make sigils like squirrel strafe possible
-                //CardSlot oldSlot = abilityData.self.Slot;
+                //CardSlot oldSlot = SlotToMove.Card.Slot;
 
-                yield return Singleton<BoardManager>.Instance.AssignCardToSlot(abilityData.self, destination, 0.1f, null, true);
+                yield return Singleton<BoardManager>.Instance.AssignCardToSlot(SlotToMove.Card, destination, 0.1f, null, true);
                 yield return new WaitForSeconds(0.25f);
             }
             else
             {
-                abilityData.self.Anim.StrongNegationEffect();
+                SlotToMove.Card.Anim.StrongNegationEffect();
                 yield return new WaitForSeconds(0.15f);
             }
             yield break;
