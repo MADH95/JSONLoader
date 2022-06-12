@@ -44,15 +44,20 @@ namespace JLPlugin.SigilCode
                         {
                             SigilData.UpdateVariables(abilityBehaviour, slot.Card);
 
-                            if (slotData.GetSlot(buffCards.slot, abilityBehaviour) == __instance.slot)
+                            CardSlot chosenSlot = slotData.GetSlot(buffCards.slot, abilityBehaviour);
+                            if (buffCards.self == "true")
+                            {
+                                chosenSlot = abilityBehaviour.self.slot;
+                            }
+                            if (chosenSlot == __instance.slot)
                             {
                                 if (buffCards.addStats != null)
                                 {
-                                    __result += int.Parse(buffCards.addStats.Split('/')[1]);
+                                    __result += int.Parse(SigilData.ConvertArgument(buffCards.addStats.Split('/')[1], abilityBehaviour));
                                 }
                                 if (buffCards.setStats != null)
                                 {
-                                    __result = int.Parse(buffCards.setStats.Split('/')[1]);
+                                    __result = int.Parse(SigilData.ConvertArgument(buffCards.setStats.Split('/')[1], abilityBehaviour));
                                 }
                                 if ((__instance.Info.Health + __result) <= 0)
                                 {
