@@ -56,6 +56,7 @@ namespace JLPlugin.Data
                 Plugin.Log.LogWarning($"{fields[i].Name}: {values[i]}\n");
             }
 
+
             //There probably a more API oriented way of handling this, I'm just very confused how that all works atm
             Texture2D sigilPixelTexture = new(17, 17);
             if (this.pixelTexture != null)
@@ -76,7 +77,7 @@ namespace JLPlugin.Data
             info.powerLevel = this.powerLevel ?? 3;
 
             info.AddMetaCategories(this.metaCategories.Select(elem => ParseEnum<AbilityMetaCategory>(elem)).ToArray());
-            if (info.metaCategories.Count < 1)
+            if ((info.metaCategories?.Count ?? 0) < 1)
             {
                 info.SetDefaultPart1Ability();
             }
@@ -200,6 +201,7 @@ namespace JLPlugin.Data
 
         public static IEnumerator RunActions(AbilityBehaviourData abilitydata, PlayableCard self, Ability ability = new Ability())
         {
+            Plugin.Log.LogInfo($"This behaviour has the trigger: {abilitydata.trigger.triggerType}");
 
             abilitydata.self = self;
             abilitydata.ability = ability;

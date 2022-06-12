@@ -125,8 +125,8 @@ namespace JLPlugin.SigilCode
                 for (int i = 0; i < abilityData.abilityBehaviour.Count; i++)
                 {
                     abilityData.abilityBehaviour[i].TurnsInPlay++;
-                    yield return TriggerSigil("OnEndOfTurn");
                 }
+                yield return TriggerSigil("OnEndOfTurn");
             }
             else
             {

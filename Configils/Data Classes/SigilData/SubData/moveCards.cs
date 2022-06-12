@@ -32,8 +32,12 @@ namespace JLPlugin.Data
                     continue;
                 }
 
-                Singleton<ViewManager>.Instance.SwitchToView(View.Default, false, false);
                 CardSlot slotFrom = slotData.GetSlot(movecardinfo.moveFromSlot, abilitydata);
+                if (SigilData.ConvertArgument(movecardinfo.self, abilitydata) == "true")
+                {
+                    slotFrom = abilitydata.self.Slot;
+                }
+
                 CardSlot slotTo = slotData.GetSlot(movecardinfo.moveToSlot, abilitydata);
                 if (slotFrom?.Card != null)
                 {
@@ -54,7 +58,7 @@ namespace JLPlugin.Data
                     }
                     if (movecardinfo.strafe != null)
                     {
-                        movecardinfo.strafe.Strafe(abilitydata, movecardinfo, slotFrom);
+                        yield return movecardinfo.strafe.Strafe(abilitydata, movecardinfo, slotFrom);
                     }
                 }
             }

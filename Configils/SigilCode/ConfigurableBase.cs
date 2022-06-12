@@ -14,6 +14,7 @@ namespace JLPlugin.SigilCode
                 return ability;
             }
         }
+
         public PlayableCard PlayableCard
         {
             get
