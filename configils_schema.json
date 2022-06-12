@@ -138,7 +138,10 @@
                     "heal": {
                       "type": "string"
                     },
-                    "stats": {
+                    "addStats": {
+                      "type": "string"
+                    },
+                    "setStats": {
                       "type": "string"
                     },
                     "addAbilities": {
