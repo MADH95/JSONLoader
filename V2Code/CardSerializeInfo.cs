@@ -272,6 +272,28 @@ namespace JLPlugin.V2.Data
             }
         }
 
+        internal CardInfo ToCardInfo()
+        {
+            if (string.IsNullOrEmpty(this.name))
+                throw new InvalidOperationException("Card cannot have an empty name!");
+
+            CardInfo baseGameCard = (CardInfo) CardManager.BaseGameCards.CardByName(this.name).Clone();
+            if (baseGameCard != null)
+            {
+                Plugin.Log.LogDebug($"Modifying {this.name} using {this.ToJSON()}");
+                this.ApplyCardInfo(baseGameCard);
+                return baseGameCard;
+            }
+            else
+            {
+                string localModPrefix = this.modPrefix ?? DEFAULT_MOD_PREFIX;
+                CardInfo newCard = ScriptableObject.CreateInstance<CardInfo>();
+                newCard.name = this.name.StartsWith($"{localModPrefix}_") ? this.name : $"{localModPrefix}_{this.name}";
+                this.ApplyCardInfo(newCard);
+                return newCard;
+            }
+        }
+
         internal void WriteToFile(string filename, bool overwrite = true)
         {
             Plugin.Log.LogDebug($"Writing card {this.name ?? "Unnamed"} to {filename}");
