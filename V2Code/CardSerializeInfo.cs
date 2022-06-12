@@ -5,6 +5,7 @@ using InscryptionAPI.Guid;
 using InscryptionAPI.Helpers;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -236,6 +237,38 @@ namespace JLPlugin.V2.Data
                 newCard.name = this.name.StartsWith($"{localModPrefix}_") ? this.name : $"{localModPrefix}_{this.name}";
                 this.ApplyCardInfo(newCard);
                 CardManager.Add(localModPrefix, newCard);
+            }
+        }
+
+        internal void Remove()
+        {
+            if (string.IsNullOrEmpty(this.name))
+                throw new InvalidOperationException("Card cannot have an empty name!");
+            CardInfo baseGameCard = CardManager.BaseGameCards.CardByName(this.name);
+            if (baseGameCard != null)
+            {
+                throw new InvalidOperationException("Base game cards cannot be removed!");
+            }
+            else
+            {
+                string localModPrefix = this.modPrefix ?? DEFAULT_MOD_PREFIX;
+                CardInfo newCard = ScriptableObject.CreateInstance<CardInfo>();
+                newCard.name = this.name.StartsWith($"{localModPrefix}_") ? this.name : $"{localModPrefix}_{this.name}";
+                this.ApplyCardInfo(newCard);
+
+                // Remove from NewCards using reflection
+                ObservableCollection<CardInfo> NewCards = (ObservableCollection<CardInfo>) typeof(CardManager)
+                    .GetField("NewCards", BindingFlags.Static | BindingFlags.NonPublic).GetValue(null); 
+
+                CardInfo card = NewCards.FirstOrDefault(x => x.name == this.name);
+                if (card != default)
+                {
+                    CardManager.Remove(card);
+                }
+                else
+                {
+                    Plugin.Log.LogWarning($"Cannot remove {this.name}");
+                }
             }
         }
 
