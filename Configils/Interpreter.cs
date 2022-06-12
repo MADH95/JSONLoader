@@ -46,7 +46,7 @@ namespace JLPlugin
                 output = input.Replace(function.Value, ProcessFunction(function, abilityData));
             }
 
-            Plugin.Log.LogDebug($"output before NCalc: {output}");
+            Plugin.Log.LogInfo($"output before NCalc: {output}");
 
             if (Regex.Match(output, RegexStrings.Expression) is var expression && expression.Success)
             {
@@ -148,7 +148,8 @@ namespace JLPlugin
 
             string output = obj.ToString();
 
-            if (obj is IEnumerable collection)
+            //for some reason it thinks a string is an IEnumerable
+            if (obj is IEnumerable collection && obj is not string)
             {
                 output = $"'{ string.Join("','", collection) }'";
             }

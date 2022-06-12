@@ -137,6 +137,7 @@ namespace JLPlugin.V2.Data
             if (this.gemsCost != null)
                 card.gemsCost = this.gemsCost.Select(s => ParseEnum<GemType>(s)).ToList();
 
+            //this runs multiple times when you reload a run causing the card to gain duplicate sigils
             if (this.abilities != null && this.abilities.Length > 0)
                 card.AddAbilities(this.abilities.Select(s => ParseEnum<Ability>(s)).ToArray());
 

@@ -201,7 +201,7 @@ namespace JLPlugin.Data
 
         public static IEnumerator RunActions(AbilityBehaviourData abilitydata, PlayableCard self, Ability ability = new Ability())
         {
-            Plugin.Log.LogInfo($"This behaviour has the trigger: {abilitydata.trigger.triggerType}");
+            //Plugin.Log.LogInfo($"This behaviour has the trigger: {abilitydata.trigger.triggerType}");
 
             abilitydata.self = self;
             abilitydata.ability = ability;
