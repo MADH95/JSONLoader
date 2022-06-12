@@ -27,7 +27,7 @@ namespace JLPlugin.Data
                 }
                 if (boneamount < 0)
                 {
-                    yield return Singleton<ResourcesManager>.Instance.SpendBones(boneamount);
+                    yield return Singleton<ResourcesManager>.Instance.SpendBones(boneamount * -1);
                 }
             }
             if (abilitydata.gainCurrency.energy != null)
@@ -39,7 +39,7 @@ namespace JLPlugin.Data
                 }
                 if (energyamount < 0)
                 {
-                    yield return Singleton<ResourcesManager>.Instance.SpendEnergy(energyamount);
+                    yield return Singleton<ResourcesManager>.Instance.SpendEnergy(energyamount * -1);
                 }
             }
             if (abilitydata.gainCurrency.foils != null)
@@ -51,7 +51,7 @@ namespace JLPlugin.Data
                 }
                 if (foilamount < 0)
                 {
-                    yield return Singleton<CurrencyBowl>.Instance.TakeWeights(foilamount);
+                    yield return Singleton<CurrencyBowl>.Instance.TakeWeights(foilamount * -1);
                 }
             }
             yield break;

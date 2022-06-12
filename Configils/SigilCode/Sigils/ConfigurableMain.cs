@@ -60,6 +60,9 @@ namespace JLPlugin.SigilCode
                 }
                 else
                 {
+                    base.Card.Anim.LightNegationEffect();
+                    AudioController.Instance.PlaySound2D("toneless_negate", MixerGroup.GBCSFX, 0.2f, 0f, null, null, null, null, false);
+                    yield return new WaitForSeconds(0.25f);
                     yield break;
                 }
             }
@@ -69,6 +72,9 @@ namespace JLPlugin.SigilCode
             {
                 if (!Singleton<ResourcesManager>.Instance.HasGem(Gem))
                 {
+                    base.Card.Anim.LightNegationEffect();
+                    AudioController.Instance.PlaySound2D("toneless_negate", MixerGroup.GBCSFX, 0.2f, 0f, null, null, null, null, false);
+                    yield return new WaitForSeconds(0.25f);
                     yield break;
                 }
             }
