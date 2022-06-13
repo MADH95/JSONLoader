@@ -25,6 +25,9 @@ namespace JLPlugin.Data
     {
         public void GenerateNew()
         {
+            //It might be a good idea to add a check here to see if the trigger is valid
+            //and then send an error message if it isn't?
+
             //Type SigilType = GetType("JLPlugin.SigilCode", this.sigilBase);
             Type SigilType = typeof(ConfigurableMain);
 
@@ -134,7 +137,7 @@ namespace JLPlugin.Data
             });
         }
 
-        public static string ConvertArgument(string value, AbilityBehaviourData abilitydata)
+        public static string ConvertArgument(string value, AbilityBehaviourData abilitydata, bool sendDebug = true)
         {
             if (value == null)
             {
@@ -150,7 +153,7 @@ namespace JLPlugin.Data
                 value = StringList[random.Next(StringList.Count)];
             }
 
-            return Interpreter.Process(value, abilitydata);
+            return Interpreter.Process(value, abilitydata, sendDebug);
         }
         public static List<string> ConvertArgument(List<string> value, AbilityBehaviourData abilitydata)
         {

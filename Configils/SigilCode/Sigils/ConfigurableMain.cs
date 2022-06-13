@@ -150,13 +150,16 @@ namespace JLPlugin.SigilCode
         {
             foreach (AbilityBehaviourData behaviourData in abilityData.abilityBehaviour)
             {
-                MatchCollection OnHealthLevelMatch = Regex.Matches(behaviourData.trigger?.triggerType, @"OnHealthLevel\((.*?)\)");
-                if (OnHealthLevelMatch.Cast<Match>().ToList().Count > 0)
+                if (behaviourData.trigger?.triggerType != null)
                 {
-                    int healthLevel = int.Parse(OnHealthLevelMatch.Cast<Match>().ToList()[0].Groups[1].Value);
-                    if (target.Health <= healthLevel)
+                    MatchCollection OnHealthLevelMatch = Regex.Matches(behaviourData.trigger?.triggerType, @"OnHealthLevel\((.*?)\)");
+                    if (OnHealthLevelMatch.Cast<Match>().ToList().Count > 0)
                     {
-                        TriggerBehaviour(behaviourData, "OnHealthLevel", new Dictionary<string, object>() { ["AttackerCard"] = attacker }, target);
+                        int healthLevel = int.Parse(OnHealthLevelMatch.Cast<Match>().ToList()[0].Groups[1].Value);
+                        if (target.Health <= healthLevel)
+                        {
+                            TriggerBehaviour(behaviourData, "OnHealthLevel", new Dictionary<string, object>() { ["AttackerCard"] = attacker }, target);
+                        }
                     }
                 }
             }

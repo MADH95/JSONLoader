@@ -28,7 +28,7 @@ namespace JLPlugin
         }
 
 
-        public static string Process(in string input, AbilityBehaviourData abilityData)
+        public static string Process(in string input, AbilityBehaviourData abilityData, bool sendDebug = true)
         {
             string output = input;
 
@@ -46,12 +46,21 @@ namespace JLPlugin
                 output = input.Replace(function.Value, ProcessFunction(function, abilityData));
             }
 
-            Plugin.Log.LogInfo($"output before NCalc: {output}");
+            //this should stay as it's very useful for debugging for people
+            if (sendDebug)
+            {
+                Plugin.Log.LogInfo($"output before NCalc: {output}");
+            }
 
             if (Regex.Match(output, RegexStrings.Expression) is var expression && expression.Success)
             {
                 Expression e = new(expression.Groups[0].Value);
                 output = e.Evaluate().ToString();
+            }
+
+            if (output == "True" || output == "False")
+            {
+                output = output.ToLower();
             }
 
             return output;

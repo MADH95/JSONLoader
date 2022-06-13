@@ -28,13 +28,14 @@ namespace JLPlugin.SigilCode
 
                 foreach (Ability ability in slot.Card.Info.abilities)
                 {
-                    if (!SigilDicts.ArgumentList.ContainsKey(ability))
+                    if (!SigilDicts.ArgumentList.ContainsKey(ability) || !slot.Card.HasAbility(ability))
                     {
                         continue;
                     }
 
                     foreach (AbilityBehaviourData abilityBehaviour in SigilData.GetAbilityArguments(ability).abilityBehaviour.Where(x => x.trigger?.triggerType == "Passive"))
                     {
+
                         if (abilityBehaviour.buffCards == null)
                         {
                             continue;
@@ -45,19 +46,19 @@ namespace JLPlugin.SigilCode
                             SigilData.UpdateVariables(abilityBehaviour, slot.Card);
 
                             CardSlot chosenSlot = slotData.GetSlot(buffCards.slot, abilityBehaviour);
-                            if (buffCards.self == "true")
+                            if (buffCards.slot == null)
                             {
-                                chosenSlot = abilityBehaviour.self.slot;
+                                chosenSlot = slot;
                             }
                             if (chosenSlot == __instance.slot)
                             {
                                 if (buffCards.addStats != null)
                                 {
-                                    __result += int.Parse(SigilData.ConvertArgument(buffCards.addStats.Split('/')[1], abilityBehaviour));
+                                    __result += int.Parse(SigilData.ConvertArgument(buffCards.addStats.Split('/')[1], abilityBehaviour, false));
                                 }
                                 if (buffCards.setStats != null)
                                 {
-                                    __result = int.Parse(SigilData.ConvertArgument(buffCards.setStats.Split('/')[1], abilityBehaviour));
+                                    __result = int.Parse(SigilData.ConvertArgument(buffCards.setStats.Split('/')[1], abilityBehaviour, false)) - slot.Card.Info.Health;
                                 }
                                 if ((__instance.Info.Health + __result) <= 0)
                                 {

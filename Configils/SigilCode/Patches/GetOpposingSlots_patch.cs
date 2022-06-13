@@ -23,10 +23,11 @@ namespace JLPlugin.SigilCode
 
             foreach (Ability ability in __instance.Info.abilities)
             {
-                if (!SigilDicts.ArgumentList.ContainsKey(ability))
+                if (!SigilDicts.ArgumentList.ContainsKey(ability) || !__instance.HasAbility(ability))
                 {
                     continue;
                 }
+
                 foreach (AbilityBehaviourData abilityBehaviour in SigilData.GetAbilityArguments(ability).abilityBehaviour.Where(x => x.extraAttacks != null))
                 {
                     __result.Remove(__instance.Slot.opposingSlot);

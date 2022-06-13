@@ -18,7 +18,6 @@ namespace JLPlugin.Data
         public string heal;
         public List<string> addAbilities;
         public List<string> removeAbilities;
-        public string self;
 
         public static IEnumerator BuffCards(AbilityBehaviourData abilitydata)
         {
@@ -37,11 +36,7 @@ namespace JLPlugin.Data
                 }
 
                 PlayableCard card = null;
-                if (buffcardsinfo.self != null)
-                {
-                    card = abilitydata.self;
-                }
-                else
+                if (buffcardsinfo.slot != null)
                 {
                     CardSlot slot = slotData.GetSlot(buffcardsinfo.slot, abilitydata);
                     if (slot != null)
@@ -51,6 +46,10 @@ namespace JLPlugin.Data
                             card = slot.Card;
                         }
                     }
+                }
+                else
+                {
+                    card = abilitydata.self;
                 }
 
                 if (card != null)
@@ -75,18 +74,40 @@ namespace JLPlugin.Data
                     }
                     if (buffcardsinfo.removeAbilities != null)
                     {
+                        //how to fix this and add abilities
                         yield return new WaitForSeconds(0.15f);
                         card.Anim.PlayTransformAnimation();
                         yield return new WaitForSeconds(0.15f);
-                        mod.negateAbilities = SigilData.ConvertArgument(buffcardsinfo.removeAbilities, abilitydata).Select(s => CardSerializeInfo.ParseEnum<Ability>(s)).ToList();
-                        card.Status.hiddenAbilities.AddRange(SigilData.ConvertArgument(buffcardsinfo.removeAbilities, abilitydata).Select(s => CardSerializeInfo.ParseEnum<Ability>(s)));
+                        List<Ability> removeSigilList = SigilData.ConvertArgument(buffcardsinfo.removeAbilities, abilitydata).Select(s => CardSerializeInfo.ParseEnum<Ability>(s)).ToList();
+
+                        foreach (Ability removeSigil in removeSigilList)
+                        {
+                            card.temporaryMods.Select(x => x.abilities.Remove(removeSigil));
+                            card.Info.RemoveBaseAbility(removeSigil);
+                        }
+                        //mod.negateAbilities = SigilData.ConvertArgument(buffcardsinfo.removeAbilities, abilitydata).Select(s => CardSerializeInfo.ParseEnum<Ability>(s)).ToList();
+                        //card.Status.hiddenAbilities.AddRange(SigilData.ConvertArgument(buffcardsinfo.removeAbilities, abilitydata).Select(s => CardSerializeInfo.ParseEnum<Ability>(s)));
                     }
                     if (buffcardsinfo.addAbilities != null)
                     {
                         yield return new WaitForSeconds(0.15f);
                         card.Anim.PlayTransformAnimation();
                         yield return new WaitForSeconds(0.15f);
-                        mod.abilities = SigilData.ConvertArgument(buffcardsinfo.addAbilities, abilitydata).Select(s => CardSerializeInfo.ParseEnum<Ability>(s)).ToList();
+                        List<Ability> addSigilList = SigilData.ConvertArgument(buffcardsinfo.addAbilities, abilitydata).Select(s => CardSerializeInfo.ParseEnum<Ability>(s)).ToList();
+                        //card.Status.hiddenAbilities.RemoveAll(x => addSigilList.Contains(x));
+
+                        //if (!card.temporaryMods.Any(x => x.negateAbilities.Any(x => addSigilList.Contains(x))) && !card.Info.Mods.Any(x => x.negateAbilities.Any(x => addSigilList.Contains(x))))
+                        //{
+                        //    mod.abilities = addSigilList;
+                        //}
+
+                        mod.abilities = addSigilList;
+
+                        //foreach (Ability removeFromNegate in addSigilList)
+                        //{
+                        //    card.temporaryMods.Select(x => x.negateAbilities).ToList().RemoveAll(x => x.Contains(removeFromNegate));
+                        //    card.Info.Mods.Select(x => x.negateAbilities).ToList().RemoveAll(x => x.Contains(removeFromNegate));
+                        //}
                     }
                     card.AddTemporaryMod(mod);
                     card.RenderCard();

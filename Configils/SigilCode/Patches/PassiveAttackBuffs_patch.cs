@@ -28,7 +28,7 @@ namespace JLPlugin.SigilCode
 
                 foreach (Ability ability in slot.Card.Info.abilities)
                 {
-                    if (!SigilDicts.ArgumentList.ContainsKey(ability))
+                    if (!SigilDicts.ArgumentList.ContainsKey(ability) || !slot.Card.HasAbility(ability))
                     {
                         continue;
                     }
@@ -45,19 +45,19 @@ namespace JLPlugin.SigilCode
                             SigilData.UpdateVariables(abilityBehaviour, slot.Card);
 
                             CardSlot chosenSlot = slotData.GetSlot(buffCards.slot, abilityBehaviour);
-                            if (buffCards.self == "true")
+                            if (buffCards.slot == null)
                             {
-                                chosenSlot = abilityBehaviour.self.slot;
+                                chosenSlot = slot;
                             }
                             if (chosenSlot == __instance.slot)
                             {
                                 if (buffCards.addStats != null)
                                 {
-                                    __result += int.Parse(SigilData.ConvertArgument(buffCards.addStats.Split('/')[0], abilityBehaviour));
+                                    __result += int.Parse(SigilData.ConvertArgument(buffCards.addStats.Split('/')[0], abilityBehaviour, false));
                                 }
                                 if (buffCards.setStats != null)
                                 {
-                                    __result = int.Parse(SigilData.ConvertArgument(buffCards.setStats.Split('/')[0], abilityBehaviour));
+                                    __result = int.Parse(SigilData.ConvertArgument(buffCards.setStats.Split('/')[0], abilityBehaviour, false)) - slot.Card.Info.Attack;
                                 }
                                 if ((__instance.Info.Health + __result) <= 0)
                                 {

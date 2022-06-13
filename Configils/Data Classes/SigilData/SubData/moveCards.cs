@@ -11,7 +11,6 @@ namespace JLPlugin.Data
         public slotData moveFromSlot;
         public slotData moveToSlot;
         public string replace;
-        public string self;
         public strafeData strafe;
 
         public bool movingLeft;
@@ -33,7 +32,7 @@ namespace JLPlugin.Data
                 }
 
                 CardSlot slotFrom = slotData.GetSlot(movecardinfo.moveFromSlot, abilitydata);
-                if (SigilData.ConvertArgument(movecardinfo.self, abilitydata) == "true")
+                if (movecardinfo.moveFromSlot == null)
                 {
                     slotFrom = abilitydata.self.Slot;
                 }

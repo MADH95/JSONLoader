@@ -28,6 +28,10 @@ namespace JLPlugin.Data
                 }
 
                 CardSlot slot = slotData.GetSlot(damageslotinfo.slot, abilitydata);
+                if (damageslotinfo.slot == null)
+                {
+                    slot = abilitydata.self.Slot;
+                }
                 if (slot != null)
                 {
                     int damage = int.Parse(SigilData.ConvertArgument(damageslotinfo.damage, abilitydata));
