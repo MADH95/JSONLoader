@@ -264,6 +264,22 @@
                 }
               ]
             },
+            "extraAttacks": {
+              "type": "array",
+              "items": [
+                {
+                  "type": "object",
+                  "properties": {
+                    "index": {
+                      "type": "string"
+                    },
+                    "isOpponentSlot": {
+                      "type": "string"
+                    }
+                  }
+                }
+              ]
+            },
             "gainCurrency": {
               "type": "object",
               "properties": {
@@ -323,17 +339,6 @@
                   }
                 }
               ]
-            },
-            "uses": {
-              "type": "object",
-              "properties": {
-                "amountOfTurns": {
-                  "type": "string"
-                },
-                "amountOfTriggerActivations": {
-                  "type": "string"
-                }
-              }
             },
             "moveCards": {
               "type": "array",
