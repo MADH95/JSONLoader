@@ -13,6 +13,7 @@ using static JLPlugin.V2.Data.CardSerializeInfo;
 namespace JLPlugin.SigilCode
 {
     public class ConfigurableMain : ConfigurableBase, IOnBellRung, IOnOtherCardAddedToHand, IOnCardAssignedToSlotContext
+
     {
         public override int BonesCost
         {
@@ -33,6 +34,7 @@ namespace JLPlugin.SigilCode
         public override bool CanActivate()
         {
             AbilityBehaviourData behaviourData = abilityData.abilityBehaviour.Where(x => x.trigger?.triggerType == "OnActivate").ToList()[0];
+
             if (abilityData.activationCost == null || behaviourData == null)
             {
                 return false;

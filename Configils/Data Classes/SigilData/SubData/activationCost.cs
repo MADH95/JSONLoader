@@ -1,3 +1,4 @@
+
 ﻿using System.Collections.Generic;
 
 namespace JLPlugin.Data
@@ -7,6 +8,7 @@ namespace JLPlugin.Data
     {
         public int? bonesCost;
         public int? energyCost;
+
         public int? bloodCost;
         public List<string> gemCost;
     }

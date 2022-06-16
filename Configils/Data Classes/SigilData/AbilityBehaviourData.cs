@@ -15,11 +15,11 @@ namespace JLPlugin.Data
         public string dealScaleDamage;
         public List<drawCards> drawCards;
         public List<chooseSlot> chooseSlots;
+
         public List<moveCards> moveCards;
         public List<damageSlots> damageSlots;
         public List<attackSlots> attackSlots;
         public List<slotData> extraAttacks;
-        public messageData showMessage;
 
         public Dictionary<string, string> variables;
         public Dictionary<string, object> generatedVariables;

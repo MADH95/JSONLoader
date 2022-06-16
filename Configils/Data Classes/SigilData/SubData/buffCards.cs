@@ -1,4 +1,5 @@
-﻿using DiskCardGame;
+
+using DiskCardGame;
 using JLPlugin.V2.Data;
 using System;
 using System.Collections;
@@ -16,6 +17,7 @@ namespace JLPlugin.Data
         public string addStats;
         public string setStats;
         public string heal;
+
         public List<string> addAbilities;
         public List<string> removeAbilities;
 
@@ -36,6 +38,7 @@ namespace JLPlugin.Data
                 }
 
                 PlayableCard card = null;
+
                 if (buffcardsinfo.slot != null)
                 {
                     CardSlot slot = slotData.GetSlot(buffcardsinfo.slot, abilitydata);
@@ -72,7 +75,6 @@ namespace JLPlugin.Data
                         mod.attackAdjustment += int.Parse(SigilData.ConvertArgument(buffcardsinfo.setStats.Split('/')[0], abilitydata)) - card.Info.Attack;
                         mod.healthAdjustment += int.Parse(SigilData.ConvertArgument(buffcardsinfo.setStats.Split('/')[1], abilitydata)) - card.Info.Health;
                     }
-
                     if (buffcardsinfo.addAbilities != null || buffcardsinfo.removeAbilities != null)
                     {
                         yield return new WaitForSeconds(0.15f);
