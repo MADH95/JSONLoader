@@ -81,7 +81,6 @@ namespace JLPlugin.SigilCode
             foreach (AbilityBehaviourData behaviourData in abilityData.abilityBehaviour)
             {
                 MatchCollection OnHealthLevelMatch = Regex.Matches(behaviourData.trigger?.triggerType, @"OnHealthLevel\((.*?)\)");
-
                 if (OnHealthLevelMatch.Cast<Match>().ToList().Count > 0)
                 {
                     int healthLevel = int.Parse(OnHealthLevelMatch.Cast<Match>().ToList()[0].Groups[1].Value);
@@ -242,9 +241,7 @@ namespace JLPlugin.SigilCode
             }
 
             behaviourData.generatedVariables["TriggerCard"] = Card;
-
             string condition = SigilData.ConvertArgument(behaviourData.trigger?.activatesForCardsWithCondition, behaviourData);
-
             return condition == "true";
         }
     }

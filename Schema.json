@@ -411,8 +411,7 @@
     },
     "tailLostPortrait": {
       "description": "The .png file that contains the portrait that will replace this card's portrait if it loses its tail",
-      "type": "string",
-      "pattern": "^[a-zA-Z\\d_]+.png$"
+      "type": "string"
     },
     "iceCubeName": {
       "description": "The name of the card that will be generated if this card has or gains the IceCube ability",

@@ -25,6 +25,7 @@ namespace JLPlugin.SigilCode
                 {
                     continue;
                 }
+
                 foreach (Ability ability in slot.Card.GetTriggeredAbilities())
                 {
                     if (!SigilDicts.ArgumentList.ContainsKey(ability) || !slot.Card.HasAbility(ability))
