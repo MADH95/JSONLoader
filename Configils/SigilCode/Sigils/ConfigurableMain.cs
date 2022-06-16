@@ -276,13 +276,15 @@ namespace JLPlugin.SigilCode
             {
                 if (behaviourData.trigger.triggerType.Contains(trigger))
                 {
+                    SigilData.UpdateVariables(behaviourData, base.PlayableCard);
+
                     //de user wil alle kaarten checken
                     if (behaviourData.trigger.activatesForCardsWithCondition != null)
                     {
                         //er is een kaart om te checken dus doe dat
                         if (cardToCheck != null)
                         {
-                            if (!CheckCard(behaviourData, cardToCheck))
+                            if (!CheckCard(ref behaviourData, cardToCheck))
                             {
                                 yield break;
                             }
@@ -300,8 +302,6 @@ namespace JLPlugin.SigilCode
                         }
                     }
 
-                    SigilData.UpdateVariables(behaviourData, base.PlayableCard);
-
                     if (variableList != null)
                     {
                         foreach (var variable in variableList)
@@ -316,7 +316,7 @@ namespace JLPlugin.SigilCode
             yield break;
         }
 
-        public bool CheckCard(AbilityBehaviourData behaviourData, PlayableCard Card)
+        public bool CheckCard(ref AbilityBehaviourData behaviourData, PlayableCard Card)
         {
             if (Card == null || behaviourData.trigger?.activatesForCardsWithCondition == null)
             {

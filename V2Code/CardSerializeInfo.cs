@@ -301,14 +301,14 @@ namespace JLPlugin.V2.Data
             {
                 string filename = file.Substring(file.LastIndexOf(Path.DirectorySeparatorChar) + 1);
 
-                if (filename.EndsWith("_deck.jldr2"))
-                {
-                    continue;
-                }
-
                 if (filename.Contains("_example.jldr"))
                 {
                     Plugin.Log.LogDebug($"Skipping {filename}");
+                    continue;
+                }
+
+                if (filename.EndsWith("_sigil.jldr2") || filename.EndsWith("_deck.jldr2"))
+                {
                     continue;
                 }
 

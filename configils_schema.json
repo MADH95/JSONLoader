@@ -144,21 +144,19 @@
                     "setStats": {
                       "type": "string"
                     },
-                    "addAbilities": {
-                      "type": "array",
-                      "items": [
-                        {
+                    "addAbility": {
+                      "type": "object",
+                      "properties": {
+                        "name": {
+                          "type": "string"
+                        },
+                        "infused": {
                           "type": "string"
                         }
-                      ]
+                      }
                     },
-                    "removeAbilities": {
-                      "type": "array",
-                      "items": [
-                        {
-                          "type": "string"
-                        }
-                      ]
+                    "removeAbility": {
+                      "type": "string"
                     }
                   }
                 }
@@ -264,6 +262,43 @@
                 }
               ]
             },
+            "extraAttacks": {
+              "type": "array",
+              "items": [
+                {
+                  "type": "object",
+                  "properties": {
+                    "attackingSlot": {
+                      "type": "object",
+                      "properties": {
+                        "index": {
+                          "type": "string"
+                        },
+                        "isOpponentSlot": {
+                          "type": "string"
+                        }
+                      }
+                    },
+                    "slotsToAttack": {
+                      "type": "array",
+                      "items": [
+                        {
+                          "type": "object",
+                          "properties": {
+                            "index": {
+                              "type": "string"
+                            },
+                            "isOpponentSlot": {
+                              "type": "string"
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  }
+                }
+              ]
+            },
             "gainCurrency": {
               "type": "object",
               "properties": {
@@ -323,17 +358,6 @@
                   }
                 }
               ]
-            },
-            "uses": {
-              "type": "object",
-              "properties": {
-                "amountOfTurns": {
-                  "type": "string"
-                },
-                "amountOfTriggerActivations": {
-                  "type": "string"
-                }
-              }
             },
             "moveCards": {
               "type": "array",

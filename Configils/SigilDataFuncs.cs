@@ -73,7 +73,7 @@ namespace JLPlugin.Data
                     this.name ?? "",
                     this.description ?? "",
                     SigilType,
-                    this.texture
+                    TextureHelper.GetImageAsTexture(this.texture, FilterMode.Point) ?? new Texture2D(49, 49)
                 );
 
             info.SetPixelAbilityIcon(sigilPixelTexture);
@@ -155,6 +155,7 @@ namespace JLPlugin.Data
 
             return Interpreter.Process(value, abilitydata, sendDebug);
         }
+
         public static List<string> ConvertArgument(List<string> value, AbilityBehaviourData abilitydata)
         {
             if (value == null)
