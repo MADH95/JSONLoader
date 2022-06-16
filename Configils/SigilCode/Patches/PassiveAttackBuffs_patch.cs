@@ -26,9 +26,9 @@ namespace JLPlugin.SigilCode
                     continue;
                 }
 
-                foreach (Ability ability in slot.Card.Info.abilities)
+                foreach (Ability ability in slot.Card.GetTriggeredAbilities())
                 {
-                    if (!SigilDicts.ArgumentList.ContainsKey(ability))
+                    if (!SigilDicts.ArgumentList.ContainsKey(ability) || !slot.Card.HasAbility(ability))
                     {
                         continue;
                     }
@@ -44,15 +44,20 @@ namespace JLPlugin.SigilCode
                         {
                             SigilData.UpdateVariables(abilityBehaviour, slot.Card);
 
-                            if (slotData.GetSlot(buffCards.slot, abilityBehaviour) == __instance.slot)
+                            CardSlot chosenSlot = slotData.GetSlot(buffCards.slot, abilityBehaviour);
+                            if (buffCards.slot == null)
+                            {
+                                chosenSlot = slot;
+                            }
+                            if (chosenSlot == __instance.slot)
                             {
                                 if (buffCards.addStats != null)
                                 {
-                                    __result += int.Parse(buffCards.addStats.Split('/')[0]);
+                                    __result += int.Parse(SigilData.ConvertArgument(buffCards.addStats.Split('/')[0], abilityBehaviour, false));
                                 }
                                 if (buffCards.setStats != null)
                                 {
-                                    __result = int.Parse(buffCards.setStats.Split('/')[0]);
+                                    __result = int.Parse(SigilData.ConvertArgument(buffCards.setStats.Split('/')[0], abilityBehaviour, false)) - slot.Card.Info.Attack;
                                 }
                                 if ((__instance.Info.Health + __result) <= 0)
                                 {

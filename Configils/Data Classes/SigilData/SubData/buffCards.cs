@@ -1,4 +1,5 @@
-﻿using DiskCardGame;
+
+using DiskCardGame;
 using JLPlugin.V2.Data;
 using System;
 using System.Collections;
@@ -16,9 +17,9 @@ namespace JLPlugin.Data
         public string addStats;
         public string setStats;
         public string heal;
-        public List<string> abilities;
+
+        public List<string> addAbilities;
         public List<string> removeAbilities;
-        public string self;
 
         public static IEnumerator BuffCards(AbilityBehaviourData abilitydata)
         {
@@ -37,11 +38,8 @@ namespace JLPlugin.Data
                 }
 
                 PlayableCard card = null;
-                if (buffcardsinfo.self != null)
-                {
-                    card = abilitydata.self;
-                }
-                else
+
+                if (buffcardsinfo.slot != null)
                 {
                     CardSlot slot = slotData.GetSlot(buffcardsinfo.slot, abilitydata);
                     if (slot != null)
@@ -51,6 +49,10 @@ namespace JLPlugin.Data
                             card = slot.Card;
                         }
                     }
+                }
+                else
+                {
+                    card = abilitydata.self;
                 }
 
                 if (card != null)
@@ -73,20 +75,34 @@ namespace JLPlugin.Data
                         mod.attackAdjustment += int.Parse(SigilData.ConvertArgument(buffcardsinfo.setStats.Split('/')[0], abilitydata)) - card.Info.Attack;
                         mod.healthAdjustment += int.Parse(SigilData.ConvertArgument(buffcardsinfo.setStats.Split('/')[1], abilitydata)) - card.Info.Health;
                     }
+                    if (buffcardsinfo.addAbilities != null || buffcardsinfo.removeAbilities != null)
+                    {
+                        yield return new WaitForSeconds(0.15f);
+                        card.Anim.PlayTransformAnimation();
+                        yield return new WaitForSeconds(0.15f);
+                    }
+
                     if (buffcardsinfo.removeAbilities != null)
                     {
-                        yield return new WaitForSeconds(0.15f);
-                        card.Anim.PlayTransformAnimation();
-                        yield return new WaitForSeconds(0.15f);
-                        mod.negateAbilities = SigilData.ConvertArgument(buffcardsinfo.removeAbilities, abilitydata).Select(s => CardSerializeInfo.ParseEnum<Ability>(s)).ToList();
-                        card.Status.hiddenAbilities.AddRange(SigilData.ConvertArgument(buffcardsinfo.removeAbilities, abilitydata).Select(s => CardSerializeInfo.ParseEnum<Ability>(s)));
+                        List<Ability> removeSigilList = SigilData.ConvertArgument(buffcardsinfo.removeAbilities, abilitydata).Select(s => CardSerializeInfo.ParseEnum<Ability>(s)).ToList();
+
+                        foreach (Ability removeSigil in removeSigilList)
+                        {
+                            card.temporaryMods.ForEach(x => x.abilities.Remove(removeSigil));
+                            card.Status.hiddenAbilities.Add(removeSigil);
+                        }
+                        mod.negateAbilities.AddRange(removeSigilList);
                     }
-                    if (buffcardsinfo.abilities != null)
+                    if (buffcardsinfo.addAbilities != null)
                     {
-                        yield return new WaitForSeconds(0.15f);
-                        card.Anim.PlayTransformAnimation();
-                        yield return new WaitForSeconds(0.15f);
-                        mod.abilities = SigilData.ConvertArgument(buffcardsinfo.abilities, abilitydata).Select(s => CardSerializeInfo.ParseEnum<Ability>(s)).ToList();
+                        List<Ability> addSigilList = SigilData.ConvertArgument(buffcardsinfo.addAbilities, abilitydata).Select(s => CardSerializeInfo.ParseEnum<Ability>(s)).ToList();
+
+                        foreach (Ability addSigil in addSigilList)
+                        {
+                            card.temporaryMods.ForEach(x => x.negateAbilities.Remove(addSigil));
+                            card.Status.hiddenAbilities.Remove(addSigil);
+                        }
+                        mod.abilities.AddRange(addSigilList);
                     }
                     card.AddTemporaryMod(mod);
                     card.RenderCard();

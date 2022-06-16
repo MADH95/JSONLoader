@@ -1,41 +1,34 @@
 ﻿
+using BepInEx;
+using DiskCardGame;
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Collections;
-using System.Collections.Generic;
-
-using UnityEngine;
-using DiskCardGame;
-
-using BepInEx;
-
 using TinyJson;
+using UnityEngine;
 
 using Random = System.Random;
 
 namespace JLPlugin.Data
 {
-    using System.Text.RegularExpressions;
-
-	using InscryptionAPI.Helpers;
     using InscryptionAPI.Card;
-
-	using NCalc;
-    
+    using InscryptionAPI.Helpers;
     using SigilCode;
-    
-    using static V2.Data.CardSerializeInfo;
-
+    using System.Text.RegularExpressions;
     using static InscryptionAPI.Card.SpecialTriggeredAbilityManager;
-
+    using static V2.Data.CardSerializeInfo;
     using SigilTuple = Tuple<Type, SigilData>;
 
     public partial class SigilData
     {
         public void GenerateNew()
         {
+            //It might be a good idea to add a check here to see if the trigger is valid
+            //and then send an error message if it isn't?
+
             //Type SigilType = GetType("JLPlugin.SigilCode", this.sigilBase);
             Type SigilType = typeof(ConfigurableMain);
 
@@ -54,8 +47,7 @@ namespace JLPlugin.Data
                 return;
             }
 
-            // Is this section necessary? reflection is quite expensive so doing this for every ability will slow some things
-            // Still refactored it to use less functions to make it as quick as possible.
+            // This is for debugging it should be removed before release
             var fields = this.GetType()
                      .GetFields();
 
@@ -63,9 +55,9 @@ namespace JLPlugin.Data
 
             List<string> fieldsinfo = new();
 
-            for (int i = 0; i < fields.Length; ++i )
+            for (int i = 0; i < fields.Length; ++i)
             {
-                Plugin.Log.LogWarning( $"{fields[ i ].Name}: {values[ i ]}\n" );
+                Plugin.Log.LogWarning($"{fields[i].Name}: {values[i]}\n");
             }
 
             //There probably a more API oriented way of handling this, I'm just very confused how that all works atm
@@ -87,13 +79,14 @@ namespace JLPlugin.Data
             info.SetPixelAbilityIcon(sigilPixelTexture);
             info.powerLevel = this.powerLevel ?? 3;
 
-            info.AddMetaCategories(this.metaCategories.Select( elem => ParseEnum<AbilityMetaCategory>( elem ) ).ToArray());
-            if (info.metaCategories.Count < 1)
-			{
+            info.AddMetaCategories(this.metaCategories.Select(elem => ParseEnum<AbilityMetaCategory>(elem)).ToArray());
+            if ((info.metaCategories?.Count ?? 0) < 1)
+            {
                 info.SetDefaultPart1Ability();
-			}
+            }
 
-            info.canStack = true; // Maybe make this configurable by user?
+            info.canStack = this.canStack ?? false;
+
             info.opponentUsable = this.opponentUsable ?? false;
 
             //Is this custom dialogue events? can we not use API?
@@ -122,7 +115,7 @@ namespace JLPlugin.Data
 
         public static void LoadAllSigils()
         {
-            foreach (string file in Directory.EnumerateFiles(Paths.PluginPath, "_sigil.jldr2", SearchOption.AllDirectories))
+            foreach (string file in Directory.EnumerateFiles(Paths.PluginPath, "*_sigil.jldr2", SearchOption.AllDirectories))
             {
                 string filename = file.Substring(file.LastIndexOf(Path.DirectorySeparatorChar) + 1);
 
@@ -145,140 +138,25 @@ namespace JLPlugin.Data
             });
         }
 
-        //This could be split up, would make for more readable and usable code. I will give it a go next refactor.
-        public static string ConvertString(string value, AbilityBehaviourData abilitydata)
-        {
-            var random = new Random();
-
-            if (value.Contains("|"))
-            {
-                //regex instead of splitting so it does not mistake the or operator (||) for randomization
-                MatchCollection randomMatchList = Regex.Matches(value, @"(?:(?:\((?>[^()]+|\((?<number>)|\)(?<-number>))*(?(number)(?!))\))|[^|])+");
-                List<string> StringList = randomMatchList.Cast<Match>().Select(match => match.Value).ToList();
-                value = StringList[random.Next(StringList.Count)];
-            }
-
-            //function code, so e.g playerSlot(1 + 1)
-            MatchCollection functionMatchList = Regex.Matches(value, @"([a-zA-Z]+)\((.*?)\)");
-            List<Match> functionlist = functionMatchList.Cast<Match>().ToList();
-            //Plugin.Log.LogInfo(value + " FUNCTIONS!!!: " + functionMatchList.Cast<Match>().ToList().Count);
-
-            foreach (Match function in functionlist)
-            {
-                string fullFunction = function.Groups[0].Value;
-                string functionName = function.Groups[1].Value;
-                string functionContents = function.Groups[2].Value;
-
-                if (functionName != "if" && functionName != "in")
-                {
-                    //custom functions
-                    if (functionName == "StringContains")
-                    {
-                        if (functionContents.Contains(','))
-                        {
-                            value = value.Replace(fullFunction, ConvertString(Regex.Split(functionContents, ", ")[0], abilitydata).Contains(ConvertString(Regex.Split(functionContents, ", ")[1].Replace("'", ""), abilitydata)).ToString());
-                            continue;
-                        }
-                    }
-                    //------------------------------
-
-                    //Plugin.Log.LogInfo("FUNCTION: " + functionName + " " + functionContents);
-                    string converted = ConvertString(functionContents, abilitydata);
-                    value = value.Replace(functionContents, converted);
-                }
-            }
-            //-------------------------------
-
-            //regex for vars, it matches anything in between [ ]
-            MatchCollection matchList = Regex.Matches(value, "\\[.*?\\]");
-            List<string> variablelist = matchList.Cast<Match>().Select(match => match.Value).ToList();
-            //Plugin.Log.LogInfo("variables amount + contents: " + variablelist.Count + " " + string.Join(", ", variablelist));
-
-            foreach (string variable in variablelist)
-            {
-                List<string> fieldList = variable.Replace("[", "").Replace("]", "").Split('.').ToList();
-
-                object generatedReplaceValue = null;
-                if (abilitydata.generatedVariables.TryGetValue(fieldList[0], out generatedReplaceValue))
-                {
-                    fieldList.RemoveAt(0);
-                    foreach (string field in fieldList)
-                    {
-                        //Plugin.Log.LogInfo("properties: " + string.Join(", ", generatedReplaceValue.GetType().GetProperties().Select(x => x.Name).ToList()));
-                        PropertyInfo propertyOfField = generatedReplaceValue.GetType().GetProperty(field);
-
-                        //Plugin.Log.LogInfo("fields: " + string.Join(", ", generatedReplaceValue.GetType().GetFields().Select(x => x.Name).ToList()));
-                        //Plugin.Log.LogInfo("beforeNULL: " + generatedReplaceValue.ToString());
-
-                        try
-                        {
-                            if (propertyOfField == null)
-                            {
-                                FieldInfo fieldOfField = generatedReplaceValue.GetType().GetField(field);
-                                generatedReplaceValue = fieldOfField.GetValue(generatedReplaceValue);
-                            }
-                            else
-                            {
-                                generatedReplaceValue = propertyOfField.GetValue(generatedReplaceValue);
-                            }
-                        }
-                        catch
-                        {
-
-                            generatedReplaceValue = "null";
-                            break;
-                        }
-
-                        if (generatedReplaceValue == null)
-                        {
-                            generatedReplaceValue = "null";
-                            break;
-                        }
-                    }
-
-                    Plugin.Log.LogInfo("generatedReplaceValue: " + generatedReplaceValue.ToString());
-                    if (generatedReplaceValue is IList)
-                    {
-                        //Plugin.Log.LogInfo("before tribes!");
-                        generatedReplaceValue = "'" + string.Join("', '", ((IEnumerable)generatedReplaceValue).Cast<object>().ToList().Select(x => x.ToString())) + "'";
-                    }
-                    value = value.Replace(variable, generatedReplaceValue.ToString());
-                }
-                else
-                {
-                    string replaceValue = null;
-                    if (!abilitydata.variables.TryGetValue(variable, out replaceValue))
-                    {
-                        return null;
-                    }
-                    value = value.Replace(variable, replaceValue);
-                }
-            }
-            //Plugin.Log.LogInfo(value);
-
-            if (value.StartsWith("(") && value.EndsWith(")"))
-            {
-                Expression e = new Expression(value);
-                value = e.Evaluate().ToString();
-            }
-
-            if (value == "True" || value == "False")
-            {
-                value = value.ToLower();
-            }
-            return value;
-        }
-
-        public static string ConvertArgument(string value, AbilityBehaviourData abilitydata)
+        public static string ConvertArgument(string value, AbilityBehaviourData abilitydata, bool sendDebug = true)
         {
             if (value == null)
             {
                 return null;
             }
 
-            value = ConvertString(value, abilitydata);
-            //Plugin.Log.LogInfo("LastValue: " + value);
-            return value;
+            if (value.Contains("|"))
+            {
+                //regex instead of splitting so it does not mistake the or operator (||) for randomization
+
+                var random = new Random();
+
+                MatchCollection randomMatchList = Regex.Matches(value, @"(?:(?:\((?>[^()]+|\((?<number>)|\)(?<-number>))*(?(number)(?!))\))|[^|])+");
+                List<string> StringList = randomMatchList.Cast<Match>().Select(match => match.Value).ToList();
+                value = StringList[random.Next(StringList.Count)];
+            }
+
+            return Interpreter.Process(value, abilitydata, sendDebug);
         }
         public static List<string> ConvertArgument(List<string> value, AbilityBehaviourData abilitydata)
         {
@@ -287,7 +165,7 @@ namespace JLPlugin.Data
                 return null;
             }
 
-            return value.Select(x => ConvertString(x, abilitydata)).ToList();
+            return value.Select(x => Interpreter.Process(x, abilitydata)).ToList();
         }
 
         public static Type GetType(string nameSpace, string typeName)
@@ -329,6 +207,7 @@ namespace JLPlugin.Data
 
         public static IEnumerator RunActions(AbilityBehaviourData abilitydata, PlayableCard self, Ability ability = new Ability())
         {
+            //Plugin.Log.LogInfo($"This behaviour has the trigger: {abilitydata.trigger.triggerType}");
 
             abilitydata.self = self;
             abilitydata.ability = ability;
@@ -351,6 +230,15 @@ namespace JLPlugin.Data
                 }
             }
 
+            if (abilitydata.showMessage != null)
+            {
+                yield return messageData.showMessage(abilitydata);
+            }
+
+            if (abilitydata.gainCurrency != null)
+            {
+                yield return gainCurrency.GainCurrency(abilitydata);
+            }
             if (abilitydata.dealScaleDamage != null)
             {
                 int damage = int.Parse(ConvertArgument(abilitydata.dealScaleDamage, abilitydata));

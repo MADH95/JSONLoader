@@ -40,7 +40,7 @@ namespace JLPlugin.SigilCode
         {
             foreach (AbilityBehaviourData behaviourData in abilityData.abilityBehaviour)
             {
-                if (otherCard.Slot.opposingSlot.Card == base.PlayableCard || behaviourData.trigger.activatesForCardsWithCondition != null)
+                if (otherCard.Slot.opposingSlot.Card == base.PlayableCard || behaviourData.trigger?.activatesForCardsWithCondition != null)
                 {
                     yield return TriggerBehaviour(behaviourData, "OnDetect", null, otherCard.Slot.opposingSlot.Card);
                 }
@@ -61,8 +61,8 @@ namespace JLPlugin.SigilCode
                 for (int i = 0; i < abilityData.abilityBehaviour.Count; i++)
                 {
                     abilityData.abilityBehaviour[i].TurnsInPlay++;
-                    yield return TriggerSigil("OnEndOfTurn");
                 }
+                yield return TriggerSigil("OnEndOfTurn");
             }
             else
             {
@@ -80,7 +80,8 @@ namespace JLPlugin.SigilCode
         {
             foreach (AbilityBehaviourData behaviourData in abilityData.abilityBehaviour)
             {
-                MatchCollection OnHealthLevelMatch = Regex.Matches(behaviourData.trigger.triggerType, @"OnHealthLevel\((.*?)\)");
+                MatchCollection OnHealthLevelMatch = Regex.Matches(behaviourData.trigger?.triggerType, @"OnHealthLevel\((.*?)\)");
+
                 if (OnHealthLevelMatch.Cast<Match>().ToList().Count > 0)
                 {
                     int healthLevel = int.Parse(OnHealthLevelMatch.Cast<Match>().ToList()[0].Groups[1].Value);
@@ -161,6 +162,20 @@ namespace JLPlugin.SigilCode
             yield break;
         }
 
+        public bool RespondsToCardAssignedToSlotContext(PlayableCard card, CardSlot oldSlot, CardSlot newSlot)
+        {
+            return true;
+        }
+
+        public IEnumerator OnCardAssignedToSlotContext(PlayableCard card, CardSlot oldSlot, CardSlot newSlot)
+        {
+            if (oldSlot != null)
+            {
+                yield return TriggerSigil("OnMove", new Dictionary<string, object>() { ["OldSlot"] = oldSlot }, card);
+            }
+            yield break;
+        }
+
         public IEnumerator TriggerSigil(string trigger, Dictionary<string, object> variableList = null, PlayableCard cardToCheck = null)
         {
             //cardToCheck kan elke kaart zijn ook base.PlayableCard
@@ -175,56 +190,61 @@ namespace JLPlugin.SigilCode
 
         public IEnumerator TriggerBehaviour(AbilityBehaviourData behaviourData, string trigger, Dictionary<string, object> variableList = null, PlayableCard cardToCheck = null)
         {
-            if (behaviourData.trigger.triggerType.Contains(trigger))
+            if (behaviourData.trigger != null)
             {
-                //de user wil alle kaarten checken
-                if (behaviourData.trigger.activatesForCardsWithCondition != null)
+                if (behaviourData.trigger.triggerType.Contains(trigger))
                 {
-                    //er is een kaart om te checken dus doe dat
-                    if (cardToCheck != null)
+                    //de user wil alle kaarten checken
+                    if (behaviourData.trigger.activatesForCardsWithCondition != null)
                     {
-                        if (!CheckCard(behaviourData, cardToCheck))
+                        //er is een kaart om te checken dus doe dat
+                        if (cardToCheck != null)
+                        {
+                            if (!CheckCard(behaviourData, cardToCheck))
+                            {
+                                yield break;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        //de user wil alleen base.PlayableCard triggeren
+                        //dus check je of cardToCheck base.PlayableCard is
+                        //of dat het null is want dat is het alleen wanneer je zeker weet dat het base.PlayableCard is
+                        //bijvoorbeeld met OnResolveOnBoard
+                        if (cardToCheck != base.PlayableCard && cardToCheck != null)
                         {
                             yield break;
                         }
                     }
-                }
-                else
-                {
-                    //de user wil alleen base.PlayableCard triggeren
-                    //dus check je of cardToCheck base.PlayableCard is
-                    //of dat het null is want dat is het alleen wanneer je zeker weet dat het base.PlayableCard is
-                    //bijvoorbeeld met OnResolveOnBoard
-                    if (cardToCheck != base.PlayableCard && cardToCheck != null)
-                    {
-                        yield break;
-                    }
-                }
 
-                SigilData.UpdateVariables(behaviourData, base.PlayableCard);
+                    SigilData.UpdateVariables(behaviourData, base.PlayableCard);
 
-                if (variableList != null)
-                {
-                    foreach (var variable in variableList)
+                    if (variableList != null)
                     {
-                        //Plugin.Log.LogInfo("set and set to: " + variable.Key.ToString() + " " + variable.Value.ToString());
-                        behaviourData.generatedVariables[variable.Key] = variable.Value;
+                        foreach (var variable in variableList)
+                        {
+                            //Plugin.Log.LogInfo("set and set to: " + variable.Key.ToString() + " " + variable.Value.ToString());
+                            behaviourData.generatedVariables[variable.Key] = variable.Value;
+                        }
                     }
+                    yield return SigilData.RunActions(behaviourData, base.PlayableCard);
                 }
-                yield return SigilData.RunActions(behaviourData, base.PlayableCard);
             }
             yield break;
         }
 
         public bool CheckCard(AbilityBehaviourData behaviourData, PlayableCard Card)
         {
-            if (Card == null || behaviourData.trigger.activatesForCardsWithCondition == null)
+            if (Card == null || behaviourData.trigger?.activatesForCardsWithCondition == null)
             {
                 return false;
             }
 
             behaviourData.generatedVariables["TriggerCard"] = Card;
-            string condition = SigilData.ConvertArgument(behaviourData.trigger.activatesForCardsWithCondition, behaviourData);
+
+            string condition = SigilData.ConvertArgument(behaviourData.trigger?.activatesForCardsWithCondition, behaviourData);
+
             return condition == "true";
         }
     }

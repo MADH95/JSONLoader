@@ -1,11 +1,11 @@
 {
-  "$schema": "http://json-schema.org/draft-07/schema",
+  "$schema": "http://json-schema.org/draft-04/schema#",
   "$id": "https://github.com/MADH95/JSONLoaderPlugin/blob/master/Schema.json",
   "title": "New Card",
   "Description": "Schema to verify the input data for a new card",
   "type": "object",
   "additionalProperties": false,
-  "required": ["name", "modPrefix"],
+  "required": [ "name", "modPrefix" ],
   "properties": {
     "name": {
       "description": "A name for the card",
@@ -34,7 +34,7 @@
         "anyOf": [
           {
             "title": "Base Game Metacategory",
-            "description": "The metacategory that the base game provides",
+            "description": "Base Game Metacategory",
             "type": "string",
             "enum": [
               "ChoiceNode",
@@ -48,8 +48,7 @@
           {
             "title": "Mod-Added Metacategory",
             "description": "Format: [Mod GUID].[Metacategory Name]",
-            "type": "string",
-            "pattern": "^([^.]+[.]{1})*([^.])+$"
+            "type": "string"
           }
         ]
       },
@@ -59,13 +58,23 @@
       "description": "How common the card is",
       "default": "Vanilla",
       "type": "string",
-      "enum": ["Vanilla", "Simple", "Intermediate", "Advanced"]
+      "enum": [
+        "Vanilla",
+        "Simple",
+        "Intermediate",
+        "Advanced"
+      ]
     },
     "temple": {
       "description": "Which Scrybe the card belongs to",
       "default": "Nature",
       "type": "string",
-      "enum": ["Nature", "Undead", "Tech", "Wizard"]
+      "enum": [
+        "Nature",
+        "Undead",
+        "Tech",
+        "Wizard"
+      ]
     },
     "baseAttack": {
       "description": "The base attack value of the card",
@@ -82,7 +91,7 @@
     "hideAttackAndHealth": {
       "description": "Hide the attack and health of the card",
       "type": "boolean",
-      "default": false
+      "default": "false"
     },
     "bloodCost": {
       "description": "The sacrifice cost of the card",
@@ -107,7 +116,11 @@
       "type": "array",
       "items": {
         "type": "string",
-        "enum": ["Green", "Orange", "Blue"]
+        "enum": [
+          "Green",
+          "Orange",
+          "Blue"
+        ]
       },
       "uniqueItems": true
     },
@@ -116,9 +129,8 @@
       "anyOf": [
         {
           "title": "Base Game Stat Icon",
-          "description": "The stat icon that the base game provides",
           "type": "string",
-          "enum": [
+            "enum": [
             "Ants",
             "Bones",
             "Mirror",
@@ -131,8 +143,7 @@
         {
           "title": "Mod-Added Stat Icon",
           "description": "Format: [Mod GUID].[Stat Icon Name]",
-          "type": "string",
-          "pattern": "^([^.]+[.]{1})*([^.])+$"
+          "type": "string"
         }
       ]
     },
@@ -143,7 +154,7 @@
         "anyOf": [
           {
             "title": "Base Game Tribe",
-            "description": "The tribe that the base game provides",
+            "description": "Base Game Tribe",
             "type": "string",
             "enum": [
               "Squirrel",
@@ -157,8 +168,7 @@
           {
             "title": "Mod-Added Tribe",
             "description": "Format: [Mod GUID].[Tribe Name]",
-            "type": "string",
-            "pattern": "^([^.]+[.]{1})*([^.])+$"
+            "type": "string"
           }
         ]
       },
@@ -171,7 +181,7 @@
         "anyOf": [
           {
             "title": "Base Game Tribe",
-            "description": "The tribe that the base game provides",
+            "description": "Base Game Tribe",
             "type": "string",
             "enum": [
               "EatsWarrens",
@@ -200,8 +210,7 @@
           {
             "title": "Mod-Added Trait",
             "description": "Format: [Mod GUID].[Trait Name]",
-            "type": "string",
-            "pattern": "^([^.]+[.]{1})*([^.])+$"
+            "type": "string"
           }
         ]
       },
@@ -214,7 +223,7 @@
         "anyOf": [
           {
             "title": "Base Game Special Abilities",
-            "description": "The special ability that the base game provides",
+            "description": "Base Game Special Abilities",
             "type": "string",
             "enum": [
               "Cat",
@@ -249,8 +258,7 @@
           {
             "title": "Mod-Added Special Abilities",
             "description": "Format: [Mod GUID].[Special Ability Name]",
-            "type": "string",
-            "pattern": "^([^.]+[.]{1})*([^.])+$"
+            "type": "string"
           }
         ]
       },
@@ -263,7 +271,7 @@
         "anyOf": [
           {
             "title": "Base Game Abilities",
-            "description": "The ability that the base game provides",
+            "description": "Base Game Abilities",
             "type": "string",
             "enum": [
               "None",
@@ -378,8 +386,7 @@
           {
             "title": "Mod-Added Abilities",
             "description": "Format: [Mod GUID].[Ability Name]",
-            "type": "string",
-            "pattern": "^([^.]+[.]{1})*([^.])+$"
+            "type": "string"
           }
         ]
       },
@@ -414,7 +421,7 @@
     "flipPortraitForStrafe": {
       "description": "determines if the card art is flipped when the card changes it's strafe direction",
       "type": "boolean",
-      "default": false
+      "default": "false"
     },
     "onePerDeck": {
       "description": "determines if the card should be limited to 1 per deck",
@@ -428,7 +435,7 @@
         "anyOf": [
           {
             "title": "Base Game Appearances",
-            "description": "The apperance that the base game provides",
+            "description": "Base Game Appearances",
             "type": "string",
             "enum": [
               "StaticGlitch",
@@ -450,8 +457,7 @@
           {
             "title": "Mod-Added Appearances",
             "description": "Format: [Mod GUID].[Appearance Name]",
-            "type": "string",
-            "pattern": "^([^.]+[.]{1})*([^.])+$"
+            "type": "string"
           }
         ]
       },

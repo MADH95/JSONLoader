@@ -11,7 +11,9 @@ namespace JLPlugin.Data
         public slotData moveFromSlot;
         public slotData moveToSlot;
         public string replace;
-        public string self;
+        public strafeData strafe;
+
+        public bool movingLeft;
 
         public static IEnumerator MoveCards(AbilityBehaviourData abilitydata)
         {
@@ -29,21 +31,33 @@ namespace JLPlugin.Data
                     continue;
                 }
 
-                Singleton<ViewManager>.Instance.SwitchToView(View.Default, false, false);
                 CardSlot slotFrom = slotData.GetSlot(movecardinfo.moveFromSlot, abilitydata);
-                CardSlot slotTo = slotData.GetSlot(movecardinfo.moveToSlot, abilitydata);
-                if (slotFrom?.Card != null && slotTo != null)
+                if (movecardinfo.moveFromSlot == null)
                 {
-                    if (slotTo.Card != null && (SigilData.ConvertArgument(movecardinfo.replace, abilitydata) ?? "true") == "true")
-                    {
-                        slotTo.Card.ExitBoard(0, new Vector3(0, 0, 0));
-                    }
+                    slotFrom = abilitydata.self.Slot;
+                }
 
-                    if (slotTo.Card == null)
+                CardSlot slotTo = slotData.GetSlot(movecardinfo.moveToSlot, abilitydata);
+                if (slotFrom?.Card != null)
+                {
+                    if (slotTo != null)
                     {
-                        PlayableCard cardToSet = slotFrom.Card;
-                        cardToSet.SetIsOpponentCard(!slotTo.IsPlayerSlot);
-                        yield return Singleton<BoardManager>.Instance.AssignCardToSlot(slotFrom.Card, slotTo);
+                        if (slotTo.Card != null && (SigilData.ConvertArgument(movecardinfo.replace, abilitydata) ?? "true") == "true")
+                        {
+                            slotTo.Card.ExitBoard(0, new Vector3(0, 0, 0));
+                        }
+
+                        if (slotTo.Card == null)
+                        {
+                            PlayableCard cardToSet = slotFrom.Card;
+                            cardToSet.SetIsOpponentCard(!slotTo.IsPlayerSlot);
+                            yield return Singleton<BoardManager>.Instance.AssignCardToSlot(slotFrom.Card, slotTo);
+                        }
+
+                    }
+                    if (movecardinfo.strafe != null)
+                    {
+                        yield return movecardinfo.strafe.Strafe(abilitydata, movecardinfo, slotFrom);
                     }
                 }
             }

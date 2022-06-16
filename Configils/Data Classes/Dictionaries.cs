@@ -15,6 +15,21 @@ namespace JLPlugin.Data
                     .Cast<AbilityMetaCategory>()
                     .ToDictionary(t => t.ToString(), t => t);
 
+        public static readonly Dictionary<string, Emotion> Emotion
+            = Enum.GetValues(typeof(Emotion))
+                    .Cast<Emotion>()
+                    .ToDictionary(t => t.ToString(), t => t);
+
+        public static readonly Dictionary<string, TextDisplayer.LetterAnimation> LetterAnimation
+            = Enum.GetValues(typeof(TextDisplayer.LetterAnimation))
+                    .Cast<TextDisplayer.LetterAnimation>()
+                    .ToDictionary(t => t.ToString(), t => t);
+
+        public static readonly Dictionary<string, DialogueEvent.Speaker> Speaker
+            = Enum.GetValues(typeof(DialogueEvent.Speaker))
+                    .Cast<DialogueEvent.Speaker>()
+                    .ToDictionary(t => t.ToString(), t => t);
+
         public static IDictionary<Ability, SigilTuple> ArgumentList
             = new Dictionary<Ability, SigilTuple>();
 

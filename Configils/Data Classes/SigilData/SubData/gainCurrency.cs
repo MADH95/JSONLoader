@@ -9,6 +9,7 @@ namespace JLPlugin.Data
         public string runOnCondition;
         public string bones;
         public string energy;
+        public string foils;
 
         public static IEnumerator GainCurrency(AbilityBehaviourData abilitydata)
         {
@@ -19,11 +20,39 @@ namespace JLPlugin.Data
 
             if (abilitydata.gainCurrency.bones != null)
             {
-                yield return Singleton<ResourcesManager>.Instance.AddBones(int.Parse(SigilData.ConvertArgument(abilitydata.gainCurrency.bones, abilitydata)));
+                int boneamount = int.Parse(SigilData.ConvertArgument(abilitydata.gainCurrency.bones, abilitydata));
+                if (boneamount > 0)
+                {
+                    yield return Singleton<ResourcesManager>.Instance.AddBones(boneamount);
+                }
+                if (boneamount < 0)
+                {
+                    yield return Singleton<ResourcesManager>.Instance.SpendBones(boneamount * -1);
+                }
             }
             if (abilitydata.gainCurrency.energy != null)
             {
-                yield return Singleton<ResourcesManager>.Instance.AddEnergy(int.Parse(SigilData.ConvertArgument(abilitydata.gainCurrency.energy, abilitydata)));
+                int energyamount = int.Parse(SigilData.ConvertArgument(abilitydata.gainCurrency.energy, abilitydata));
+                if (energyamount > 0)
+                {
+                    yield return Singleton<ResourcesManager>.Instance.AddEnergy(energyamount);
+                }
+                if (energyamount < 0)
+                {
+                    yield return Singleton<ResourcesManager>.Instance.SpendEnergy(energyamount * -1);
+                }
+            }
+            if (abilitydata.gainCurrency.foils != null)
+            {
+                int foilamount = int.Parse(SigilData.ConvertArgument(abilitydata.gainCurrency.foils, abilitydata));
+                if (foilamount > 0)
+                {
+                    yield return Singleton<CurrencyBowl>.Instance.DropWeightsIn(foilamount);
+                }
+                if (foilamount < 0)
+                {
+                    yield return Singleton<CurrencyBowl>.Instance.TakeWeights(foilamount * -1);
+                }
             }
             yield break;
         }

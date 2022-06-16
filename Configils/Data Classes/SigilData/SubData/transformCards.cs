@@ -10,7 +10,6 @@ namespace JLPlugin.Data
         public string runOnCondition;
         public slotData slot;
         public card card;
-        public string self;
         public string noRetainDamage;
 
         public static IEnumerator TransformCards(AbilityBehaviourData abilitydata)
@@ -29,19 +28,23 @@ namespace JLPlugin.Data
                     continue;
                 }
 
-                CardSlot slot = slotData.GetSlot(transformCardsInfo.slot, abilitydata);
                 PlayableCard card = null;
-                if (slot != null)
+                if (transformCardsInfo.slot != null)
                 {
-                    if (slot.Card != null)
+                    CardSlot slot = slotData.GetSlot(transformCardsInfo.slot, abilitydata);
+                    if (slot != null)
                     {
-                        card = slot.Card;
+                        if (slot.Card != null)
+                        {
+                            card = slot.Card;
+                        }
                     }
                 }
-                else if (transformCardsInfo.self != null)
+                else
                 {
                     card = abilitydata.self;
                 }
+              
                 if (card != null)
                 {
                     CardInfo cardinfo = Data.card.getCard(transformCardsInfo.card, abilitydata);

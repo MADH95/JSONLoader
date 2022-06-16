@@ -15,7 +15,7 @@ namespace JLPlugin.Data
         public string dealScaleDamage;
         public List<drawCards> drawCards;
         public List<chooseSlot> chooseSlots;
-        //public uses uses;
+
         public List<moveCards> moveCards;
         public List<damageSlots> damageSlots;
         public List<attackSlots> attackSlots;
