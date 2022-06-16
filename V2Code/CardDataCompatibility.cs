@@ -1,10 +1,13 @@
-using JLPlugin.V2.Data;
-using System;
 using System.Collections.Generic;
+using System;
+using JLPlugin.V2.Data;
+using DiskCardGame;
 
 namespace JLPlugin.Data
 {
     using System.Linq;
+    using InscryptionAPI.Card;
+    using Utils;
 
     public partial class CardData
     {
@@ -38,15 +41,17 @@ namespace JLPlugin.Data
             if (nameSplit.Length > 1)
                 return name;
 
+            // Or maybe it's a base game card!
+            if (CardManager.BaseGameCards.CardByName(name) != null)
+                return name;
+
             // Okay, lets see if we can find this in the rest of the json cards
             // If we can, it means it's just a bad custom card without a prefix
-
+            
             if (allKnownCards.Exists(c => c != null && !string.IsNullOrEmpty(c.name) && c.name.Equals(name)))
                 return $"{CardSerializeInfo.DEFAULT_MOD_PREFIX}_{name}";
 
-            // Well, I guess we'll just assume its one of the game's default cards?
-            // Or its some other card we can't identify.
-            // Either way, we don't know what to do with it
+            // We don't know what to do with it
             return name;
         }
 
@@ -63,7 +68,11 @@ namespace JLPlugin.Data
             CardSerializeInfo info = new();
 
             string[] nameSplit = this.name.Split('_');
-            if (nameSplit.Length > 1)
+            if (CardManager.BaseGameCards.CardByName(this.name) != null)
+            {
+                info.name = this.name;
+            }
+            else if (nameSplit.Length > 1)
             {
                 info.modPrefix = nameSplit[0];
                 info.name = this.name;
@@ -73,7 +82,7 @@ namespace JLPlugin.Data
                 info.modPrefix = CardSerializeInfo.DEFAULT_MOD_PREFIX;
                 info.name = $"{info.modPrefix}_{this.name}";
             }
-
+            
             info.displayedName = this.displayedName;
             info.description = this.description;
             info.metaCategories = this.metaCategories?.ToArray();
@@ -100,7 +109,7 @@ namespace JLPlugin.Data
 
             if (this.bonesCost > 0 || testFieldsToEdit.Exists(f => f.Equals("energyCost", StringComparison.OrdinalIgnoreCase)))
                 info.energyCost = this.energyCost;
-
+            
             info.gemsCost = this.gemsColour?.ToArray();
             info.abilities = Combine(this.abilities, this.customAbilities);
             info.traits = this.traits?.ToArray();
@@ -122,13 +131,13 @@ namespace JLPlugin.Data
 
             if (this.iceCube != null)
                 info.iceCubeName = GetUpdatedName(this.iceCube.creatureWithin, allKnownCards);
-
+            
             if (this.flipPortraitForStrafe || testFieldsToEdit.Exists(f => f.Equals("flipPortraitForStrafe", StringComparison.OrdinalIgnoreCase)))
                 info.flipPortraitForStrafe = this.flipPortraitForStrafe;
-
+            
             if (this.onePerDeck || testFieldsToEdit.Exists(f => f.Equals("onePerDeck", StringComparison.OrdinalIgnoreCase)))
                 info.onePerDeck = this.onePerDeck;
-
+            
             info.appearanceBehaviour = this.appearanceBehaviour?.ToArray();
             info.texture = this.texture;
             info.altTexture = this.altTexture;

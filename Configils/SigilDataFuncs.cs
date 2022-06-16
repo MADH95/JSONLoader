@@ -9,7 +9,7 @@ using System.Linq;
 using System.Reflection;
 using TinyJson;
 using UnityEngine;
-
+using static JLPlugin.V2.Data.CardSerializeInfo;
 using Random = System.Random;
 
 namespace JLPlugin.Data
@@ -19,7 +19,6 @@ namespace JLPlugin.Data
     using SigilCode;
     using System.Text.RegularExpressions;
     using static InscryptionAPI.Card.SpecialTriggeredAbilityManager;
-    using static V2.Data.CardSerializeInfo;
     using SigilTuple = Tuple<Type, SigilData>;
 
     public partial class SigilData
@@ -60,6 +59,7 @@ namespace JLPlugin.Data
                 Plugin.Log.LogWarning($"{fields[i].Name}: {values[i]}\n");
             }
 
+
             //There probably a more API oriented way of handling this, I'm just very confused how that all works atm
             Texture2D sigilPixelTexture = new(17, 17);
             if (this.pixelTexture != null)
@@ -86,7 +86,6 @@ namespace JLPlugin.Data
             }
 
             info.canStack = this.canStack ?? false;
-
             info.opponentUsable = this.opponentUsable ?? false;
 
             //Is this custom dialogue events? can we not use API?
@@ -148,9 +147,7 @@ namespace JLPlugin.Data
             if (value.Contains("|"))
             {
                 //regex instead of splitting so it does not mistake the or operator (||) for randomization
-
                 var random = new Random();
-
                 MatchCollection randomMatchList = Regex.Matches(value, @"(?:(?:\((?>[^()]+|\((?<number>)|\)(?<-number>))*(?(number)(?!))\))|[^|])+");
                 List<string> StringList = randomMatchList.Cast<Match>().Select(match => match.Value).ToList();
                 value = StringList[random.Next(StringList.Count)];
@@ -239,6 +236,7 @@ namespace JLPlugin.Data
             {
                 yield return gainCurrency.GainCurrency(abilitydata);
             }
+
             if (abilitydata.dealScaleDamage != null)
             {
                 int damage = int.Parse(ConvertArgument(abilitydata.dealScaleDamage, abilitydata));

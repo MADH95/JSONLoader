@@ -44,7 +44,7 @@ namespace JLPlugin.Data
                 {
                     card = abilitydata.self;
                 }
-              
+
                 if (card != null)
                 {
                     CardInfo cardinfo = Data.card.getCard(transformCardsInfo.card, abilitydata);
