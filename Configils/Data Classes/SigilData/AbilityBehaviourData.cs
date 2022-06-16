@@ -18,7 +18,7 @@ namespace JLPlugin.Data
         public List<moveCards> moveCards;
         public List<damageSlots> damageSlots;
         public List<attackSlots> attackSlots;
-        public List<slotData> extraAttacks;
+        public List<extraAttacks> extraAttacks;
         public messageData showMessage;
 
         public Dictionary<string, string> variables;

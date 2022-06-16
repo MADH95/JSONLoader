@@ -2,9 +2,8 @@
 using JLPlugin.V2.Data;
 using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
+using static JLPlugin.Data.SigilData;
 
 namespace JLPlugin.Data
 {
@@ -16,8 +15,8 @@ namespace JLPlugin.Data
         public string addStats;
         public string setStats;
         public string heal;
-        public List<string> addAbilities;
-        public List<string> removeAbilities;
+        public addAbilityData addAbility;
+        public string removeAbility;
 
         public static IEnumerator BuffCards(AbilityBehaviourData abilitydata)
         {
@@ -38,7 +37,7 @@ namespace JLPlugin.Data
                 PlayableCard card = null;
                 if (buffcardsinfo.slot != null)
                 {
-                    CardSlot slot = slotData.GetSlot(buffcardsinfo.slot, abilitydata);
+                    CardSlot slot = slotData.GetSlot(buffcardsinfo.slot, abilitydata, true);
                     if (slot != null)
                     {
                         if (slot.Card != null)
@@ -73,37 +72,36 @@ namespace JLPlugin.Data
                         mod.healthAdjustment += int.Parse(SigilData.ConvertArgument(buffcardsinfo.setStats.Split('/')[1], abilitydata)) - card.Info.Health;
                     }
 
-                    if (buffcardsinfo.addAbilities != null || buffcardsinfo.removeAbilities != null)
+                    if (buffcardsinfo.addAbility != null || buffcardsinfo.removeAbility != null)
                     {
                         yield return new WaitForSeconds(0.15f);
                         card.Anim.PlayTransformAnimation();
                         yield return new WaitForSeconds(0.15f);
                     }
 
-                    if (buffcardsinfo.removeAbilities != null)
+                    if (buffcardsinfo.removeAbility != null)
                     {
-                        List<Ability> removeSigilList = SigilData.ConvertArgument(buffcardsinfo.removeAbilities, abilitydata).Select(s => CardSerializeInfo.ParseEnum<Ability>(s)).ToList();
+                        Ability removeSigil = CardSerializeInfo.ParseEnum<Ability>(SigilData.ConvertArgument(buffcardsinfo.removeAbility, abilitydata));
 
-                        foreach (Ability removeSigil in removeSigilList)
-                        {
-                            card.temporaryMods.ForEach(x => x.abilities.Remove(removeSigil));
-                            card.Status.hiddenAbilities.Add(removeSigil);
-                        }
-                        mod.negateAbilities.AddRange(removeSigilList);
+                        card.temporaryMods.ForEach(x => x.abilities.Remove(removeSigil));
+                        card.Status.hiddenAbilities.Add(removeSigil);
+                        mod.negateAbilities.Add(removeSigil);
                     }
-                    if (buffcardsinfo.addAbilities != null)
+                    if (buffcardsinfo.addAbility != null)
                     {
-                        List<Ability> addSigilList = SigilData.ConvertArgument(buffcardsinfo.addAbilities, abilitydata).Select(s => CardSerializeInfo.ParseEnum<Ability>(s)).ToList();
+                        Ability addSigil = CardSerializeInfo.ParseEnum<Ability>(SigilData.ConvertArgument(buffcardsinfo.addAbility.name, abilitydata));
 
-                        foreach (Ability addSigil in addSigilList)
+                        card.temporaryMods.ForEach(x => x.negateAbilities.Remove(addSigil));
+                        card.Status.hiddenAbilities.Remove(addSigil);
+                        if (ConvertArgument(buffcardsinfo.addAbility.infused, abilitydata) == "true")
                         {
-                            card.temporaryMods.ForEach(x => x.negateAbilities.Remove(addSigil));
-                            card.Status.hiddenAbilities.Remove(addSigil);
+                            card.renderInfo.forceEmissivePortrait = true;
+                            mod.fromCardMerge = true;
                         }
-                        mod.abilities.AddRange(addSigilList);
+                        mod.abilities.Add(addSigil);
                     }
                     card.AddTemporaryMod(mod);
-                    card.RenderCard();
+                    card.OnStatsChanged();
                     if (card.Health <= 0)
                     {
                         yield return card.Die(false);

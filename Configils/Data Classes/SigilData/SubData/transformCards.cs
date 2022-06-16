@@ -31,7 +31,7 @@ namespace JLPlugin.Data
                 PlayableCard card = null;
                 if (transformCardsInfo.slot != null)
                 {
-                    CardSlot slot = slotData.GetSlot(transformCardsInfo.slot, abilitydata);
+                    CardSlot slot = slotData.GetSlot(transformCardsInfo.slot, abilitydata, true);
                     if (slot != null)
                     {
                         if (slot.Card != null)

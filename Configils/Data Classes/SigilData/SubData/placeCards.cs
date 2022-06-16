@@ -29,12 +29,21 @@ namespace JLPlugin.Data
                 }
 
                 Singleton<ViewManager>.Instance.SwitchToView(View.Default, false, false);
-                CardSlot slot = slotData.GetSlot(placecardinfo.slot, abilitydata);
+                bool replace = SigilData.ConvertArgument(placecardinfo.replace, abilitydata) == "true";
+                CardSlot slot;
+                if (replace)
+                {
+                    slot = slotData.GetSlot(placecardinfo.slot, abilitydata);
+                }
+                else
+                {
+                    slot = slotData.GetSlot(placecardinfo.slot, abilitydata, false);
+                }
                 Plugin.Log.LogInfo("slot is null?: " + (slot == null).ToString());
                 if (slot != null)
                 {
                     Plugin.Log.LogInfo("test: " + (slot.Card != null).ToString() + " " + (SigilData.ConvertArgument(placecardinfo.replace, abilitydata) == "true").ToString());
-                    if (slot.Card != null && SigilData.ConvertArgument(placecardinfo.replace, abilitydata) == "true")
+                    if (slot.Card != null && replace)
                     {
                         slot.Card.ExitBoard(0, new Vector3(0, 0, 0));
                     }

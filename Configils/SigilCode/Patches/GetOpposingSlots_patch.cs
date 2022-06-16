@@ -21,22 +21,45 @@ namespace JLPlugin.SigilCode
                 return;
             }
 
-            foreach (Ability ability in __instance.Info.abilities)
+            foreach (CardSlot slot in Singleton<BoardManager>.Instance.AllSlotsCopy)
             {
-                if (!SigilDicts.ArgumentList.ContainsKey(ability) || !__instance.HasAbility(ability))
+                if (slot.Card == null)
                 {
                     continue;
                 }
 
-                foreach (AbilityBehaviourData abilityBehaviour in SigilData.GetAbilityArguments(ability).abilityBehaviour.Where(x => x.extraAttacks != null))
+                foreach (Ability ability in slot.Card.GetTriggeredAbilities())
                 {
-                    __result.Remove(__instance.Slot.opposingSlot);
-                    foreach (slotData slotData in abilityBehaviour.extraAttacks)
+                    if (!SigilDicts.ArgumentList.ContainsKey(ability) || !slot.Card.HasAbility(ability))
                     {
-                        CardSlot attackslot = slotData.GetSlot(slotData, abilityBehaviour);
-                        if (attackslot != null)
+                        continue;
+                    }
+
+                    foreach (AbilityBehaviourData abilityBehaviour in SigilData.GetAbilityArguments(ability).abilityBehaviour.Where(x => x?.extraAttacks != null))
+                    {
+                        foreach (extraAttacks extraAttackData in abilityBehaviour.extraAttacks)
                         {
-                            __result.Insert(__result.Count, attackslot);
+                            SigilData.UpdateVariables(abilityBehaviour, slot.Card);
+                            abilityBehaviour.generatedVariables["TriggerCard"] = __instance;
+                            CardSlot chosenSlot = slotData.GetSlot(extraAttackData.attackingSlot, abilityBehaviour);
+                            if (extraAttackData.attackingSlot == null)
+                            {
+                                chosenSlot = slot;
+                            }
+                            if (chosenSlot == __instance.slot)
+                            {
+                                foreach (slotData slotToAttack in extraAttackData.slotsToAttack)
+                                {
+                                    __result.Remove(__instance.Slot.opposingSlot);
+
+                                    CardSlot attackslot = slotData.GetSlot(slotToAttack, abilityBehaviour);
+                                    if (attackslot != null)
+                                    {
+                                        __result.Insert(__result.Count, attackslot);
+                                    }
+                                }
+
+                            }
                         }
                     }
                 }
