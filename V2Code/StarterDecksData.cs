@@ -1,7 +1,8 @@
-﻿using BepInEx;
-using InscryptionAPI.Ascension;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using BepInEx;
+using InscryptionAPI.Ascension;
 using TinyJson;
 
 namespace JLPlugin.Data
@@ -14,6 +15,7 @@ namespace JLPlugin.Data
             public string name;
             public string[] cards;
             public string iconTexture;
+            public int unlockLevel;
         }
 
         public StarterDeckInfo[] decks;
@@ -30,7 +32,7 @@ namespace JLPlugin.Data
                     StarterDeckList starterDeckInfo = JSONParser.FromJson<StarterDeckList>(File.ReadAllText(file));
 
                     foreach (var deckdata in starterDeckInfo.decks)
-                        StarterDeckManager.New(Plugin.PluginGuid, deckdata.name, deckdata.iconTexture, deckdata.cards);
+                        StarterDeckManager.New(Plugin.PluginGuid, deckdata.name, deckdata.iconTexture, deckdata.cards, deckdata.unlockLevel);
 
                     Plugin.Log.LogDebug($"Loaded JSON starter decks {string.Join(",", starterDeckInfo.decks.Select(s => s.name).ToList())}");
                 }

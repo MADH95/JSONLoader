@@ -1,4 +1,5 @@
-﻿
+﻿using APIPlugin;
+
 using System.Collections.Generic;
 
 namespace JLPlugin.Data
@@ -36,7 +37,7 @@ namespace JLPlugin.Data
         public TailData tail;
 
         public IceCubeData iceCube;
-
+        
         public bool flipPortraitForStrafe;
         public bool onePerDeck;
 
