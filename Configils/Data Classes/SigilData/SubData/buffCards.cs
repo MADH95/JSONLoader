@@ -2,6 +2,8 @@
 using JLPlugin.V2.Data;
 using System;
 using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using static JLPlugin.Data.SigilData;
 
@@ -11,12 +13,13 @@ namespace JLPlugin.Data
     public class buffCards
     {
         public string runOnCondition;
+        public string targetCard;
         public slotData slot;
         public string addStats;
         public string setStats;
         public string heal;
-        public addAbilityData addAbility;
-        public string removeAbility;
+        public List<addAbilityData> addAbilities;
+        public List<string> removeAbilities;
 
         public static IEnumerator BuffCards(AbilityBehaviourData abilitydata)
         {
@@ -48,7 +51,16 @@ namespace JLPlugin.Data
                 }
                 else
                 {
-                    card = abilitydata.self;
+                    if (buffcardsinfo.targetCard != null)
+                    {
+                        object playablecard;
+                        abilitydata.generatedVariables.TryGetValue(buffcardsinfo.targetCard.Replace("[", "").Replace("]", ""), out playablecard);
+                        card = (PlayableCard)playablecard;
+                    }
+                    else
+                    {
+                        card = abilitydata.self;
+                    }
                 }
 
                 if (card != null)
@@ -72,33 +84,33 @@ namespace JLPlugin.Data
                         mod.healthAdjustment += int.Parse(SigilData.ConvertArgument(buffcardsinfo.setStats.Split('/')[1], abilitydata)) - card.Info.Health;
                     }
 
-                    if (buffcardsinfo.addAbility != null || buffcardsinfo.removeAbility != null)
+                    if (buffcardsinfo.addAbilities != null || buffcardsinfo.removeAbilities != null)
                     {
                         yield return new WaitForSeconds(0.15f);
                         card.Anim.PlayTransformAnimation();
                         yield return new WaitForSeconds(0.15f);
                     }
 
-                    if (buffcardsinfo.removeAbility != null)
+                    if (buffcardsinfo.removeAbilities != null)
                     {
-                        Ability removeSigil = CardSerializeInfo.ParseEnum<Ability>(SigilData.ConvertArgument(buffcardsinfo.removeAbility, abilitydata));
+                        List<Ability> removeSigils = SigilData.ConvertArgument(buffcardsinfo.removeAbilities, abilitydata).Select(x => CardSerializeInfo.ParseEnum<Ability>(x)).ToList();
 
-                        card.temporaryMods.ForEach(x => x.abilities.Remove(removeSigil));
-                        card.Status.hiddenAbilities.Add(removeSigil);
-                        mod.negateAbilities.Add(removeSigil);
+                        card.temporaryMods.ForEach(x => x.abilities = x.abilities.Except(removeSigils).ToList());
+                        card.Status.hiddenAbilities.AddRange(removeSigils);
+                        mod.negateAbilities.AddRange(removeSigils);
                     }
-                    if (buffcardsinfo.addAbility != null)
+                    if (buffcardsinfo.addAbilities != null)
                     {
-                        Ability addSigil = CardSerializeInfo.ParseEnum<Ability>(SigilData.ConvertArgument(buffcardsinfo.addAbility.name, abilitydata));
+                        List<Ability> addSigils = SigilData.ConvertArgument(buffcardsinfo.addAbilities.Select(x => x.name).ToList(), abilitydata).Select(x => CardSerializeInfo.ParseEnum<Ability>(x)).ToList();
 
-                        card.temporaryMods.ForEach(x => x.negateAbilities.Remove(addSigil));
-                        card.Status.hiddenAbilities.Remove(addSigil);
-                        if (ConvertArgument(buffcardsinfo.addAbility.infused, abilitydata) == "true")
+                        card.temporaryMods.ForEach(x => x.negateAbilities = x.negateAbilities.Except(addSigils).ToList());
+                        card.Status.hiddenAbilities = card.Status.hiddenAbilities.Except(addSigils).ToList();
+                        if (ConvertArgument(buffcardsinfo.addAbilities.Select(x => x.infused).ToList(), abilitydata).Any(x => x == "true"))
                         {
                             card.renderInfo.forceEmissivePortrait = true;
                             mod.fromCardMerge = true;
                         }
-                        mod.abilities.Add(addSigil);
+                        mod.abilities.AddRange(addSigils);
                     }
                     card.AddTemporaryMod(mod);
                     card.OnStatsChanged();

@@ -97,17 +97,31 @@ namespace JLPlugin.SigilCode
 
         public override bool RespondsToOtherCardDie(PlayableCard card, CardSlot deathSlot, bool fromCombat, PlayableCard killer)
         {
-            return fromCombat;
+            return true;
         }
 
         public override IEnumerator OnOtherCardDie(PlayableCard card, CardSlot deathSlot, bool fromCombat, PlayableCard killer)
         {
             yield return new WaitForSeconds(0.3f);
-            yield return TriggerSigil("OnDie", new Dictionary<string, object>() { ["AttackerCard"] = killer, ["DeathSlot"] = deathSlot }, card);
-            yield return TriggerSigil("OnKill", new Dictionary<string, object>() { ["VictimCard"] = card, ["DeathSlot"] = deathSlot }, killer);
+            if (fromCombat)
+            {
+                yield return TriggerSigil("OnDie", new Dictionary<string, object>() { ["AttackerCard"] = killer, ["DeathSlot"] = deathSlot }, card);
+                yield return TriggerSigil("OnKill", new Dictionary<string, object>() { ["VictimCard"] = card, ["DeathSlot"] = deathSlot }, killer);
+            }
             yield break;
         }
 
+        public override bool RespondsToSacrifice()
+        {
+            return true;
+        }
+
+        // Token: 0x06001553 RID: 5459 RVA: 0x000494CF File Offset: 0x000476CF
+        public override IEnumerator OnSacrifice()
+        {
+            yield return TriggerSigil("OnSacrificed", new Dictionary<string, object>() { ["SacrificeTargetCard"] = Singleton<BoardManager>.Instance.CurrentSacrificeDemandingCard });
+            yield break;
+        }
         public override bool RespondsToOtherCardPreDeath(CardSlot deathSlot, bool fromCombat, PlayableCard killer)
         {
             return fromCombat;
@@ -116,7 +130,10 @@ namespace JLPlugin.SigilCode
         // Token: 0x06001B49 RID: 6985 RVA: 0x0005A16A File Offset: 0x0005836A
         public override IEnumerator OnOtherCardPreDeath(CardSlot deathSlot, bool fromCombat, PlayableCard killer)
         {
-            yield return TriggerSigil("OnPreDeath", new Dictionary<string, object>() { ["AttackerCard"] = killer }, deathSlot.Card);
+            if (deathSlot.Card != null)
+            {
+                yield return TriggerSigil("OnPreDeath", new Dictionary<string, object>() { ["AttackerCard"] = killer }, deathSlot.Card);
+            }
             yield return TriggerSigil("OnPreKill", new Dictionary<string, object>() { ["VictimCard"] = deathSlot.Card }, killer);
             yield break;
         }

@@ -9,6 +9,7 @@ namespace JLPlugin.Data
     {
         public string runOnCondition;
         public slotData slot;
+        public string targetCard;
         public card card;
         public string noRetainDamage;
 
@@ -42,7 +43,16 @@ namespace JLPlugin.Data
                 }
                 else
                 {
-                    card = abilitydata.self;
+                    if (transformCardsInfo.targetCard != null)
+                    {
+                        object playablecard;
+                        abilitydata.generatedVariables.TryGetValue(transformCardsInfo.targetCard.Replace("[", "").Replace("]", ""), out playablecard);
+                        card = (PlayableCard)playablecard;
+                    }
+                    else
+                    {
+                        card = abilitydata.self;
+                    }
                 }
 
                 if (card != null)

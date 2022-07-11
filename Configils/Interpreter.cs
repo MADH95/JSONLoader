@@ -8,7 +8,9 @@ using System.Text.RegularExpressions;
 namespace JLPlugin
 {
     using Data;
+    using DiskCardGame;
     using NCalc;
+    using System.Collections.Generic;
 
     static class Interpreter
     {
@@ -37,13 +39,13 @@ namespace JLPlugin
             {
                 foreach (Match variable in variables)
                 {
-                    output = input.Replace(variable.Value, ProcessVariable(variable, abilityData));
+                    output = output.Replace(variable.Value, ProcessVariable(variable, abilityData));
                 }
             }
 
             if (Regex.Match(output, RegexStrings.Function) is var function && function.Success)
             {
-                output = input.Replace(function.Value, ProcessFunction(function, abilityData));
+                output = output.Replace(function.Value, ProcessFunction(function, abilityData));
             }
 
             //this should stay as it's very useful for debugging for people
@@ -60,7 +62,7 @@ namespace JLPlugin
 
             if (output == "True" || output == "False")
             {
-                output = output.ToLower();
+                output.ToLower();
             }
 
             return output;
@@ -158,13 +160,24 @@ namespace JLPlugin
             string output = obj.ToString();
 
             //for some reason it thinks a string is an IEnumerable
-            if (obj is IEnumerable collection && obj is not string)
+            if (obj is List<Ability> AbilityList)
             {
-                output = $"'{ string.Join("','", collection) }'";
+                output = $"'{ string.Join("', '", AbilityList.Select(x => AbilitiesUtil.GetInfo(x).rulebookName)) }'";
+            }
+            else if (obj is IEnumerable collection && obj is not string)
+            {
+                List<string> list = new List<string>();
+                foreach (object item in collection)
+                {
+                    list.Add(item.ToString());
+                }
+                output = $"'{ string.Join("', '", list) }'";
             }
 
+
+
             //bool conversion to allow for compatibility with NCalc
-            if (obj is bool)
+            if (output == "True" || output == "False")
             {
                 output.ToLower();
             }

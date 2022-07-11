@@ -203,6 +203,21 @@ namespace JLPlugin.Data
             return null;
         }
 
+        public static List<string> DefaultActionOrder = new List<string>()
+        {
+            "chooseSlots",
+            "showMessage",
+            "gainCurrency",
+            "dealScaleDamage",
+            "drawCards",
+            "placeCards",
+            "transformCards",
+            "buffCards",
+            "moveCards",
+            "damageSlots",
+            "attackSlots"
+        };
+
         public static IEnumerator RunActions(AbilityBehaviourData abilitydata, PlayableCard self, Ability ability = new Ability())
         {
             //Plugin.Log.LogInfo($"This behaviour has the trigger: {abilitydata.trigger.triggerType}");
@@ -210,79 +225,140 @@ namespace JLPlugin.Data
             abilitydata.self = self;
             abilitydata.ability = ability;
 
-            if (abilitydata.chooseSlots != null)
+            List<string> CompleteActionOrder = DefaultActionOrder;
+            if (abilitydata.actionOrder != null)
             {
-                foreach (chooseSlot chooseslotdata in abilitydata.chooseSlots)
+                for (int i = 0; i < (abilitydata.actionOrder.Count - 1); i++)
                 {
-                    CoroutineWithData chosenslotdata = new CoroutineWithData(Data.chooseSlot.ChooseSlot(abilitydata, chooseslotdata, self.slot));
-                    yield return Data.chooseSlot.ChooseSlot(abilitydata, chooseslotdata, self.slot);
+                    string currentAction = abilitydata.actionOrder[i];
+                    string nextAction = abilitydata.actionOrder[i + 1];
 
-                    abilitydata.generatedVariables.Add("ChosenSlot(" + (abilitydata.chooseSlots.IndexOf(chooseslotdata) + 1).ToString() + ")", (chosenslotdata.result as CardSlot) ?? self.slot);
+                    if (CompleteActionOrder.IndexOf(currentAction) > CompleteActionOrder.IndexOf(nextAction))
+                    {
+                        CompleteActionOrder.Remove(currentAction);
+                        CompleteActionOrder.Insert(CompleteActionOrder.IndexOf(nextAction), currentAction);
+                    }
                 }
             }
-            foreach (var variable in abilitydata.generatedVariables)
+
+            View OriginalView = Singleton<ViewManager>.Instance.CurrentView;
+
+            foreach (string action in CompleteActionOrder)
             {
-                if (variable.Key.Contains("ChosenSlot") && variable.Value == null)
+                switch (action)
                 {
-                    yield break;
+                    case nameof(AbilityBehaviourData.chooseSlots):
+
+                        if (abilitydata.chooseSlots != null)
+                        {
+                            foreach (chooseSlot chooseslotdata in abilitydata.chooseSlots)
+                            {
+                                CoroutineWithData chosenslotdata = new CoroutineWithData(Data.chooseSlot.ChooseSlot(abilitydata, chooseslotdata, self.slot));
+                                yield return Data.chooseSlot.ChooseSlot(abilitydata, chooseslotdata, self.slot);
+
+                                abilitydata.generatedVariables.Add("ChosenSlot(" + (abilitydata.chooseSlots.IndexOf(chooseslotdata) + 1).ToString() + ")", (chosenslotdata.result as CardSlot) ?? self.slot);
+                            }
+                        }
+
+                        foreach (var variable in abilitydata.generatedVariables)
+                        {
+                            if (variable.Key.Contains("ChosenSlot") && variable.Value == null)
+                            {
+                                yield break;
+                            }
+                        }
+                        break;
+
+                    case nameof(AbilityBehaviourData.showMessage):
+
+                        if (abilitydata.showMessage != null)
+                        {
+                            yield return messageData.showMessage(abilitydata);
+                        }
+                        break;
+
+                    case nameof(AbilityBehaviourData.gainCurrency):
+
+                        if (abilitydata.gainCurrency != null)
+                        {
+                            yield return gainCurrency.GainCurrency(abilitydata);
+                        }
+                        break;
+
+                    case nameof(AbilityBehaviourData.dealScaleDamage):
+
+                        if (abilitydata.dealScaleDamage != null)
+                        {
+                            int damage = int.Parse(ConvertArgument(abilitydata.dealScaleDamage, abilitydata));
+                            yield return Singleton<LifeManager>.Instance.ShowDamageSequence(damage, damage, false, 0.125f, null, 0f, true);
+                        }
+                        break;
+
+                    case nameof(AbilityBehaviourData.drawCards):
+
+                        if (abilitydata.drawCards != null)
+                        {
+                            yield return drawCards.DrawCards(abilitydata);
+                        }
+                        break;
+
+                    case nameof(AbilityBehaviourData.placeCards):
+
+                        if (abilitydata.placeCards != null)
+                        {
+                            yield return placeCards.PlaceCards(abilitydata);
+                        }
+                        break;
+
+                    case nameof(AbilityBehaviourData.transformCards):
+
+                        if (abilitydata.transformCards != null)
+                        {
+                            yield return transformCards.TransformCards(abilitydata);
+                        }
+                        break;
+
+                    case nameof(AbilityBehaviourData.buffCards):
+
+                        if (abilitydata.buffCards != null)
+                        {
+                            yield return buffCards.BuffCards(abilitydata);
+                        }
+                        break;
+
+                    case nameof(AbilityBehaviourData.moveCards):
+
+                        if (abilitydata.moveCards != null)
+                        {
+                            yield return moveCards.MoveCards(abilitydata);
+                        }
+                        break;
+
+                    case nameof(AbilityBehaviourData.damageSlots):
+
+                        if (abilitydata.damageSlots != null)
+                        {
+                            yield return damageSlots.DamageSlots(abilitydata);
+                        }
+                        break;
+
+                    case nameof(AbilityBehaviourData.attackSlots):
+
+                        if (abilitydata.attackSlots != null)
+                        {
+                            yield return attackSlots.AttackSlots(abilitydata);
+                        }
+                        break;
+
+                    default:
+                        break;
                 }
-            }
-
-            if (abilitydata.showMessage != null)
-            {
-                yield return messageData.showMessage(abilitydata);
-            }
-
-            if (abilitydata.gainCurrency != null)
-            {
-                yield return gainCurrency.GainCurrency(abilitydata);
-            }
-
-            if (abilitydata.dealScaleDamage != null)
-            {
-                int damage = int.Parse(ConvertArgument(abilitydata.dealScaleDamage, abilitydata));
-                yield return Singleton<LifeManager>.Instance.ShowDamageSequence(damage, damage, false, 0.125f, null, 0f, true);
-            }
-
-            if (abilitydata.drawCards != null)
-            {
-                yield return drawCards.DrawCards(abilitydata);
-            }
-
-            if (abilitydata.placeCards != null)
-            {
-                yield return placeCards.PlaceCards(abilitydata);
-            }
-
-            if (abilitydata.transformCards != null)
-            {
-                yield return transformCards.TransformCards(abilitydata);
-            }
-
-            if (abilitydata.buffCards != null)
-            {
-                yield return buffCards.BuffCards(abilitydata);
-            }
-
-            if (abilitydata.moveCards != null)
-            {
-                yield return moveCards.MoveCards(abilitydata);
-            }
-
-            if (abilitydata.damageSlots != null)
-            {
-                yield return damageSlots.DamageSlots(abilitydata);
-            }
-
-            if (abilitydata.attackSlots != null)
-            {
-                yield return attackSlots.AttackSlots(abilitydata);
             }
 
             yield return new WaitForSeconds(0.6f);
-            if (Singleton<ViewManager>.Instance.CurrentView != View.Default)
+            if (Singleton<ViewManager>.Instance.CurrentView != OriginalView)
             {
-                Singleton<ViewManager>.Instance.SwitchToView(View.Default, false, false);
+                Singleton<ViewManager>.Instance.SwitchToView(OriginalView, false, false);
             }
             yield break;
         }
@@ -294,7 +370,8 @@ namespace JLPlugin.Data
                 { "[EnergyAmount]", Singleton<ResourcesManager>.Instance.PlayerBones.ToString() },
                 { "[BoneAmount]", Singleton<ResourcesManager>.Instance.PlayerEnergy.ToString() },
                 { "[Turn]", Singleton<TurnManager>.Instance.TurnNumber.ToString() },
-                { "[TurnsInPlay]", (abilitydata.TurnsInPlay ?? 0).ToString() }
+                { "[TurnsInPlay]", (abilitydata.TurnsInPlay ?? 0).ToString() },
+                { "[ScaleBalance]", Singleton<LifeManager>.Instance.Balance.ToString() }
             };
 
             abilitydata.generatedVariables = new Dictionary<string, object>()

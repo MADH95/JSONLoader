@@ -39,6 +39,11 @@ namespace JLPlugin.SigilCode
                     {
                         foreach (extraAttacks extraAttackData in abilityBehaviour.extraAttacks)
                         {
+                            if (SigilData.ConvertArgument(extraAttackData.runOnCondition, abilityBehaviour) == "false")
+                            {
+                                continue;
+                            }
+
                             SigilData.UpdateVariables(abilityBehaviour, slot.Card);
                             abilityBehaviour.generatedVariables["TriggerCard"] = __instance;
                             CardSlot chosenSlot = slotData.GetSlot(extraAttackData.attackingSlot, abilityBehaviour);
