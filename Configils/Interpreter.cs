@@ -27,6 +27,9 @@ namespace JLPlugin
 
             // Detects all whitespace in a string
             public static string Whitespace = @"\s+";
+
+            // Detects text in the format 'text'
+            public static string WithoutApostrophes = @"'(.*?)'";
         }
 
 
@@ -90,6 +93,10 @@ namespace JLPlugin
                 case "CardInSlot":
                     {
                         return ConfigilFunctions.CardInSlot(functionContents);
+                    }
+                case "GetListIndex":
+                    {
+                        return ConfigilFunctions.GetListIndex(functionContents);
                     }
                 default:
                     {
@@ -171,7 +178,15 @@ namespace JLPlugin
                 {
                     list.Add(item.ToString());
                 }
-                output = $"'{ string.Join("', '", list) }'";
+
+                if (list.Count == 0)
+                {
+                    output = "";
+                }
+                else
+                {
+                    output = $"'{ string.Join("', '", list) }'";
+                }
             }
 
 

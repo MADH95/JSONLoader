@@ -1,11 +1,25 @@
 ﻿
 using System;
 using System.Linq;
+using System.Text.RegularExpressions;
+using static JLPlugin.Interpreter;
 
 namespace JLPlugin
 {
     static class ConfigilFunctions
     {
+
+
+        public static string RemoveApostrophes(string text)
+        {
+            if (Regex.Matches(text, RegexStrings.WithoutApostrophes) is var TextWithout
+               && TextWithout.Cast<Match>().Any(TextWithout => TextWithout.Success))
+            {
+                return TextWithout[0].Groups[1].Value;
+            }
+            return text;
+        }
+
         public static string StringContains(string functionContents)
         {
             if (!functionContents.Contains(","))
@@ -35,7 +49,7 @@ namespace JLPlugin
 
             Random random = new();
 
-            return parameters[random.Next(parameters.Length)];
+            return RemoveApostrophes(parameters[random.Next(parameters.Length)]);
         }
 
         public static string CardInSlot(string functionContents)
@@ -48,6 +62,19 @@ namespace JLPlugin
             //TODO: figure the rest of this out later
 
             throw new Exception("CardInSlot: function is incomplete");
+        }
+
+        public static string GetListIndex(string functionContents)
+        {
+            var parameters = functionContents.Split(',').ToList();
+
+            if (parameters.Count < 1)
+            {
+                throw new Exception("GetListIndex: Too few function parameters");
+            }
+
+            var list = parameters.Skip(1).ToList();
+            return RemoveApostrophes(list[int.Parse(parameters[0])]);
         }
     }
 }

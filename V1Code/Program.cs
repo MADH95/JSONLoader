@@ -4,6 +4,7 @@ using BepInEx.Logging;
 using HarmonyLib;
 using JLPlugin.Data;
 using JLPlugin.V2.Data;
+
 namespace JLPlugin
 {
     [BepInPlugin(PluginGuid, PluginName, PluginVersion)]
@@ -29,8 +30,6 @@ namespace JLPlugin
                 Log.LogWarning("Note: Backwards compatibility has been enabled. Old *.jldr files will be converted to *.jldr2 automatically. This will slow down your game loading!");
             if (betaCompatibility.Value)
                 Utils.JLUtils.LoadCardsFromFiles();
-
-
 
             SigilData.LoadAllSigils();
             CardSerializeInfo.LoadAllJLDR2();
