@@ -290,7 +290,15 @@ namespace JLPlugin.Data
                         if (abilitydata.dealScaleDamage != null)
                         {
                             int damage = int.Parse(ConvertArgument(abilitydata.dealScaleDamage, abilitydata));
-                            yield return Singleton<LifeManager>.Instance.ShowDamageSequence(damage, damage, false, 0.125f, null, 0f, true);
+                            if (damage > 0)
+                            {
+                                yield return Singleton<LifeManager>.Instance.ShowDamageSequence(damage, damage, false, 0.125f, null, 0f, true);
+                            }
+                            else if (damage < 0)
+                            {
+                                yield return Singleton<LifeManager>.Instance.ShowDamageSequence(-damage, -damage, true, 0.125f, null, 0f, true);
+                            }
+
                         }
                         break;
 
