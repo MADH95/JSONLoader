@@ -373,7 +373,7 @@ namespace JLPlugin.Data
 
         public static void UpdateVariables(AbilityBehaviourData abilitydata, PlayableCard self)
         {
-            abilitydata.variables = new Dictionary<string, string>()
+            Dictionary<string, string> VariableDictionary = new Dictionary<string, string>()
             {
                 { "[EnergyAmount]", Singleton<ResourcesManager>.Instance.PlayerBones.ToString() },
                 { "[BoneAmount]", Singleton<ResourcesManager>.Instance.PlayerEnergy.ToString() },
@@ -381,8 +381,9 @@ namespace JLPlugin.Data
                 { "[TurnsInPlay]", (abilitydata.TurnsInPlay ?? 0).ToString() },
                 { "[ScaleBalance]", Singleton<LifeManager>.Instance.Balance.ToString() }
             };
+            abilitydata.variables.Append(VariableDictionary);
 
-            abilitydata.generatedVariables = new Dictionary<string, object>()
+            Dictionary<string, object> GeneratedVariableDictionary = new Dictionary<string, object>()
             {
                 { "DeathSlot", null },
                 { "HitSlot", null },
@@ -401,6 +402,7 @@ namespace JLPlugin.Data
                 { "OpponentSlot(2)", Singleton<BoardManager>.Instance.opponentSlots[2] },
                 { "OpponentSlot(3)", Singleton<BoardManager>.Instance.opponentSlots[3] }
             };
+            abilitydata.generatedVariables.Append(GeneratedVariableDictionary);
         }
     }
 }

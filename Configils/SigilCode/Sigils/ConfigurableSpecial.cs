@@ -1,13 +1,18 @@
 // Using Inscryption
 using DiskCardGame;
+using InscryptionAPI.Card;
 using InscryptionAPI.Triggers;
 using JLPlugin.Data;
+using JLPlugin.V2.Data;
 // Modding Inscryption
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using TinyJson;
 using UnityEngine;
+using static JLPlugin.Interpreter;
 
 namespace JLPlugin.SigilCode
 {
@@ -26,6 +31,28 @@ namespace JLPlugin.SigilCode
             foreach (AbilityBehaviourData behaviourData in abilityData.abilityBehaviour)
             {
                 behaviourData.TurnsInPlay = 0;
+
+                if (behaviourData.variables == null)
+                    behaviourData.variables = new Dictionary<string, string>();
+
+                if (behaviourData.generatedVariables == null)
+                    behaviourData.generatedVariables = new Dictionary<string, object>();
+
+                string filepath = base.PlayableCard.Info.GetExtendedProperty("JSONFilePath");
+                if (filepath != null)
+                {
+                    CardSerializeInfo cardinfo = JSONParser.FromJson<CardSerializeInfo>(File.ReadAllText(filepath));
+
+                    foreach (KeyValuePair<string, string> property in cardinfo.extensionProperties)
+                    {
+                        if (Regex.Matches(property.Key, $"variable: ({RegexStrings.Variable})") is var variables
+                        && variables.Cast<Match>().Any(variables => variables.Success))
+                        {
+                            behaviourData.variables[variables[0].Groups[1].Value] = property.Value;
+                        }
+                    }
+                }
+
                 SigilData.UpdateVariables(behaviourData, base.PlayableCard);
             }
             TriggerSigil("OnLoad");
