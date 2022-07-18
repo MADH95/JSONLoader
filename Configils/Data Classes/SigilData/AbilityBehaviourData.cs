@@ -7,6 +7,7 @@ namespace JLPlugin.Data
     public class AbilityBehaviourData
     {
         public trigger trigger;
+        public List<string> actionOrder;
 
         public List<placeCards> placeCards;
         public List<buffCards> buffCards;

@@ -316,6 +316,7 @@ namespace JLPlugin.V2.Data
                 try
                 {
                     CardSerializeInfo cardInfo = JSONParser.FromJson<CardSerializeInfo>(File.ReadAllText(file));
+                    cardInfo.filePath = file;
                     cardInfo.Apply();
                     Plugin.Log.LogDebug($"Loaded JSON card {cardInfo.name}");
                 }
