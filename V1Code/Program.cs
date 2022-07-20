@@ -4,6 +4,7 @@ using BepInEx.Logging;
 using HarmonyLib;
 using JLPlugin.Data;
 using JLPlugin.V2.Data;
+using UnityEngine;
 
 namespace JLPlugin
 {
@@ -34,6 +35,15 @@ namespace JLPlugin
             SigilData.LoadAllSigils();
             CardSerializeInfo.LoadAllJLDR2();
             StarterDeckList.LoadAllStarterDecks();
+        }
+
+        public void Update()
+        {
+            if ((Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift)) && Input.GetKeyDown(KeyCode.R))
+            {
+                SigilData.LoadAllSigils();
+                CardSerializeInfo.LoadAllJLDR2();
+            }
         }
     }
 }

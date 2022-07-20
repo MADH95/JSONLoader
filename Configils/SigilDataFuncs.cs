@@ -41,23 +41,23 @@ namespace JLPlugin.Data
                     SigilType
                     );
 
-                SigilDicts.SpecialArgumentList.Add(specialAbility.Id, new SigilTuple(SigilType, this));
+                SigilDicts.SpecialArgumentList[specialAbility.Id] = new SigilTuple(SigilType, this);
 
                 return;
             }
 
             // This is for debugging it should be removed before release
-            var fields = this.GetType()
-                     .GetFields();
-
-            var values = fields.Select(field => field.GetValue(this)).ToList();
-
-            List<string> fieldsinfo = new();
-
-            for (int i = 0; i < fields.Length; ++i)
-            {
-                Plugin.Log.LogWarning($"{fields[i].Name}: {values[i]}\n");
-            }
+            //var fields = this.GetType()
+            //         .GetFields();
+            //
+            //var values = fields.Select(field => field.GetValue(this)).ToList();
+            //
+            //List<string> fieldsinfo = new();
+            //
+            //for (int i = 0; i < fields.Length; ++i)
+            //{
+            //    Plugin.Log.LogWarning($"{fields[i].Name}: {values[i]}\n");
+            //}
 
 
             //There probably a more API oriented way of handling this, I'm just very confused how that all works atm
@@ -99,7 +99,7 @@ namespace JLPlugin.Data
 
             //info.activated = this.abilityBehaviour.Any( x => ParseEnum<TriggerType>( x.trigger?.triggerType ) == TriggerType.OnActivate );
 
-            SigilDicts.ArgumentList.Add(info.ability, new SigilTuple(SigilType, this));
+            SigilDicts.ArgumentList[info.ability] = new SigilTuple(SigilType, this);
         }
 
         public static SigilData GetAbilityArguments(Ability ability)

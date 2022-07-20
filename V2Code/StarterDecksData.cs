@@ -1,8 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using BepInEx;
+using InscryptionAPI.Ascension;
 using System.IO;
 using System.Linq;
-using BepInEx;
-using InscryptionAPI.Ascension;
 using TinyJson;
 
 namespace JLPlugin.Data
