@@ -4,8 +4,10 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using UnityEngine;
 using static JLPlugin.Data.SigilData;
+using static JLPlugin.Interpreter;
 
 namespace JLPlugin.Data
 {
@@ -53,9 +55,11 @@ namespace JLPlugin.Data
                 {
                     if (buffcardsinfo.targetCard != null)
                     {
-                        object playablecard;
-                        abilitydata.generatedVariables.TryGetValue(buffcardsinfo.targetCard.Replace("[", "").Replace("]", ""), out playablecard);
-                        card = (PlayableCard)playablecard;
+                        if (Regex.Matches(buffcardsinfo.targetCard, RegexStrings.Variable) is var variables
+                        && variables.Cast<Match>().Any(variables => variables.Success))
+                        {
+                            card = (PlayableCard)Interpreter.GeneratedVarToObj(variables[0], abilitydata);
+                        }
                     }
                     else
                     {

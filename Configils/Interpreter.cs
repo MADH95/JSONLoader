@@ -2,7 +2,6 @@
 using System;
 using System.Collections;
 using System.Linq;
-using System.Reflection;
 using System.Text.RegularExpressions;
 
 namespace JLPlugin
@@ -11,6 +10,7 @@ namespace JLPlugin
     using DiskCardGame;
     using NCalc;
     using System.Collections.Generic;
+    using System.Reflection;
 
     static class Interpreter
     {
@@ -65,7 +65,7 @@ namespace JLPlugin
 
             if (output == "True" || output == "False")
             {
-                output.ToLower();
+                output = output.ToLower();
             }
 
             return output;
@@ -123,6 +123,44 @@ namespace JLPlugin
                 return value;
             }
 
+            object obj = GeneratedVarToObj(variable, abilityData);
+
+            string output = obj.ToString();
+
+            //for some reason it thinks a string is an IEnumerable
+            if (obj is List<Ability> AbilityList)
+            {
+                output = $"'{ string.Join("', '", AbilityList.Select(x => AbilitiesUtil.GetInfo(x).rulebookName)) }'";
+            }
+            else if (obj is IEnumerable collection && obj is not string)
+            {
+                List<string> list = new List<string>();
+                foreach (object item in collection)
+                {
+                    list.Add(item.ToString());
+                }
+
+                if (list.Count == 0)
+                {
+                    output = "";
+                }
+                else
+                {
+                    output = $"'{ string.Join("', '", list) }'";
+                }
+            }
+
+            //bool conversion to allow for compatibility with NCalc
+            if (output == "True" || output == "False")
+            {
+                output = output.ToLower();
+            }
+
+            return output;
+        }
+
+        public static object GeneratedVarToObj(Match variable, AbilityBehaviourData abilityData)
+        {
             var fieldList = variable.Value.Trim('[', ']').Split('.').ToList();
 
             object obj;
@@ -163,41 +201,7 @@ namespace JLPlugin
 
                 break;
             }
-
-            string output = obj.ToString();
-
-            //for some reason it thinks a string is an IEnumerable
-            if (obj is List<Ability> AbilityList)
-            {
-                output = $"'{ string.Join("', '", AbilityList.Select(x => AbilitiesUtil.GetInfo(x).rulebookName)) }'";
-            }
-            else if (obj is IEnumerable collection && obj is not string)
-            {
-                List<string> list = new List<string>();
-                foreach (object item in collection)
-                {
-                    list.Add(item.ToString());
-                }
-
-                if (list.Count == 0)
-                {
-                    output = "";
-                }
-                else
-                {
-                    output = $"'{ string.Join("', '", list) }'";
-                }
-            }
-
-
-
-            //bool conversion to allow for compatibility with NCalc
-            if (output == "True" || output == "False")
-            {
-                output.ToLower();
-            }
-
-            return output;
+            return obj;
         }
     }
 }

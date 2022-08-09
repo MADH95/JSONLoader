@@ -69,6 +69,11 @@ namespace JLPlugin.Data
 
         private static void ModifySpawnedCard(CardInfo card, AbilityBehaviourData abilitydata)
         {
+            if (abilitydata.self == null)
+            {
+                return;
+            }
+
             List<Ability> abilities = new List<Ability>();
             foreach (CardModificationInfo cardMod in abilitydata.self.TemporaryMods)
             {

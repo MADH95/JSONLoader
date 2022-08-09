@@ -113,12 +113,15 @@ namespace JLPlugin.SigilCode
                 {
                     CardSerializeInfo cardinfo = JSONParser.FromJson<CardSerializeInfo>(File.ReadAllText(filepath));
 
-                    foreach (KeyValuePair<string, string> property in cardinfo.extensionProperties)
+                    if (cardinfo.extensionProperties != null)
                     {
-                        if (Regex.Matches(property.Key, $"variable: ({RegexStrings.Variable})") is var variables
-                        && variables.Cast<Match>().Any(variables => variables.Success))
+                        foreach (KeyValuePair<string, string> property in cardinfo.extensionProperties)
                         {
-                            behaviourData.variables[variables[0].Groups[1].Value] = property.Value;
+                            if (Regex.Matches(property.Key, $"variable: ({RegexStrings.Variable})") is var variables
+                            && variables.Cast<Match>().Any(variables => variables.Success))
+                            {
+                                behaviourData.variables[variables[0].Groups[1].Value] = property.Value;
+                            }
                         }
                     }
                 }

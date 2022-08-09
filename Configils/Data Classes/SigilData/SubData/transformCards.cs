@@ -1,6 +1,9 @@
 ﻿using DiskCardGame;
 using System.Collections;
+using System.Linq;
+using System.Text.RegularExpressions;
 using UnityEngine;
+using static JLPlugin.Interpreter;
 
 namespace JLPlugin.Data
 {
@@ -45,9 +48,11 @@ namespace JLPlugin.Data
                 {
                     if (transformCardsInfo.targetCard != null)
                     {
-                        object playablecard;
-                        abilitydata.generatedVariables.TryGetValue(transformCardsInfo.targetCard.Replace("[", "").Replace("]", ""), out playablecard);
-                        card = (PlayableCard)playablecard;
+                        if (Regex.Matches(transformCardsInfo.targetCard, RegexStrings.Variable) is var variables
+                        && variables.Cast<Match>().Any(variables => variables.Success))
+                        {
+                            card = (PlayableCard)Interpreter.GeneratedVarToObj(variables[0], abilitydata);
+                        }
                     }
                     else
                     {
