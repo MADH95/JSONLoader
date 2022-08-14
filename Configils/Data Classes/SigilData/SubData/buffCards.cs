@@ -55,10 +55,10 @@ namespace JLPlugin.Data
                 {
                     if (buffcardsinfo.targetCard != null)
                     {
-                        if (Regex.Matches(buffcardsinfo.targetCard, RegexStrings.Variable) is var variables
+                        if (Regex.Matches(buffcardsinfo.targetCard, RegexStrings.GeneratedVariable) is var variables
                         && variables.Cast<Match>().Any(variables => variables.Success))
                         {
-                            card = (PlayableCard)Interpreter.GeneratedVarToObj(variables[0], abilitydata);
+                            card = (PlayableCard)Interpreter.ProcessGeneratedVariable(variables[0].Groups[1].Value, abilitydata);
                         }
                     }
                     else

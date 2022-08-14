@@ -1,14 +1,12 @@
 ﻿
 using System;
-using System.Collections;
 using System.Linq;
 using System.Text.RegularExpressions;
 
 namespace JLPlugin
 {
     using Data;
-    using DiskCardGame;
-    using NCalc;
+    using PanoramicData.NCalcExtensions;
     using System.Collections.Generic;
     using System.Reflection;
 
@@ -17,19 +15,17 @@ namespace JLPlugin
         public static class RegexStrings
         {
             // Detects functions in the format name(params)
+            // This regex is not needed anymore but i just left it in because it's super cool lol
             public static string Function = @"([a-zA-Z]+)(?<!if|in)\(((?>\((?<c>)|[^()]+|\)(?<-c>))*(?(c)(?!)))\)";
 
-            // Detects a variable in the format [variableName] or [variableName.memberName]
-            public static string Variable = @"\[.*?\]";
+            // Detects a variable in the format [variableName]
+            public static string Variable = @"\[(.*?)\]";
+
+            // Detects a generated variable in the format [variableName.memberName]
+            public static string GeneratedVariable = @"\[(.*\..*)\]";
 
             //Detects an Expression in the format (1 + 4)
             public static string Expression = @"^\((.*?)\)$";
-
-            // Detects all whitespace in a string
-            public static string Whitespace = @"\s+";
-
-            // Detects text in the format 'text'
-            public static string WithoutApostrophes = @"'(.*?)'";
         }
 
 
@@ -37,131 +33,52 @@ namespace JLPlugin
         {
             string output = input;
 
-            if (Regex.Matches(output, RegexStrings.Variable) is var variables
-                && variables.Cast<Match>().Any(variables => variables.Success))
-            {
-                foreach (Match variable in variables)
-                {
-                    output = output.Replace(variable.Value, ProcessVariable(variable, abilityData));
-                }
-            }
-
-            if (Regex.Match(output, RegexStrings.Function) is var function && function.Success)
-            {
-                output = output.Replace(function.Value, ProcessFunction(function, abilityData));
-            }
-
-            //this should stay as it's very useful for debugging for people
-            if (sendDebug)
-            {
-                Plugin.Log.LogInfo($"output before NCalc: {output}");
-            }
-
             if (Regex.Match(output, RegexStrings.Expression) is var expression && expression.Success)
             {
-                Expression e = new(expression.Groups[0].Value);
+                //NoCache means the logs don't get spammed but it could cause some performance loss
+                ExtendedExpression e = new ExtendedExpression(expression.Groups[1].Value);
+                e.EvaluateFunction += ConfigilExtensions.Extend;
+
+                foreach (KeyValuePair<string, string> variable in abilityData.variables)
+                {
+                    e.Parameters[variable.Key] = variable.Value;
+                }
+
+                if (Regex.Matches(output, RegexStrings.GeneratedVariable) is var variables
+                && variables.Cast<Match>().Any(variables => variables.Success))
+                {
+                    foreach (Match variable in variables)
+                    {
+                        string contents = variable.Groups[1].Value;
+                        e.Parameters[contents] = ProcessGeneratedVariable(contents, abilityData);
+                    }
+                }
+
+                //this should stay as it's very useful for debugging for people
+                if (sendDebug)
+                {
+                    Plugin.Log.LogInfo($"input: {output}");
+                }
+
                 output = e.Evaluate().ToString();
-            }
 
-            if (output == "True" || output == "False")
-            {
-                output = output.ToLower();
+                if (output == "True" || output == "False")
+                {
+                    output = output.ToLower();
+                }
+
+                if (sendDebug)
+                {
+                    Plugin.Log.LogInfo($"output: {output}");
+                }
             }
 
             return output;
         }
 
-        private static string ProcessFunction(Match function, AbilityBehaviourData abilityData)
+        public static object ProcessGeneratedVariable(string contents, AbilityBehaviourData abilityData)
         {
-            string fullFunction = function.Groups[0].Value;
-            string functionName = function.Groups[1].Value;
-
-            //I readded the auto process of the function contents
-            //as it's now compatible due to the new regex
-            string functionContents = Regex.Replace(SigilData.ConvertArgument(function.Groups[2].Value, abilityData), RegexStrings.Whitespace, string.Empty);
-
-            switch (functionName)
-            {
-                case "StringContains":
-                    {
-                        return ConfigilFunctions.StringContains(functionContents);
-                    }
-                case "Random":
-                    {
-                        return ConfigilFunctions.Random(functionContents);
-                    }
-                case "CardInSlot":
-                    {
-                        return ConfigilFunctions.CardInSlot(functionContents);
-                    }
-                case "GetListIndex":
-                    {
-                        return ConfigilFunctions.GetListIndex(functionContents);
-                    }
-                default:
-                    {
-                        throw new Exception($"{functionName} - is an invalid function name");
-                    }
-
-                    //Suggested functions
-
-                    //GetSlot( Player/Opponent, Index) might be easier to get slot in real time rather than updating a list every frame, would only get the required slots
-            }
-        }
-
-        public static string ProcessVariable(Match variable, AbilityBehaviourData abilityData)
-        {
-            if (!variable.Value.Contains('.'))
-            {
-                bool validVariable = abilityData.variables.TryGetValue(variable.Value, out string value);
-
-                if (!validVariable)
-                {
-                    throw new Exception($"{ variable.Value } is an invalid variable");
-                }
-
-                return value;
-            }
-
-            object obj = GeneratedVarToObj(variable, abilityData);
-
-            string output = obj.ToString();
-
-            //for some reason it thinks a string is an IEnumerable
-            if (obj is List<Ability> AbilityList)
-            {
-                output = $"'{ string.Join("', '", AbilityList.Select(x => AbilitiesUtil.GetInfo(x).rulebookName)) }'";
-            }
-            else if (obj is IEnumerable collection && obj is not string)
-            {
-                List<string> list = new List<string>();
-                foreach (object item in collection)
-                {
-                    list.Add(item.ToString());
-                }
-
-                if (list.Count == 0)
-                {
-                    output = "";
-                }
-                else
-                {
-                    output = $"'{ string.Join("', '", list) }'";
-                }
-            }
-
-            //bool conversion to allow for compatibility with NCalc
-            if (output == "True" || output == "False")
-            {
-                output = output.ToLower();
-            }
-
-            return output;
-        }
-
-        public static object GeneratedVarToObj(Match variable, AbilityBehaviourData abilityData)
-        {
-            var fieldList = variable.Value.Trim('[', ']').Split('.').ToList();
+            var fieldList = contents.Split('.').ToList();
 
             object obj;
 
@@ -178,11 +95,12 @@ namespace JLPlugin
 
                 if (property is null)
                 {
-                    var field = obj.GetType().GetField(fieldList[i]);
+                    FieldInfo field = obj.GetType().GetField(fieldList[i]);
 
                     if (field is null)
                     {
-                        throw new Exception($"{ fieldList[i] } is an invalid field/property of { string.Join(".", fieldList.Where(x => fieldList.IndexOf(x) < i)) }");
+                        return null;
+                        //throw new Exception($"{ fieldList[i] } is an invalid field/property of { string.Join(".", fieldList.Where(x => fieldList.IndexOf(x) < i)) }");
                     }
 
                     obj = field.GetValue(obj);

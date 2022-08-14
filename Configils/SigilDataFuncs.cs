@@ -375,11 +375,11 @@ namespace JLPlugin.Data
         {
             Dictionary<string, string> VariableDictionary = new Dictionary<string, string>()
             {
-                { "[EnergyAmount]", Singleton<ResourcesManager>.Instance.PlayerBones.ToString() },
-                { "[BoneAmount]", Singleton<ResourcesManager>.Instance.PlayerEnergy.ToString() },
-                { "[Turn]", Singleton<TurnManager>.Instance.TurnNumber.ToString() },
-                { "[TurnsInPlay]", (abilitydata.TurnsInPlay ?? 0).ToString() },
-                { "[ScaleBalance]", Singleton<LifeManager>.Instance.Balance.ToString() }
+                { "EnergyAmount", Singleton<ResourcesManager>.Instance.PlayerBones.ToString() },
+                { "BoneAmount", Singleton<ResourcesManager>.Instance.PlayerEnergy.ToString() },
+                { "Turn", Singleton<TurnManager>.Instance.TurnNumber.ToString() },
+                { "TurnsInPlay", (abilitydata.TurnsInPlay ?? 0).ToString() },
+                { "ScaleBalance", Singleton<LifeManager>.Instance.Balance.ToString() }
             };
             abilitydata.variables.Append(VariableDictionary);
 
