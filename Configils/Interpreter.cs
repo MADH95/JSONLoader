@@ -22,7 +22,7 @@ namespace JLPlugin
             public static string Variable = @"\[(.*?)\]";
 
             // Detects a generated variable in the format [variableName.memberName]
-            public static string GeneratedVariable = @"\[(.*\..*)\]";
+            public static string GeneratedVariable = @"\[(.*?\..*?)\]";
 
             //Detects an Expression in the format (1 + 4)
             public static string Expression = @"^\((.*?)\)$";

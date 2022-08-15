@@ -149,7 +149,7 @@ namespace JLPlugin.SigilCode
         // Token: 0x06001553 RID: 5459 RVA: 0x000494CF File Offset: 0x000476CF
         public override IEnumerator OnSacrifice()
         {
-            yield return TriggerSigil("OnSacrificed", new Dictionary<string, object>() { ["SacrificeTargetCard"] = Singleton<BoardManager>.Instance.CurrentSacrificeDemandingCard });
+            yield return TriggerSigil("OnSacrifice", new Dictionary<string, object>() { ["SacrificeTargetCard"] = Singleton<BoardManager>.Instance.CurrentSacrificeDemandingCard });
             yield break;
         }
         public override bool RespondsToOtherCardPreDeath(CardSlot deathSlot, bool fromCombat, PlayableCard killer)
