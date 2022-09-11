@@ -28,6 +28,8 @@ namespace JLPlugin
             public static string Expression = @"^\((.*?)\)$";
         }
 
+        public static Random random = new Random();
+
 
         public static string Process(in string input, AbilityBehaviourData abilityData, bool sendDebug = true)
         {
@@ -42,6 +44,11 @@ namespace JLPlugin
                 foreach (KeyValuePair<string, string> variable in abilityData.variables)
                 {
                     e.Parameters[variable.Key] = variable.Value;
+                }
+
+                foreach (KeyValuePair<string, object> generatedVariable in abilityData.generatedVariables)
+                {
+                    e.Parameters[generatedVariable.Key] = generatedVariable.Value;
                 }
 
                 if (Regex.Matches(output, RegexStrings.GeneratedVariable) is var variables

@@ -29,6 +29,7 @@ namespace JLPlugin.Data
                 }
 
                 Singleton<ViewManager>.Instance.SwitchToView(View.Default, false, false);
+
                 bool replace = SigilData.ConvertArgument(placecardinfo.replace, abilitydata) == "true";
                 CardSlot slot;
                 if (replace)
@@ -37,22 +38,23 @@ namespace JLPlugin.Data
                 }
                 else
                 {
-                    slot = slotData.GetSlot(placecardinfo.slot, abilitydata, false);
+                    slot = slotData.GetSlot(placecardinfo.slot, abilitydata);
                 }
-                Plugin.Log.LogInfo("slot is null?: " + (slot == null).ToString());
                 if (slot != null)
                 {
-                    Plugin.Log.LogInfo("test: " + (slot.Card != null).ToString() + " " + (SigilData.ConvertArgument(placecardinfo.replace, abilitydata) == "true").ToString());
+                    //done before replacing so that if the card bearing
+                    //the sigil is replaced retainMods won't break
+                    CardInfo CardToPlace = card.getCard(placecardinfo.card, abilitydata);
+
                     if (slot.Card != null && replace)
                     {
                         slot.Card.ExitBoard(0, new Vector3(0, 0, 0));
                     }
                     if (slot.Card == null || slot.Card.Dead)
                     {
-                        CardInfo cardinfo = card.getCard(placecardinfo.card, abilitydata);
-                        if (cardinfo != null)
+                        if (CardToPlace != null)
                         {
-                            yield return Singleton<BoardManager>.Instance.CreateCardInSlot(cardinfo, slot, 0.15f);
+                            yield return Singleton<BoardManager>.Instance.CreateCardInSlot(CardToPlace, slot, 0.15f);
                         }
                     }
                 }

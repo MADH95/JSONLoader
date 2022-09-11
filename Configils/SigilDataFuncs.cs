@@ -10,14 +10,12 @@ using System.Reflection;
 using TinyJson;
 using UnityEngine;
 using static JLPlugin.V2.Data.CardSerializeInfo;
-using Random = System.Random;
 
 namespace JLPlugin.Data
 {
     using InscryptionAPI.Card;
     using InscryptionAPI.Helpers;
     using SigilCode;
-    using System.Text.RegularExpressions;
     using static InscryptionAPI.Card.SpecialTriggeredAbilityManager;
     using SigilTuple = Tuple<Type, SigilData>;
 
@@ -144,14 +142,14 @@ namespace JLPlugin.Data
                 return null;
             }
 
-            if (value.Contains("|"))
-            {
-                //regex instead of splitting so it does not mistake the or operator (||) for randomization
-                var random = new Random();
-                MatchCollection randomMatchList = Regex.Matches(value, @"(?:(?:\((?>[^()]+|\((?<number>)|\)(?<-number>))*(?(number)(?!))\))|[^|])+");
-                List<string> StringList = randomMatchList.Cast<Match>().Select(match => match.Value).ToList();
-                value = StringList[random.Next(StringList.Count)];
-            }
+            //if (value.Contains("|"))
+            //{
+            //regex instead of splitting so it does not mistake the or operator (||) for randomization
+            //    var random = new Random();
+            //    MatchCollection randomMatchList = Regex.Matches(value, @"(?:(?:\((?>[^()]+|\((?<number>)|\)(?<-number>))*(?(number)(?!))\))|[^|])+");
+            //    List<string> StringList = randomMatchList.Cast<Match>().Select(match => match.Value).ToList();
+            //    value = StringList[random.Next(StringList.Count)];
+            //}
 
             return Interpreter.Process(value, abilitydata, sendDebug);
         }
@@ -242,6 +240,7 @@ namespace JLPlugin.Data
             }
 
             View OriginalView = Singleton<ViewManager>.Instance.CurrentView;
+            Singleton<ViewManager>.Instance.Controller.LockState = ViewLockState.Locked;
 
             foreach (string action in CompleteActionOrder)
             {
@@ -256,15 +255,7 @@ namespace JLPlugin.Data
                                 CoroutineWithData chosenslotdata = new CoroutineWithData(Data.chooseSlot.ChooseSlot(abilitydata, chooseslotdata, self.slot));
                                 yield return Data.chooseSlot.ChooseSlot(abilitydata, chooseslotdata, self.slot);
 
-                                abilitydata.generatedVariables.Add("ChosenSlot(" + (abilitydata.chooseSlots.IndexOf(chooseslotdata) + 1).ToString() + ")", (chosenslotdata.result as CardSlot) ?? self.slot);
-                            }
-                        }
-
-                        foreach (var variable in abilitydata.generatedVariables)
-                        {
-                            if (variable.Key.Contains("ChosenSlot") && variable.Value == null)
-                            {
-                                yield break;
+                                abilitydata.generatedVariables["ChosenSlot(" + (abilitydata.chooseSlots.IndexOf(chooseslotdata) + 1).ToString() + ")"] = (chosenslotdata.result as CardSlot);
                             }
                         }
                         break;
@@ -289,16 +280,7 @@ namespace JLPlugin.Data
 
                         if (abilitydata.dealScaleDamage != null)
                         {
-                            int damage = int.Parse(ConvertArgument(abilitydata.dealScaleDamage, abilitydata));
-                            if (damage > 0)
-                            {
-                                yield return Singleton<LifeManager>.Instance.ShowDamageSequence(damage, damage, false, 0.125f, null, 0f, true);
-                            }
-                            else if (damage < 0)
-                            {
-                                yield return Singleton<LifeManager>.Instance.ShowDamageSequence(-damage, -damage, true, 0.125f, null, 0f, true);
-                            }
-
+                            yield return dealScaleDamage.DealScaleDamage(abilitydata);
                         }
                         break;
 
@@ -368,6 +350,7 @@ namespace JLPlugin.Data
             {
                 Singleton<ViewManager>.Instance.SwitchToView(OriginalView, false, false);
             }
+            Singleton<ViewManager>.Instance.Controller.LockState = ViewLockState.Unlocked;
             yield break;
         }
 

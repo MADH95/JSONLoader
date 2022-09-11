@@ -31,13 +31,13 @@ namespace JLPlugin.Data
                     continue;
                 }
 
-                CardSlot slotFrom = slotData.GetSlot(movecardinfo.moveFromSlot, abilitydata, true);
+                CardSlot slotFrom = slotData.GetSlot(movecardinfo.moveFromSlot, abilitydata);
                 if (movecardinfo.moveFromSlot == null)
                 {
                     slotFrom = abilitydata.self.Slot;
                 }
 
-                CardSlot slotTo = slotData.GetSlot(movecardinfo.moveToSlot, abilitydata, false);
+                CardSlot slotTo = slotData.GetSlot(movecardinfo.moveToSlot, abilitydata);
                 if (slotFrom?.Card != null)
                 {
                     if (slotTo != null)

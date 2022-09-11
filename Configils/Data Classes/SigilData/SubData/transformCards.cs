@@ -32,15 +32,15 @@ namespace JLPlugin.Data
                     continue;
                 }
 
-                PlayableCard card = null;
+                PlayableCard CardToReplace = null;
                 if (transformCardsInfo.slot != null)
                 {
-                    CardSlot slot = slotData.GetSlot(transformCardsInfo.slot, abilitydata, true);
+                    CardSlot slot = slotData.GetSlot(transformCardsInfo.slot, abilitydata);
                     if (slot != null)
                     {
                         if (slot.Card != null)
                         {
-                            card = slot.Card;
+                            CardToReplace = slot.Card;
                         }
                     }
                 }
@@ -51,23 +51,23 @@ namespace JLPlugin.Data
                         if (Regex.Matches(transformCardsInfo.targetCard, RegexStrings.GeneratedVariable) is var variables
                         && variables.Cast<Match>().Any(variables => variables.Success))
                         {
-                            card = (PlayableCard)Interpreter.ProcessGeneratedVariable(variables[0].Groups[1].Value, abilitydata);
+                            CardToReplace = (PlayableCard)Interpreter.ProcessGeneratedVariable(variables[0].Groups[1].Value, abilitydata);
                         }
                     }
                     else
                     {
-                        card = abilitydata.self;
+                        CardToReplace = abilitydata.self;
                     }
                 }
 
-                if (card != null)
+                if (CardToReplace != null)
                 {
                     CardInfo cardinfo = Data.card.getCard(transformCardsInfo.card, abilitydata);
 
-                    yield return card.TransformIntoCard(cardinfo);
+                    yield return CardToReplace.TransformIntoCard(cardinfo);
                     if (SigilData.ConvertArgument(transformCardsInfo.noRetainDamage, abilitydata) == "true")
                     {
-                        card.HealDamage(card.Status.damageTaken);
+                        CardToReplace.HealDamage(CardToReplace.Status.damageTaken);
                     }
                 }
             }

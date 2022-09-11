@@ -27,8 +27,11 @@ namespace JLPlugin.Data
                     continue;
                 }
 
-                Singleton<ViewManager>.Instance.SwitchToView(View.Default, false, false);
                 CardSlot attackerSlot = slotData.GetSlot(attackslotinfo.attackerSlot, abilitydata);
+                if (attackerSlot == null)
+                {
+                    attackerSlot = abilitydata.self.slot;
+                }
                 CardSlot victimSlot = slotData.GetSlot(attackslotinfo.victimSlot, abilitydata);
                 if (attackerSlot != null && victimSlot != null)
                 {

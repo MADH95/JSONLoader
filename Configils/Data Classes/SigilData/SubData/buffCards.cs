@@ -42,7 +42,7 @@ namespace JLPlugin.Data
                 PlayableCard card = null;
                 if (buffcardsinfo.slot != null)
                 {
-                    CardSlot slot = slotData.GetSlot(buffcardsinfo.slot, abilitydata, true);
+                    CardSlot slot = slotData.GetSlot(buffcardsinfo.slot, abilitydata);
                     if (slot != null)
                     {
                         if (slot.Card != null)
