@@ -239,6 +239,7 @@ namespace JLPlugin.Data
                 }
             }
 
+            yield return new WaitForSeconds(0.3f);
             View OriginalView = Singleton<ViewManager>.Instance.CurrentView;
             Singleton<ViewManager>.Instance.Controller.LockState = ViewLockState.Locked;
 
@@ -346,10 +347,7 @@ namespace JLPlugin.Data
             }
 
             yield return new WaitForSeconds(0.6f);
-            if (Singleton<ViewManager>.Instance.CurrentView != OriginalView)
-            {
-                Singleton<ViewManager>.Instance.SwitchToView(OriginalView, false, false);
-            }
+            Singleton<ViewManager>.Instance.SwitchToView(OriginalView, false, false);
             Singleton<ViewManager>.Instance.Controller.LockState = ViewLockState.Unlocked;
             yield break;
         }

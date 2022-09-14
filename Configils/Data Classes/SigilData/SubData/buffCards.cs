@@ -25,19 +25,15 @@ namespace JLPlugin.Data
 
         public static IEnumerator BuffCards(AbilityBehaviourData abilitydata)
         {
-            yield return new WaitForSeconds(0.3f);
-            if (Singleton<ViewManager>.Instance.CurrentView != View.Board)
-            {
-                Singleton<ViewManager>.Instance.SwitchToView(View.Board, false, false);
-                yield return new WaitForSeconds(0.3f);
-            }
-
             foreach (buffCards buffcardsinfo in abilitydata.buffCards)
             {
                 if (SigilData.ConvertArgument(buffcardsinfo.runOnCondition, abilitydata) == "false")
                 {
                     continue;
                 }
+
+                yield return new WaitForSeconds(0.3f);
+                Singleton<ViewManager>.Instance.SwitchToView(View.Board, false, false);
 
                 PlayableCard card = null;
                 if (buffcardsinfo.slot != null)
@@ -55,7 +51,7 @@ namespace JLPlugin.Data
                 {
                     if (buffcardsinfo.targetCard != null)
                     {
-                        if (Regex.Matches(buffcardsinfo.targetCard, RegexStrings.GeneratedVariable) is var variables
+                        if (Regex.Matches(buffcardsinfo.targetCard, RegexStrings.Variable) is var variables
                         && variables.Cast<Match>().Any(variables => variables.Success))
                         {
                             card = (PlayableCard)Interpreter.ProcessGeneratedVariable(variables[0].Groups[1].Value, abilitydata);

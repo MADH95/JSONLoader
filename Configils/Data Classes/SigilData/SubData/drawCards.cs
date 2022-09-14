@@ -13,18 +13,15 @@ namespace JLPlugin.Data
 
         public static IEnumerator DrawCards(AbilityBehaviourData abilitydata)
         {
-            if (Singleton<ViewManager>.Instance.CurrentView != View.Default)
-            {
-                yield return new WaitForSeconds(0.2f);
-                Singleton<ViewManager>.Instance.SwitchToView(View.Default, false, false);
-                yield return new WaitForSeconds(0.2f);
-            }
             foreach (drawCards drawcardsinfo in abilitydata.drawCards)
             {
                 if (SigilData.ConvertArgument(drawcardsinfo.runOnCondition, abilitydata) == "false")
                 {
                     continue;
                 }
+
+                yield return new WaitForSeconds(0.3f);
+                Singleton<ViewManager>.Instance.SwitchToView(View.Default, false, false);
 
                 card cardInfo = drawcardsinfo.card;
                 CardInfo cardinfo = Data.card.getCard(cardInfo, abilitydata);

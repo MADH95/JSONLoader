@@ -14,13 +14,6 @@ namespace JLPlugin.Data
 
         public static IEnumerator PlaceCards(AbilityBehaviourData abilitydata)
         {
-            yield return new WaitForSeconds(0.3f);
-            if (Singleton<ViewManager>.Instance.CurrentView != View.Board)
-            {
-                Singleton<ViewManager>.Instance.SwitchToView(View.Board, false, false);
-                yield return new WaitForSeconds(0.3f);
-            }
-
             foreach (placeCards placecardinfo in abilitydata.placeCards)
             {
                 if (SigilData.ConvertArgument(placecardinfo.runOnCondition, abilitydata) == "false")
@@ -28,7 +21,8 @@ namespace JLPlugin.Data
                     continue;
                 }
 
-                Singleton<ViewManager>.Instance.SwitchToView(View.Default, false, false);
+                yield return new WaitForSeconds(0.3f);
+                Singleton<ViewManager>.Instance.SwitchToView(View.Board, false, false);
 
                 bool replace = SigilData.ConvertArgument(placecardinfo.replace, abilitydata) == "true";
                 CardSlot slot;

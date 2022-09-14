@@ -18,19 +18,15 @@ namespace JLPlugin.Data
 
         public static IEnumerator TransformCards(AbilityBehaviourData abilitydata)
         {
-            yield return new WaitForSeconds(0.3f);
-            if (Singleton<ViewManager>.Instance.CurrentView != View.Board)
-            {
-                Singleton<ViewManager>.Instance.SwitchToView(View.Board, false, false);
-                yield return new WaitForSeconds(0.3f);
-            }
-
             foreach (transformCards transformCardsInfo in abilitydata.transformCards)
             {
                 if (SigilData.ConvertArgument(transformCardsInfo.runOnCondition, abilitydata) == "false")
                 {
                     continue;
                 }
+
+                yield return new WaitForSeconds(0.3f);
+                Singleton<ViewManager>.Instance.SwitchToView(View.Board, false, false);
 
                 PlayableCard CardToReplace = null;
                 if (transformCardsInfo.slot != null)
@@ -48,7 +44,7 @@ namespace JLPlugin.Data
                 {
                     if (transformCardsInfo.targetCard != null)
                     {
-                        if (Regex.Matches(transformCardsInfo.targetCard, RegexStrings.GeneratedVariable) is var variables
+                        if (Regex.Matches(transformCardsInfo.targetCard, RegexStrings.Variable) is var variables
                         && variables.Cast<Match>().Any(variables => variables.Success))
                         {
                             CardToReplace = (PlayableCard)Interpreter.ProcessGeneratedVariable(variables[0].Groups[1].Value, abilitydata);
