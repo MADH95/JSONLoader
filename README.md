@@ -201,7 +201,6 @@ If you want help debugging you can ask in the #card-creation channel in the [Ins
 <summary>Changelog</summary>
 2.1.1
 - Added configils
-- Fixed a bug where editing cards would cause fields to be applied multiple times
 
 2.1
 - Added starter deck support with help from Lily
