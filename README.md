@@ -5,6 +5,12 @@ It can parse custom cards and pass them to APIPlugin to load them into the game.
 
 Version 2.0 of this mod is designed to create full compatibility with Version 2.0+ of the API. JSON card files compatible with this API will have an extension of .JLDR2
 
+## Configils
+
+The latest version of JSON Loader allows you to create sigils. To do this, your file needs to end in '_sigil.jldr2'.
+
+Here is the [documentation](https://docs.google.com/document/d/1QLAfomaTcatm-foU2P1ZoqGQFFvhCfmEnN4jIxAWceQ/edit?usp=sharing) for making sigils.
+
 ## Converting Existing Cards to JLDR2
 
 In order to have compatability with mod manager, version 2.0.0 breaks backwards compatability by default. Don't worry though! This mod comes with a backwards compatibility mode that can optionally be turned on. When turned on, all existing .JLDR files will be read in, converted to .JLDR2 files, and dumped back into the folder where the original JLDR was found. However, I cannot guarantee that the version will be 100% correct, especially when it comes to assigning the appropriate prefix to the card (see the first heading below under 'Custom Cards').
@@ -193,9 +199,12 @@ If you want help debugging you can ask in the #card-creation channel in the [Ins
 
 <details>
 <summary>Changelog</summary>
+2.1.1
+- Added configils
+- Fixed a bug where editing cards would cause fields to be applied multiple times
 
 2.1
-- Added starter deck support with help from Sylvie
+- Added starter deck support with help from Lily
 
 2.0.1
 - Fixed a defect with converting JLDR to JLDR2 as it relates to editing base game cards
