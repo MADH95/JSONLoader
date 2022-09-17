@@ -1,5 +1,5 @@
 ## 2.1.1
-- Added configils
+- Added configils (made by Lily#7394)
 
 ## 2.1
 - Added starter deck support with help from Lily
