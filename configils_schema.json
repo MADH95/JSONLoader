@@ -141,6 +141,9 @@
                         }
                       }
                     },
+                    "targetCard": {
+                      "type": "string"
+                    },
                     "heal": {
                       "type": "string"
                     },
@@ -190,6 +193,9 @@
                           "type": "string"
                         }
                       }
+                    },
+                    "targetCard": {
+                      "type": "string"
                     },
                     "card": {
                       "type": "object",
@@ -452,7 +458,7 @@
                 "message": {
                   "type": "string"
                 },
-                "lenght": {
+                "length": {
                   "type": "string"
                 },
                 "emotion": {
