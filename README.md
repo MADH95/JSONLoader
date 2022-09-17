@@ -199,6 +199,7 @@ If you want help debugging you can ask in the #card-creation channel in the [Ins
 
 <details>
 <summary>Changelog</summary>
+
 2.1.1
 - Added configils (made by Lily#7394)
 
