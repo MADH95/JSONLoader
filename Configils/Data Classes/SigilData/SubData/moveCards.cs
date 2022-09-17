@@ -17,13 +17,6 @@ namespace JLPlugin.Data
 
         public static IEnumerator MoveCards(AbilityBehaviourData abilitydata)
         {
-            yield return new WaitForSeconds(0.3f);
-            if (Singleton<ViewManager>.Instance.CurrentView != View.Board)
-            {
-                Singleton<ViewManager>.Instance.SwitchToView(View.Board, false, false);
-                yield return new WaitForSeconds(0.3f);
-            }
-
             foreach (moveCards movecardinfo in abilitydata.moveCards)
             {
                 if (SigilData.ConvertArgument(movecardinfo.runOnCondition, abilitydata) == "false")
@@ -31,13 +24,16 @@ namespace JLPlugin.Data
                     continue;
                 }
 
-                CardSlot slotFrom = slotData.GetSlot(movecardinfo.moveFromSlot, abilitydata, true);
+                yield return new WaitForSeconds(0.3f);
+                Singleton<ViewManager>.Instance.SwitchToView(View.Board, false, false);
+
+                CardSlot slotFrom = slotData.GetSlot(movecardinfo.moveFromSlot, abilitydata);
                 if (movecardinfo.moveFromSlot == null)
                 {
                     slotFrom = abilitydata.self.Slot;
                 }
 
-                CardSlot slotTo = slotData.GetSlot(movecardinfo.moveToSlot, abilitydata, false);
+                CardSlot slotTo = slotData.GetSlot(movecardinfo.moveToSlot, abilitydata);
                 if (slotFrom?.Card != null)
                 {
                     if (slotTo != null)

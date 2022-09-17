@@ -39,13 +39,14 @@ namespace JLPlugin.SigilCode
                     {
                         foreach (extraAttacks extraAttackData in abilityBehaviour.extraAttacks)
                         {
+                            SigilData.UpdateVariables(abilityBehaviour, slot.Card);
+                            abilityBehaviour.generatedVariables["TriggerCard"] = __instance;
+
                             if (SigilData.ConvertArgument(extraAttackData.runOnCondition, abilityBehaviour) == "false")
                             {
                                 continue;
                             }
 
-                            SigilData.UpdateVariables(abilityBehaviour, slot.Card);
-                            abilityBehaviour.generatedVariables["TriggerCard"] = __instance;
                             CardSlot chosenSlot = slotData.GetSlot(extraAttackData.attackingSlot, abilityBehaviour);
                             if (extraAttackData.attackingSlot == null)
                             {
@@ -53,17 +54,16 @@ namespace JLPlugin.SigilCode
                             }
                             if (chosenSlot == __instance.slot)
                             {
+                                __result.Remove(__instance.Slot.opposingSlot);
                                 foreach (slotData slotToAttack in extraAttackData.slotsToAttack)
                                 {
-                                    __result.Remove(__instance.Slot.opposingSlot);
-
                                     CardSlot attackslot = slotData.GetSlot(slotToAttack, abilityBehaviour);
                                     if (attackslot != null)
                                     {
-                                        __result.Insert(__result.Count, attackslot);
+                                        Plugin.Log.LogInfo($"{attackslot.Index}, {attackslot.IsPlayerSlot}");
+                                        __result.Add(attackslot);
                                     }
                                 }
-
                             }
                         }
                     }

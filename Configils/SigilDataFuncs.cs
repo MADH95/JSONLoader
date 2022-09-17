@@ -10,14 +10,12 @@ using System.Reflection;
 using TinyJson;
 using UnityEngine;
 using static JLPlugin.V2.Data.CardSerializeInfo;
-using Random = System.Random;
 
 namespace JLPlugin.Data
 {
     using InscryptionAPI.Card;
     using InscryptionAPI.Helpers;
     using SigilCode;
-    using System.Text.RegularExpressions;
     using static InscryptionAPI.Card.SpecialTriggeredAbilityManager;
     using SigilTuple = Tuple<Type, SigilData>;
 
@@ -41,23 +39,23 @@ namespace JLPlugin.Data
                     SigilType
                     );
 
-                SigilDicts.SpecialArgumentList.Add(specialAbility.Id, new SigilTuple(SigilType, this));
+                SigilDicts.SpecialArgumentList[specialAbility.Id] = new SigilTuple(SigilType, this);
 
                 return;
             }
 
             // This is for debugging it should be removed before release
-            var fields = this.GetType()
-                     .GetFields();
-
-            var values = fields.Select(field => field.GetValue(this)).ToList();
-
-            List<string> fieldsinfo = new();
-
-            for (int i = 0; i < fields.Length; ++i)
-            {
-                Plugin.Log.LogWarning($"{fields[i].Name}: {values[i]}\n");
-            }
+            //var fields = this.GetType()
+            //         .GetFields();
+            //
+            //var values = fields.Select(field => field.GetValue(this)).ToList();
+            //
+            //List<string> fieldsinfo = new();
+            //
+            //for (int i = 0; i < fields.Length; ++i)
+            //{
+            //    Plugin.Log.LogWarning($"{fields[i].Name}: {values[i]}\n");
+            //}
 
 
             //There probably a more API oriented way of handling this, I'm just very confused how that all works atm
@@ -99,7 +97,7 @@ namespace JLPlugin.Data
 
             //info.activated = this.abilityBehaviour.Any( x => ParseEnum<TriggerType>( x.trigger?.triggerType ) == TriggerType.OnActivate );
 
-            SigilDicts.ArgumentList.Add(info.ability, new SigilTuple(SigilType, this));
+            SigilDicts.ArgumentList[info.ability] = new SigilTuple(SigilType, this);
         }
 
         public static SigilData GetAbilityArguments(Ability ability)
@@ -144,14 +142,14 @@ namespace JLPlugin.Data
                 return null;
             }
 
-            if (value.Contains("|"))
-            {
-                //regex instead of splitting so it does not mistake the or operator (||) for randomization
-                var random = new Random();
-                MatchCollection randomMatchList = Regex.Matches(value, @"(?:(?:\((?>[^()]+|\((?<number>)|\)(?<-number>))*(?(number)(?!))\))|[^|])+");
-                List<string> StringList = randomMatchList.Cast<Match>().Select(match => match.Value).ToList();
-                value = StringList[random.Next(StringList.Count)];
-            }
+            //if (value.Contains("|"))
+            //{
+            //regex instead of splitting so it does not mistake the or operator (||) for randomization
+            //    var random = new Random();
+            //    MatchCollection randomMatchList = Regex.Matches(value, @"(?:(?:\((?>[^()]+|\((?<number>)|\)(?<-number>))*(?(number)(?!))\))|[^|])+");
+            //    List<string> StringList = randomMatchList.Cast<Match>().Select(match => match.Value).ToList();
+            //    value = StringList[random.Next(StringList.Count)];
+            //}
 
             return Interpreter.Process(value, abilitydata, sendDebug);
         }
@@ -241,7 +239,9 @@ namespace JLPlugin.Data
                 }
             }
 
+            yield return new WaitForSeconds(0.3f);
             View OriginalView = Singleton<ViewManager>.Instance.CurrentView;
+            Singleton<ViewManager>.Instance.Controller.LockState = ViewLockState.Locked;
 
             foreach (string action in CompleteActionOrder)
             {
@@ -256,15 +256,7 @@ namespace JLPlugin.Data
                                 CoroutineWithData chosenslotdata = new CoroutineWithData(Data.chooseSlot.ChooseSlot(abilitydata, chooseslotdata, self.slot));
                                 yield return Data.chooseSlot.ChooseSlot(abilitydata, chooseslotdata, self.slot);
 
-                                abilitydata.generatedVariables.Add("ChosenSlot(" + (abilitydata.chooseSlots.IndexOf(chooseslotdata) + 1).ToString() + ")", (chosenslotdata.result as CardSlot) ?? self.slot);
-                            }
-                        }
-
-                        foreach (var variable in abilitydata.generatedVariables)
-                        {
-                            if (variable.Key.Contains("ChosenSlot") && variable.Value == null)
-                            {
-                                yield break;
+                                abilitydata.generatedVariables["ChosenSlot(" + (abilitydata.chooseSlots.IndexOf(chooseslotdata) + 1).ToString() + ")"] = (chosenslotdata.result as CardSlot);
                             }
                         }
                         break;
@@ -289,16 +281,7 @@ namespace JLPlugin.Data
 
                         if (abilitydata.dealScaleDamage != null)
                         {
-                            int damage = int.Parse(ConvertArgument(abilitydata.dealScaleDamage, abilitydata));
-                            if (damage > 0)
-                            {
-                                yield return Singleton<LifeManager>.Instance.ShowDamageSequence(damage, damage, false, 0.125f, null, 0f, true);
-                            }
-                            else if (damage < 0)
-                            {
-                                yield return Singleton<LifeManager>.Instance.ShowDamageSequence(-damage, -damage, true, 0.125f, null, 0f, true);
-                            }
-
+                            yield return dealScaleDamage.DealScaleDamage(abilitydata);
                         }
                         break;
 
@@ -364,10 +347,8 @@ namespace JLPlugin.Data
             }
 
             yield return new WaitForSeconds(0.6f);
-            if (Singleton<ViewManager>.Instance.CurrentView != OriginalView)
-            {
-                Singleton<ViewManager>.Instance.SwitchToView(OriginalView, false, false);
-            }
+            Singleton<ViewManager>.Instance.SwitchToView(OriginalView, false, false);
+            Singleton<ViewManager>.Instance.Controller.LockState = ViewLockState.Unlocked;
             yield break;
         }
 
@@ -375,11 +356,11 @@ namespace JLPlugin.Data
         {
             Dictionary<string, string> VariableDictionary = new Dictionary<string, string>()
             {
-                { "[EnergyAmount]", Singleton<ResourcesManager>.Instance.PlayerBones.ToString() },
-                { "[BoneAmount]", Singleton<ResourcesManager>.Instance.PlayerEnergy.ToString() },
-                { "[Turn]", Singleton<TurnManager>.Instance.TurnNumber.ToString() },
-                { "[TurnsInPlay]", (abilitydata.TurnsInPlay ?? 0).ToString() },
-                { "[ScaleBalance]", Singleton<LifeManager>.Instance.Balance.ToString() }
+                { "EnergyAmount", Singleton<ResourcesManager>.Instance.PlayerBones.ToString() },
+                { "BoneAmount", Singleton<ResourcesManager>.Instance.PlayerEnergy.ToString() },
+                { "Turn", Singleton<TurnManager>.Instance.TurnNumber.ToString() },
+                { "TurnsInPlay", (abilitydata.TurnsInPlay ?? 0).ToString() },
+                { "ScaleBalance", Singleton<LifeManager>.Instance.Balance.ToString() }
             };
             abilitydata.variables.Append(VariableDictionary);
 

@@ -13,13 +13,6 @@ namespace JLPlugin.Data
 
         public static IEnumerator AttackSlots(AbilityBehaviourData abilitydata)
         {
-            yield return new WaitForSeconds(0.3f);
-            if (Singleton<ViewManager>.Instance.CurrentView != View.Board)
-            {
-                Singleton<ViewManager>.Instance.SwitchToView(View.Board, false, false);
-                yield return new WaitForSeconds(0.3f);
-            }
-
             foreach (attackSlots attackslotinfo in abilitydata.attackSlots)
             {
                 if (SigilData.ConvertArgument(attackslotinfo.runOnCondition, abilitydata) == "false")
@@ -27,8 +20,14 @@ namespace JLPlugin.Data
                     continue;
                 }
 
-                Singleton<ViewManager>.Instance.SwitchToView(View.Default, false, false);
+                yield return new WaitForSeconds(0.3f);
+                Singleton<ViewManager>.Instance.SwitchToView(View.Board, false, false);
+
                 CardSlot attackerSlot = slotData.GetSlot(attackslotinfo.attackerSlot, abilitydata);
+                if (attackerSlot == null)
+                {
+                    attackerSlot = abilitydata.self.slot;
+                }
                 CardSlot victimSlot = slotData.GetSlot(attackslotinfo.victimSlot, abilitydata);
                 if (attackerSlot != null && victimSlot != null)
                 {

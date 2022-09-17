@@ -4,8 +4,10 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using UnityEngine;
 using static JLPlugin.Data.SigilData;
+using static JLPlugin.Interpreter;
 
 namespace JLPlugin.Data
 {
@@ -23,13 +25,6 @@ namespace JLPlugin.Data
 
         public static IEnumerator BuffCards(AbilityBehaviourData abilitydata)
         {
-            yield return new WaitForSeconds(0.3f);
-            if (Singleton<ViewManager>.Instance.CurrentView != View.Board)
-            {
-                Singleton<ViewManager>.Instance.SwitchToView(View.Board, false, false);
-                yield return new WaitForSeconds(0.3f);
-            }
-
             foreach (buffCards buffcardsinfo in abilitydata.buffCards)
             {
                 if (SigilData.ConvertArgument(buffcardsinfo.runOnCondition, abilitydata) == "false")
@@ -37,10 +32,13 @@ namespace JLPlugin.Data
                     continue;
                 }
 
+                yield return new WaitForSeconds(0.3f);
+                Singleton<ViewManager>.Instance.SwitchToView(View.Board, false, false);
+
                 PlayableCard card = null;
                 if (buffcardsinfo.slot != null)
                 {
-                    CardSlot slot = slotData.GetSlot(buffcardsinfo.slot, abilitydata, true);
+                    CardSlot slot = slotData.GetSlot(buffcardsinfo.slot, abilitydata);
                     if (slot != null)
                     {
                         if (slot.Card != null)
@@ -53,9 +51,11 @@ namespace JLPlugin.Data
                 {
                     if (buffcardsinfo.targetCard != null)
                     {
-                        object playablecard;
-                        abilitydata.generatedVariables.TryGetValue(buffcardsinfo.targetCard.Replace("[", "").Replace("]", ""), out playablecard);
-                        card = (PlayableCard)playablecard;
+                        if (Regex.Matches(buffcardsinfo.targetCard, RegexStrings.Variable) is var variables
+                        && variables.Cast<Match>().Any(variables => variables.Success))
+                        {
+                            card = (PlayableCard)Interpreter.ProcessGeneratedVariable(variables[0].Groups[1].Value, abilitydata);
+                        }
                     }
                     else
                     {

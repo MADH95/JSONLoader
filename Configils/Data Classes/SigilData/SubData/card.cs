@@ -69,19 +69,24 @@ namespace JLPlugin.Data
 
         private static void ModifySpawnedCard(CardInfo card, AbilityBehaviourData abilitydata)
         {
-            List<Ability> abilities = new List<Ability>();
-            foreach (CardModificationInfo cardMod in abilitydata.self.TemporaryMods)
+            if (abilitydata.self == null)
             {
-                abilities.AddRange(cardMod.abilities);
+                return;
+            }
+
+            List<Ability> abilities = new List<Ability>();
+            foreach (CardModificationInfo temporaryMod in abilitydata.self.TemporaryMods)
+            {
+                abilities.AddRange(temporaryMod.abilities);
+            }
+            foreach (CardModificationInfo mod in abilitydata.self.Info.mods)
+            {
+                abilities.AddRange(mod.abilities);
             }
             abilities.RemoveAll((Ability x) => x == abilitydata.ability);
             if (abilities.Count == 0)
             {
                 return;
-            }
-            if (abilities.Count > 4)
-            {
-                abilities.RemoveRange(3, abilities.Count - 4);
             }
             CardModificationInfo newcardMod = new CardModificationInfo();
             newcardMod.fromCardMerge = true;

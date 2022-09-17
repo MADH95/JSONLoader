@@ -86,6 +86,9 @@
                     "slot": {
                       "type": "object",
                       "properties": {
+                        "randomSlotOnCondition": {
+                          "type": "string"
+                        },
                         "index": {
                           "type": "string"
                         },
@@ -127,6 +130,9 @@
                     "slot": {
                       "type": "object",
                       "properties": {
+                        "randomSlotOnCondition": {
+                          "type": "string"
+                        },
                         "index": {
                           "type": "string"
                         },
@@ -134,6 +140,9 @@
                           "type": "string"
                         }
                       }
+                    },
+                    "targetCard": {
+                      "type": "string"
                     },
                     "heal": {
                       "type": "string"
@@ -174,6 +183,9 @@
                     "slot": {
                       "type": "object",
                       "properties": {
+                        "randomSlotOnCondition": {
+                          "type": "string"
+                        },
                         "index": {
                           "type": "string"
                         },
@@ -181,6 +193,9 @@
                           "type": "string"
                         }
                       }
+                    },
+                    "targetCard": {
+                      "type": "string"
                     },
                     "card": {
                       "type": "object",
@@ -212,6 +227,9 @@
                     "slot": {
                       "type": "object",
                       "properties": {
+                        "randomSlotOnCondition": {
+                          "type": "string"
+                        },
                         "index": {
                           "type": "string"
                         },
@@ -239,6 +257,9 @@
                     "attackerSlot": {
                       "type": "object",
                       "properties": {
+                        "randomSlotOnCondition": {
+                          "type": "string"
+                        },
                         "index": {
                           "type": "string"
                         },
@@ -250,6 +271,9 @@
                     "victimSlot": {
                       "type": "object",
                       "properties": {
+                        "randomSlotOnCondition": {
+                          "type": "string"
+                        },
                         "index": {
                           "type": "string"
                         },
@@ -271,6 +295,9 @@
                     "attackingSlot": {
                       "type": "object",
                       "properties": {
+                        "randomSlotOnCondition": {
+                          "type": "string"
+                        },
                         "index": {
                           "type": "string"
                         },
@@ -285,6 +312,9 @@
                         {
                           "type": "object",
                           "properties": {
+                            "randomSlotOnCondition": {
+                              "type": "string"
+                            },
                             "index": {
                               "type": "string"
                             },
@@ -317,7 +347,15 @@
               }
             },
             "dealScaleDamage": {
-              "type": "string"
+              "type": "object",
+              "properties": {
+                "runOnCondition": {
+                  "type": "string"
+                },
+                "damage": {
+                  "type": "string"
+                }
+              }
             },
             "drawCards": {
               "type": "array",
@@ -371,6 +409,9 @@
                     "moveFromSlot": {
                       "type": "object",
                       "properties": {
+                        "randomSlotOnCondition": {
+                          "type": "string"
+                        },
                         "index": {
                           "type": "string"
                         },
@@ -382,6 +423,9 @@
                     "moveToSlot": {
                       "type": "object",
                       "properties": {
+                        "randomSlotOnCondition": {
+                          "type": "string"
+                        },
                         "index": {
                           "type": "string"
                         },
@@ -414,7 +458,7 @@
                 "message": {
                   "type": "string"
                 },
-                "lenght": {
+                "length": {
                   "type": "string"
                 },
                 "emotion": {

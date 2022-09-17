@@ -44,6 +44,11 @@ namespace JLPlugin.SigilCode
                         {
                             SigilData.UpdateVariables(abilityBehaviour, slot.Card);
 
+                            if (SigilData.ConvertArgument(buffCards.runOnCondition, abilityBehaviour, false) == "false")
+                            {
+                                continue;
+                            }
+
                             CardSlot chosenSlot = slotData.GetSlot(buffCards.slot, abilityBehaviour);
                             if (buffCards.slot == null)
                             {

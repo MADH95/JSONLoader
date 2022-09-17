@@ -13,7 +13,7 @@ namespace JLPlugin.Data
         public List<buffCards> buffCards;
         public List<transformCards> transformCards;
         public gainCurrency gainCurrency;
-        public string dealScaleDamage;
+        public dealScaleDamage dealScaleDamage;
         public List<drawCards> drawCards;
         public List<chooseSlot> chooseSlots;
         public List<moveCards> moveCards;

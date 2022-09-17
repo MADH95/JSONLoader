@@ -1,11 +1,11 @@
 {
-  "$schema": "http://json-schema.org/draft-04/schema#",
+  "$schema": "http://json-schema.org/draft-07/schema",
   "$id": "https://github.com/MADH95/JSONLoaderPlugin/blob/master/Schema.json",
   "title": "New Card",
   "Description": "Schema to verify the input data for a new card",
   "type": "object",
   "additionalProperties": false,
-  "required": [ "name", "modPrefix" ],
+  "required": ["name", "modPrefix"],
   "properties": {
     "name": {
       "description": "A name for the card",
@@ -34,7 +34,7 @@
         "anyOf": [
           {
             "title": "Base Game Metacategory",
-            "description": "Base Game Metacategory",
+            "description": "The metacategory that the base game provides",
             "type": "string",
             "enum": [
               "ChoiceNode",
@@ -48,7 +48,8 @@
           {
             "title": "Mod-Added Metacategory",
             "description": "Format: [Mod GUID].[Metacategory Name]",
-            "type": "string"
+            "type": "string",
+            "pattern": "^([^.]+[.]{1})*([^.])+$"
           }
         ]
       },
@@ -58,23 +59,13 @@
       "description": "How common the card is",
       "default": "Vanilla",
       "type": "string",
-      "enum": [
-        "Vanilla",
-        "Simple",
-        "Intermediate",
-        "Advanced"
-      ]
+      "enum": ["Vanilla", "Simple", "Intermediate", "Advanced"]
     },
     "temple": {
       "description": "Which Scrybe the card belongs to",
       "default": "Nature",
       "type": "string",
-      "enum": [
-        "Nature",
-        "Undead",
-        "Tech",
-        "Wizard"
-      ]
+      "enum": ["Nature", "Undead", "Tech", "Wizard"]
     },
     "baseAttack": {
       "description": "The base attack value of the card",
@@ -91,7 +82,7 @@
     "hideAttackAndHealth": {
       "description": "Hide the attack and health of the card",
       "type": "boolean",
-      "default": "false"
+      "default": false
     },
     "bloodCost": {
       "description": "The sacrifice cost of the card",
@@ -116,11 +107,7 @@
       "type": "array",
       "items": {
         "type": "string",
-        "enum": [
-          "Green",
-          "Orange",
-          "Blue"
-        ]
+        "enum": ["Green", "Orange", "Blue"]
       },
       "uniqueItems": true
     },
@@ -129,8 +116,9 @@
       "anyOf": [
         {
           "title": "Base Game Stat Icon",
+          "description": "The stat icon that the base game provides",
           "type": "string",
-            "enum": [
+          "enum": [
             "Ants",
             "Bones",
             "Mirror",
@@ -143,7 +131,8 @@
         {
           "title": "Mod-Added Stat Icon",
           "description": "Format: [Mod GUID].[Stat Icon Name]",
-          "type": "string"
+          "type": "string",
+          "pattern": "^([^.]+[.]{1})*([^.])+$"
         }
       ]
     },
@@ -154,7 +143,7 @@
         "anyOf": [
           {
             "title": "Base Game Tribe",
-            "description": "Base Game Tribe",
+            "description": "The tribe that the base game provides",
             "type": "string",
             "enum": [
               "Squirrel",
@@ -168,7 +157,8 @@
           {
             "title": "Mod-Added Tribe",
             "description": "Format: [Mod GUID].[Tribe Name]",
-            "type": "string"
+            "type": "string",
+            "pattern": "^([^.]+[.]{1})*([^.])+$"
           }
         ]
       },
@@ -181,7 +171,7 @@
         "anyOf": [
           {
             "title": "Base Game Tribe",
-            "description": "Base Game Tribe",
+            "description": "The tribe that the base game provides",
             "type": "string",
             "enum": [
               "EatsWarrens",
@@ -210,7 +200,8 @@
           {
             "title": "Mod-Added Trait",
             "description": "Format: [Mod GUID].[Trait Name]",
-            "type": "string"
+            "type": "string",
+            "pattern": "^([^.]+[.]{1})*([^.])+$"
           }
         ]
       },
@@ -223,7 +214,7 @@
         "anyOf": [
           {
             "title": "Base Game Special Abilities",
-            "description": "Base Game Special Abilities",
+            "description": "The special ability that the base game provides",
             "type": "string",
             "enum": [
               "Cat",
@@ -258,7 +249,8 @@
           {
             "title": "Mod-Added Special Abilities",
             "description": "Format: [Mod GUID].[Special Ability Name]",
-            "type": "string"
+            "type": "string",
+            "pattern": "^([^.]+[.]{1})*([^.])+$"
           }
         ]
       },
@@ -271,7 +263,7 @@
         "anyOf": [
           {
             "title": "Base Game Abilities",
-            "description": "Base Game Abilities",
+            "description": "The ability that the base game provides",
             "type": "string",
             "enum": [
               "None",
@@ -386,7 +378,8 @@
           {
             "title": "Mod-Added Abilities",
             "description": "Format: [Mod GUID].[Ability Name]",
-            "type": "string"
+            "type": "string",
+            "pattern": "^([^.]+[.]{1})*([^.])+$"
           }
         ]
       },
@@ -411,7 +404,8 @@
     },
     "tailLostPortrait": {
       "description": "The .png file that contains the portrait that will replace this card's portrait if it loses its tail",
-      "type": "string"
+      "type": "string",
+      "pattern": "^[a-zA-Z\\d_]+.png$"
     },
     "iceCubeName": {
       "description": "The name of the card that will be generated if this card has or gains the IceCube ability",
@@ -420,7 +414,7 @@
     "flipPortraitForStrafe": {
       "description": "determines if the card art is flipped when the card changes it's strafe direction",
       "type": "boolean",
-      "default": "false"
+      "default": false
     },
     "onePerDeck": {
       "description": "determines if the card should be limited to 1 per deck",
@@ -434,7 +428,7 @@
         "anyOf": [
           {
             "title": "Base Game Appearances",
-            "description": "Base Game Appearances",
+            "description": "The appearance that the base game provides",
             "type": "string",
             "enum": [
               "StaticGlitch",
@@ -456,7 +450,8 @@
           {
             "title": "Mod-Added Appearances",
             "description": "Format: [Mod GUID].[Appearance Name]",
-            "type": "string"
+            "type": "string",
+            "pattern": "^([^.]+[.]{1})*([^.])+$"
           }
         ]
       },

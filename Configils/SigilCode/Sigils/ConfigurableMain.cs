@@ -113,12 +113,15 @@ namespace JLPlugin.SigilCode
                 {
                     CardSerializeInfo cardinfo = JSONParser.FromJson<CardSerializeInfo>(File.ReadAllText(filepath));
 
-                    foreach (KeyValuePair<string, string> property in cardinfo.extensionProperties)
+                    if (cardinfo.extensionProperties != null)
                     {
-                        if (Regex.Matches(property.Key, $"variable: ({RegexStrings.Variable})") is var variables
-                        && variables.Cast<Match>().Any(variables => variables.Success))
+                        foreach (KeyValuePair<string, string> property in cardinfo.extensionProperties)
                         {
-                            behaviourData.variables[variables[0].Groups[1].Value] = property.Value;
+                            if (Regex.Matches(property.Key, $"variable: {RegexStrings.Variable}") is var variables
+                            && variables.Cast<Match>().Any(variables => variables.Success))
+                            {
+                                behaviourData.variables[variables[0].Groups[1].Value] = property.Value;
+                            }
                         }
                     }
                 }
@@ -135,12 +138,9 @@ namespace JLPlugin.SigilCode
 
         public override IEnumerator OnOtherCardResolve(PlayableCard otherCard)
         {
-            foreach (AbilityBehaviourData behaviourData in abilityData.abilityBehaviour)
+            if (otherCard.Slot.opposingSlot.Card == base.PlayableCard)
             {
-                if (otherCard.Slot.opposingSlot.Card == base.PlayableCard || behaviourData.trigger?.activatesForCardsWithCondition != null)
-                {
-                    yield return TriggerBehaviour(behaviourData, "OnDetect", null, otherCard.Slot.opposingSlot.Card);
-                }
+                yield return TriggerSigil("OnDetect", null, otherCard.Slot.opposingSlot.Card);
             }
             yield return TriggerSigil("OnResolveOnBoard", null, otherCard);
             yield break;
@@ -187,16 +187,22 @@ namespace JLPlugin.SigilCode
         {
             foreach (AbilityBehaviourData behaviourData in abilityData.abilityBehaviour)
             {
-                if (behaviourData.trigger?.triggerType != null)
+                if (behaviourData.trigger?.triggerType == null)
                 {
-                    MatchCollection OnHealthLevelMatch = Regex.Matches(behaviourData.trigger?.triggerType, @"OnHealthLevel\((.*?)\)");
-                    if (OnHealthLevelMatch.Cast<Match>().ToList().Count > 0)
+                    yield break;
+                }
+                if (!behaviourData.trigger.triggerType.Contains("OnHealthLevel"))
+                {
+                    yield break;
+                }
+
+                MatchCollection OnHealthLevelMatch = Regex.Matches(behaviourData.trigger?.triggerType, @"OnHealthLevel\((.*?)\)");
+                if (OnHealthLevelMatch.Cast<Match>().ToList().Count > 0)
+                {
+                    int healthLevel = int.Parse(OnHealthLevelMatch.Cast<Match>().ToList()[0].Groups[1].Value);
+                    if (target.Health <= healthLevel)
                     {
-                        int healthLevel = int.Parse(OnHealthLevelMatch.Cast<Match>().ToList()[0].Groups[1].Value);
-                        if (target.Health <= healthLevel)
-                        {
-                            TriggerBehaviour(behaviourData, "OnHealthLevel", new Dictionary<string, object>() { ["AttackerCard"] = attacker }, target);
-                        }
+                        TriggerBehaviour(behaviourData, new Dictionary<string, object>() { ["AttackerCard"] = attacker }, target);
                     }
                 }
             }
@@ -307,67 +313,69 @@ namespace JLPlugin.SigilCode
         {
             //cardToCheck kan elke kaart zijn ook base.PlayableCard
             //het is alleen voor wanneer de methods gesplits zijn zovan OnResolveOnBoard en OnOtherResolveOnBoard
-
             foreach (AbilityBehaviourData behaviourData in abilityData.abilityBehaviour)
             {
-                yield return TriggerBehaviour(behaviourData, trigger, variableList, cardToCheck);
-            }
-            yield break;
-        }
-
-        public IEnumerator TriggerBehaviour(AbilityBehaviourData behaviourData, string trigger, Dictionary<string, object> variableList = null, PlayableCard cardToCheck = null)
-        {
-            if (behaviourData.trigger != null)
-            {
-                if (behaviourData.trigger.triggerType.Contains(trigger))
+                if (behaviourData.trigger?.triggerType == null)
                 {
-                    SigilData.UpdateVariables(behaviourData, base.PlayableCard);
+                    continue;
+                }
 
-                    //de user wil alle kaarten checken
-                    if (behaviourData.trigger.activatesForCardsWithCondition != null)
-                    {
-                        //er is een kaart om te checken dus doe dat
-                        if (cardToCheck != null)
-                        {
-                            if (!CheckCard(ref behaviourData, cardToCheck))
-                            {
-                                yield break;
-                            }
-                        }
-                    }
-                    else
-                    {
-                        //de user wil alleen base.PlayableCard triggeren
-                        //dus check je of cardToCheck base.PlayableCard is
-                        //of dat het null is want dat is het alleen wanneer je zeker weet dat het base.PlayableCard is
-                        //bijvoorbeeld met OnResolveOnBoard
-                        if (cardToCheck != base.PlayableCard && cardToCheck != null)
-                        {
-                            yield break;
-                        }
-                    }
+                if (behaviourData.trigger.triggerType != trigger)
+                {
+                    continue;
+                }
 
-                    if (variableList != null)
-                    {
-                        foreach (var variable in variableList)
-                        {
-                            //Plugin.Log.LogInfo("set and set to: " + variable.Key.ToString() + " " + variable.Value.ToString());
-                            behaviourData.generatedVariables[variable.Key] = variable.Value;
-                        }
-                    }
-                    yield return SigilData.RunActions(behaviourData, base.PlayableCard, ability);
+                List<PlayableCard> CardsToCheck = (cardToCheck == null) ? Singleton<BoardManager>.Instance.AllSlots.Select(x => x.Card).OfType<PlayableCard>().ToList() : new List<PlayableCard>() { cardToCheck };
+                foreach (PlayableCard card in CardsToCheck)
+                {
+                    yield return TriggerBehaviour(behaviourData, variableList, card);
                 }
             }
             yield break;
         }
 
-        public bool CheckCard(ref AbilityBehaviourData behaviourData, PlayableCard Card)
+        public IEnumerator TriggerBehaviour(AbilityBehaviourData behaviourData, Dictionary<string, object> variableList = null, PlayableCard cardToCheck = null)
         {
-            if (Card == null || behaviourData.trigger?.activatesForCardsWithCondition == null)
+            SigilData.UpdateVariables(behaviourData, base.PlayableCard);
+
+            //de user wil alle kaarten checken
+            if (behaviourData.trigger.activatesForCardsWithCondition != null)
             {
-                return false;
+                //er is een kaart om te checken dus doe dat
+                if (cardToCheck != null)
+                {
+                    if (!CheckCard(ref behaviourData, cardToCheck))
+                    {
+                        yield break;
+                    }
+                }
+            }
+            else
+            {
+                //de user wil alleen base.PlayableCard triggeren
+                //dus check je of cardToCheck base.PlayableCard is
+                //of dat het null is want dat is het alleen wanneer je zeker weet dat het base.PlayableCard is
+                //bijvoorbeeld met OnResolveOnBoard
+                if (cardToCheck != base.PlayableCard && cardToCheck != null)
+                {
+                    yield break;
+                }
             }
 
+            if (variableList != null)
+            {
+                foreach (var variable in variableList)
+                {
+                    //Plugin.Log.LogInfo("set and set to: " + variable.Key.ToString() + " " + variable.Value.ToString());
+                    behaviourData.generatedVariables[variable.Key] = variable.Value;
+                }
+            }
+            yield return SigilData.RunActions(behaviourData, base.PlayableCard, ability);
+            yield break;
+        }
+
+        public bool CheckCard(ref AbilityBehaviourData behaviourData, PlayableCard Card)
+        {
             behaviourData.generatedVariables["TriggerCard"] = Card;
             string condition = SigilData.ConvertArgument(behaviourData.trigger?.activatesForCardsWithCondition, behaviourData);
             return condition == "true";
