@@ -1,0 +1,127 @@
+﻿using DiskCardGame;
+using HarmonyLib;
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+namespace JLPlugin.SigilCode
+{
+    [HarmonyPatch(typeof(CombatPhaseManager), "DoCombatPhase")]
+    public class AttackSlotBugFix_patch2
+    {
+        [HarmonyPostfix]
+        public static IEnumerator Postfix(IEnumerator enumerator, CombatPhaseManager __instance, bool playerIsAttacker, SpecialBattleSequencer specialSequencer)
+        {
+            Plugin.Log.LogInfo("AAAAAAAAAAH");
+            __instance.DamageDealtThisPhase = 0;
+            List<CardSlot> attackingSlots = playerIsAttacker ? Singleton<BoardManager>.Instance.PlayerSlotsCopy : Singleton<BoardManager>.Instance.OpponentSlotsCopy;
+            attackingSlots.RemoveAll((CardSlot x) => x.Card == null || x.Card.Attack == 0);
+            bool atLeastOneAttacker = attackingSlots.Count > 0;
+            yield return __instance.InitializePhase(attackingSlots, playerIsAttacker);
+            if (specialSequencer != null)
+            {
+                if (playerIsAttacker)
+                {
+                    yield return specialSequencer.PlayerCombatStart();
+                }
+                else
+                {
+                    yield return specialSequencer.OpponentCombatStart();
+                }
+            }
+            if (atLeastOneAttacker)
+            {
+                bool attackedWithSquirrel = false;
+                foreach (CardSlot cardSlot in attackingSlots)
+                {
+                    cardSlot.Card.AttackedThisTurn = false;
+                    if (cardSlot.Card.Info.IsOfTribe(Tribe.Squirrel))
+                    {
+                        attackedWithSquirrel = true;
+                    }
+                }
+                foreach (CardSlot cardSlot2 in attackingSlots)
+                {
+                    if (cardSlot2.Card != null && !cardSlot2.Card.AttackedThisTurn)
+                    {
+                        cardSlot2.Card.AttackedThisTurn = true;
+                        yield return __instance.SlotAttackSequence(cardSlot2);
+                    }
+                }
+                List<CardSlot>.Enumerator enumerator2 = default(List<CardSlot>.Enumerator);
+                if (specialSequencer != null && playerIsAttacker)
+                {
+                    yield return specialSequencer.PlayerCombatPostAttacks();
+                }
+                yield return new WaitForSeconds(0.4f);
+                yield return __instance.VisualizeDamageMovingToScales(playerIsAttacker);
+                int excessDamage = 0;
+                if (playerIsAttacker)
+                {
+                    excessDamage = Singleton<LifeManager>.Instance.Balance + __instance.DamageDealtThisPhase - 5;
+                    if (attackedWithSquirrel && excessDamage >= 0)
+                    {
+                        AchievementManager.Unlock(Achievement.PART1_SPECIAL1);
+                    }
+                    excessDamage = Mathf.Max(0, excessDamage);
+                }
+                int damage = __instance.DamageDealtThisPhase - excessDamage;
+                Plugin.Log.LogInfo($"DAMAGE: {damage}");
+                AscensionStatsData.TryIncreaseStat(AscensionStat.Type.MostDamageDealt, __instance.DamageDealtThisPhase);
+                if (__instance.DamageDealtThisPhase >= 666)
+                {
+                    AchievementManager.Unlock(Achievement.PART2_SPECIAL2);
+                }
+                if (!(specialSequencer != null) || !specialSequencer.PreventDamageAddedToScales)
+                {
+                    if (damage > 0)
+                    {
+                        yield return Singleton<LifeManager>.Instance.ShowDamageSequence(damage, damage, !playerIsAttacker, 0f, null, 0f, true);
+                    }
+                    else if (damage < 0)
+                    {
+                        yield return Singleton<LifeManager>.Instance.ShowDamageSequence(-damage, -damage, playerIsAttacker, 0f, null, 0f, true);
+                    }
+                }
+                if (specialSequencer != null)
+                {
+                    yield return specialSequencer.DamageAddedToScale(damage + excessDamage, playerIsAttacker);
+                }
+                if ((!(specialSequencer != null) || !specialSequencer.PreventDamageAddedToScales) && excessDamage > 0 && Singleton<TurnManager>.Instance.Opponent.NumLives == 1 && Singleton<TurnManager>.Instance.Opponent.GiveCurrencyOnDefeat)
+                {
+                    yield return Singleton<TurnManager>.Instance.Opponent.TryRevokeSurrender();
+                    RunState.Run.currency += excessDamage;
+                    yield return __instance.VisualizeExcessLethalDamage(excessDamage, specialSequencer);
+                }
+
+                yield return new WaitForSeconds(0.15f);
+                foreach (CardSlot cardSlot3 in attackingSlots)
+                {
+                    if (cardSlot3.Card != null && cardSlot3.Card.TriggerHandler.RespondsToTrigger(Trigger.AttackEnded, Array.Empty<object>()))
+                    {
+                        yield return cardSlot3.Card.TriggerHandler.OnTrigger(Trigger.AttackEnded, Array.Empty<object>());
+                    }
+                }
+                enumerator2 = default(List<CardSlot>.Enumerator);
+            }
+            if (specialSequencer != null)
+            {
+                if (playerIsAttacker)
+                {
+                    yield return specialSequencer.PlayerCombatEnd();
+                }
+                else
+                {
+                    yield return specialSequencer.OpponentCombatEnd();
+                }
+            }
+            Singleton<ViewManager>.Instance.Controller.LockState = ViewLockState.Unlocked;
+            if (atLeastOneAttacker)
+            {
+                yield return new WaitForSeconds(0.15f);
+            }
+            yield break;
+        }
+    }
+}

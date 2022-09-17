@@ -428,7 +428,7 @@
         "anyOf": [
           {
             "title": "Base Game Appearances",
-            "description": "The apperance that the base game provides",
+            "description": "The appearance that the base game provides",
             "type": "string",
             "enum": [
               "StaticGlitch",

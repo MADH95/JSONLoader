@@ -1,3 +1,12 @@
+## 2.1.1
+- Added configils
+
+## 2.1
+- Added starter deck support with help from Lily
+
+## 2.0.1
+- Fixed a defect with converting JLDR to JLDR2 as it relates to editing base game cards
+- Base game cards are now edited directly instead of using the event. This fixes issues where copies of those cards still existed in other places but wouldn't get properly edited (example: Pack Rat).
 
 ## 2.0.0
 - Updated to align with API 2.0

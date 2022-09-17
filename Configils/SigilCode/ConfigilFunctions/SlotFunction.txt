@@ -1,0 +1,42 @@
+﻿using DiskCardGame;
+using NCalc;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+
+namespace JLPlugin.ConfigilFunctions
+{
+    internal static class Slot
+    {
+        internal static void Evaluate(FunctionArgs functionArgs)
+        {
+            string FunctionName = "Slot";
+            List<object> parameters = functionArgs.Parameters.Select(x => x.Evaluate()).ToList();
+            if (parameters.Count >= 1 && parameters.Count <= 2)
+            {
+                throw new ArgumentException($"{FunctionName} function - Expected at least 1 argument");
+            }
+
+            if (parameters[0] is not int)
+            {
+                throw new ArgumentException($"{FunctionName} function - Expected first argument to be an int.");
+            }
+
+            if (parameters[1] is not bool)
+            {
+                throw new ArgumentException($"{FunctionName} function - Expected second argument to be a bool.");
+            }
+
+            CardSlot result;
+            if ((bool)parameters[1])
+            {
+                result = Singleton<BoardManager>.Instance.opponentSlots[(int)parameters[0]];
+            }
+            else
+            {
+                result = Singleton<BoardManager>.Instance.playerSlots[(int)parameters[0]];
+            }
+            functionArgs.Result = result;
+        }
+    }
+}
