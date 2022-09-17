@@ -35,14 +35,5 @@ namespace JLPlugin
             CardSerializeInfo.LoadAllJLDR2();
             StarterDeckList.LoadAllStarterDecks();
         }
-
-        //public void Update()
-        //{
-        //    if ((Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift)) && Input.GetKeyDown(KeyCode.R))
-        //    {
-        //        SigilData.LoadAllSigils();
-        //        CardSerializeInfo.LoadAllJLDR2();
-        //    }
-        //}
     }
 }

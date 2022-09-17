@@ -232,20 +232,10 @@ namespace JLPlugin.V2.Data
             else
             {
                 string localModPrefix = this.modPrefix ?? DEFAULT_MOD_PREFIX;
-                string name = this.name.StartsWith($"{localModPrefix}_") ? this.name : $"{localModPrefix}_{this.name}";
-                CardInfo card = CardManager.AllCardsCopy.CardByName(name);
-                if (card != null)
-                {
-                    Plugin.Log.LogDebug($"Modifying {this.name} using {this.ToJSON()}");
-                    this.ApplyCardInfo(card);
-                }
-                else
-                {
-                    CardInfo newCard = ScriptableObject.CreateInstance<CardInfo>();
-                    newCard.name = name;
-                    this.ApplyCardInfo(newCard);
-                    CardManager.Add(localModPrefix, newCard);
-                }
+                CardInfo newCard = ScriptableObject.CreateInstance<CardInfo>();
+                newCard.name = this.name.StartsWith($"{localModPrefix}_") ? this.name : $"{localModPrefix}_{this.name}";
+                this.ApplyCardInfo(newCard);
+                CardManager.Add(localModPrefix, newCard);
             }
         }
 
