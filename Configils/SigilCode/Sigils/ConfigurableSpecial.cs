@@ -268,10 +268,8 @@ namespace JLPlugin.SigilCode
         {
             SigilData.UpdateVariables(behaviourData, base.PlayableCard);
 
-            //de user wil alle kaarten checken
             if (behaviourData.trigger.activatesForCardsWithCondition != null)
             {
-                //er is een kaart om te checken dus doe dat
                 if (cardToCheck != null)
                 {
                     if (!CheckCard(ref behaviourData, cardToCheck))
@@ -282,10 +280,6 @@ namespace JLPlugin.SigilCode
             }
             else
             {
-                //de user wil alleen base.PlayableCard triggeren
-                //dus check je of cardToCheck base.PlayableCard is
-                //of dat het null is want dat is het alleen wanneer je zeker weet dat het base.PlayableCard is
-                //bijvoorbeeld met OnResolveOnBoard
                 if (cardToCheck != base.PlayableCard && cardToCheck != null)
                 {
                     yield break;

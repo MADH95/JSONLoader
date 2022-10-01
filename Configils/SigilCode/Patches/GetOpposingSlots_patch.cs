@@ -60,7 +60,6 @@ namespace JLPlugin.SigilCode
                                     CardSlot attackslot = slotData.GetSlot(slotToAttack, abilityBehaviour);
                                     if (attackslot != null)
                                     {
-                                        Plugin.Log.LogInfo($"{attackslot.Index}, {attackslot.IsPlayerSlot}");
                                         __result.Add(attackslot);
                                     }
                                 }

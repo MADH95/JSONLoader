@@ -15,17 +15,16 @@ namespace JLPlugin
         public static class RegexStrings
         {
             // Detects functions in the format name(params)
-            // This regex is not needed anymore but i just left it in because it's super cool lol
-            public static string Function = @"([a-zA-Z]+)(?<!if|in)\(((?>\((?<c>)|[^()]+|\)(?<-c>))*(?(c)(?!)))\)";
+            public static string Function = @"([a-zA-Z]+)(?<!if|in)(\(((?>\((?<c>)|[^()]+|\)(?<-c>))*(?(c)(?!)))\))";
 
             // Detects a variable in the format [variableName]
-            public static string Variable = @"\[(.*?)\]";
+            public static string Variable = @"\[((?>\[(?<c>)|[^\[\]]+|\](?<-c>))*(?(c)(?!)))\]";
 
             // Detects a generated variable in the format [variableName.memberName]
             public static string GeneratedVariable = @"\[([^]]*?\.[^[]*?)\]";
 
             //Detects an Expression in the format (1 + 4)
-            public static string Expression = @"^\((.*?)\)$";
+            public static string Expression = @"\(((?>\((?<c>)|[^()]+|\)(?<-c>))*(?(c)(?!)))\)";
         }
 
         public static Random random = new Random();
@@ -35,51 +34,73 @@ namespace JLPlugin
         {
             string output = input;
 
-            if (Regex.Match(output, RegexStrings.Expression) is var expression && expression.Success)
+            if (Regex.Matches(output, RegexStrings.Expression) is var expressions
+            && expressions.Cast<Match>().Any(expressions => expressions.Success))
             {
-                //NoCache means the logs don't get spammed but it could cause some performance loss
-                ExtendedExpression e = new ExtendedExpression(expression.Groups[1].Value);
-                e.EvaluateFunction += ConfigilExtensions.Extend;
-
-                foreach (KeyValuePair<string, string> variable in abilityData.variables)
+                foreach (Match expression in expressions)
                 {
-                    e.Parameters[variable.Key] = variable.Value;
-                }
+                    string CalcInput = expression.Groups[0].Value;
+                    string CalcContent = expression.Groups[1].Value;
 
-                foreach (KeyValuePair<string, object> generatedVariable in abilityData.generatedVariables)
-                {
-                    e.Parameters[generatedVariable.Key] = generatedVariable.Value;
-                }
-
-                if (Regex.Matches(output, RegexStrings.GeneratedVariable) is var variables
-                && variables.Cast<Match>().Any(variables => variables.Success))
-                {
-                    foreach (Match variable in variables)
+                    //Quick fix for the PlayerSlot and OpponentSlot variables, would be best to change it to actual
+                    //functions later if possible
+                    if (Regex.Matches(CalcContent, RegexStrings.Function) is var ParContents
+                            && ParContents.Cast<Match>().Any(ParContents => ParContents.Success))
                     {
-                        string contents = variable.Groups[1].Value;
-                        e.Parameters[contents] = ProcessGeneratedVariable(contents, abilityData);
+                        foreach (Match ParContent in ParContents)
+                        {
+                            if (ParContent.Groups[1].Value != "PlayerSlot" && ParContent.Groups[1].Value != "OpponentSlot")
+                            {
+                                continue;
+                            }
+                            CalcContent = CalcContent.Replace(ParContent.Groups[3].Value, SigilData.ConvertArgument(ParContent.Groups[2].Value, abilityData));
+                        }
+                    }
+
+                    //NoCache means the logs don't get spammed but it could cause some performance loss
+                    ExtendedExpression e = new ExtendedExpression(CalcContent);
+                    e.EvaluateFunction += ConfigilExtensions.Extend;
+
+                    foreach (KeyValuePair<string, string> variable in abilityData.variables)
+                    {
+                        e.Parameters[variable.Key] = variable.Value;
+                    }
+
+                    foreach (KeyValuePair<string, object> generatedVariable in abilityData.generatedVariables)
+                    {
+                        e.Parameters[generatedVariable.Key] = generatedVariable.Value;
+                    }
+
+                    if (Regex.Matches(CalcContent, RegexStrings.GeneratedVariable) is var variables
+                    && variables.Cast<Match>().Any(variables => variables.Success))
+                    {
+                        foreach (Match variable in variables)
+                        {
+                            string contents = variable.Groups[1].Value;
+                            e.Parameters[contents] = ProcessGeneratedVariable(contents, abilityData);
+                        }
+                    }
+
+                    //this should stay as it's very useful for debugging for people
+                    if (sendDebug)
+                    {
+                        Plugin.Log.LogInfo($"input: {CalcInput}");
+                    }
+
+                    string CalcOutput = e.Evaluate().ToString();
+                    output = output.Replace(CalcInput, CalcOutput);
+
+                    if (output == "True" || output == "False")
+                    {
+                        output = output.ToLower();
+                    }
+
+                    if (sendDebug)
+                    {
+                        Plugin.Log.LogInfo($"output: {CalcOutput}");
                     }
                 }
-
-                //this should stay as it's very useful for debugging for people
-                if (sendDebug)
-                {
-                    Plugin.Log.LogInfo($"input: {output}");
-                }
-
-                output = e.Evaluate().ToString();
-
-                if (output == "True" || output == "False")
-                {
-                    output = output.ToLower();
-                }
-
-                if (sendDebug)
-                {
-                    Plugin.Log.LogInfo($"output: {output}");
-                }
             }
-
             return output;
         }
 

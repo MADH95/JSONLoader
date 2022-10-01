@@ -118,7 +118,6 @@ namespace JLPlugin.Data
 
                 Plugin.Log.LogDebug($"Loading JLDR2 (sigil) {filename}");
                 SigilData sigilInfo = JSONParser.FromJson<SigilData>(File.ReadAllText(file));
-                Plugin.Log.LogInfo(sigilInfo.name);
                 sigilInfo.GenerateNew();
                 Plugin.Log.LogDebug($"Loaded JSON sigil {sigilInfo.name}");
             }
