@@ -15,6 +15,11 @@ namespace JLPlugin.Data
         {
             CardInfo card = null;
 
+            if (cardInfo == null)
+            {
+                return null;
+            }
+
             if (SigilData.ConvertArgument(cardInfo.name, abilitydata) == "None")
             {
                 return null;
@@ -62,36 +67,27 @@ namespace JLPlugin.Data
             }
             if (SigilData.ConvertArgument(cardInfo.retainMods, abilitydata) == "true")
             {
-                ModifySpawnedCard(card, abilitydata);
+                ModifyCard(card, abilitydata);
             }
             return card;
         }
 
-        private static void ModifySpawnedCard(CardInfo card, AbilityBehaviourData abilitydata)
+        private static void ModifyCard(CardInfo card, AbilityBehaviourData abilitydata)
         {
             if (abilitydata.self == null)
             {
                 return;
             }
 
-            List<Ability> abilities = new List<Ability>();
-            foreach (CardModificationInfo temporaryMod in abilitydata.self.TemporaryMods)
+            foreach (CardModificationInfo mod in abilitydata.self.Info.Mods.FindAll((CardModificationInfo x) => !x.nonCopyable))
             {
-                abilities.AddRange(temporaryMod.abilities);
+                CardModificationInfo NewCardMod = (CardModificationInfo)mod.Clone();
+                if (NewCardMod.HasAbility(Ability.Evolve))
+                {
+                    NewCardMod.abilities.Remove(Ability.Evolve);
+                }
+                card.Mods.Add(NewCardMod);
             }
-            foreach (CardModificationInfo mod in abilitydata.self.Info.mods)
-            {
-                abilities.AddRange(mod.abilities);
-            }
-            abilities.RemoveAll((Ability x) => x == abilitydata.ability);
-            if (abilities.Count == 0)
-            {
-                return;
-            }
-            CardModificationInfo newcardMod = new CardModificationInfo();
-            newcardMod.fromCardMerge = true;
-            newcardMod.abilities = abilities;
-            card.Mods.Add(newcardMod);
         }
     }
 }

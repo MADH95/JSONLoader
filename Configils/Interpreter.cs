@@ -53,7 +53,7 @@ namespace JLPlugin
                             {
                                 continue;
                             }
-                            CalcContent = CalcContent.Replace(ParContent.Groups[3].Value, SigilData.ConvertArgument(ParContent.Groups[2].Value, abilityData));
+                            CalcContent = CalcContent.Replace(ParContent.Groups[3].Value, SigilData.ConvertArgument(ParContent.Groups[2].Value, abilityData, sendDebug));
                         }
                     }
 
@@ -119,15 +119,15 @@ namespace JLPlugin
 
             for (int i = 1; i < fieldList.Count; ++i)
             {
-                PropertyInfo property = obj.GetType().GetProperty(fieldList[i]);
+                PropertyInfo property = obj?.GetType().GetProperty(fieldList[i]);
 
                 if (property is null)
                 {
-                    FieldInfo field = obj.GetType().GetField(fieldList[i]);
+                    FieldInfo field = obj?.GetType().GetField(fieldList[i]);
 
                     if (field is null)
                     {
-                        return null;
+                        return (object)null;
                         //throw new Exception($"{ fieldList[i] } is an invalid field/property of { string.Join(".", fieldList.Where(x => fieldList.IndexOf(x) < i)) }");
                     }
 
