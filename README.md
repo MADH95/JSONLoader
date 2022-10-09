@@ -5,9 +5,13 @@ It can parse custom cards and pass them to APIPlugin to load them into the game.
 
 Version 2.0 of this mod is designed to create full compatibility with Version 2.0+ of the API. JSON card files compatible with this API will have an extension of .JLDR2
 
+## Reloading
+
+In the newest version of JSON Loader you can press "shift + r" to apply the changes you made to your cards and/or sigils without restarting the game.
+
 ## Configils
 
-The latest version of JSON Loader allows you to create sigils. To do this, your file needs to end in '_sigil.jldr2'.
+Besides cards JSON Loader also allows you to create sigils. To do this, your file needs to end in '_sigil.jldr2'.
 
 Here is the [documentation](https://docs.google.com/document/d/1QLAfomaTcatm-foU2P1ZoqGQFFvhCfmEnN4jIxAWceQ/edit?usp=sharing) for making sigils.
 
@@ -199,6 +203,12 @@ If you want help debugging you can ask in the #card-creation channel in the [Ins
 
 <details>
 <summary>Changelog</summary>
+
+2.2.1
+- Added card and sigil reloading and fixed a ton of bugs with configils
+
+2.2.0
+- Added API for adding cards
 
 2.1.1
 - Added configils (made by Lily#7394)
