@@ -1,9 +1,11 @@
 ﻿using BepInEx;
 using BepInEx.Configuration;
 using BepInEx.Logging;
+using DiskCardGame;
 using HarmonyLib;
 using JLPlugin.Data;
 using JLPlugin.V2.Data;
+using UnityEngine;
 
 namespace JLPlugin
 {
@@ -34,6 +36,39 @@ namespace JLPlugin
             SigilData.LoadAllSigils();
             CardSerializeInfo.LoadAllJLDR2();
             StarterDeckList.LoadAllStarterDecks();
+        }
+
+        public void Update()
+        {
+            if ((Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift)) && Input.GetKeyDown(KeyCode.R))
+            {
+                SigilData.LoadAllSigils();
+                CardSerializeInfo.LoadAllJLDR2();
+                if (SaveFile.IsAscension)
+                {
+                    ReloadKaycees();
+                }
+                if (SaveManager.SaveFile.IsPart1)
+                {
+                    ReloadVanilla();
+                }
+            }
+        }
+
+        public static void ReloadVanilla()
+        {
+            FrameLoopManager.Instance.SetIterationDisabled(false);
+            MenuController.ReturnToStartScreen();
+            MenuController.LoadGameFromMenu(false);
+        }
+
+        public static void ReloadKaycees()
+        {
+            FrameLoopManager.Instance.SetIterationDisabled(false);
+            SceneLoader.Load("Ascension_Configure");
+            FrameLoopManager.Instance.SetIterationDisabled(false);
+            SaveManager.savingDisabled = false;
+            MenuController.LoadGameFromMenu(false);
         }
     }
 }

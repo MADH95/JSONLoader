@@ -60,7 +60,7 @@ namespace JLPlugin.Data
 
             //There probably a more API oriented way of handling this, I'm just very confused how that all works atm
             Texture2D sigilPixelTexture = new(17, 17);
-            if (this.pixelTexture != null)
+            if (!this.pixelTexture.IsNullOrWhiteSpace())
             {
                 sigilPixelTexture.LoadImage(TextureHelper.ReadArtworkFileAsBytes(this.pixelTexture));
                 sigilPixelTexture.filterMode = FilterMode.Point;
@@ -71,7 +71,7 @@ namespace JLPlugin.Data
                     this.name ?? "",
                     this.description ?? "",
                     SigilType,
-                    TextureHelper.GetImageAsTexture(this.texture, FilterMode.Point) ?? new Texture2D(49, 49)
+                    (this.texture == null) ? new Texture2D(49, 49) : TextureHelper.GetImageAsTexture(this.texture, FilterMode.Point)
                 );
 
             info.SetPixelAbilityIcon(sigilPixelTexture);
@@ -118,7 +118,6 @@ namespace JLPlugin.Data
 
                 Plugin.Log.LogDebug($"Loading JLDR2 (sigil) {filename}");
                 SigilData sigilInfo = JSONParser.FromJson<SigilData>(File.ReadAllText(file));
-                Plugin.Log.LogInfo(sigilInfo.name);
                 sigilInfo.GenerateNew();
                 Plugin.Log.LogDebug($"Loaded JSON sigil {sigilInfo.name}");
             }

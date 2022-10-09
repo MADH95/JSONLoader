@@ -1,5 +1,11 @@
+## 2.2.1
+- Added card and sigil reloading and fixed a ton of bugs with configils
+
+## 2.2.0
+- Added API for adding cards
+
 ## 2.1.1
-- Added configils
+- Added configils (made by Lily#7394)
 
 ## 2.1
 - Added starter deck support with help from Lily

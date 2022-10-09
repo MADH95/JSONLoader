@@ -25,15 +25,7 @@ namespace JLPlugin.Data
                 Singleton<ViewManager>.Instance.SwitchToView(View.Board, false, false);
 
                 bool replace = SigilData.ConvertArgument(placecardinfo.replace, abilitydata) == "true";
-                CardSlot slot;
-                if (replace)
-                {
-                    slot = slotData.GetSlot(placecardinfo.slot, abilitydata);
-                }
-                else
-                {
-                    slot = slotData.GetSlot(placecardinfo.slot, abilitydata);
-                }
+                CardSlot slot = slotData.GetSlot(placecardinfo.slot, abilitydata);
                 if (slot != null)
                 {
                     //done before replacing so that if the card bearing
