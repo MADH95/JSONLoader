@@ -257,8 +257,8 @@ namespace JLPlugin.V2.Data
                 this.ApplyCardInfo(newCard);
 
                 // Remove from NewCards using reflection
-                ObservableCollection<CardInfo> NewCards = (ObservableCollection<CardInfo>) typeof(CardManager)
-                    .GetField("NewCards", BindingFlags.Static | BindingFlags.NonPublic).GetValue(null); 
+                ObservableCollection<CardInfo> NewCards = (ObservableCollection<CardInfo>)typeof(CardManager)
+                    .GetField("NewCards", BindingFlags.Static | BindingFlags.NonPublic).GetValue(null);
 
                 CardInfo card = NewCards.FirstOrDefault(x => x.name == this.name);
                 if (card != default)
@@ -276,8 +276,7 @@ namespace JLPlugin.V2.Data
         {
             if (string.IsNullOrEmpty(this.name))
                 throw new InvalidOperationException("Card cannot have an empty name!");
-
-            CardInfo baseGameCard = (CardInfo) CardManager.BaseGameCards.CardByName(this.name).Clone();
+            CardInfo baseGameCard = (CardInfo)CardManager.BaseGameCards.CardByName(this.name).Clone();
             if (baseGameCard != null)
             {
                 Plugin.Log.LogDebug($"Modifying {this.name} using {this.ToJSON()}");
