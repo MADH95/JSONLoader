@@ -3,7 +3,7 @@
 |Value | Description |
 |-|-|
 | ChoiceNode | Defines the card to be a choice option |
-| GBCPack | Can be acquired by buing a card pack in act 2 |
+| GBCPack | Can be acquired by buying a card pack in act 2 |
 | GBCPlayable | Can show up in the card catalogue in act 2 |
 | Part3Random | Can show up as card from the Loot sigil |
 | Rare | Defines the card to be rare |
@@ -14,7 +14,7 @@ ___
 |-|-|
 | Vanilla | Will always be a learned card |
 | Simple | Will always be an unlocked card |
-| Intermediate | Will only be unlocked after turotial |
+| Intermediate | Will only be unlocked after tutorial |
 | Advanced | Will only be unlocked after tutorial |
 ___
 ### Temple
@@ -81,15 +81,15 @@ ___
 |Value | Description |
 |-|-|
 |Ant | Increases cards attack by 1 for each card with ant trait on the board                                                                                                                               |
-|BellProximity | Damage is equal to 4 - the distance from the bell (adjascent is distance 0)                                                                                                               |
+|BellProximity | Damage is equal to 4 - the distance from the bell (adjacent is distance 0)                                                                                                               |
 |BountyHunter | Functions like act 3 Bounty Hunters (only works for opponent)                                                                                                        |
-|BrokenCoinLeft | Functions like Broken Opol (Left)                                                                                                            |
-|BrokenCoinRight | Functions like Broken Opol (Right)                                                                                                              |
+|BrokenCoinLeft | Functions like Broken Obol (Left)                                                                                                            |
+|BrokenCoinRight | Functions like Broken Obol (Right)                                                                                                              |
 |CagedWolf | Functions like the Caged Wolf card                                                                                                                                             |
 |CardsInHand | Damage is equal to the number of cards in player's hand                                                                                                                                     |
 |Cat | Functions like the Cat card                                                                                                                                                   |
 |Daus | Functions like Daus                                                                                                                             |
-|GiantCard | Assings to all slots on the board (only works for opponent)                                                                                              |
+|GiantCard | Assigns to all slots on the board (only works for opponent)                                                                                              |
 |GiantMoon | Renders moon death animation                                                                                                                                             |
 |GiantShip | Exclusive to the Limoncello |
 |GreenMage | Damage is equal to the number of Green Mox cards you control                                                                                                                                   |
@@ -125,7 +125,7 @@ ___
 |Brittle | After card attacks, it dies                                  |
 |BuffEnemy | Increase opposing card's attack by 1                               |
 |BuffGems | Increases attack of all gems by 1                            |
-|BuffNeighbours | Increase attack of adjascent cards by 1                            |
+|BuffNeighbours | Increase attack of adjacent cards by 1                            |
 |CellBuffSelf | When within circuit, increase attack by 2                    |
 |CellDrawRandomCardOnDeath | When within circuit, will draw a random card on death      |
 |CellTriStrike | When within circuit, gains trifurcated strike           |
@@ -136,13 +136,13 @@ ___
 |ConduitNull | Will complete a circuit                        |
 |ConduitSpawnGems | When completing circuit, will spawn random gems in all your available board slots at end of turn               |
 |CorpseEater | When another card dies, this card will be played in its slot                         |
-|CreateBells | When played, will spawn bell cards in adjascent slots                              |
-|CreateDams | When played, will spawn dam cards in adjascent slots                           |
+|CreateBells | When played, will spawn bell cards in adjacent slots                              |
+|CreateDams | When played, will spawn dam cards in adjacent slots                           |
 |CreateEgg | When played, spawns a broken egg in the opposing slot, with a 10% chance to spawn a Raven Egg instead |
 |DeathShield | When this card would take damage for the first time, it does not                      |
 |Deathtouch | When card deals damage to a card, it dies                        |
-|DebuffEnemy | Decrese opposing card's attack by 1                               |
-|DeleteFile | Nothing unless in archavist boss battle                          |
+|DebuffEnemy | Decrease opposing card's attack by 1                               |
+|DeleteFile | Nothing unless in archivists boss battle                          |
 |DoubleDeath | When another card dies, it dies again                         |
 |DoubleStrike | Makes the card attack the slot across from it an additional time |
 |DrawAnt | When played, add an ant to your hand                               |
@@ -159,9 +159,9 @@ ___
 |EdaxioTorso | Unused		                        |
 |Evolve | After a number of turns based on evolveParams, will turn into a card based on evolveParams                                 |
 |ExplodeGems | When a card with the Gem trait dies, will cause them to explode                       |
-|ExplodeOnDeath | When card dies, deals 10 damage to adjascent and opposing card                         |
+|ExplodeOnDeath | When card dies, deals 10 damage to adjacent and opposing card                         |
 |ExplodingCorpse | Unused                 |
-|FileSizeDamage | Nothing unless in archavist boss battle                        |
+|FileSizeDamage | Nothing unless in archivist boss battle                        |
 |Flying | When attacking, will attack directly                                  |
 |GainAttackOnKill | Gets +1/+0 for the rest of the battle whenever it kills a creature |
 |GainBattery | When played, increases energy and max energy by 1                       |
@@ -182,11 +182,12 @@ ___
 |MadeOfStone | Invulnerable to Stinky and Deathtouch |
 |Morsel | When sacrificed to summon another card, the card will add +1/+2 to the summoned card |
 |MoveBeside | Moves to closest space when a card is played                               |
+|OpponentBones | When any enemy card dies, gain 1 bone                           |
 |PermaDeath | When card dies, it is removed from the deck                           |
 |PreventAttack | Prevents opposing card from attacking it                         |
 |QuadrupleBones | When dies, gain 4 bones                         |
 |RandomAbility | When drawn, Sigil becomes a random sigil                          |
-|RandomConsumable | When played, will add a random consumable if you ahve less than 3                  |
+|RandomConsumable | When played, will add a random consumable if you have less than 3                  |
 |Reach | Will block attacking flying card                                |
 |Sacrificial | Can be sacrificed an unlimited number of times                           |
 |Sentry | When a card is enters the slot in front of this card, it is dealt 1 damage                                    |
@@ -195,20 +196,20 @@ ___
 |Sinkhole | Unused                                  |
 |SkeletonStrafe | Strafe but spawns skeleton in previous slot                     |
 |Sniper | When attacking, you can choose the target slots                                    |
-|SplitStrike | When attacking, will attack slots adjascent to opposing slot                    |
+|SplitStrike | When attacking, will attack slots adjacent to opposing slot                    |
 |SquirrelOrbit | No effect on player cards                         |
 |SquirrelStrafe | Strafe but spawns squirrel in previous slot                 |
 |SteelTrap | When card dies, it kills the opposing card, and adds a pelt to your hand                             |
 |Strafe | At end of turn, card moves                                  |
 |StrafePush | Strafe but will move other cards with it                                 |
 |StrafeSwap | Strafe but will forcibly swap the adjacent card with its current position |
-|Submerge | After attacking, will sumberge, meaning it can't be attacked                              |
+|Submerge | After attacking, will submerge, meaning it can't be attacked                              |
 |SubmergeSquid | Waterborne but becomes random tentacle card on resurface                 |
 |SwapStats | When taking damage, will swap attack and health                              |
 |TailOnHit | When attacked, will move and spawn a card in previous slot based on tailParams, then loses this ability.                             |
 |Transformer | Same as evolve with different sigil icon                          |
 |TripleBlood | Counts as 3 blood when sacrificed                     |
-|TriStrike | When attacking, will attack opposing slot, and slots adjascent to opposing slot                     |
+|TriStrike | When attacking, will attack opposing slot, and slots adjacent to opposing slot                     |
 |Tutor | When played, you can choose a card in your deck to add to your hand                                    |
 |VirtualReality | Unused                   |
 |WhackAMole | When an empty slot is attacked, will move to that slot                              |
@@ -217,7 +218,7 @@ ___
 |Value | Description |                              
 |-|-|                                                                                                                                     
 |AddSnelkDecals | Unused                                                                                          |
-|AlternatingBloodDecal | Renders card with mycologist merged card layout                                                        |
+|AlternatingBloodDecal | Renders card with blood decals                                                        |
 |AnimatedPortrait | Used for animated portraits                                                                                                |
 |DynamicPortrait | Renders the card's animated portrait (differently)                                                                                       |
 |FullCardPortrait | Renders the card with no stats        |
@@ -226,7 +227,8 @@ ___
 |HologramPortrait | Renders portrait as hologram                                                                                             |
 |RareCardBackground |  Renders card with rare background                                                                                  |
 |RareCardColors | Renders card with inverted colours                                                                                                    |
-|SexyGoat | Randers alternate texture if you have the goat's eyeball |
+|RedEmission | Makes emission glow red |
+|SexyGoat | Renders alternate texture if you have the goat's eyeball |
 |StaticGlitch | Renders the card with the static animation                                                                                          |
 |TerrainBackground | Renders the card with terrain border                                                                               |
 |TerrainLayout | Renders card with terrain card layout                                                                                                 |
