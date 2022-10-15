@@ -172,6 +172,31 @@ The latest version of JSON Loader allows you to create starter decks. To do this
 
 Note that you can define any number of starter decks in a single '*_deck.jldr2' file, and that the expected format of a '_deck.jldr2' file looks very different than other jldr2 files.
 
+## Tribes
+
+The latest version of JSON Loader allows you to create tribes. To do this, your file needs to end in '_tribe.jldr2' and should look like this:
+
+```json
+{
+    "tribes": [
+    {
+      "name": "TribeName1",
+	  "guid": "YourModGuid",
+	  "tribeIcon": "tribeicon_custom1.png",
+	  "appearInTribeChoices": true,
+	  "choiceCardBackTexture": "card_rewardback_custom1.png"
+    },
+	{
+      "name": "TribeName2",
+	  "guid": "YourModGuid",
+	  "appearInTribeChoices": false
+    }
+  ]
+}
+```
+
+Note that much like starter decks, any number of tribes can be defined in a single '*_tribe.jldr2' file. Also note that if a tribe doesn't have a choiceCardBackTexture, one will be auto-generated based on the tribe's icon.
+
 ## Debugging
 The easiest way to check if the plugin is working properly or to debug an error is to enable the console. This can be done by changing
 ```
@@ -197,12 +222,15 @@ To add cards to your starting hand to test if your cards work, you can download 
 
 ___
 
-If you want help debugging you can ask in the #card-creation channel in the [Inscryption modding discord](https://discord.gg/QrJEF5Denm).
+If you want help debugging you can ask in the #jsonloader channel in the [Inscryption modding discord](https://discord.gg/QrJEF5Denm).
 
 ## Changelog 
 
 <details>
 <summary>Changelog</summary>
+
+2.2.2
+- Added tribe support
 
 2.2.1
 - Added card and sigil reloading and fixed a ton of bugs with configils
