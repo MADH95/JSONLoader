@@ -15,7 +15,7 @@ namespace JLPlugin
     {
         public const string PluginGuid = "MADH.inscryption.JSONLoader";
         public const string PluginName = "JSONLoader";
-        public const string PluginVersion = "2.2.1";
+        public const string PluginVersion = "2.2.2";
 
         internal static ConfigEntry<bool> betaCompatibility;
 
@@ -33,6 +33,7 @@ namespace JLPlugin
             if (betaCompatibility.Value)
                 Utils.JLUtils.LoadCardsFromFiles();
 
+            TribeList.LoadAllTribes();
             SigilData.LoadAllSigils();
             CardSerializeInfo.LoadAllJLDR2();
             StarterDeckList.LoadAllStarterDecks();
@@ -42,6 +43,7 @@ namespace JLPlugin
         {
             if ((Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift)) && Input.GetKeyDown(KeyCode.R))
             {
+                TribeList.LoadAllTribes();
                 SigilData.LoadAllSigils();
                 CardSerializeInfo.LoadAllJLDR2();
                 if (SaveFile.IsAscension)
