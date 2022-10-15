@@ -1,3 +1,6 @@
+## 2.2.2
+- Added tribe support
+
 ## 2.2.1
 - Added card and sigil reloading and fixed a ton of bugs with configils
 
