@@ -172,6 +172,58 @@ The latest version of JSON Loader allows you to create starter decks. To do this
 
 Note that you can define any number of starter decks in a single '*_deck.jldr2' file, and that the expected format of a '_deck.jldr2' file looks very different than other jldr2 files.
 
+## Tribes
+
+The latest version of JSON Loader allows you to create tribes. To do this, your file needs to end in '_tribe.jldr2' and should look like this:
+
+```json
+{
+    "tribes": [
+    {
+      "name": "TribeName1",
+	  "guid": "YourModGuid",
+	  "tribeIcon": "tribeicon_custom1.png",
+	  "appearInTribeChoices": true,
+	  "choiceCardBackTexture": "card_rewardback_custom1.png"
+    },
+	{
+      "name": "TribeName2",
+	  "guid": "YourModGuid",
+	  "appearInTribeChoices": false
+    }
+  ]
+}
+```
+
+Note that much like starter decks, any number of tribes can be defined in a single '*_tribe.jldr2' file. Also note that if a tribe doesn't have a choiceCardBackTexture, one will be auto-generated based on the tribe's icon.
+
+## Encounters
+
+The latest version of JSON Loader allows you to create encounters. To do this, your file needs to end in '_encounter.jldr2' and should look like this:
+
+```json
+{
+	"name": "",
+	"minDifficulty": 0,
+	"maxDifficulty": 0,
+	"regions": [""],
+	"dominantTribes": [""],
+	"randomReplacementCards": [""],
+	"redundantAbilities": [""],
+	"turns": [{
+		"cardInfo": [{
+			"card": "",
+			"randomReplaceChance": 0,
+			"difficultyReq": 0,
+			"difficultyReplacement": ""
+		}]
+	}]
+}
+```
+
+These are all vanilla regions:
+Alpine, Forest, Midnight, Midnight_Ascension, Pirateville, Wetlands
+
 ## Debugging
 The easiest way to check if the plugin is working properly or to debug an error is to enable the console. This can be done by changing
 ```
@@ -197,12 +249,22 @@ To add cards to your starting hand to test if your cards work, you can download 
 
 ___
 
-If you want help debugging you can ask in the #card-creation channel in the [Inscryption modding discord](https://discord.gg/QrJEF5Denm).
+If you want help debugging you can ask in the #jsonloader channel in the [Inscryption modding discord](https://discord.gg/QrJEF5Denm).
 
 ## Changelog 
 
 <details>
 <summary>Changelog</summary>
+
+2.2.3
+- Added encounter support
+- Removed the [PlayerSlot()] and [OpponentSlot()] variable and replaced it with the GetSlot() function with this format:
+  GetSlot(index, isOpponentSlot, fields) 
+  (fields is everything that you would have after the first dot of the original variable in single quotation marks)
+- Fixed a ton more configil bugs
+
+2.2.2
+- Added tribe support
 
 2.2.1
 - Added card and sigil reloading and fixed a ton of bugs with configils

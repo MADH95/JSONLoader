@@ -38,7 +38,7 @@ namespace JLPlugin.SigilCode
         public override bool CanActivate()
         {
             AbilityBehaviourData behaviourData = abilityData.abilityBehaviour.Where(x => x.trigger?.triggerType == "OnActivate").ToList()[0];
-            if (abilityData.activationCost == null || behaviourData == null)
+            if (behaviourData == null)
             {
                 return false;
             }
@@ -49,7 +49,7 @@ namespace JLPlugin.SigilCode
 
         public override IEnumerator Activate()
         {
-            int BloodCost = abilityData.activationCost.bloodCost ?? 0;
+            int BloodCost = abilityData.activationCost?.bloodCost ?? 0;
             if (BloodCost > 0)
             {
                 List<CardSlot> occupiedSlots = Singleton<BoardManager>.Instance.PlayerSlotsCopy.FindAll((CardSlot x) => x.Card != null && x.Card != Card);
@@ -72,7 +72,7 @@ namespace JLPlugin.SigilCode
                 }
             }
 
-            List<GemType> GemCost = abilityData.activationCost.gemCost?.Select(s => ParseEnum<GemType>(s)).ToList() ?? new List<GemType>();
+            List<GemType> GemCost = abilityData.activationCost?.gemCost?.Select(s => ParseEnum<GemType>(s)).ToList() ?? new List<GemType>();
             foreach (GemType Gem in GemCost)
             {
                 if (!Singleton<ResourcesManager>.Instance.HasGem(Gem))
@@ -101,12 +101,6 @@ namespace JLPlugin.SigilCode
             foreach (AbilityBehaviourData behaviourData in abilityData.abilityBehaviour)
             {
                 behaviourData.TurnsInPlay = 0;
-
-                if (behaviourData.variables == null)
-                    behaviourData.variables = new Dictionary<string, string>();
-
-                if (behaviourData.generatedVariables == null)
-                    behaviourData.generatedVariables = new Dictionary<string, object>();
 
                 string filepath = base.PlayableCard.Info.GetExtendedProperty("JSONFilePath");
                 if (filepath != null)
@@ -172,8 +166,8 @@ namespace JLPlugin.SigilCode
                 for (int i = 0; i < abilityData.abilityBehaviour.Count; i++)
                 {
                     abilityData.abilityBehaviour[i].TurnsInPlay++;
-                    yield return TriggerSigil("OnEndOfTurn");
                 }
+                yield return TriggerSigil("OnEndOfTurn");
             }
             yield break;
         }
@@ -237,7 +231,10 @@ namespace JLPlugin.SigilCode
             if (fromCombat)
             {
                 yield return TriggerSigil("OnDie", new Dictionary<string, object>() { ["AttackerCard"] = killer, ["DeathSlot"] = deathSlot }, card);
-                yield return TriggerSigil("OnKill", new Dictionary<string, object>() { ["VictimCard"] = card, ["DeathSlot"] = deathSlot }, killer);
+                if (killer != null)
+                {
+                    yield return TriggerSigil("OnKill", new Dictionary<string, object>() { ["VictimCard"] = card, ["DeathSlot"] = deathSlot }, killer);
+                }
             }
             yield break;
         }

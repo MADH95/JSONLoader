@@ -3,8 +3,10 @@ using BepInEx.Configuration;
 using BepInEx.Logging;
 using DiskCardGame;
 using HarmonyLib;
+using InscryptionAPI.Regions;
 using JLPlugin.Data;
 using JLPlugin.V2.Data;
+using System.Linq;
 using UnityEngine;
 
 namespace JLPlugin
@@ -15,7 +17,7 @@ namespace JLPlugin
     {
         public const string PluginGuid = "MADH.inscryption.JSONLoader";
         public const string PluginName = "JSONLoader";
-        public const string PluginVersion = "2.2.1";
+        public const string PluginVersion = "2.2.3";
 
         internal static ConfigEntry<bool> betaCompatibility;
 
@@ -33,8 +35,12 @@ namespace JLPlugin
             if (betaCompatibility.Value)
                 Utils.JLUtils.LoadCardsFromFiles();
 
+            Plugin.Log.LogInfo(string.Join(", ", RegionManager.AllRegionsCopy.Select(x => x.name)));
+
+            TribeList.LoadAllTribes();
             SigilData.LoadAllSigils();
             CardSerializeInfo.LoadAllJLDR2();
+            Data.EncounterData.LoadAllEncounters();
             StarterDeckList.LoadAllStarterDecks();
         }
 
@@ -42,6 +48,7 @@ namespace JLPlugin
         {
             if ((Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift)) && Input.GetKeyDown(KeyCode.R))
             {
+                TribeList.LoadAllTribes();
                 SigilData.LoadAllSigils();
                 CardSerializeInfo.LoadAllJLDR2();
                 if (SaveFile.IsAscension)
