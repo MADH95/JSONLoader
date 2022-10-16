@@ -1,3 +1,10 @@
+## 2.2.3
+- Added encounter support
+- Removed the [PlayerSlot()] and [OpponentSlot()] variable and replaced it with the GetSlot() function with this format:
+  GetSlot(index, isOpponentSlot, fields) 
+  (fields is everything that you would have after the first dot of the original variable in single quotation marks)
+- Fixed a ton more configil bugs
+
 ## 2.2.2
 - Added tribe support
 

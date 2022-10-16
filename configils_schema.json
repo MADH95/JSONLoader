@@ -153,19 +153,29 @@
                     "setStats": {
                       "type": "string"
                     },
-                    "addAbility": {
-                      "type": "object",
-                      "properties": {
-                        "name": {
-                          "type": "string"
-                        },
-                        "infused": {
+                    "addAbilities": {
+                      "type": "array",
+                      "items": [
+                        {
+                          "type": "object",
+                          "properties": {
+                            "name": {
+                              "type": "string"
+                            },
+                            "infused": {
+                              "type": "string"
+                            }
+                          }
+                        }
+                      ]
+                    },
+                    "removeAbilities": {
+                      "type": "array",
+                      "items": [
+                        {
                           "type": "string"
                         }
-                      }
-                    },
-                    "removeAbility": {
-                      "type": "string"
+                      ]
                     }
                   }
                 }

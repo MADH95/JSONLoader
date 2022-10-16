@@ -32,12 +32,6 @@ namespace JLPlugin.SigilCode
             {
                 behaviourData.TurnsInPlay = 0;
 
-                if (behaviourData.variables == null)
-                    behaviourData.variables = new Dictionary<string, string>();
-
-                if (behaviourData.generatedVariables == null)
-                    behaviourData.generatedVariables = new Dictionary<string, object>();
-
                 string filepath = base.PlayableCard.Info.GetExtendedProperty("JSONFilePath");
                 if (filepath != null)
                 {
@@ -102,8 +96,8 @@ namespace JLPlugin.SigilCode
                 for (int i = 0; i < abilityData.abilityBehaviour.Count; i++)
                 {
                     abilityData.abilityBehaviour[i].TurnsInPlay++;
-                    yield return TriggerSigil("OnEndOfTurn");
                 }
+                yield return TriggerSigil("OnEndOfTurn");
             }
             yield break;
         }
@@ -167,7 +161,10 @@ namespace JLPlugin.SigilCode
             if (fromCombat)
             {
                 yield return TriggerSigil("OnDie", new Dictionary<string, object>() { ["AttackerCard"] = killer, ["DeathSlot"] = deathSlot }, card);
-                yield return TriggerSigil("OnKill", new Dictionary<string, object>() { ["VictimCard"] = card, ["DeathSlot"] = deathSlot }, killer);
+                if (killer != null)
+                {
+                    yield return TriggerSigil("OnKill", new Dictionary<string, object>() { ["VictimCard"] = card, ["DeathSlot"] = deathSlot }, killer);
+                }
             }
             yield break;
         }

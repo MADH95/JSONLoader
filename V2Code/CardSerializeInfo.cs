@@ -219,12 +219,12 @@ namespace JLPlugin.V2.Data
             card.SetExtendedProperty("JSONFilePath", this.filePath);
         }
 
-        internal void Apply()
+        internal void Apply(bool UpdateCard = false)
         {
             if (string.IsNullOrEmpty(this.name))
                 throw new InvalidOperationException("Card cannot have an empty name!");
 
-            CardInfo existingCard = ScriptableObjectLoader<CardInfo>.AllData.Find((CardInfo x) => x.name == this.name);
+            CardInfo existingCard = UpdateCard ? ScriptableObjectLoader<CardInfo>.AllData.Find((CardInfo x) => x.name == this.name) : CardManager.BaseGameCards.CardByName(this.name);
             if (existingCard != null)
             {
                 Plugin.Log.LogDebug($"Modifying {this.name} using {this.ToJSON()}");
@@ -276,6 +276,7 @@ namespace JLPlugin.V2.Data
         {
             if (string.IsNullOrEmpty(this.name))
                 throw new InvalidOperationException("Card cannot have an empty name!");
+
             CardInfo baseGameCard = (CardInfo)CardManager.BaseGameCards.CardByName(this.name).Clone();
             if (baseGameCard != null)
             {
@@ -349,7 +350,7 @@ namespace JLPlugin.V2.Data
             return retval;
         }
 
-        public static void LoadAllJLDR2()
+        public static void LoadAllJLDR2(bool UpdateCards = false)
         {
             foreach (string file in Directory.EnumerateFiles(Paths.PluginPath, "*.jldr2", SearchOption.AllDirectories))
             {
@@ -361,7 +362,7 @@ namespace JLPlugin.V2.Data
                     continue;
                 }
 
-                if (filename.EndsWith("_tribe.jldr2") || filename.EndsWith("_sigil.jldr2") || filename.EndsWith("_deck.jldr2"))
+                if (filename.EndsWith("_encounter.jldr2") || filename.EndsWith("_tribe.jldr2") || filename.EndsWith("_sigil.jldr2") || filename.EndsWith("_deck.jldr2"))
                 {
                     continue;
                 }
@@ -371,7 +372,7 @@ namespace JLPlugin.V2.Data
                 {
                     CardSerializeInfo cardInfo = JSONParser.FromJson<CardSerializeInfo>(File.ReadAllText(file));
                     cardInfo.filePath = file;
-                    cardInfo.Apply();
+                    cardInfo.Apply(UpdateCards);
                     Plugin.Log.LogDebug($"Loaded JSON card {cardInfo.name}");
                 }
                 catch (Exception ex)

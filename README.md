@@ -197,6 +197,33 @@ The latest version of JSON Loader allows you to create tribes. To do this, your 
 
 Note that much like starter decks, any number of tribes can be defined in a single '*_tribe.jldr2' file. Also note that if a tribe doesn't have a choiceCardBackTexture, one will be auto-generated based on the tribe's icon.
 
+## Encounters
+
+The latest version of JSON Loader allows you to create encounters. To do this, your file needs to end in '_encounter.jldr2' and should look like this:
+
+```json
+{
+	"name": "",
+	"minDifficulty": 0,
+	"maxDifficulty": 0,
+	"regions": [""],
+	"dominantTribes": [""],
+	"randomReplacementCards": [""],
+	"redundantAbilities": [""],
+	"turns": [{
+		"cardInfo": [{
+			"card": "",
+			"randomReplaceChance": 0,
+			"difficultyReq": 0,
+			"difficultyReplacement": ""
+		}]
+	}]
+}
+```
+
+These are all vanilla regions:
+Alpine, Forest, Midnight, Midnight_Ascension, Pirateville, Wetlands
+
 ## Debugging
 The easiest way to check if the plugin is working properly or to debug an error is to enable the console. This can be done by changing
 ```
@@ -228,6 +255,13 @@ If you want help debugging you can ask in the #jsonloader channel in the [Inscry
 
 <details>
 <summary>Changelog</summary>
+
+2.2.3
+- Added encounter support
+- Removed the [PlayerSlot()] and [OpponentSlot()] variable and replaced it with the GetSlot() function with this format:
+  GetSlot(index, isOpponentSlot, fields) 
+  (fields is everything that you would have after the first dot of the original variable in single quotation marks)
+- Fixed a ton more configil bugs
 
 2.2.2
 - Added tribe support

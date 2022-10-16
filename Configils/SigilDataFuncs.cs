@@ -77,8 +77,11 @@ namespace JLPlugin.Data
             info.SetPixelAbilityIcon(sigilPixelTexture);
             info.powerLevel = this.powerLevel ?? 3;
 
-            info.AddMetaCategories(this.metaCategories.Select(elem => ParseEnum<AbilityMetaCategory>(elem)).ToArray());
-            if ((info.metaCategories?.Count ?? 0) < 1)
+            if (this.metaCategories != null)
+            {
+                info.AddMetaCategories(this.metaCategories.Select(elem => ParseEnum<AbilityMetaCategory>(elem)).ToArray());
+            }
+            else
             {
                 info.SetDefaultPart1Ability();
             }
@@ -102,12 +105,14 @@ namespace JLPlugin.Data
 
         public static SigilData GetAbilityArguments(Ability ability)
         {
-            return SigilDicts.ArgumentList[ability].Item2;
+            SigilTuple data;
+            return SigilDicts.ArgumentList.TryGetValue(ability, out data) ? data.Item2 : null;
         }
 
         public static SigilData GetAbilityArguments(SpecialTriggeredAbility ability)
         {
-            return SigilDicts.SpecialArgumentList[ability].Item2;
+            SigilTuple data;
+            return SigilDicts.SpecialArgumentList.TryGetValue(ability, out data) ? data.Item2 : null;
         }
 
         public static void LoadAllSigils()
@@ -353,10 +358,20 @@ namespace JLPlugin.Data
 
         public static void UpdateVariables(AbilityBehaviourData abilitydata, PlayableCard self)
         {
+            if (abilitydata.variables == null)
+            {
+                abilitydata.variables = new Dictionary<string, string>();
+            }
+
+            if (abilitydata.generatedVariables == null)
+            {
+                abilitydata.generatedVariables = new Dictionary<string, object>();
+            }
+
             Dictionary<string, string> VariableDictionary = new Dictionary<string, string>()
             {
-                { "EnergyAmount", Singleton<ResourcesManager>.Instance.PlayerBones.ToString() },
-                { "BoneAmount", Singleton<ResourcesManager>.Instance.PlayerEnergy.ToString() },
+                { "EnergyAmount", Singleton<ResourcesManager>.Instance.PlayerEnergy.ToString() },
+                { "BoneAmount", Singleton<ResourcesManager>.Instance.PlayerBones.ToString() },
                 { "Turn", Singleton<TurnManager>.Instance.TurnNumber.ToString() },
                 { "TurnsInPlay", (abilitydata.TurnsInPlay ?? 0).ToString() },
                 { "ScaleBalance", Singleton<LifeManager>.Instance.Balance.ToString() }
@@ -372,15 +387,7 @@ namespace JLPlugin.Data
                 { "ChooseableSlot", null },
                 { "RandomCardInfo", null },
                 { "TriggerCard", null },
-                { "BaseCard", self },
-                { "PlayerSlot(0)", Singleton<BoardManager>.Instance.playerSlots[0] },
-                { "PlayerSlot(1)", Singleton<BoardManager>.Instance.playerSlots[1] },
-                { "PlayerSlot(2)", Singleton<BoardManager>.Instance.playerSlots[2] },
-                { "PlayerSlot(3)", Singleton<BoardManager>.Instance.playerSlots[3] },
-                { "OpponentSlot(0)", Singleton<BoardManager>.Instance.opponentSlots[0] },
-                { "OpponentSlot(1)", Singleton<BoardManager>.Instance.opponentSlots[1] },
-                { "OpponentSlot(2)", Singleton<BoardManager>.Instance.opponentSlots[2] },
-                { "OpponentSlot(3)", Singleton<BoardManager>.Instance.opponentSlots[3] }
+                { "BaseCard", self }
             };
             abilitydata.generatedVariables.Append(GeneratedVariableDictionary);
         }

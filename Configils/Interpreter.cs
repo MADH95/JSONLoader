@@ -6,7 +6,10 @@ using System.Text.RegularExpressions;
 namespace JLPlugin
 {
     using Data;
+    using HarmonyLib;
+    using InscryptionAPI.Saves;
     using PanoramicData.NCalcExtensions;
+    using System.Collections;
     using System.Collections.Generic;
     using System.Reflection;
 
@@ -44,18 +47,18 @@ namespace JLPlugin
 
                     //Quick fix for the PlayerSlot and OpponentSlot variables, would be best to change it to actual
                     //functions later if possible
-                    if (Regex.Matches(CalcContent, RegexStrings.Function) is var ParContents
-                            && ParContents.Cast<Match>().Any(ParContents => ParContents.Success))
-                    {
-                        foreach (Match ParContent in ParContents)
-                        {
-                            if (ParContent.Groups[1].Value != "PlayerSlot" && ParContent.Groups[1].Value != "OpponentSlot")
-                            {
-                                continue;
-                            }
-                            CalcContent = CalcContent.Replace(ParContent.Groups[3].Value, SigilData.ConvertArgument(ParContent.Groups[2].Value, abilityData, sendDebug));
-                        }
-                    }
+                    //if (Regex.Matches(CalcContent, RegexStrings.Function) is var ParContents
+                    //        && ParContents.Cast<Match>().Any(ParContents => ParContents.Success))
+                    //{
+                    //    foreach (Match ParContent in ParContents)
+                    //    {
+                    //        if (ParContent.Groups[1].Value != "PlayerSlot" && ParContent.Groups[1].Value != "OpponentSlot")
+                    //        {
+                    //            continue;
+                    //        }
+                    //        CalcContent = CalcContent.Replace(ParContent.Groups[3].Value, SigilData.ConvertArgument(ParContent.Groups[2].Value, abilityData, sendDebug));
+                    //    }
+                    //}
 
                     //NoCache means the logs don't get spammed but it could cause some performance loss
                     ExtendedExpression e = new ExtendedExpression(CalcContent);
@@ -104,17 +107,20 @@ namespace JLPlugin
             return output;
         }
 
-        public static object ProcessGeneratedVariable(string contents, AbilityBehaviourData abilityData)
+        public static object ProcessGeneratedVariable(string contents, AbilityBehaviourData abilityData = null, object variable = null)
         {
             var fieldList = contents.Split('.').ToList();
 
-            object obj;
+            object obj = variable;
 
-            bool validGeneratedVariable = abilityData.generatedVariables.TryGetValue(fieldList[0], out obj);
-
-            if (!validGeneratedVariable)
+            if (variable == null && abilityData != null)
             {
-                throw new Exception($"{ fieldList[0] } is an invalid generated variable");
+                bool validGeneratedVariable = abilityData.generatedVariables.TryGetValue(fieldList[0], out obj);
+
+                if (!validGeneratedVariable)
+                {
+                    throw new Exception($"{ fieldList[0] } is an invalid generated variable");
+                }
             }
 
             for (int i = 1; i < fieldList.Count; ++i)
@@ -147,6 +153,42 @@ namespace JLPlugin
 
                 break;
             }
+
+            if (obj is IList)
+            {
+
+                //i have no clue why this specific way of casting works but i'l take it
+                obj = ((IList)obj).Cast<object>().ToList();
+
+                for (int i = 0; i < ((IList)obj).Count; i++)
+                {
+                    Dictionary<string, Dictionary<string, object>> SaveData = (Dictionary<string, Dictionary<string, object>>)AccessTools.Field(typeof(ModdedSaveData), "SaveData").GetValue(ModdedSaveManager.SaveData);
+                    object item = ((IList)obj)[i];
+
+                    foreach (KeyValuePair<string, object> keyValuePair in SaveData["cyantist.inscryption.api"])
+                    {
+                        if (keyValuePair.Key.StartsWith($"{item.GetType().Name}_"))
+                        {
+                            int AbilityID;
+                            if (!int.TryParse(item.ToString(), out AbilityID))
+                            {
+                                continue;
+                            }
+                            int ValueID = int.Parse((string)keyValuePair.Value);
+
+                            if (ValueID == AbilityID)
+                            {
+                                List<string> SubstringList = keyValuePair.Key.Split('_').ToList();
+                                ((IList)obj)[i] = $"{SubstringList[1]}_{SubstringList[2]}";
+                                break;
+                            }
+                        }
+                    }
+                }
+
+                obj = ((IList)obj).Cast<object>().ToList();
+            }
+
             return obj;
         }
     }
