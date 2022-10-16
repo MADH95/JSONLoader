@@ -1,0 +1,79 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string"
+    },
+    "minDifficulty": {
+      "type": "integer"
+    },
+    "maxDifficulty": {
+      "type": "integer"
+    },
+    "regions": {
+      "type": "array",
+      "items": [
+        {
+          "type": "string"
+        }
+      ]
+    },
+    "dominantTribes": {
+      "type": "array",
+      "items": [
+        {
+          "type": "string"
+        }
+      ]
+    },
+    "randomReplacementCards": {
+      "type": "array",
+      "items": [
+        {
+          "type": "string"
+        }
+      ]
+    },
+    "redundantAbilities": {
+      "type": "array",
+      "items": [
+        {
+          "type": "string"
+        }
+      ]
+    },
+    "turns": {
+      "type": "array",
+      "items": [
+        {
+          "type": "object",
+          "properties": {
+            "cardInfo": {
+              "type": "array",
+              "items": [
+                {
+                  "type": "object",
+                  "properties": {
+                    "card": {
+                      "type": "string"
+                    },
+                    "randomReplaceChance": {
+                      "type": "integer"
+                    },
+                    "difficultyReq": {
+                      "type": "integer"
+                    },
+                    "difficultyReplacement": {
+                      "type": "string"
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        }
+      ]
+    }
+  }
+}

@@ -21,7 +21,7 @@ namespace JLPlugin.Data
 
         public IEnumerator Strafe(AbilityBehaviourData abilityData, moveCards movecardinfo, CardSlot SlotToMove)
         {
-            StrafeType strafeType = ParseEnum<StrafeType>(movecardinfo.strafe.direction);
+            StrafeType strafeType = ParseEnum<StrafeType>(SigilData.ConvertArgument(movecardinfo.strafe.direction, abilityData));
             switch (strafeType)
             {
                 case StrafeType.normal:

@@ -18,6 +18,9 @@ namespace JLPlugin
                 case "Random":
                     RandomPar.Evaluate(functionArgs);
                     return;
+                case "GetSlot":
+                    GetSlot.Evaluate(functionArgs);
+                    return;
             }
         }
     }

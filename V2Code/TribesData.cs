@@ -32,7 +32,7 @@ namespace JLPlugin.Data
                 {
                     Plugin.Log.LogDebug($"Loading JLDR2 (tribes) {filename}");
                     TribeList tribeInfo = JSONParser.FromJson<TribeList>(File.ReadAllText(file));
-                    
+
                     foreach (var tribedata in tribeInfo.tribes)
                     {
                         Texture2D backTex;
