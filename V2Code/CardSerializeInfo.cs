@@ -362,7 +362,7 @@ namespace JLPlugin.V2.Data
                     continue;
                 }
 
-                if (filename.EndsWith("_encounter.jldr2") || filename.EndsWith("_tribe.jldr2") || filename.EndsWith("_sigil.jldr2") || filename.EndsWith("_deck.jldr2"))
+                if (filename.EndsWith("_encounter.jldr2") || filename.EndsWith("_tribe.jldr2") || filename.EndsWith("_sigil.jldr2") || filename.EndsWith("_deck.jldr2") || filename.EndsWith("_gram.jldr2"))
                 {
                     continue;
                 }
