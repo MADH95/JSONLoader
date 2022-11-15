@@ -1,21 +1,25 @@
 ﻿using BepInEx;
-using InscryptionAPI.Ascension;
-using JLPlugin.Data;
 using JLPlugin;
-using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Text;
 using TinyJson;
+using InscryptionAPI.Sound;
+using HarmonyLib;
 
-namespace JSONLoader.V2Code
+namespace JSONLoader.Data
 {
-    internal class GramophoneData
+    [System.Serializable]
+    public class GramophoneData
     {
         public class GramophoneInfo
         {
-            public string Guid;
-            public string[] Tracks;
+            public string Prefix;
+            public TrackData[] Tracks;
+        }
+
+        public class TrackData
+        {
+            public string Track;
+            public float? Volume;
         }
 
         public static void LoadAllGramophone()
@@ -29,13 +33,16 @@ namespace JSONLoader.V2Code
                     Plugin.Log.LogDebug($"Loading JLDR2 (gramophone) {filename}");
                     GramophoneInfo gramInfo = JSONParser.FromJson<GramophoneInfo>(File.ReadAllText(file));
 
-                    foreach (string track in gramInfo.Tracks)
+                    string guidAndPrefix = $"{Plugin.PluginGuid}_{gramInfo.Prefix ?? string.Empty}";
+
+                    foreach (TrackData track in gramInfo.Tracks)
                     {
-                        // Have to comment it out as assembly isn't added yet.
-                        // GramophoneManager.Add(gramInfo.Guid, track);
+                        FileLog.Log($"Reading track data: {track.Track ?? "null"}");
+                        if (track == null) continue;
+                        GramophoneManager.AddTrack(guidAndPrefix, track.Track, track.Volume ?? 0);
                     }
 
-                    Plugin.Log.LogDebug($"Loaded JSON gramophone tracks for {gramInfo.Guid}!");
+                    Plugin.Log.LogDebug($"Loaded JSON gramophone tracks from {filename}!");
                 }
             }
         }

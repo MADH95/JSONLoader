@@ -6,6 +6,7 @@ using HarmonyLib;
 using InscryptionAPI.Regions;
 using JLPlugin.Data;
 using JLPlugin.V2.Data;
+using JSONLoader.Data;
 using System.Linq;
 using UnityEngine;
 
@@ -42,6 +43,7 @@ namespace JLPlugin
             CardSerializeInfo.LoadAllJLDR2();
             Data.EncounterData.LoadAllEncounters();
             StarterDeckList.LoadAllStarterDecks();
+            GramophoneData.LoadAllGramophone();
         }
 
         public void Update()
