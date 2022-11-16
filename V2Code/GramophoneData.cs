@@ -38,7 +38,7 @@ namespace JSONLoader.Data
                     foreach (TrackData track in gramInfo.Tracks)
                     {
                         if (track == null) continue;
-                        GramophoneManager.AddTrack(guidAndPrefix, track.Track, track.Volume ?? 0);
+                        GramophoneManager.AddTrack(guidAndPrefix, track.Track, track.Volume ?? 1);
                     }
 
                     Plugin.Log.LogDebug($"Loaded JSON gramophone tracks from {filename}!");
