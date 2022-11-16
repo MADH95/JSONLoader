@@ -26,7 +26,7 @@ namespace JSONLoader.Data
         {
             foreach (string file in Directory.EnumerateFiles(Paths.PluginPath, "*.jldr2", SearchOption.AllDirectories))
             {
-                string filename = file.Substring(file.LastIndexOf(Path.DirectorySeparatorChar) + 1f);
+                string filename = file.Substring(file.LastIndexOf(Path.DirectorySeparatorChar) + 1);
 
                 if (filename.EndsWith("_gram.jldr2"))
                 {
@@ -38,7 +38,7 @@ namespace JSONLoader.Data
                     foreach (TrackData track in gramInfo.Tracks)
                     {
                         if (track == null) continue;
-                        GramophoneManager.AddTrack(guidAndPrefix, track.Track, track.Volume ?? 1);
+                        GramophoneManager.AddTrack(guidAndPrefix, track.Track, track.Volume ?? 1f);
                     }
 
                     Plugin.Log.LogDebug($"Loaded JSON gramophone tracks from {filename}!");
