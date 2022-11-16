@@ -1,3 +1,6 @@
+## 2.2.4
+- Added gramophone support
+
 ## 2.2.3
 - Added encounter support
 - Removed the [PlayerSlot()] and [OpponentSlot()] variable and replaced it with the GetSlot() function with this format:

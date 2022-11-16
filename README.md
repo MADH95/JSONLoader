@@ -224,6 +224,32 @@ The latest version of JSON Loader allows you to create encounters. To do this, y
 These are all vanilla regions:
 Alpine, Forest, Midnight, Midnight_Ascension, Pirateville, Wetlands
 
+## Gramophone
+
+The latest version of JSON Loader allows you to add music tracks to the Gramophone in Leshy's cabin.
+To do this, your file needs to end in '_gram.jldr2' and should look like this:
+
+```json
+{
+  "Prefix": "Example",
+  "Tracks": [
+    {
+      "Track": "MyTrack.mp3",
+      "Volume": 1
+    },
+    {
+      "Track": "AnotherTrack.wav",
+      "Volume": 1
+    }
+  ]
+}
+```
+You should put your mod's prefix in the "Prefix" field. You can add as many tracks as you want inside of "Tracks", following the example above.
+
+"Track" should be the name of your audio file. The audio file should be located inside of the `BepInEx/plugins` folder. The supported audio formats currently are MP3, OGG, WAV and AIFF.
+
+"Volume" should be the volume of your track, from 0 to 1, where 0 is silence and 1 is full volume. If you want your track to be at half volume, for example, you can put 0.5 in the Volume field.
+
 ## Debugging
 The easiest way to check if the plugin is working properly or to debug an error is to enable the console. This can be done by changing
 ```
@@ -255,6 +281,9 @@ If you want help debugging you can ask in the #jsonloader channel in the [Inscry
 
 <details>
 <summary>Changelog</summary>
+
+2.2.4
+- Added gramophone support
 
 2.2.3
 - Added encounter support

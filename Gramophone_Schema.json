@@ -1,0 +1,33 @@
+﻿{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "properties": {
+    "Prefix": {
+      "type": "string"
+    },
+    "Tracks": {
+      "type": "array",
+      "items": [
+        {
+          "type": "object",
+          "properties": {
+            "Track": {
+              "type": "string"
+            },
+            "Volume": {
+              "type": "number"
+            }
+          },
+          "required": [
+            "Track",
+            "Volume"
+          ]
+        }
+      ]
+    }
+  },
+  "required": [
+    "Prefix",
+    "Tracks"
+  ]
+}
