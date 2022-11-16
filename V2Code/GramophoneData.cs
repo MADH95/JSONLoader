@@ -26,7 +26,7 @@ namespace JSONLoader.Data
         {
             foreach (string file in Directory.EnumerateFiles(Paths.PluginPath, "*.jldr2", SearchOption.AllDirectories))
             {
-                string filename = file.Substring(file.LastIndexOf(Path.DirectorySeparatorChar) + 1);
+                string filename = file.Substring(file.LastIndexOf(Path.DirectorySeparatorChar) + 1f);
 
                 if (filename.EndsWith("_gram.jldr2"))
                 {
