@@ -36,7 +36,7 @@ namespace JLPlugin
             if (betaCompatibility.Value)
                 Utils.JLUtils.LoadCardsFromFiles();
 
-            Plugin.Log.LogInfo(string.Join(", ", RegionManager.AllRegionsCopy.Select(x => x.name)));
+            Plugin.Log.LogDebug(string.Join(", ", RegionManager.AllRegionsCopy.Select(x => x.name)));
 
             TribeList.LoadAllTribes();
             SigilData.LoadAllSigils();

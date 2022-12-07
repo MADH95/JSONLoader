@@ -87,7 +87,7 @@ namespace JLPlugin
                     //this should stay as it's very useful for debugging for people
                     if (sendDebug)
                     {
-                        Plugin.Log.LogInfo($"input: {CalcInput}");
+                        Plugin.Log.LogDebug($"input: {CalcInput}");
                     }
 
                     string CalcOutput = e.Evaluate().ToString();
@@ -100,7 +100,7 @@ namespace JLPlugin
 
                     if (sendDebug)
                     {
-                        Plugin.Log.LogInfo($"output: {CalcOutput}");
+                        Plugin.Log.LogDebug($"output: {CalcOutput}");
                     }
                 }
             }

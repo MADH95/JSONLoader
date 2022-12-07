@@ -26,7 +26,7 @@ namespace JLPlugin.Data
 
         public static bool CheckCondition(condition conditionInfo, SigilData abilitydata, CardSlot slot = null, CardInfo card = null)
         {
-            Plugin.Log.LogInfo((conditionInfo == null) + " " + (slot == null) + " " + (card == null));
+            Plugin.Log.LogDebug((conditionInfo == null) + " " + (slot == null) + " " + (card == null));
             if (conditionInfo == null)
             {
                 return true;

@@ -13,7 +13,7 @@ namespace JLPlugin.SigilCode
         [HarmonyPostfix]
         public static IEnumerator Postfix(IEnumerator enumerator, CombatPhaseManager __instance, bool playerIsAttacker, SpecialBattleSequencer specialSequencer)
         {
-            Plugin.Log.LogInfo("AAAAAAAAAAH");
+            Plugin.Log.LogDebug("AAAAAAAAAAH");
             __instance.DamageDealtThisPhase = 0;
             List<CardSlot> attackingSlots = playerIsAttacker ? Singleton<BoardManager>.Instance.PlayerSlotsCopy : Singleton<BoardManager>.Instance.OpponentSlotsCopy;
             attackingSlots.RemoveAll((CardSlot x) => x.Card == null || x.Card.Attack == 0);
@@ -67,7 +67,7 @@ namespace JLPlugin.SigilCode
                     excessDamage = Mathf.Max(0, excessDamage);
                 }
                 int damage = __instance.DamageDealtThisPhase - excessDamage;
-                Plugin.Log.LogInfo($"DAMAGE: {damage}");
+                Plugin.Log.LogDebug($"DAMAGE: {damage}");
                 AscensionStatsData.TryIncreaseStat(AscensionStat.Type.MostDamageDealt, __instance.DamageDealtThisPhase);
                 if (__instance.DamageDealtThisPhase >= 666)
                 {

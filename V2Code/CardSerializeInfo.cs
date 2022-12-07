@@ -173,6 +173,9 @@ namespace JLPlugin.V2.Data
 
             if (!string.IsNullOrEmpty(this.texture))
                 card.SetPortrait(this.texture);
+            
+            if (!string.IsNullOrEmpty(this.altTexture))
+                card.SetAltPortrait(this.altTexture);
 
             if (!string.IsNullOrEmpty(this.emissionTexture))
                 card.SetEmissivePortrait(this.emissionTexture);

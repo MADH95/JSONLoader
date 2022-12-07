@@ -1,3 +1,7 @@
+## 2.2.5
+- Fixed altTexture not working
+- Debug prints are now logged to debug instead of info
+
 ## 2.2.4
 - Added gramophone support
 
