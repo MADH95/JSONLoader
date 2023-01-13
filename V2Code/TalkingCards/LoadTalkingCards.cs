@@ -31,19 +31,22 @@ namespace JSONLoader.Data.TalkingCards
         private static void LogError(string message)
             => Plugin.Log?.LogError(message);
 
+        private static void DebugLog(string message)
+            => Plugin.Log?.LogDebug(message);
+
         private static void LoadTalkJSON(string file)
         {
             LogInfo($"Loading file: {Path.GetFileName(file)}");
 
             try
             {
-                //TalkingJSONData? talk = JsonConvert.DeserializeObject<TalkingJSONData>(File.ReadAllText(file));
                 TalkingJSONData? talk = JSONParser.FromJson<TalkingJSONData>(File.ReadAllText(file));
                 if (talk == null) return;
                 //FileLog.Log($"Loading card: {talk.cardName}");
                 TalkingCardManager.Create(talk.GetFaceData(), null);
                 var dialogueEvents = talk.MakeDialogueEvents();
                 dialogueEvents.ForEach(x => TalkingCardManager.AddToDialogueCache(x?.id));
+                DebugLog($"Loaded talking card data for card: {talk.cardName}");
             }
             catch (Exception ex)
             {
