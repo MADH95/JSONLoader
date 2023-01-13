@@ -13,12 +13,14 @@ namespace JSONLoader.Data.TalkingCards
 {
     internal static class LoadTalkingCards
     {
-        private static List<string> GetTalkingJSON()
-            => Directory.GetFiles(Paths.PluginPath, "*_talk.jldr2", SearchOption.AllDirectories)
-            .ToList();
+        private static string[] GetTalkingJSON()
+            => Directory.GetFiles(Paths.PluginPath, "*_talk.jldr2", SearchOption.AllDirectories);
 
         public static void LoadJSONCards()
-            => GetTalkingJSON().ForEach(x => LoadTalkJSON(x));
+        {
+            foreach(string file in GetTalkingJSON())
+                LoadTalkJSON(file);
+        }
 
         public static void InitAndLoad()
         {

@@ -7,25 +7,45 @@ namespace JSONLoader.Data.TalkingCards
 {
     internal static class RenameFiles
     {
-        internal static List<string> FindJSON()
-            => Directory.GetFiles(Paths.PluginPath, "*_talk.json", SearchOption.AllDirectories)
-            .ToList();
-
-        internal static void RenameAll()
-            => FindJSON().ForEach(Rename);
+        internal static string[] FindJSON()
+            => Directory.GetFiles(Paths.PluginPath, "*_talk.json", SearchOption.AllDirectories);
 
         private static void LogInfo(string message)
-            => JLPlugin.Plugin.Log.LogInfo(message);
+            => JLPlugin.Plugin.Log?.LogInfo(message);
 
-        internal static void Rename(string fileName)
+        private static void LogError(string message)
+            => JLPlugin.Plugin.Log?.LogError(message);
+
+        internal static void RenameAll()
         {
-            if (!fileName.EndsWith("_talk.json")) return;
-            string noExtension = fileName.Substring(0, fileName.Length - ".json".Length);
-            string newFileName = $"{noExtension}.jldr2";
-            if (!File.Exists(newFileName))
+            string[] files = FindJSON();
+            if(files.Length > 0)
             {
-                File.Move(fileName, newFileName);
-                LogInfo($"Renamed file \'{Path.GetFileName(fileName)}\' to \'{Path.GetFileName(newFileName)}\' for backwards compatibility.");
+                LogInfo($"TalkingCards: Found {files.Length} \'_talk.json\' files.");
+                LogInfo($"Renaming them to \'_talk.jldr2\' files for backwards compatibility!");
+            }
+
+            foreach (string file in files) Rename(file);
+        }
+
+        internal static void Rename(string filePath)
+        {
+            if (!filePath.EndsWith("_talk.json")) return;
+            string noExtension = filePath.Substring(0, filePath.Length - ".json".Length);
+            string newFilePath = $"{noExtension}.jldr2";
+
+            string oldName = Path.GetFileName(filePath);
+            string newName = Path.GetFileName(newFilePath);
+
+            if (!File.Exists(newFilePath))
+            {
+                File.Move(filePath, newFilePath);
+                LogInfo($"Renamed file \'{oldName}\' to \'{newName}\' for backwards compatibility.");
+            }
+            else
+            {
+                string fileDir = new DirectoryInfo(filePath).Parent.Name;
+                LogError($"Couldn't rename file {oldName} to {newName} as there's already a file named {newName} in the {fileDir} directory.");
             }
         }
     }
