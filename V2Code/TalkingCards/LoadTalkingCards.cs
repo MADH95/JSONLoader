@@ -2,6 +2,7 @@
 using System.IO;
 using BepInEx;
 using InscryptionAPI.TalkingCards;
+using InscryptionAPI.TalkingCards.Animation;
 using TinyJson;
 
 #nullable enable
@@ -38,7 +39,7 @@ namespace JSONLoader.Data.TalkingCards
                 TalkingJSONData? talk = JSONParser.FromJson<TalkingJSONData>(File.ReadAllText(file));
                 if (talk == null) return;
                 //FileLog.Log($"Loading card: {talk.cardName}");
-                TalkingCardManager.Create(talk.GetFaceData(), null);
+                TalkingCardManager.Create(talk.GetFaceData(), GeneratePortrait.DialogueDummy);
                 var dialogueEvents = talk.MakeDialogueEvents();
                 dialogueEvents.ForEach(x => TalkingCardManager.AddToDialogueCache(x?.id));
                 LogHelpers.LogInfo($"Loaded talking card data for card: {talk.cardName}!");
