@@ -10,20 +10,13 @@ namespace JSONLoader.Data.TalkingCards
         internal static string[] FindJSON()
             => Directory.GetFiles(Paths.PluginPath, "*_talk.json", SearchOption.AllDirectories);
 
-        private static void LogInfo(string message)
-            => JLPlugin.Plugin.Log?.LogInfo(message);
-
-        private static void LogError(string message)
-            => JLPlugin.Plugin.Log?.LogError(message);
-
         internal static void RenameAll()
         {
             string[] files = FindJSON();
-            if(files.Length > 0)
-            {
-                LogInfo($"TalkingCards: Found {files.Length} \'_talk.json\' files.");
-                LogInfo($"Renaming them to \'_talk.jldr2\' files for backwards compatibility!");
-            }
+            if (files.Length == 0) return;
+
+            LogHelpers.LogInfo($"TalkingCards: Found {files.Length} \'_talk.json\' files.");
+            LogHelpers.LogInfo($"Renaming each to end in \'_talk.jldr2\' instead for compatibility!");
 
             foreach (string file in files) Rename(file);
         }
@@ -40,12 +33,12 @@ namespace JSONLoader.Data.TalkingCards
             if (!File.Exists(newFilePath))
             {
                 File.Move(filePath, newFilePath);
-                LogInfo($"Renamed file \'{oldName}\' to \'{newName}\' for backwards compatibility.");
+                LogHelpers.DebugLog($"Renamed file \'{oldName}\' to \'{newName}\' for compatibility.");
             }
             else
             {
-                string fileDir = new DirectoryInfo(filePath).Parent.Name;
-                LogError($"Couldn't rename file {oldName} to {newName} as there's already a file named {newName} in the {fileDir} directory.");
+                string fileDir = Path.GetDirectoryName(filePath);
+                LogHelpers.LogError($"Couldn't rename file \'{oldName}\' to \'{newName}\' as there's already a file named \'{newName}\' in the \'{fileDir}\' directory.");
             }
         }
     }

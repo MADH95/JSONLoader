@@ -1,7 +1,6 @@
 ﻿using System;
 using System.IO;
 using BepInEx;
-using JLPlugin;
 using InscryptionAPI.TalkingCards;
 using TinyJson;
 
@@ -25,18 +24,14 @@ namespace JSONLoader.Data.TalkingCards
             LoadJSONCards();
         }
 
-        private static void LogInfo(string message)
-            => Plugin.Log?.LogInfo(message);
-
-        private static void LogError(string message)
-            => Plugin.Log?.LogError(message);
-
-        private static void DebugLog(string message)
-            => Plugin.Log?.LogDebug(message);
-
         private static void LoadTalkJSON(string file)
         {
-            LogInfo($"Loading file: {Path.GetFileName(file)}");
+            // I'm keeping all these as LogInfo instead of LogDebug *for now*.
+            // This will be really useful information in console logs for me!
+            // I'm going to change all of these to LogDebug soon when everything is stable.
+            // c: <3
+
+            LogHelpers.LogInfo($"Loading file: {Path.GetFileName(file)}");
 
             try
             {
@@ -46,12 +41,12 @@ namespace JSONLoader.Data.TalkingCards
                 TalkingCardManager.Create(talk.GetFaceData(), null);
                 var dialogueEvents = talk.MakeDialogueEvents();
                 dialogueEvents.ForEach(x => TalkingCardManager.AddToDialogueCache(x?.id));
-                DebugLog($"Loaded talking card data for card: {talk.cardName}");
+                LogHelpers.LogInfo($"Loaded talking card data for card: {talk.cardName}!");
             }
             catch (Exception ex)
             {
-                LogError($"Error loading JSON data from file {Path.GetFileName(file)}!");
-                LogError(ex.ToString());
+                LogHelpers.LogError($"Error loading JSON data from file {Path.GetFileName(file)}!");
+                LogHelpers.LogError(ex.ToString());
                 // throw;
             }
         }
