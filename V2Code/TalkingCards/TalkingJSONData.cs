@@ -5,6 +5,7 @@ using UnityEngine;
 using DiskCardGame;
 using InscryptionAPI.TalkingCards.Create;
 using InscryptionAPI.TalkingCards.Helpers;
+using InscryptionAPI.TalkingCards.Animation;
 
 #nullable enable
 namespace JSONLoader.Data.TalkingCards
@@ -145,9 +146,8 @@ namespace JSONLoader.Data.TalkingCards
                 : neutralEmotion.Mouth;
 
             // Backwards compatibility with now unused "emissionSprite" field.
-            Sprite emission = emissionSprite != null
-                ? (AssetHelpers.MakeSprite(emissionSprite)
-                        ?? neutralEmotion.Emission)
+            FaceAnim emission = emissionSprite != null
+                ? (AssetHelpers.MakeSprite(emissionSprite), GeneratePortrait.EmptyPortrait)
                 : (emissionSprites != null
                         ? emissionSprites.GetSprites()
                         : neutralEmotion.Emission);
