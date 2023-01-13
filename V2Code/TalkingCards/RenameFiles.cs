@@ -17,8 +17,9 @@ namespace JSONLoader.Data.TalkingCards
         internal static void Rename(string fileName)
         {
             if (!fileName.EndsWith("_talk.json")) return;
-            string name = Path.GetFileNameWithoutExtension(fileName);
-            File.Move(fileName, $"{name}.jldr2");
+            string noExtension = fileName.Substring(0, fileName.Length - ".json".Length);
+            string newFileName = $"{noExtension}.jldr2";
+            if (!File.Exists(newFileName)) File.Move(fileName, newFileName);
         }
     }
 }

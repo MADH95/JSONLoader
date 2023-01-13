@@ -5,7 +5,6 @@ using UnityEngine;
 using DiskCardGame;
 using InscryptionAPI.TalkingCards.Create;
 using InscryptionAPI.TalkingCards.Helpers;
-using InscryptionAPI.TalkingCards.Animation;
 
 #nullable enable
 namespace JSONLoader.Data.TalkingCards
@@ -30,19 +29,20 @@ namespace JSONLoader.Data.TalkingCards
 
         public TalkingJSONData(string cardName, string faceSprite,
             FaceImages? eyeSprites = null, FaceImages? mouthSprites = null,
-            string? emissionSprite = null, EmotionImages[]? emotions = null,
-            FaceInfo? faceInfo = null, DialogueEventStrings[]? dialogueEvents = null,
-            FaceImages? emissionSprites = null)
+            string? emissionSprite = null, FaceImages? emissionSprites = null,
+            EmotionImages[]? emotions = null,
+            FaceInfo? faceInfo = null, DialogueEventStrings[]? dialogueEvents = null
+            ) // Ahh, argument soup.~ uxu;
         {
             this.cardName = cardName;
             this.faceSprite = faceSprite;
             this.eyeSprites = eyeSprites;
             this.mouthSprites = mouthSprites;
-            this.emissionSprite = emissionSprite;
+            this.emissionSprite = emissionSprite; // Backwards compatibility. oxo;
+            this.emissionSprites = emissionSprites;
             this.emotions = emotions;
             this.faceInfo = faceInfo;
             this.dialogueEvents = dialogueEvents ?? new DialogueEventStrings[0];
-            this.emissionSprites = emissionSprites;
         }
 
         public List<EmotionData> GetEmotions()
@@ -55,6 +55,7 @@ namespace JSONLoader.Data.TalkingCards
                     faceSprite,
                     eyeSprites?.AsTuple(),
                     mouthSprites?.AsTuple(),
+                    // Backwards compatibility, woo!
                     (emissionSprite != null ? (emissionSprite, "_") : emissionSprites?.AsTuple())
                 );;
 
@@ -106,15 +107,23 @@ namespace JSONLoader.Data.TalkingCards
         public string? faceSprite { get; set; }
         public FaceImages? eyeSprites { get; set; }
         public FaceImages? mouthSprites { get; set; }
-        public string? emissionSprite { get; set; }
 
-        public EmotionImages(string emotion, string? faceSprite = null, FaceImages? eyeSprites = null, FaceImages? mouthSprites = null, string? emissionSprite = null)
+        // No longer in use, but kept here for backwards compatibility.
+        // 'emissionSprites' should be used instead.
+        public string? emissionSprite { get; set; }
+        public FaceImages? emissionSprites { get; set; }
+
+        public EmotionImages(string emotion, string? faceSprite = null,
+            FaceImages? eyeSprites = null, FaceImages? mouthSprites = null,
+            string? emissionSprite = null, FaceImages? emissionSprites = null
+            )
         {
             this.emotion = emotion;
             this.faceSprite = faceSprite;
             this.eyeSprites = eyeSprites;
             this.mouthSprites = mouthSprites;
             this.emissionSprite = emissionSprite;
+            this.emissionSprites = emissionSprites;
         }
 
         public EmotionData? MakeEmotion(EmotionData neutralEmotion)
@@ -135,8 +144,13 @@ namespace JSONLoader.Data.TalkingCards
                 ? mouthSprites.GetSprites()
                 : neutralEmotion.Mouth;
 
-            Sprite emission = AssetHelpers.MakeSprite(emissionSprite)
-                ?? neutralEmotion.Emission;
+            // Backwards compatibility with now unused "emissionSprite" field.
+            Sprite emission = emissionSprite != null
+                ? (AssetHelpers.MakeSprite(emissionSprite)
+                        ?? neutralEmotion.Emission)
+                : (emissionSprites != null
+                        ? emissionSprites.GetSprites()
+                        : neutralEmotion.Emission);
 
             return new EmotionData(emotionValue, face, eyes, mouth, emission);
         }

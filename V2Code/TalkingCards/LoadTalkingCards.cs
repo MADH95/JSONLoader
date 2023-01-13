@@ -12,7 +12,7 @@ using TinyJson;
 #nullable enable
 namespace JSONLoader.Data.TalkingCards
 {
-    internal static class LoadJSON
+    internal static class LoadTalkingCards
     {
         private static List<string> GetTalkingJSON()
             => Directory.GetFiles(Paths.PluginPath, "*_talk.jldr2", SearchOption.AllDirectories).ToList();
@@ -22,7 +22,7 @@ namespace JSONLoader.Data.TalkingCards
 
         public static void InitAndLoad()
         {
-            RenameFiles.RenameAll();
+            RenameFiles.RenameAll(); // For seamless compatibility with my TalkingCardAPI. 
             LoadJSONCards();
         }
 
@@ -43,10 +43,10 @@ namespace JSONLoader.Data.TalkingCards
                 var dialogueEvents = talk.MakeDialogueEvents();
                 dialogueEvents.ForEach(x => TalkingCardManager.AddToDialogueCache(x?.id));
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 Plugin.Log.LogError($"Error loading JSON data from file {Path.GetFileName(file)}!");
-                // Plugin.LogError(ex.ToString());
+                Plugin.Log.LogError(ex.ToString());
                 // throw;
             }
         }

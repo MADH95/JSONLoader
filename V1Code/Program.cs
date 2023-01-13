@@ -44,6 +44,8 @@ namespace JLPlugin
             Data.EncounterData.LoadAllEncounters();
             StarterDeckList.LoadAllStarterDecks();
             GramophoneData.LoadAllGramophone();
+            JSONLoader.Data.TalkingCards.LoadTalkingCards.InitAndLoad();
+            // ^ Ambiguity between JSONLoader.Data and JLPlugin.Data is annoying. = u= -Kelly
         }
 
         public void Update()
