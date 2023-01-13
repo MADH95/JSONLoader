@@ -26,7 +26,10 @@ namespace JSONLoader.Data.TalkingCards
         }
 
         private static void LogInfo(string message)
-            => Plugin.Log.LogInfo(message);
+            => Plugin.Log?.LogInfo(message);
+
+        private static void LogError(string message)
+            => Plugin.Log?.LogError(message);
 
         private static void LoadTalkJSON(string file)
         {
@@ -38,14 +41,14 @@ namespace JSONLoader.Data.TalkingCards
                 TalkingJSONData? talk = JSONParser.FromJson<TalkingJSONData>(File.ReadAllText(file));
                 if (talk == null) return;
                 //FileLog.Log($"Loading card: {talk.cardName}");
-                TalkingCardManager.Create(talk.GetFaceData(), GeneratePortrait.DialogueDummy);
+                TalkingCardManager.Create(talk.GetFaceData(), null);
                 var dialogueEvents = talk.MakeDialogueEvents();
                 dialogueEvents.ForEach(x => TalkingCardManager.AddToDialogueCache(x?.id));
             }
             catch (Exception ex)
             {
-                Plugin.Log.LogError($"Error loading JSON data from file {Path.GetFileName(file)}!");
-                Plugin.Log.LogError(ex.ToString());
+                LogError($"Error loading JSON data from file {Path.GetFileName(file)}!");
+                LogError(ex.ToString());
                 // throw;
             }
         }
