@@ -16,7 +16,9 @@ namespace JSONLoader.Data.TalkingCards
         public static void LoadJSONCards()
         {
             foreach(string file in GetTalkingJSON())
+            {
                 LoadTalkJSON(file);
+            }
         }
 
         public static void InitAndLoad()
