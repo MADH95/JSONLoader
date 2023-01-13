@@ -3,7 +3,6 @@ using System.Linq;
 using System.Collections.Generic;
 using System.IO;
 using BepInEx;
-using Newtonsoft.Json;
 using InscryptionAPI.TalkingCards.Animation;
 using JLPlugin;
 using InscryptionAPI.TalkingCards;
