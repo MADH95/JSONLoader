@@ -7,6 +7,9 @@ namespace JSONLoader.Data.TalkingCards
 {
     internal static class RenameFiles
     {
+        /* Rename any '_talk.json' files to '_talk.jldr2' (for backwards compatibility with my TalkingCardAPI). c:
+         * It's a simple little change. If none are found, this does nothing. */
+
         internal static string[] FindJSON()
             => Directory.GetFiles(Paths.PluginPath, "*_talk.json", SearchOption.AllDirectories);
 
