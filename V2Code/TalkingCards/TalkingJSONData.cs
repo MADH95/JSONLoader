@@ -3,13 +3,12 @@ using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
 using DiskCardGame;
-using InscryptionAPI.TalkingCards.Animation;
 using InscryptionAPI.TalkingCards.Create;
 using InscryptionAPI.TalkingCards.Helpers;
-using Steamworks;
+using InscryptionAPI.TalkingCards.Animation;
 
 #nullable enable
-namespace JSONLoader.TalkingCards.JSON
+namespace JSONLoader.Data.TalkingCards
 {
     [Serializable]
     public class TalkingJSONData
@@ -18,7 +17,12 @@ namespace JSONLoader.TalkingCards.JSON
         public string faceSprite { get; set; }
         public FaceImages? eyeSprites { get; set; }
         public FaceImages? mouthSprites { get; set; }
+
+        // No longer in use, but kept here for backwards compatibility.
+        // 'emissionSprites' should be used instead.
         public string? emissionSprite { get; set; }
+        public FaceImages? emissionSprites { get; set; }
+
         public EmotionImages[]? emotions { get; set; }
 
         public FaceInfo? faceInfo { get; set; }
@@ -27,7 +31,8 @@ namespace JSONLoader.TalkingCards.JSON
         public TalkingJSONData(string cardName, string faceSprite,
             FaceImages? eyeSprites = null, FaceImages? mouthSprites = null,
             string? emissionSprite = null, EmotionImages[]? emotions = null,
-            FaceInfo? faceInfo = null, DialogueEventStrings[]? dialogueEvents = null)
+            FaceInfo? faceInfo = null, DialogueEventStrings[]? dialogueEvents = null,
+            FaceImages? emissionSprites = null)
         {
             this.cardName = cardName;
             this.faceSprite = faceSprite;
@@ -37,6 +42,7 @@ namespace JSONLoader.TalkingCards.JSON
             this.emotions = emotions;
             this.faceInfo = faceInfo;
             this.dialogueEvents = dialogueEvents ?? new DialogueEventStrings[0];
+            this.emissionSprites = emissionSprites;
         }
 
         public List<EmotionData> GetEmotions()
@@ -49,8 +55,8 @@ namespace JSONLoader.TalkingCards.JSON
                     faceSprite,
                     eyeSprites?.AsTuple(),
                     mouthSprites?.AsTuple(),
-                    emissionSprite
-                );
+                    (emissionSprite != null ? (emissionSprite, "_") : emissionSprites?.AsTuple())
+                );;
 
             emotionList.Add(neutral);
             #endregion

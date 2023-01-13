@@ -1,11 +1,9 @@
-﻿using BepInEx;
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
+using BepInEx;
 
-namespace JSONLoader.V2Code.TalkingCards
+namespace JSONLoader.Data.TalkingCards
 {
     internal static class RenameFiles
     {

@@ -4,15 +4,13 @@ using System.Collections.Generic;
 using System.IO;
 using BepInEx;
 using Newtonsoft.Json;
-using HarmonyLib;
-using InscryptionAPI.TalkingCards.Create;
 using InscryptionAPI.TalkingCards.Animation;
-using InscryptionAPI;
 using JLPlugin;
 using InscryptionAPI.TalkingCards;
+using TinyJson;
 
 #nullable enable
-namespace JSONLoader.TalkingCards.JSON
+namespace JSONLoader.Data.TalkingCards
 {
     internal static class LoadJSON
     {
@@ -21,6 +19,12 @@ namespace JSONLoader.TalkingCards.JSON
 
         public static void LoadJSONCards()
             => GetTalkingJSON().ForEach(x => LoadTalkJSON(x));
+
+        public static void InitAndLoad()
+        {
+            RenameFiles.RenameAll();
+            LoadJSONCards();
+        }
 
         private static void LogInfo(string message)
             => Plugin.Log.LogInfo(message);
@@ -31,7 +35,8 @@ namespace JSONLoader.TalkingCards.JSON
 
             try
             {
-                TalkingJSONData? talk = JsonConvert.DeserializeObject<TalkingJSONData>(File.ReadAllText(file));
+                //TalkingJSONData? talk = JsonConvert.DeserializeObject<TalkingJSONData>(File.ReadAllText(file));
+                TalkingJSONData? talk = JSONParser.FromJson<TalkingJSONData>(File.ReadAllText(file));
                 if (talk == null) return;
                 //FileLog.Log($"Loading card: {talk.cardName}");
                 TalkingCardManager.Create(talk.GetFaceData(), GeneratePortrait.DialogueDummy);
