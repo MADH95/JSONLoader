@@ -14,7 +14,8 @@ namespace JSONLoader.Data.TalkingCards
     internal static class LoadTalkingCards
     {
         private static List<string> GetTalkingJSON()
-            => Directory.GetFiles(Paths.PluginPath, "*_talk.jldr2", SearchOption.AllDirectories).ToList();
+            => Directory.GetFiles(Paths.PluginPath, "*_talk.jldr2", SearchOption.AllDirectories)
+            .ToList();
 
         public static void LoadJSONCards()
             => GetTalkingJSON().ForEach(x => LoadTalkJSON(x));
