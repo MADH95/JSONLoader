@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Linq;
-using System.Collections.Generic;
 using System.IO;
 using BepInEx;
-using InscryptionAPI.TalkingCards.Animation;
 using JLPlugin;
 using InscryptionAPI.TalkingCards;
 using TinyJson;
