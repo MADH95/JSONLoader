@@ -18,7 +18,7 @@ namespace JLPlugin
     {
         public const string PluginGuid = "MADH.inscryption.JSONLoader";
         public const string PluginName = "JSONLoader";
-        public const string PluginVersion = "2.2.3";
+        public const string PluginVersion = "2.3.0";
 
         internal static ConfigEntry<bool> betaCompatibility;
 
@@ -44,6 +44,8 @@ namespace JLPlugin
             Data.EncounterData.LoadAllEncounters();
             StarterDeckList.LoadAllStarterDecks();
             GramophoneData.LoadAllGramophone();
+            JSONLoader.Data.TalkingCards.LoadTalkingCards.InitAndLoad();
+            // ^ Ambiguity between JSONLoader.Data and JLPlugin.Data is annoying. = u= -Kelly
         }
 
         public void Update()

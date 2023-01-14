@@ -1,3 +1,6 @@
+## 2.3.0
+- Added talking card support
+
 ## 2.2.5
 - Fixed altTexture not working
 - Debug prints are now logged to debug instead of info

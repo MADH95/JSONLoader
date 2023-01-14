@@ -1,0 +1,202 @@
+﻿{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "JSONLoader Talking Card",
+  "description": "Make a talking card in Inscryption with the JSONCardLoader mod!",
+  "type": "object",
+  "properties": {
+    "cardName": {
+      "description": "The name of an existing card.",
+      "type": "string"
+    },
+    "faceSprite": {
+      "description": "The sprite image for your character's face.",
+      "$ref": "#/$defs/imagePath"
+    },
+    "eyeSprites": {
+      "description": "The sprite images for your character's eyes.",
+      "$ref": "#/$defs/faceAnim"
+    },
+    "mouthSprites": {
+      "description": "The sprite images for your character's mouth.",
+      "$ref": "#/$defs/faceAnim"
+    },
+    "emissionSprites": {
+      "description": "The sprite images for your animated portrait's emission.",
+      "$ref": "#/$defs/faceAnim"
+    },
+    "faceInfo": {
+      "description": "A bunch of settings for your character's animated portrait:",
+      "$ref": "#/$defs/faceInfo"
+    },
+    "emotions": {
+      "description": "Your character's emotions.",
+      "type": "array",
+      "items": {
+        "title": "emotion",
+        "$ref": "#/$defs/emotionData"
+      },
+      "uniqueItems": true
+    },
+    "dialogueEvents": {
+      "description": "Your character's dialogue events.",
+      "$ref": "#/$defs/dialogueEventsArray"
+    }
+  },
+  "required": [
+    "cardName",
+    "faceSprite",
+    "eyeSprites",
+    "mouthSprites",
+    "emissionSprites",
+    "faceInfo",
+    "dialogueEvents"
+  ],
+  "$defs": {
+    "faceAnim": {
+      "type": "object",
+      "properties": {
+        "open": {
+          "$ref": "#/$defs/imagePath"
+        },
+        "closed": {
+          "$ref": "#/$defs/imagePath"
+        }
+      },
+      "required": [ "open", "closed" ]
+    },
+    "imagePath": {
+      "type": "string",
+      "pattern": "(^_|.*\\.(png|jpg|jpeg|bmp))$"
+    },
+    "faceInfo": {
+      "type": "object",
+      "properties": {
+        "blinkRate": {
+          "description": "How often your character blinks. The higher the number, the more often they will blink. Default: 1.5",
+          "$ref": "#/$defs/clampNumber",
+          "default": 1.5
+        },
+        "voiceId": {
+          "description": "Your character's \"voice\". Most talking cards just use \"female1_voice\" and change the pitch!",
+          "$ref": "#/$defs/validVoiceIds"
+        },
+        "voiceSoundPitch": {
+          "description": "Your character's voice's pitch. The higher the number, the higher the pitch; the lower the number, the lower the pitch. Default: 1",
+          "$ref": "#/$defs/clampNumber",
+          "default": 1
+        },
+        "customVoice": {
+          "description": "The path to a custom audio file for your character's voice. It must be a very short sound; please be careful when adding your own! Supported formats are MP3, WAV and OGG.",
+          "$ref": "#/$defs/audioPath",
+          "default": null
+        }
+      },
+      "required": []
+    },
+    "clampNumber": {
+      "type": "number",
+      "maximum": 10,
+      "minimum": 0.1
+    },
+    "validVoiceIds": {
+      "type": "string",
+      "enum": [
+        "female1_voice",
+        "kobold_voice",
+        "cat_voice"
+      ]
+    },
+    "audioPath": {
+      "type": "string",
+      "pattern": ".*\\.(mp3|wav|ogg|aiff|aif)$"
+    },
+    "dialogueEventsArray": {
+      "type": "array",
+      "items": {
+        "title": "dialogue event",
+        "$ref": "#/$defs/dialogueEvent"
+      },
+      "uniqueItems": true
+    },
+    "dialogueEvent": {
+      "type": "object",
+      "properties": {
+        "eventName": {
+          "description": "The dialogue event trigger.",
+          "$ref": "#/$defs/eventNames"
+        },
+        "mainLines": {
+          "description": "What your character says when this event first plays for them.",
+          "$ref": "#/$defs/dialogueLines"
+        },
+        "repeatLines": {
+          "description": "The lines the character says after the first time the event has played.",
+          "type": "array",
+          "items": {
+            "title": "repeat lines",
+            "$ref": "#/$defs/dialogueLines"
+          },
+          "minItems": 1
+        }
+      },
+      "required": [ "eventName", "mainLines", "repeatLines" ]
+    },
+    "eventNames": {
+      "type": "string",
+      "enum": [
+        "OnDrawn",
+        "OnPlayFromHand",
+        "OnAttacked",
+        "OnBecomeSelectablePositive",
+        "OnBecomeSelectableNegative",
+        "OnSacrificed",
+        "OnSelectedForDeckTrial",
+        "OnSelectedForCardMerge",
+        "OnSelectedForCardRemove",
+        "OnDiscoveredInExploration",
+        "ProspectorBoss",
+        "AnglerBoss",
+        "TrapperTraderBoss",
+        "LeshyBoss",
+        "RoyalBoss",
+        "DefaultOpponent"
+      ]
+    },
+    "dialogueLines": {
+      "type": "array",
+      "items": {
+        "title": "line",
+        "type": "string"
+      },
+      "minItems": 1
+    },
+    "emotionData": {
+      "type": "object",
+      "properties": {
+        "emotion": {
+          "type": "string",
+          "enum": [
+            "Laughter",
+            "Anger",
+            "Quiet",
+            "Surprise",
+            "Curious"
+          ]
+        },
+        "faceSprite": {
+          "$ref": "#/$defs/imagePath"
+        },
+        "eyeSprites": {
+          "$ref": "#/$defs/faceAnim"
+        },
+        "mouthSprites": {
+          "$ref": "#/$defs/faceAnim"
+        },
+        "emissionSprites": {
+          "$ref": "#/$defs/faceAnim"
+        }
+      },
+      "required": [ "emotion" ]
+    }
+  }
+}
