@@ -19,7 +19,7 @@ Here is the [documentation](https://docs.google.com/document/d/1QLAfomaTcatm-foU
 
 The latest version of JSONLoader allows you to create talking cards! To do this, your file needs to end in '\_talk.json'.
 
-All of the documentation for that can be found [here](https://github.com/KBMackenzie/InscryptionJSONDump/blob/main/Documentation/Talking_Card_Guide.md).
+All of the documentation for that can be found [here](https://github.com/KBMackenzie/InscryptionJSONDump/blob/main/Documentation/Talking_Card_Guide.md)!
 
 ## Converting Existing Cards to JLDR2
 
