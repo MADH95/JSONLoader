@@ -17,7 +17,7 @@ Here is the [documentation](https://docs.google.com/document/d/1QLAfomaTcatm-foU
 
 ## Talking Cards
 
-The latest version of JSONLoader allows you to create talking cards! To do this, your file needs to end in '\_talk.json'.
+The latest version of JSONLoader allows you to create talking cards! To do this, your file needs to end in '\_talk.jldr2'.
 
 All of the documentation for that can be found [here](https://github.com/KBMackenzie/InscryptionJSONDump/blob/main/Documentation/Talking_Card_Guide.md)!
 
@@ -288,6 +288,9 @@ If you want help debugging you can ask in the #jsonloader channel in the [Inscry
 <details>
 <summary>Changelog</summary>
 
+2.3.0
+- Added talking card support!
+	
 2.2.4
 - Added gramophone support
 
