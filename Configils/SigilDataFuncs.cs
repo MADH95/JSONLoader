@@ -220,6 +220,12 @@ namespace JLPlugin.Data
             "attackSlots"
         };
 
+        /* the delays in runactions() seem misplaced! removing them seems to help a lot with the
+         * delay issues people were having.
+         *
+         * i think keeping delays action-specific rather than putting them here is probably the
+         * best thing to do! */
+
         public static IEnumerator RunActions(AbilityBehaviourData abilitydata, PlayableCard self, Ability ability = new Ability())
         {
             //Plugin.Log.LogInfo($"This behaviour has the trigger: {abilitydata.trigger.triggerType}");
@@ -243,7 +249,7 @@ namespace JLPlugin.Data
                 }
             }
 
-            yield return new WaitForSeconds(0.3f);
+            // yield return new WaitForSeconds(0.3f);
             View OriginalView = Singleton<ViewManager>.Instance.CurrentView;
             Singleton<ViewManager>.Instance.Controller.LockState = ViewLockState.Locked;
 
@@ -350,7 +356,7 @@ namespace JLPlugin.Data
                 }
             }
 
-            yield return new WaitForSeconds(0.6f);
+            // yield return new WaitForSeconds(0.6f);
             Singleton<ViewManager>.Instance.SwitchToView(OriginalView, false, false);
             Singleton<ViewManager>.Instance.Controller.LockState = ViewLockState.Unlocked;
             yield break;
