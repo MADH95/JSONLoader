@@ -35,7 +35,18 @@ namespace JLPlugin.SigilCode
                 string filepath = base.PlayableCard.Info.GetExtendedProperty("JSONFilePath");
                 if (filepath != null)
                 {
-                    CardSerializeInfo cardinfo = JSONParser.FromJson<CardSerializeInfo>(File.ReadAllText(filepath));
+                    /* load from cache first. avoid reading a file and parsing JSON every single
+                     * time this method is called (which will be MULTIPLE TIMES throughout the
+                     * game). >.<;; */
+                    /* if it doesn't exist in cache, *THEN* you can read from the file. */
+                    CardSerializeInfo cardinfo = CachedCardData.Get(filepath); 
+
+                    /* if null, it means it wasn't in cache. in this case, read from file. */
+                    /* i love the '??=' operator so much! > .< */
+                    cardinfo ??= JSONParser.FromJson<CardSerializeInfo>(File.ReadAllText(filepath));
+
+                    /* also, adding the cache stuff actually fixed the null exceptions that kept
+                     * happening in Start(). i don't know... why???? but it did. so. uh. yay!!! */
 
                     if (cardinfo.extensionProperties != null)
                     {
