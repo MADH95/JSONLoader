@@ -28,6 +28,7 @@ namespace JLPlugin.SigilCode
 
         public void Start()
         {
+            Plugin.Log.LogInfo("aaaaaaaaaaaaa :3");
             foreach (AbilityBehaviourData behaviourData in abilityData.abilityBehaviour)
             {
                 behaviourData.TurnsInPlay = 0;
@@ -44,9 +45,6 @@ namespace JLPlugin.SigilCode
                     /* if null, it means it wasn't in cache. in this case, read from file. */
                     /* i love the '??=' operator so much! > .< */
                     cardinfo ??= JSONParser.FromJson<CardSerializeInfo>(File.ReadAllText(filepath));
-
-                    /* also, adding the cache stuff actually fixed the null exceptions that kept
-                     * happening in Start(). i don't know... why???? but it did. so. uh. yay!!! */
 
                     if (cardinfo.extensionProperties != null)
                     {

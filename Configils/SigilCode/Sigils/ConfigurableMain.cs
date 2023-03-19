@@ -127,9 +127,6 @@ namespace JLPlugin.SigilCode
                     /* i love the '??=' operator so much! > .< */
                     cardinfo ??= JSONParser.FromJson<CardSerializeInfo>(File.ReadAllText(filepath));
 
-                    /* also, adding the cache stuff actually fixed the null exceptions that kept
-                     * happening in Start(). i don't know... why???? but it did. so. uh. yay!!! */
-
                     if (cardinfo.extensionProperties != null)
                     {
                         foreach (KeyValuePair<string, string> property in cardinfo.extensionProperties)
