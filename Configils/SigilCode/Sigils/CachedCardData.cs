@@ -1,5 +1,3 @@
-using System;
-using System.Linq;
 using System.Collections.Generic;
 using JLPlugin.V2.Data;
 
@@ -20,5 +18,8 @@ namespace JLPlugin.SigilCode
 
         public static void Add(string filePath, CardSerializeInfo data)
             => CardDataCache[filePath] = data;
+
+        public static bool Contains(string? filePath)
+            => filePath != null && CardDataCache.ContainsKey(filePath);
     }
 }

@@ -40,18 +40,21 @@ namespace JLPlugin.SigilCode
                      * time this method is called (which will be MULTIPLE TIMES throughout the
                      * game). >.<;; */
                     /* if it doesn't exist in cache, *THEN* you can read from the file. */
+                    if (!CachedCardData.Contains(filepath))
+                    {
+                        CachedCardData.Add(
+                                filePath: filepath,
+                                data: JSONParser.FromJson<CardSerializeInfo>(File.ReadAllText(filepath))
+                            );
+                    }
                     CardSerializeInfo cardinfo = CachedCardData.Get(filepath); 
-
-                    /* if null, it means it wasn't in cache. in this case, read from file. */
-                    /* i love the '??=' operator so much! > .< */
-                    cardinfo ??= JSONParser.FromJson<CardSerializeInfo>(File.ReadAllText(filepath));
 
                     if (cardinfo.extensionProperties != null)
                     {
                         foreach (KeyValuePair<string, string> property in cardinfo.extensionProperties)
                         {
                             if (Regex.Matches(property.Key, $"variable: {RegexStrings.Variable}") is var variables
-                            && variables.Cast<Match>().Any(variables => variables.Success))
+                                    && variables.Cast<Match>().Any(variables => variables.Success))
                             {
                                 behaviourData.variables[variables[0].Groups[1].Value] = property.Value;
                             }
