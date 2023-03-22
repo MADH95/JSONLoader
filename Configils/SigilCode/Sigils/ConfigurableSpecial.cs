@@ -13,8 +13,6 @@ using System.Text.RegularExpressions;
 using TinyJson;
 using UnityEngine;
 using static JLPlugin.Interpreter;
-using System.Diagnostics;
-using Debug = System.Diagnostics.Debug;
 
 namespace JLPlugin.SigilCode
 {
@@ -32,14 +30,12 @@ namespace JLPlugin.SigilCode
         {
             /* I think this is what causes the null exceptions! :'3
              * All of my tests point to this. Adding this check for it for now. */
-            Debug.Assert(abilityData != null && abilityData.abilityBehaviour != null);
+            // Debug.Assert(abilityData != null && abilityData.abilityBehaviour != null);
+            if (abilityData?.abilityBehaviour == null) return;
 
             foreach (AbilityBehaviourData behaviourData in abilityData.abilityBehaviour)
             {
-                Debug.Assert(behaviourData != null);
-
                 behaviourData.TurnsInPlay = 0;
-                Plugin.Log.LogInfo("aaaaaaaaa :3");
 
                 string filepath = base.PlayableCard.Info.GetExtendedProperty("JSONFilePath");
                 if (filepath != null)
@@ -64,11 +60,6 @@ namespace JLPlugin.SigilCode
                             if (Regex.Matches(property.Key, $"variable: {RegexStrings.Variable}") is var variables
                                     && variables.Cast<Match>().Any(variables => variables.Success))
                             {
-                                Debug.Assert(
-                                            variables.Count > 0
-                                            && variables[0].Groups.Count > 1
-                                            && variables[0].Groups[1].Value != null
-                                        );
                                 behaviourData.variables[variables[0].Groups[1].Value] = property.Value;
                             }
                         }

@@ -109,6 +109,11 @@ namespace JLPlugin.SigilCode
 
         public void Start()
         {
+            /* adding this since this seems to be the root of the null exceptions
+             * according to Debug.Assert(). ><
+             * read the notes i left on ConfigurableSpecial.Start()! */
+            if (abilityData?.abilityBehaviour == null) return;
+
             foreach (AbilityBehaviourData behaviourData in abilityData.abilityBehaviour)
             {
                 behaviourData.TurnsInPlay = 0;
