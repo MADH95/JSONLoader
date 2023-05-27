@@ -21,5 +21,8 @@ namespace JLPlugin.SigilCode
 
         public static bool Contains(string? filePath)
             => filePath != null && CardDataCache.ContainsKey(filePath);
+
+        public static void Flush()
+            => CardDataCache.Clear();
     }
 }

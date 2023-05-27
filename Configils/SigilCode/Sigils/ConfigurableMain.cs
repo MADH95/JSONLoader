@@ -97,21 +97,10 @@ namespace JLPlugin.SigilCode
         }
 
 
-        /* you're loading and deserializing files whenever Start() is called.
-         * but Start() is called *multiple times* in the game. ><;
-         * whenever a BATTLE starts and a card is played with that sigil, for example
-         * that instantiates this script and calls Start()!!
-         *
-         * there's no need to load the file again each time since the files are basically
-         * guaranteed to not change when the game is already opened.
-         * so instead, you can just cache the file contents and use them like that!
-         * trust me, this is genuinely so much faster. I/O operations are VERY, VERY SLOW!! */
-
         public void Start()
         {
-            /* adding this since this seems to be the root of the null exceptions
-             * according to Debug.Assert(). ><
-             * read the notes i left on ConfigurableSpecial.Start()! */
+            /* Adding this check since this seems to be the root of the null exceptions in Start()!! 
+             * According to Debug.Assert(). >< */
             if (abilityData?.abilityBehaviour == null) return;
 
             foreach (AbilityBehaviourData behaviourData in abilityData.abilityBehaviour)
@@ -121,11 +110,10 @@ namespace JLPlugin.SigilCode
                 string filepath = base.PlayableCard.Info.GetExtendedProperty("JSONFilePath");
                 if (filepath != null)
                 {
-                    /* load from cache first. avoid reading a file and parsing JSON every single
+                    /* Load from cache first. avoid reading a file and parsing JSON every single
                      * time this method is called (which will be MULTIPLE TIMES throughout the
-                     * game). >.<;; */
+                     * game). >< */
                     /* if it doesn't exist in cache, *THEN* you can read from the file. */
-
                     if (!CachedCardData.Contains(filepath))
                     {
                         CachedCardData.Add(
