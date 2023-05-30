@@ -66,7 +66,7 @@ namespace JLPlugin.SigilCode
                         continue;
                     }
 
-                    CardSlot chosenSlot = slotData.GetSlot(buffCards.slot, abilityBehaviour);
+                    CardSlot chosenSlot = slotData.GetSlot(buffCards.slot, abilityBehaviour, false);
                     if (buffCards.slot == null)
                     {
                         chosenSlot = slot;

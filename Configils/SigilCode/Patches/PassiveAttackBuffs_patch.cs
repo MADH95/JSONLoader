@@ -66,7 +66,7 @@ namespace JLPlugin.SigilCode
                         continue;
                     }
 
-                    CardSlot chosenSlot = slotData.GetSlot(buffCards.slot, abilityBehaviour);
+                    CardSlot chosenSlot = slotData.GetSlot(buffCards.slot, abilityBehaviour, false);
                     if (buffCards.slot == null)
                     {
                         chosenSlot = slot;
@@ -80,10 +80,6 @@ namespace JLPlugin.SigilCode
                         if (buffCards.setStats != null)
                         {
                             __result = int.Parse(SigilData.ConvertArgument(buffCards.setStats.Split('/')[0], abilityBehaviour, false)) - slot.Card.Info.Attack;
-                        }
-                        if ((__instance.Info.Health + __result) <= 0)
-                        {
-                            BoardManager.Instance.StartCoroutine(__instance.Die(false));
                         }
                     }
                 }

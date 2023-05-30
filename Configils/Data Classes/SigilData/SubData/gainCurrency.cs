@@ -62,10 +62,12 @@ namespace JLPlugin.Data
                 int foilamount = int.Parse(SigilData.ConvertArgument(abilitydata.gainCurrency.foils, abilitydata));
                 if (foilamount > 0)
                 {
+                    RunState.Run.currency += foilamount;
                     yield return Singleton<CurrencyBowl>.Instance.DropWeightsIn(foilamount);
                 }
                 else if (foilamount < 0)
                 {
+                    RunState.Run.currency -= foilamount;
                     yield return Singleton<CurrencyBowl>.Instance.TakeWeights(foilamount * -1);
                 }
             }

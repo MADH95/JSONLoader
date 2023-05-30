@@ -65,7 +65,7 @@ namespace JLPlugin.SigilCode
                 }
                 else
                 {
-                    base.Card.Anim.LightNegationEffect();
+                    base.PlayableCard.Anim.LightNegationEffect();
                     AudioController.Instance.PlaySound2D("toneless_negate", MixerGroup.GBCSFX, 0.2f, 0f, null, null, null, null, false);
                     yield return new WaitForSeconds(0.25f);
                     yield break;
@@ -77,7 +77,7 @@ namespace JLPlugin.SigilCode
             {
                 if (!Singleton<ResourcesManager>.Instance.HasGem(Gem))
                 {
-                    base.Card.Anim.LightNegationEffect();
+                    base.PlayableCard.Anim.LightNegationEffect();
                     AudioController.Instance.PlaySound2D("toneless_negate", MixerGroup.GBCSFX, 0.2f, 0f, null, null, null, null, false);
                     yield return new WaitForSeconds(0.25f);
                     yield break;
@@ -231,8 +231,8 @@ namespace JLPlugin.SigilCode
                     }
                 }
             }
-            yield return TriggerSigil("OnStruck", new Dictionary<string, object>() { ["AttackerCard"] = attacker }, target);
-            yield return TriggerSigil("OnDamage", new Dictionary<string, object>() { ["VictimCard"] = target }, attacker);
+            yield return TriggerSigil("OnStruck", new Dictionary<string, object>() { ["AttackerCard"] = attacker, ["DamageAmount"] = amount }, target);
+            yield return TriggerSigil("OnDamage", new Dictionary<string, object>() { ["VictimCard"] = target, ["DamageAmount"] = amount }, attacker);
             yield break;
         }
 
@@ -355,10 +355,16 @@ namespace JLPlugin.SigilCode
                     continue;
                 }
 
-                List<PlayableCard> CardsToCheck = (cardToCheck == null) ? Singleton<BoardManager>.Instance.AllSlots.Select(x => x.Card).OfType<PlayableCard>().ToList() : new List<PlayableCard>() { cardToCheck };
-                foreach (PlayableCard card in CardsToCheck)
+                if (behaviourData.trigger.activatesForCardsWithCondition != null && cardToCheck == null)
                 {
-                    yield return TriggerBehaviour(behaviourData, variableList, card);
+                    foreach (PlayableCard card in Singleton<BoardManager>.Instance.AllSlots.Select(x => x.Card).OfType<PlayableCard>().ToList())
+                    {
+                        yield return TriggerBehaviour(behaviourData, variableList, card);
+                    }
+                }
+                else
+                {
+                    yield return TriggerBehaviour(behaviourData, variableList, cardToCheck ?? base.PlayableCard);
                 }
             }
             yield break;
@@ -366,6 +372,13 @@ namespace JLPlugin.SigilCode
 
         public IEnumerator TriggerBehaviour(AbilityBehaviourData behaviourData, Dictionary<string, object> variableList = null, PlayableCard cardToCheck = null)
         {
+            //this is to prevent errors relating to the sigil trying to access
+            //the card that it's on after it has been removed from said card
+            if (base.PlayableCard == null)
+            {
+                yield break;
+            }
+
             SigilData.UpdateVariables(behaviourData, base.PlayableCard);
 
             if (behaviourData.trigger.activatesForCardsWithCondition != null)

@@ -16,6 +16,12 @@ namespace JLPlugin.Data
         public static IEnumerator showMessage(AbilityBehaviourData abilitydata)
         {
             messageData data = abilitydata.showMessage;
+
+            if (SigilData.ConvertArgument(data.runOnCondition, abilitydata) == "false")
+            {
+                continue;
+            }
+
             yield return Singleton<TextDisplayer>.Instance.ShowThenClear(
                 SigilData.ConvertArgument(data.message, abilitydata) ?? "",
                 float.Parse(SigilData.ConvertArgument(data.length, abilitydata) ?? "2"),
