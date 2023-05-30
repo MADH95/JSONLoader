@@ -96,8 +96,13 @@ namespace JLPlugin.SigilCode
             }
         }
 
+
         public void Start()
         {
+            /* Adding this check since this seems to be the root of the null exceptions in Start()!! 
+             * According to Debug.Assert(). >< */
+            if (abilityData?.abilityBehaviour == null) return;
+
             foreach (AbilityBehaviourData behaviourData in abilityData.abilityBehaviour)
             {
                 behaviourData.TurnsInPlay = 0;
@@ -105,14 +110,25 @@ namespace JLPlugin.SigilCode
                 string filepath = base.PlayableCard.Info.GetExtendedProperty("JSONFilePath");
                 if (filepath != null)
                 {
-                    CardSerializeInfo cardinfo = JSONParser.FromJson<CardSerializeInfo>(File.ReadAllText(filepath));
+                    /* Load from cache first. avoid reading a file and parsing JSON every single
+                     * time this method is called (which will be MULTIPLE TIMES throughout the
+                     * game). >< */
+                    /* if it doesn't exist in cache, *THEN* you can read from the file. */
+                    if (!CachedCardData.Contains(filepath))
+                    {
+                        CachedCardData.Add(
+                                filePath: filepath,
+                                data: JSONParser.FromJson<CardSerializeInfo>(File.ReadAllText(filepath))
+                            );
+                    }
+                    CardSerializeInfo cardinfo = CachedCardData.Get(filepath); 
 
                     if (cardinfo.extensionProperties != null)
                     {
                         foreach (KeyValuePair<string, string> property in cardinfo.extensionProperties)
                         {
                             if (Regex.Matches(property.Key, $"variable: {RegexStrings.Variable}") is var variables
-                            && variables.Cast<Match>().Any(variables => variables.Success))
+                                    && variables.Cast<Match>().Any(variables => variables.Success))
                             {
                                 behaviourData.variables[variables[0].Groups[1].Value] = property.Value;
                             }

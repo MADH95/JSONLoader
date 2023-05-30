@@ -20,7 +20,7 @@ namespace JLPlugin.Data
                     continue;
                 }
 
-                yield return new WaitForSeconds(0.3f);
+                // yield return new WaitForSeconds(0.3f);
                 Singleton<ViewManager>.Instance.SwitchToView(View.Default, false, false);
 
                 card cardInfo = drawcardsinfo.card;

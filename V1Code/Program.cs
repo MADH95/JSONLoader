@@ -55,6 +55,7 @@ namespace JLPlugin
                 TribeList.LoadAllTribes();
                 SigilData.LoadAllSigils();
                 CardSerializeInfo.LoadAllJLDR2();
+                SigilCode.CachedCardData.Flush();
                 if (SaveFile.IsAscension)
                 {
                     ReloadKaycees();

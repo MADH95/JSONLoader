@@ -32,7 +32,7 @@ namespace JLPlugin.Data
                     continue;
                 }
 
-                yield return new WaitForSeconds(0.3f);
+                // yield return new WaitForSeconds(0.3f);
                 Singleton<ViewManager>.Instance.SwitchToView(View.Board, false, false);
 
                 PlayableCard card = null;
@@ -121,7 +121,7 @@ namespace JLPlugin.Data
                 }
             }
 
-            yield return new WaitForSeconds(0.3f);
+            // yield return new WaitForSeconds(0.3f);
             yield break;
         }
     }
