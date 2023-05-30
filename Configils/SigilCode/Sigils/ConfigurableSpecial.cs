@@ -50,7 +50,7 @@ namespace JLPlugin.SigilCode
                                 data: JSONParser.FromJson<CardSerializeInfo>(File.ReadAllText(filepath))
                             );
                     }
-                    CardSerializeInfo cardinfo = CachedCardData.Get(filepath); 
+                    CardSerializeInfo cardinfo = CachedCardData.Get(filepath);
 
                     if (cardinfo.extensionProperties != null)
                     {
@@ -160,7 +160,7 @@ namespace JLPlugin.SigilCode
                     }
                 }
             }
-           yield return TriggerSigil("OnStruck", new Dictionary<string, object>() { ["AttackerCard"] = attacker, ["DamageAmount"] = amount }, target);
+            yield return TriggerSigil("OnStruck", new Dictionary<string, object>() { ["AttackerCard"] = attacker, ["DamageAmount"] = amount }, target);
             yield return TriggerSigil("OnDamage", new Dictionary<string, object>() { ["VictimCard"] = target, ["DamageAmount"] = amount }, attacker);
             yield break;
         }
@@ -336,7 +336,7 @@ namespace JLPlugin.SigilCode
                     behaviourData.generatedVariables[variable.Key] = variable.Value;
                 }
             }
-            yield return SigilData.RunActions(behaviourData, base.PlayableCard, ability);
+            yield return SigilData.RunActions(behaviourData, base.PlayableCard);
             yield break;
         }
 

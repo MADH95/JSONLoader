@@ -19,7 +19,7 @@ namespace JLPlugin.Data
 
             if (SigilData.ConvertArgument(data.runOnCondition, abilitydata) == "false")
             {
-                continue;
+                yield break;
             }
 
             yield return Singleton<TextDisplayer>.Instance.ShowThenClear(

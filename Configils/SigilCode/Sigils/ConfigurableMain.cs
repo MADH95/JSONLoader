@@ -121,7 +121,7 @@ namespace JLPlugin.SigilCode
                                 data: JSONParser.FromJson<CardSerializeInfo>(File.ReadAllText(filepath))
                             );
                     }
-                    CardSerializeInfo cardinfo = CachedCardData.Get(filepath); 
+                    CardSerializeInfo cardinfo = CachedCardData.Get(filepath);
 
                     if (cardinfo.extensionProperties != null)
                     {
