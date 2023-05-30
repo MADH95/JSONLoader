@@ -1,4 +1,5 @@
 ﻿using DiskCardGame;
+using InscryptionAPI;
 using System.Collections;
 
 namespace JLPlugin.Data
@@ -9,6 +10,7 @@ namespace JLPlugin.Data
         public string runOnCondition;
         public string bones;
         public string energy;
+        public string maxEnergy;
         public string foils;
 
         public static IEnumerator GainCurrency(AbilityBehaviourData abilitydata)
@@ -25,7 +27,7 @@ namespace JLPlugin.Data
                 {
                     yield return Singleton<ResourcesManager>.Instance.AddBones(boneamount);
                 }
-                if (boneamount < 0)
+                else if (boneamount < 0)
                 {
                     yield return Singleton<ResourcesManager>.Instance.SpendBones(boneamount * -1);
                 }
@@ -37,9 +39,22 @@ namespace JLPlugin.Data
                 {
                     yield return Singleton<ResourcesManager>.Instance.AddEnergy(energyamount);
                 }
-                if (energyamount < 0)
+                else if (energyamount < 0)
                 {
                     yield return Singleton<ResourcesManager>.Instance.SpendEnergy(energyamount * -1);
+                }
+            }
+            if (abilitydata.gainCurrency.maxEnergy != null)
+            {
+                int maxEnergyamount = int.Parse(SigilData.ConvertArgument(abilitydata.gainCurrency.maxEnergy, abilitydata));
+
+                if (maxEnergyamount > 0)
+                {
+                    yield return Singleton<ResourcesManager>.Instance.AddMaxEnergy(maxEnergyamount);
+                }
+                else if (maxEnergyamount < 0) // sketchy, may bug
+                {
+                    Singleton<ResourcesManager>.Instance.PlayerMaxEnergy -= maxEnergyamount;
                 }
             }
             if (abilitydata.gainCurrency.foils != null)
@@ -49,7 +64,7 @@ namespace JLPlugin.Data
                 {
                     yield return Singleton<CurrencyBowl>.Instance.DropWeightsIn(foilamount);
                 }
-                if (foilamount < 0)
+                else if (foilamount < 0)
                 {
                     yield return Singleton<CurrencyBowl>.Instance.TakeWeights(foilamount * -1);
                 }
