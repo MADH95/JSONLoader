@@ -287,6 +287,24 @@ If you want help debugging you can ask in the #jsonloader channel in the [Inscry
 
 <details>
 <summary>Changelog</summary>
+2.4.3
+- actually added the file now
+
+2.4.2
+- readded an important file that i deleted because i thought it wasn't important :P
+
+2.4.1
+- fixed the patchnotes
+
+2.4.0 (configil patchnotes)
+- added a maxEnergy field to gainCurrency (coded by UwUMacaroniTime)
+- made configils run much faster and have better performance (coded by kelly betty)
+- fixed any errors relating to a sigil trying to access the card that it is on after it has died or has been removed from the board
+- fixed the passive trigger spamming the console and cards dying when their attack was set to 0 when using the passive trigger
+- fixed gainCurrency foils only being visual and not actually increasing the foil amount
+- added a [DamageAmount] variable to both OnStruck and OnDamage
+- fixed runOnCondition not working for sendMessage
+- added two new variables [card.TemporaryMods] and [card.AllAbilities]
 
 2.3.0
 - Added talking card support!
