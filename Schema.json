@@ -1,11 +1,13 @@
 {
-  "$schema": "http://json-schema.org/draft-07/schema",
+  "$schema": "http://json-schema.org/draft-04/schema#",
   "$id": "https://github.com/MADH95/JSONLoaderPlugin/blob/master/Schema.json",
   "title": "New Card",
   "Description": "Schema to verify the input data for a new card",
   "type": "object",
   "additionalProperties": false,
-  "required": ["name", "modPrefix"],
+  "required": [
+    "name"
+  ],
   "properties": {
     "name": {
       "description": "A name for the card",
@@ -34,7 +36,7 @@
         "anyOf": [
           {
             "title": "Base Game Metacategory",
-            "description": "The metacategory that the base game provides",
+            "description": "Base Game Metacategory",
             "type": "string",
             "enum": [
               "ChoiceNode",
@@ -48,8 +50,7 @@
           {
             "title": "Mod-Added Metacategory",
             "description": "Format: [Mod GUID].[Metacategory Name]",
-            "type": "string",
-            "pattern": "^([^.]+[.]{1})*([^.])+$"
+            "type": "string"
           }
         ]
       },
@@ -59,13 +60,23 @@
       "description": "How common the card is",
       "default": "Vanilla",
       "type": "string",
-      "enum": ["Vanilla", "Simple", "Intermediate", "Advanced"]
+      "enum": [
+        "Advanced",
+        "Intermediate",
+        "Simple",
+        "Vanilla"
+      ]
     },
     "temple": {
       "description": "Which Scrybe the card belongs to",
       "default": "Nature",
       "type": "string",
-      "enum": ["Nature", "Undead", "Tech", "Wizard"]
+      "enum": [
+        "Nature",
+        "Tech",
+        "Undead",
+        "Wizard"
+      ]
     },
     "baseAttack": {
       "description": "The base attack value of the card",
@@ -82,7 +93,7 @@
     "hideAttackAndHealth": {
       "description": "Hide the attack and health of the card",
       "type": "boolean",
-      "default": false
+      "default": "false"
     },
     "bloodCost": {
       "description": "The sacrifice cost of the card",
@@ -107,7 +118,11 @@
       "type": "array",
       "items": {
         "type": "string",
-        "enum": ["Green", "Orange", "Blue"]
+        "enum": [
+          "Blue",
+          "Green",
+          "Orange"
+        ]
       },
       "uniqueItems": true
     },
@@ -116,23 +131,21 @@
       "anyOf": [
         {
           "title": "Base Game Stat Icon",
-          "description": "The stat icon that the base game provides",
           "type": "string",
           "enum": [
             "Ants",
-            "Bones",
-            "Mirror",
             "Bell",
-            "GreenGems",
+            "Bones",
             "CardsInHand",
+            "GreenGems",
+            "Mirror",
             "SacrificesThisTurn"
           ]
         },
         {
           "title": "Mod-Added Stat Icon",
           "description": "Format: [Mod GUID].[Stat Icon Name]",
-          "type": "string",
-          "pattern": "^([^.]+[.]{1})*([^.])+$"
+          "type": "string"
         }
       ]
     },
@@ -143,22 +156,21 @@
         "anyOf": [
           {
             "title": "Base Game Tribe",
-            "description": "The tribe that the base game provides",
+            "description": "Base Game Tribe",
             "type": "string",
             "enum": [
-              "Squirrel",
               "Bird",
               "Canine",
               "Hooved",
+              "Insect",
               "Reptile",
-              "Insect"
+              "Squirrel"
             ]
           },
           {
             "title": "Mod-Added Tribe",
             "description": "Format: [Mod GUID].[Tribe Name]",
-            "type": "string",
-            "pattern": "^([^.]+[.]{1})*([^.])+$"
+            "type": "string"
           }
         ]
       },
@@ -171,37 +183,36 @@
         "anyOf": [
           {
             "title": "Base Game Tribe",
-            "description": "The tribe that the base game provides",
+            "description": "Base Game Tribe",
             "type": "string",
             "enum": [
+              "Ant",
+              "Bear",
+              "Blind",
+              "DeathcardCreationNonOption",
               "EatsWarrens",
               "FeedsStoat",
-              "LikesHoney",
-              "Wolf",
-              "Bear",
-              "Juvenile",
-              "ProtectsCub",
-              "Undead",
-              "Structure",
-              "Blind",
-              "Ant",
-              "Terrain",
-              "Pelt",
-              "Uncuttable ",
-              "SatisfiesRingTrial",
-              "Giant",
-              "Gem",
               "Fused",
-              "KillsSurvivors",
+              "Gem",
+              "Giant",
               "Goat",
-              "DeathcardCreationNonOption"
+              "Juvenile",
+              "KillsSurvivors",
+              "LikesHoney",
+              "Pelt",
+              "ProtectsCub",
+              "SatisfiesRingTrial",
+              "Structure",
+              "Terrain",
+              "Uncuttable ",
+              "Undead",
+              "Wolf"
             ]
           },
           {
             "title": "Mod-Added Trait",
             "description": "Format: [Mod GUID].[Trait Name]",
-            "type": "string",
-            "pattern": "^([^.]+[.]{1})*([^.])+$"
+            "type": "string"
           }
         ]
       },
@@ -214,43 +225,42 @@
         "anyOf": [
           {
             "title": "Base Game Special Abilities",
-            "description": "The special ability that the base game provides",
+            "description": "Base Game Special Abilities",
             "type": "string",
             "enum": [
+              "Ant",
+              "BellProximity",
+              "BountyHunter",
+              "BrokenCoinLeft",
+              "BrokenCoinRight",
+              "CagedWolf",
+              "CardsInHand",
               "Cat",
+              "Daus",
               "EMPTY3",
               "EMPTY4",
               "EMPTY5",
               "EMPTY6",
-              "Ant",
-              "RandomCard",
-              "Lammergeier",
-              "TalkingCardChooser",
-              "PackMule",
-              "Mirror",
-              "BellProximity",
-              "CagedWolf",
-              "TrapSpawner",
               "GiantCard",
               "GiantMoon",
               "GreenMage",
               "JerseyDevil",
-              "Daus",
-              "BountyHunter",
-              "BrokenCoinLeft",
-              "BrokenCoinRight",
-              "CardsInHand",
+              "Lammergeier",
+              "Mirror",
               "Ouroboros",
-              "Shapeshifter",
+              "PackMule",
+              "RandomCard",
               "SacrificesThisTurn",
-              "SpawnLice"
+              "Shapeshifter",
+              "SpawnLice",
+              "TalkingCardChooser",
+              "TrapSpawner"
             ]
           },
           {
             "title": "Mod-Added Special Abilities",
             "description": "Format: [Mod GUID].[Special Ability Name]",
-            "type": "string",
-            "pattern": "^([^.]+[.]{1})*([^.])+$"
+            "type": "string"
           }
         ]
       },
@@ -263,123 +273,122 @@
         "anyOf": [
           {
             "title": "Base Game Abilities",
-            "description": "The ability that the base game provides",
+            "description": "Base Game Abilities",
             "type": "string",
             "enum": [
               "None",
-              "DrawRabbits",
-              "BeesOnHit",
-              "Strafe",
-              "Deathtouch",
-              "Evolve",
-              "CreateDams",
-              "Tutor",
-              "WhackAMole",
-              "DrawCopy",
-              "TailOnHit",
-              "CorpseEater",
-              "QuadrupleBones",
-              "Submerge",
-              "DrawCopyOnDeath",
-              "Sharp",
-              "StrafePush",
-              "DrawAnt",
-              "GuardDog",
-              "Flying",
-              "Sacrificial",
-              "PreventAttack",
-              "TripleBlood",
-              "Reach",
-              "SplitStrike",
-              "TriStrike",
-              "IceCube",
-              "Sinkhole",
-              "BoneDigger",
-              "RandomConsumable",
-              "SteelTrap",
-              "RandomAbility",
-              "SquirrelOrbit",
-              "AllStrike",
-              "BuffNeighbours",
-              "Brittle",
-              "SkeletonStrafe",
-              "GainGemGreen",
-              "GainGemOrange",
-              "GainGemBlue",
-              "BuffGems",
-              "DropRubyOnDeath",
-              "GemsDraw",
-              "GemDependant",
-              "GainGemTriple",
-              "DrawNewHand",
-              "SquirrelStrafe",
-              "ConduitBuffAttack",
-              "ConduitFactory",
-              "ConduitHeal",
-              "ConduitNull",
-              "GainBattery",
-              "ExplodeOnDeath",
-              "Sniper",
-              "DeathShield",
-              "PermaDeath",
-              "LatchExplodeOnDeath",
-              "LatchBrittle",
-              "LatchDeathShield",
-              "FileSizeDamage",
-              "DeleteFile",
-              "Transformer",
-              "Sentry",
-              "ExplodeGems",
-              "ShieldGems",
-              "DrawVesselOnHit",
-              "ConduitEnergy",
-              "BombSpawner",
-              "DoubleDeath",
-              "ActivatedRandomPowerEnergy",
-              "ActivatedRandomPowerBone  ",
-              "ActivatedStatsUp",
-              "SwapStats",
-              "ActivatedDrawSkeleton",
               "ActivatedDealDamage",
-              "CreateBells",
-              "BuffEnemy",
-              "ConduitSpawnGems",
-              "DrawRandomCardOnDeath",
-              "Loot",
-              "ActivatedSacrificeDrawCards",
-              "ActivatedStatsUpEnergy",
+              "ActivatedDrawSkeleton",
+              "ActivatedEnergyToBones",
               "ActivatedHeal",
-              "DebuffEnemy",
+              "ActivatedRandomPowerBone  ",
+              "ActivatedRandomPowerEnergy",
+              "ActivatedSacrificeDrawCards",
+              "ActivatedStatsUp",
+              "ActivatedStatsUpEnergy",
+              "AllStrike",
+              "Apparition",
+              "BeesOnHit",
+              "BloodGuzzler",
+              "BombSpawner",
+              "BoneDigger",
+              "Brittle",
+              "BuffEnemy",
+              "BuffGems",
+              "BuffNeighbours",
               "CellBuffSelf",
               "CellDrawRandomCardOnDeath",
               "CellTriStrike",
-              "ActivatedEnergyToBones",
-              "MoveBeside",
-              "SubmergeSquid",
-              "BloodGuzzler",
-              "Haunter",
-              "ExplodingCorpse",
-              "Apparition",
-              "VirtualReality",
-              "EdaxioHead",
+              "ConduitBuffAttack",
+              "ConduitEnergy",
+              "ConduitFactory",
+              "ConduitHeal",
+              "ConduitNull",
+              "ConduitSpawnGems",
+              "CorpseEater",
+              "CreateBells",
+              "CreateDams",
+              "CreateEgg",
+              "DeathShield",
+              "Deathtouch",
+              "DebuffEnemy",
+              "DeleteFile",
+              "DoubleDeath",
+              "DoubleStrike",
+              "DrawAnt",
+              "DrawCopy",
+              "DrawCopyOnDeath",
+              "DrawNewHand",
+              "DrawRabbits",
+              "DrawRandomCardOnDeath",
+              "DrawVesselOnHit",
+              "DropRubyOnDeath",
               "EdaxioArms",
+              "EdaxioHead",
               "EdaxioLegs",
               "EdaxioTorso",
-              "CreateEgg",
-              "DoubleStrike",
-              "OpponentBones",
-              "StrafeSwap",
-              "Morsel",
+              "Evolve",
+              "ExplodeGems",
+              "ExplodeOnDeath",
+              "ExplodingCorpse",
+              "FileSizeDamage",
+              "Flying",
               "GainAttackOnKill",
+              "GainBattery",
+              "GainGemBlue",
+              "GainGemGreen",
+              "GainGemOrange",
+              "GainGemTriple",
+              "GemDependant",
+              "GemsDraw",
+              "GuardDog",
+              "Haunter",
+              "HydraEgg",
+              "IceCube",
+              "LatchBrittle",
+              "LatchDeathShield",
+              "LatchExplodeOnDeath",
+              "Loot",
               "MadeOfStone",
-              "HydraEgg"
+              "Morsel",
+              "MoveBeside",
+              "OpponentBones",
+              "PermaDeath",
+              "PreventAttack",
+              "QuadrupleBones",
+              "RandomAbility",
+              "RandomConsumable",
+              "Reach",
+              "Sacrificial",
+              "Sentry",
+              "Sharp",
+              "ShieldGems",
+              "Sinkhole",
+              "SkeletonStrafe",
+              "Sniper",
+              "SplitStrike",
+              "SquirrelOrbit",
+              "SquirrelStrafe",
+              "SteelTrap",
+              "Strafe",
+              "StrafePush",
+              "StrafeSwap",
+              "Submerge",
+              "SubmergeSquid",
+              "SwapStats",
+              "TailOnHit",
+              "Transformer",
+              "TriStrike",
+              "TripleBlood",
+              "Tutor",
+              "VirtualReality",
+              "WhackAMole"
             ]
           },
           {
             "title": "Mod-Added Abilities",
             "description": "Format: [Mod GUID].[Ability Name]",
-            "type": "string",
-            "pattern": "^([^.]+[.]{1})*([^.])+$"
+            "type": "string"
           }
         ]
       },
@@ -404,8 +413,7 @@
     },
     "tailLostPortrait": {
       "description": "The .png file that contains the portrait that will replace this card's portrait if it loses its tail",
-      "type": "string",
-      "pattern": "^[a-zA-Z\\d_]+.png$"
+      "type": "string"
     },
     "iceCubeName": {
       "description": "The name of the card that will be generated if this card has or gains the IceCube ability",
@@ -414,7 +422,7 @@
     "flipPortraitForStrafe": {
       "description": "determines if the card art is flipped when the card changes it's strafe direction",
       "type": "boolean",
-      "default": false
+      "default": "false"
     },
     "onePerDeck": {
       "description": "determines if the card should be limited to 1 per deck",
@@ -428,67 +436,66 @@
         "anyOf": [
           {
             "title": "Base Game Appearances",
-            "description": "The appearance that the base game provides",
+            "description": "Base Game Appearances",
             "type": "string",
             "enum": [
-              "StaticGlitch",
-              "FullCardPortrait",
-              "TerrainBackground",
-              "RareCardColors",
               "AddSnelkDecals",
-              "AnimatedPortrait",
-              "GoldEmission",
-              "RareCardBackground",
               "AlternatingBloodDecal",
-              "TerrainLayout",
+              "AnimatedPortrait",
               "DynamicPortrait",
+              "FullCardPortrait",
               "GiantAnimatedPortrait",
+              "GoldEmission",
               "HologramPortrait",
-              "SexyGoat"
+              "RareCardBackground",
+              "RareCardColors",
+              "SexyGoat",
+              "StaticGlitch",
+              "TerrainBackground",
+              "TerrainLayout"
             ]
           },
           {
             "title": "Mod-Added Appearances",
             "description": "Format: [Mod GUID].[Appearance Name]",
-            "type": "string",
-            "pattern": "^([^.]+[.]{1})*([^.])+$"
+            "type": "string"
           }
         ]
       },
       "uniqueItems": true
     },
     "texture": {
-      "description": "The image to use for the card art",
+      "description": "The image to use for the card art   Size:114x94",
       "type": "string",
       "pattern": "^[a-zA-Z\\d_]+.png$"
     },
     "emissionTexture": {
-      "description": "The emission texture the card uses when a sigil is sacrificed on it",
+      "description": "The emission texture the card uses when a sigil is sacrificed on it   Size:114x94",
       "type": "string",
       "pattern": "^[a-zA-Z\\d_]+.png$"
     },
     "altTexture": {
-      "description": "The alternate image to use for the card art (used by specific abilities only)",
+      "description": "The alternate image to use for the card art (used by specific abilities only)   Size:114x94",
       "type": "string",
       "pattern": "^[a-zA-Z\\d_]+.png$"
     },
     "altEmissionTexture": {
-      "description": "The emission texture the card uses when a sigil is sacrificed on it and the card is displaying the alternate art",
+      "description": "The emission texture the card uses when a sigil is sacrificed on it and the card is displaying the alternate art   Size:114x94",
       "type": "string",
       "pattern": "^[a-zA-Z\\d_]+.png$"
     },
     "pixelTexture": {
-      "description": "The image to use for the card art",
+      "description": "The image to use for the card art   Size:41x28",
       "type": "string",
       "pattern": "^[a-zA-Z\\d_]+.png$"
     },
     "titleGraphic": {
-      "description": "The image to use for the card title (e.g., tentacle card titles)",
+      "description": "The image to use for the card title (e.g., tentacle card titles)   Size:123x28",
       "type": "string",
       "pattern": "^[a-zA-Z\\d_]+.png$"
     },
     "decals": {
-      "description": "An array of decals to add to the card",
+      "description": "An array of decals to add to the card   Size: 125x190",
       "type": "array",
       "items": {
         "description": "The path for the decal",
