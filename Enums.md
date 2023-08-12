@@ -1,5 +1,8 @@
+___
+# Vanilla
 
-### Meta Categories
+___
+## Meta Categories
 |Value | Description |
 |-|-|
 | ChoiceNode | Defines the card to be a choice option |
@@ -8,8 +11,27 @@
 | Part3Random | Can show up as card from the Loot sigil |
 | Rare | Defines the card to be rare |
 | TraderOffer | Can show up at the trader in act 1 |
+| Part1Rulebook | Adds the sigil to the act 1 rulebook. |
+| Part1Modular | Allows the sigil to appear on totems, Wolf Pelt trades and Cave Trial rewards. |
+| Part3Rulebook | Adds the sigil to the act 3 rulebook. |
+| Part3Modular | Allows the sigil to appear in the Upgrade node in act 3. |
+| Part3BuildACard | Allows the sigil to be chosen in the Build-A-Bot node in act 3. |
+| BountyHunter | Allows the sigil to appear on act 3 Bounty Hunter cards. |
+| GrimoraRulebook | Adds the sigil to the rulebook in Grimora’s part of Finale. |
+| MagnificusRulebook | Adds the sigil to the rulebook in Magnificus’ part of Finale. |
+
 ___
-### Complexity
+## Power Levels
+| Event | Power Levels | Info |
+| - | - | - |
+| Cave Trial | 0-5 | If you want your sigil to appear on the Cave Trial rewards |
+| Totems | 0-7 | If you want your sigil to appear on totems |
+| Prospector | 0-5 | If you want your sigil to appear on Insect cards from the Prospector node |
+| Trader | 0-5 | If you want your sigil to appear on Wolf Pelt trades |
+| Amorphous | 0-5 | If you want the Amorphous sigil to be able to pick your sigil as one of the options |
+
+___
+## Complexity
 |Value | Description |
 |-|-|
 | Vanilla | Will always be a learned card |
@@ -17,7 +39,7 @@ ___
 | Intermediate | Will only be unlocked after tutorial |
 | Advanced | Will only be unlocked after tutorial |
 ___
-### Temple
+## Temple
 |Value | Description |
 |-|-|
 | Nature | Will show up in act 1 and be in Beast card packs |
@@ -25,14 +47,14 @@ ___
 | Tech | Will show up in act 3 and Tech card packs          |
 | Wizard | Will show up in Wizard card packs                |
 ___
-### GemType
+## GemType
 |Value |
 |-|
 |Blue  |
 |Green |
 |Orange|
 ___
-### SpecialIcon
+## SpecialIcon
 |Value | Description |
 |-|-|
 |Ants | Displays the Ants icon for the cards attack                           |
@@ -42,7 +64,7 @@ ___
 |GreenGems | Displays the Green Mox icon for of cards attack                  |
 |Mirror | Displays the Mirror icon for the cards attack                       |
 ___
-### Tribe
+## Tribe
 |Value |
 |-|
 | Bird     |
@@ -52,7 +74,7 @@ ___
 | Reptile  |
 | Squirrel |
 ___
-### Trait
+## Trait
 |Value | Description |
 |-|-|
 |Ant | Will increase the attack of cards with the Ant special ability                                                                                                                            |
@@ -77,7 +99,7 @@ ___
 |Undead | Unused                                                                                                                                                                                 |
 |Wolf | Unused                                                                                                                                                                                   |
 ___
-### SpecialAbilities
+## SpecialAbilities
 |Value | Description |
 |-|-|
 |Ant | Increases cards attack by 1 for each card with ant trait on the board                                                                                                                               |
@@ -105,7 +127,7 @@ ___
 |TalkingCardChooser | Exclusive to talking cards.                                                                                                                                                           |
 |TrapSpawner | Creates a Steel Trap in its place after it perishes.                                                                                                                                       |
 ___
-### Abilities
+## Abilities
 |Value | Description |                              
 |-|-|                                               
 |ActivatedDealDamage | When activated for 1 energy, deals 1 damage to opposing card                  |
@@ -213,22 +235,36 @@ ___
 |Tutor | When played, you can choose a card in your deck to add to your hand                                    |
 |VirtualReality | Unused                   |
 |WhackAMole | When an empty slot is attacked, will move to that slot                              |
+
 ___
-### AppearanceBehaviour
+## Vanilla Appearance Behaviour
+  
 |Value | Description |                              
 |-|-|                                                                                                                                     
-|AddSnelkDecals | Unused                                                                                          |
-|AlternatingBloodDecal | Renders card with blood decals                                                        |
-|AnimatedPortrait | Used for animated portraits                                                                                                |
-|DynamicPortrait | Renders the card's animated portrait (differently)                                                                                       |
-|FullCardPortrait | Renders the card with no stats        |
-|GiantAnimatedPortrait | Used for animated portraits on giant cards                                                                                 |
-|GoldEmission | Renders the card with gold layout                                                                                                  |
-|HologramPortrait | Renders portrait as hologram                                                                                             |
-|RareCardBackground |  Renders card with rare background                                                                                  |
-|RareCardColors | Renders card with inverted colours                                                                                                    |
-|RedEmission | Makes emission glow red |
+|AddSnelkDecals | Cycles through the Base Games Long Elk Decals. |
+|AlternatingBloodDecal | Renders card with blood decals |
+|AnimatedPortrait | Used for animated portraits |
+|DynamicPortrait | Renders the card's animated portrait (differently) |
+|FullCardPortrait | Renders the card with no stats |
+|GiantAnimatedPortrait | Used for animated portraits on giant cards |
+|GoldEmission | Renders the card with gold layout |
+|HologramPortrait | Renders portrait as hologram |
+|RareCardBackground |  Renders card with rare background |
+|RareCardColors | Renders card with inverted colours |
 |SexyGoat | Renders alternate texture if you have the goat's eyeball |
-|StaticGlitch | Renders the card with the static animation                                                                                          |
-|TerrainBackground | Renders the card with terrain border                                                                               |
-|TerrainLayout | Renders card with terrain card layout                                                                                                 |
+|StaticGlitch | Renders the card with the static animation |
+|TerrainBackground | Renders the card with terrain border |
+|TerrainLayout | Renders card with terrain card layout |
+|RedEmission | Does the Ijiraq emission effect |
+|DefaultEmission | Emissions are on cards by default. |
+
+___
+## Regions
+| Region | Description |
+| - | - |
+| Alpine | This is The Trappers Region |
+| Forest | This is The Prospectors Region |
+| Midnight | This is Leshy's area in ACT 1. |
+| Midnight_Ascension | This is Leshy's area in KCM |
+| Pirateville | This is Royal's area |
+| Wetlands | This is Anglers Area |
