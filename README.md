@@ -256,6 +256,54 @@ You should put your mod's prefix in the "Prefix" field. You can add as many trac
 
 "Volume" should be the volume of your track, from 0 to 1, where 0 is silence and 1 is full volume. If you want your track to be at half volume, for example, you can put 0.5 in the Volume field.
 
+
+## Localization
+
+If you want to translate your cards into other languages, add the language suffix to the end of the field name. 
+
+For example, if you want to translate the *displayedName* field into French, you would add a *displayedName_fr* field to your card. 
+
+The supported language suffixes are listed in the table below.
+
+| Suffix | Language          |
+|------|-------------------|
+| fr   | French            |
+| it   | Italian           |
+| de  | German            |
+| es  | Spanish           |
+| pt  | Portuguese        |
+| tr  | Turkish           |
+| ru  | Russian           |
+| ja  | Japanese          |
+| ko  | Korean            |
+| zhcn | Chinese (Simplified)|
+| zhtw | Chinese (Traditional)|
+
+**Example:**
+```json
+{
+  "name": "JSON_SuperHypeMan", 
+  "modPrefix": "ExampleMod", 
+  "baseAttack": 6, 
+  "baseHealth": 9, 
+  "displayedName": "Super Hype Man", 
+  "displayedName_fr": "Super Animateur", 
+  "displayedName_it": "Super Uomo dell'Eccitazione", 
+  "displayedName_de": "Super Stimmungsmacher", 
+  "displayedName_es": "Super Animador", 
+  "displayedName_pt": "Super Animador", 
+  "description_tr": "Süper Coşku Adamı", 
+  "description_ru": "Супер Человек-Аниматор", 
+  "description_ja": "スーパーハイプマン", 
+  "description_ko": "슈퍼 하이프 맨", 
+  "description_zhcn": "超级炒作男", 
+  "description_zhtw": "超級炒作男"
+}
+```
+
+
+
+
 ## Debugging
 The easiest way to check if the plugin is working properly or to debug an error is to enable the console. This can be done by changing
 ```

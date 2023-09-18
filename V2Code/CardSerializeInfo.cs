@@ -9,6 +9,7 @@ using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using InscryptionAPI.Localizing;
 using TinyJson;
 using UnityEngine;
 
@@ -17,6 +18,7 @@ namespace JLPlugin.V2.Data
     public class CardSerializeInfo
     {
         public const string DEFAULT_MOD_PREFIX = "JSON";
+        private static FieldInfo[] PUBLIC_FIELD_INFOS = typeof(CardSerializeInfo).GetFields(BindingFlags.Instance | BindingFlags.Public);
 
         public string name;
 
@@ -25,6 +27,30 @@ namespace JLPlugin.V2.Data
         public string[] decals;
 
         public string displayedName;
+        public string displayedName_fr;
+        public string displayedName_it;
+        public string displayedName_de;
+        public string displayedName_es;
+        public string displayedName_pt;
+        public string displayedName_tr;
+        public string displayedName_ru;
+        public string displayedName_ja;
+        public string displayedName_ko;
+        public string displayedName_zhcn;
+        public string displayedName_zhtw;
+
+        public string description;
+        public string description_fr;
+        public string description_it;
+        public string description_de;
+        public string description_es;
+        public string description_pt;
+        public string description_tr;
+        public string description_ru;
+        public string description_ja;
+        public string description_ko;
+        public string description_zhcn;
+        public string description_zhtw;
 
         public int? baseAttack;
 
@@ -53,8 +79,6 @@ namespace JLPlugin.V2.Data
         public string temple;
 
         public string titleGraphic;
-
-        public string description;
 
         public bool? hideAttackAndHealth;
 
@@ -117,8 +141,7 @@ namespace JLPlugin.V2.Data
             if (this.decals != null && this.decals.Length > 0)
                 card.AddDecal(this.decals);
 
-            if (!string.IsNullOrEmpty(this.displayedName))
-                card.displayedName = this.displayedName;
+            ApplyLocalisations(card);
 
             if (this.baseAttack.HasValue)
                 card.baseAttack = this.baseAttack.Value;
@@ -161,9 +184,6 @@ namespace JLPlugin.V2.Data
 
             if (!string.IsNullOrEmpty(this.titleGraphic))
                 card.titleGraphic = TextureHelper.GetImageAsTexture(this.titleGraphic);
-
-            if (!string.IsNullOrEmpty(this.description))
-                card.description = this.description;
 
             if (this.hideAttackAndHealth.HasValue)
                 card.hideAttackAndHealth = this.hideAttackAndHealth.Value;
@@ -222,6 +242,51 @@ namespace JLPlugin.V2.Data
             card.SetExtendedProperty("JSONFilePath", this.filePath);
         }
 
+        private void ApplyLocalisations(CardInfo card)
+        {
+            ApplyLocaleField("displayedName", displayedName, out card.displayedName);
+            ApplyLocaleField("description", description, out card.description);
+        }
+
+        private void ApplyLocaleField(string field, string englishValue, out string cardInfoEnglishField)
+        {
+            // English
+            cardInfoEnglishField = englishValue;
+            
+            // Go through our public fields and look for a field with the same prefix
+            // Get what code it should be and apply that
+            for (int i = 0; i < PUBLIC_FIELD_INFOS.Length; i++)
+            {
+                FieldInfo fieldInfo = PUBLIC_FIELD_INFOS[i];
+                string fieldName = fieldInfo.Name;
+                if (!fieldName.StartsWith(field, StringComparison.Ordinal))
+                    continue;
+
+                string translatedValue = fieldInfo.GetValue(this) as string;
+                if (string.IsNullOrEmpty(translatedValue))
+                    continue;
+                
+                int indexOf = fieldName.LastIndexOf("_", StringComparison.Ordinal);
+                if (indexOf >= 0)
+                {
+                    // Translations
+                    int length = fieldName.Length - indexOf - 1;
+                    string code = fieldName.Substring(indexOf + 1, length);
+                    Language language = LocalizationManager.CodeToLanguage(code);
+                    if (language < Language.NUM_LANGUAGES)
+                    {
+                        Plugin.Log.LogDebug($"{displayedName} has translation for {field} in {language} with {translatedValue}");
+                        LocalizationManager.New(Plugin.PluginGuid, null, englishValue, translatedValue, language);
+                    }
+                    else
+                    {
+                        Plugin.Log.LogDebug($"Unknown language code {code} for card {displayedName} in field {field}");
+                    }
+                }
+            }
+        }
+
+        
         internal void Apply(bool UpdateCard = false)
         {
             if (string.IsNullOrEmpty(this.name))
@@ -311,7 +376,7 @@ namespace JLPlugin.V2.Data
         {
             string retval = "{\n";
 
-            foreach (FieldInfo field in this.GetType().GetFields(BindingFlags.Instance | BindingFlags.Public))
+            foreach (FieldInfo field in PUBLIC_FIELD_INFOS)
             {
                 if (field.FieldType == typeof(string))
                 {
