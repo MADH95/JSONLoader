@@ -8,6 +8,7 @@ using JLPlugin.Data;
 using JLPlugin.V2.Data;
 using JSONLoader.Data;
 using System.Linq;
+using JSONLoader.V2Code;
 using UnityEngine;
 
 namespace JLPlugin
@@ -44,6 +45,7 @@ namespace JLPlugin
             Data.EncounterData.LoadAllEncounters();
             StarterDeckList.LoadAllStarterDecks();
             GramophoneData.LoadAllGramophone();
+            LanguageData.LoadAllLanguages();
             JSONLoader.Data.TalkingCards.LoadTalkingCards.InitAndLoad();
             // ^ Ambiguity between JSONLoader.Data and JLPlugin.Data is annoying. = u= -Kelly
         }
