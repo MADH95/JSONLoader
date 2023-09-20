@@ -29,7 +29,9 @@ namespace JLPlugin
 
         private static List<string> GetAllJLDRFiles()
         {
-            return new List<string>(Directory.EnumerateFiles(Paths.PluginPath, ".*\\.(jldr|jldr2)$", SearchOption.AllDirectories));
+            return Directory.GetFiles(Paths.PluginPath, "*.jldr*", SearchOption.AllDirectories)
+                .Where((a)=> a.EndsWith(".jldr") || a.EndsWith(".jldr2"))
+                .ToList();
         }
         
         private void Awake()
