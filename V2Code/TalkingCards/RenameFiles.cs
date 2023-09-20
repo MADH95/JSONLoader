@@ -26,7 +26,9 @@ namespace JSONLoader.Data.TalkingCards
 
         internal static void Rename(string filePath)
         {
-            if (!filePath.EndsWith("_talk.json")) return;
+            if (!filePath.EndsWith("_talk.json")) 
+                return;
+            
             string noExtension = filePath.Substring(0, filePath.Length - ".json".Length);
             string newFilePath = $"{noExtension}.jldr2";
 

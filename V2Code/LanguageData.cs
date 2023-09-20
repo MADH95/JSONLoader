@@ -28,18 +28,25 @@ namespace JSONLoader.V2Code
         public string StringTablePath;
         public List<Fonts> FontReplacementPaths;
         
-        public static void LoadAllLanguages()
+        public static void LoadAllLanguages(List<string> files)
         {
-            foreach (string file in Directory.EnumerateFiles(Paths.PluginPath, "*_language.jldr2", SearchOption.AllDirectories))
+            for (int index = 0; index < files.Count; index++)
             {
+                string file = files[index];
                 string filename = file.Substring(file.LastIndexOf(Path.DirectorySeparatorChar) + 1);
+                if (!filename.EndsWith("_language.jldr2")) 
+                    continue;
+                
+                files.RemoveAt(index--);
+                
                 Plugin.Log.LogDebug($"Loading JLDR2 (language) {filename}");
                 LanguageData languageInfo = JSONParser.FromJson<LanguageData>(File.ReadAllText(file));
 
                 string stringTablePath = languageInfo.StringTablePath;
                 if (!TryGetFullPath(stringTablePath, out stringTablePath))
                 {
-                    Plugin.Log.LogError($"Could not load language. Could not find string table with name {languageInfo.StringTablePath}!");
+                    Plugin.Log.LogError(
+                        $"Could not load language. Could not find string table with name {languageInfo.StringTablePath}!");
                     return;
                 }
 
@@ -52,28 +59,32 @@ namespace JSONLoader.V2Code
                     {
                         if (!TryGetFullPath(replacement.AssetBundlePath, out string abPath))
                         {
-                            Plugin.Log.LogWarning($"Could not load font replacement. Could not find file with name {replacement.AssetBundlePath}!");
+                            Plugin.Log.LogWarning(
+                                $"Could not load font replacement. Could not find file with name {replacement.AssetBundlePath}!");
                             continue;
                         }
 
                         AssetBundle bundle = AssetBundle.LoadFromFile(abPath);
                         if (bundle == null)
                         {
-                            Plugin.Log.LogWarning($"Could not load asset bundle at path '{abPath}'. Skipping font replacement!");
+                            Plugin.Log.LogWarning(
+                                $"Could not load asset bundle at path '{abPath}'. Skipping font replacement!");
                             continue;
                         }
 
                         Font font = bundle.LoadAsset<Font>(replacement.FontAssetName);
                         if (font == null)
                         {
-                            Plugin.Log.LogWarning($"Could not load FontAssetName asset from bundle with name '{replacement.FontAssetName}'. Skipping font replacement!");
+                            Plugin.Log.LogWarning(
+                                $"Could not load FontAssetName asset from bundle with name '{replacement.FontAssetName}'. Skipping font replacement!");
                             continue;
                         }
 
                         TMP_FontAsset asset = bundle.LoadAsset<TMP_FontAsset>(replacement.TMPFontAssetName);
                         if (asset == null)
                         {
-                            Plugin.Log.LogWarning($"Could not load TMPFontAssetName asset from bundle with name '{replacement.TMPFontAssetName}'. Skipping font replacement!");
+                            Plugin.Log.LogWarning(
+                                $"Could not load TMPFontAssetName asset from bundle with name '{replacement.TMPFontAssetName}'. Skipping font replacement!");
                             continue;
                         }
 

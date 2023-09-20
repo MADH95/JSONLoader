@@ -1,4 +1,6 @@
-﻿using BepInEx;
+﻿using System.Collections.Generic;
+using System.IO;
+using BepInEx;
 using BepInEx.Configuration;
 using BepInEx.Logging;
 using DiskCardGame;
@@ -20,43 +22,56 @@ namespace JLPlugin
         public const string PluginGuid = "MADH.inscryption.JSONLoader";
         public const string PluginName = "JSONLoader";
         public const string PluginVersion = "2.4.0";
-
+        
         internal static ConfigEntry<bool> betaCompatibility;
 
         internal static ManualLogSource Log;
+
+        private static List<string> GetAllJLDRFiles()
+        {
+            return new List<string>(Directory.EnumerateFiles(Paths.PluginPath, ".*\\.(jldr|jldr2)$", SearchOption.AllDirectories));
+        }
+        
         private void Awake()
         {
             Logger.LogInfo($"Loaded {PluginName}!");
-            Log = base.Logger;
+            Log = Logger;
             Harmony harmony = new(PluginGuid);
             harmony.PatchAll();
             betaCompatibility = Config.Bind("JSONLoader", "JDLR Backwards Compatibility", true, "Set to true to enable old-style JSON files (JLDR) to be read and converted to new-style files (JLDR2)");
             Log.LogWarning("Note: JSONLoader now uses .jldr2 files, not .json files.");
+
+            List<string> files = GetAllJLDRFiles();
             if (betaCompatibility.Value)
                 Log.LogWarning("Note: Backwards compatibility has been enabled. Old *.jldr files will be converted to *.jldr2 automatically. This will slow down your game loading!");
             if (betaCompatibility.Value)
-                Utils.JLUtils.LoadCardsFromFiles();
+                Utils.JLUtils.LoadCardsFromFiles(files);
 
-            Plugin.Log.LogDebug(string.Join(", ", RegionManager.AllRegionsCopy.Select(x => x.name)));
+            Log.LogDebug(string.Join(", ", RegionManager.AllRegionsCopy.Select(x => x.name)));
 
-            TribeList.LoadAllTribes();
-            SigilData.LoadAllSigils();
-            CardSerializeInfo.LoadAllJLDR2();
-            Data.EncounterData.LoadAllEncounters();
-            StarterDeckList.LoadAllStarterDecks();
-            GramophoneData.LoadAllGramophone();
-            LanguageData.LoadAllLanguages();
+            LoadAll(files);
+        }
+
+        public void LoadAll(List<string> files)
+        {
+            TribeList.LoadAllTribes(files);
+            SigilData.LoadAllSigils(files);
+            Data.EncounterData.LoadAllEncounters(files);
+            StarterDeckList.LoadAllStarterDecks(files);
+            GramophoneData.LoadAllGramophone(files);
+            LanguageData.LoadAllLanguages(files);
             JSONLoader.Data.TalkingCards.LoadTalkingCards.InitAndLoad();
             // ^ Ambiguity between JSONLoader.Data and JLPlugin.Data is annoying. = u= -Kelly
+            
+            CardSerializeInfo.LoadAllJLDR2(files); // Expects the lsit to only have cards at this stage
         }
 
         public void Update()
         {
             if ((Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift)) && Input.GetKeyDown(KeyCode.R))
             {
-                TribeList.LoadAllTribes();
-                SigilData.LoadAllSigils();
-                CardSerializeInfo.LoadAllJLDR2();
+                List<string> files = GetAllJLDRFiles();
+                LoadAll(files);
                 SigilCode.CachedCardData.Flush();
                 if (SaveFile.IsAscension)
                 {

@@ -10,6 +10,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using InscryptionAPI.Localizing;
+using JSONLoader.V2Code;
 using TinyJson;
 using UnityEngine;
 
@@ -362,7 +363,7 @@ namespace JLPlugin.V2.Data
             }
         }
 
-        internal void WriteToFile(string filename, bool overwrite = true)
+        internal string WriteToFile(string filename, bool overwrite = true)
         {
             Plugin.Log.LogDebug($"Writing card {this.name ?? "Unnamed"} to {filename}");
             if (!filename.EndsWith("2")) // we now play with jldr2 files
@@ -370,6 +371,8 @@ namespace JLPlugin.V2.Data
 
             if (overwrite || !File.Exists(filename))
                 File.WriteAllText(filename, this.ToJSON());
+
+            return filename;
         }
 
         private string ToJSON()
@@ -418,10 +421,15 @@ namespace JLPlugin.V2.Data
             return retval;
         }
 
-        public static void LoadAllJLDR2(bool UpdateCards = false)
+        /// <summary>
+        /// Assumes files is only cards
+        /// </summary>
+        /// <param name="files"></param>
+        public static void LoadAllJLDR2(List<string> files)
         {
-            foreach (string file in Directory.EnumerateFiles(Paths.PluginPath, "*.jldr2", SearchOption.AllDirectories))
+            for (var index = 0; index < files.Count; index++)
             {
+                string file = files[index];
                 string filename = file.Substring(file.LastIndexOf(Path.DirectorySeparatorChar) + 1);
 
                 if (filename.Contains("_example.jldr"))
@@ -429,24 +437,14 @@ namespace JLPlugin.V2.Data
                     Plugin.Log.LogDebug($"Skipping {filename}");
                     continue;
                 }
+                files.RemoveAt(index--);
 
-                if (filename.EndsWith("_encounter.jldr2") || 
-                    filename.EndsWith("_tribe.jldr2") || 
-                    filename.EndsWith("_sigil.jldr2") || 
-                    filename.EndsWith("_deck.jldr2") || 
-                    filename.EndsWith("_gram.jldr2") || 
-                    filename.EndsWith("_language.jldr2") || 
-                    filename.EndsWith("_talk.jldr2"))
-                {
-                    continue;
-                }
-
-                Plugin.Log.LogDebug($"Loading JLDR2 {filename}");
+                Plugin.Log.LogDebug($"Loading JLDR2 Card {filename}");
                 try
                 {
                     CardSerializeInfo cardInfo = JSONParser.FromJson<CardSerializeInfo>(File.ReadAllText(file));
                     cardInfo.filePath = file;
-                    cardInfo.Apply(UpdateCards);
+                    cardInfo.Apply();
                     Plugin.Log.LogDebug($"Loaded JSON card {cardInfo.name}");
                 }
                 catch (Exception ex)
@@ -456,5 +454,6 @@ namespace JLPlugin.V2.Data
                 }
             }
         }
+
     }
 }

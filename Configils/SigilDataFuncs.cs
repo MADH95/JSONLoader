@@ -115,12 +115,18 @@ namespace JLPlugin.Data
             return SigilDicts.SpecialArgumentList.TryGetValue(ability, out data) ? data.Item2 : null;
         }
 
-        public static void LoadAllSigils()
+        public static void LoadAllSigils(List<string> files)
         {
-            foreach (string file in Directory.EnumerateFiles(Paths.PluginPath, "*_sigil.jldr2", SearchOption.AllDirectories))
+            for (int index = 0; index < files.Count; index++)
             {
+                string file = files[index];
                 string filename = file.Substring(file.LastIndexOf(Path.DirectorySeparatorChar) + 1);
 
+                if (!filename.EndsWith("_sigil.jldr2"))
+                    continue;
+                
+                files.RemoveAt(index--);
+                
                 Plugin.Log.LogDebug($"Loading JLDR2 (sigil) {filename}");
                 SigilData sigilInfo = JSONParser.FromJson<SigilData>(File.ReadAllText(file));
                 sigilInfo.GenerateNew();
