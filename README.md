@@ -263,7 +263,7 @@ If you want to translate your cards into other languages, add the language suffi
 
 For example, if you want to translate the *displayedName* field into French, you would add a *displayedName_fr* field to your card. 
 
-**Example:**
+### Card localisation
 ```json
 {
   "name": "JSON_SuperHypeMan", 
@@ -282,6 +282,29 @@ For example, if you want to translate the *displayedName* field into French, you
   "description_ko": "슈퍼 하이프 맨", 
   "description_zhcn": "超级炒作男", 
   "description_zhtw": "超級炒作男"
+}
+```
+
+### New Languages
+```json
+{
+    "languageName": "Polish",
+    "languageCode": "nl",
+    "resetButtonText": "Reset with Polish",
+    "stringTablePath": "stringtable.csv"
+}
+```
+### New Language Fonts
+```json
+{
+    "fontReplacementPaths": [
+        {
+        "Type": "Liberation",
+        "AssetBundlePath": "en_mainfont.assetbundle",
+        "FontAssetName": "en_mainfont",
+        "TMPFontAssetName": "en_mainfont"
+        }
+    ]
 }
 ```
 

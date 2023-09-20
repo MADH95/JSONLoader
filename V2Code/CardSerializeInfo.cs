@@ -432,11 +432,6 @@ namespace JLPlugin.V2.Data
                 string file = files[index];
                 string filename = file.Substring(file.LastIndexOf(Path.DirectorySeparatorChar) + 1);
 
-                if (filename.Contains("_example.jldr"))
-                {
-                    Plugin.Log.LogDebug($"Skipping {filename}");
-                    continue;
-                }
                 files.RemoveAt(index--);
 
                 Plugin.Log.LogDebug($"Loading JLDR2 Card {filename}");

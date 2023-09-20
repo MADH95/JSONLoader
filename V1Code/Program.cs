@@ -30,7 +30,7 @@ namespace JLPlugin
         private static List<string> GetAllJLDRFiles()
         {
             return Directory.GetFiles(Paths.PluginPath, "*.jldr*", SearchOption.AllDirectories)
-                .Where((a)=> a.EndsWith(".jldr") || a.EndsWith(".jldr2"))
+                .Where((a)=> (a.EndsWith(".jldr") || a.EndsWith(".jldr2")) && !a.Contains("_example.jldr2"))
                 .ToList();
         }
         
