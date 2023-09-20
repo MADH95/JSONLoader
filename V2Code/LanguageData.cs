@@ -7,6 +7,7 @@ using JLPlugin;
 using TinyJson;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace JSONLoader.V2Code
 {
@@ -22,11 +23,11 @@ namespace JSONLoader.V2Code
             public string TMPFontAssetName;
         }
         
-        public string LanguageName;
-        public string LanguageCode;
-        public string ResetButtonText;
-        public string StringTablePath;
-        public List<Fonts> FontReplacementPaths;
+        public string languageName;
+        public string languageCode;
+        public string resetButtonText;
+        public string stringTablePath;
+        public List<Fonts> fontReplacementPaths;
         
         public static void LoadAllLanguages(List<string> files)
         {
@@ -42,20 +43,20 @@ namespace JSONLoader.V2Code
                 Plugin.Log.LogDebug($"Loading JLDR2 (language) {filename}");
                 LanguageData languageInfo = JSONParser.FromJson<LanguageData>(File.ReadAllText(file));
 
-                string stringTablePath = languageInfo.StringTablePath;
+                string stringTablePath = languageInfo.stringTablePath;
                 if (!TryGetFullPath(stringTablePath, out stringTablePath))
                 {
                     Plugin.Log.LogError(
-                        $"Could not load language. Could not find string table with name {languageInfo.StringTablePath}!");
+                        $"Could not load language. Could not find string table with name {languageInfo.stringTablePath}!");
                     return;
                 }
 
 
                 List<FontReplacement> fontReplacements = null;
-                if (languageInfo.FontReplacementPaths != null)
+                if (languageInfo.fontReplacementPaths != null)
                 {
                     fontReplacements = new List<FontReplacement>();
-                    foreach (Fonts replacement in languageInfo.FontReplacementPaths)
+                    foreach (Fonts replacement in languageInfo.fontReplacementPaths)
                     {
                         if (!TryGetFullPath(replacement.AssetBundlePath, out string abPath))
                         {
@@ -93,8 +94,8 @@ namespace JSONLoader.V2Code
                     }
                 }
 
-                LocalizationManager.NewLanguage(Plugin.PluginGuid, languageInfo.LanguageName,
-                    languageInfo.LanguageCode, languageInfo.ResetButtonText, stringTablePath, fontReplacements);
+                LocalizationManager.NewLanguage(Plugin.PluginGuid, languageInfo.languageName,
+                    languageInfo.languageCode, languageInfo.resetButtonText, stringTablePath, fontReplacements);
 
                 Plugin.Log.LogDebug($"Loaded JSON gramophone tracks from {filename}!");
             }
