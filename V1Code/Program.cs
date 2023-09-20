@@ -62,6 +62,7 @@ namespace JLPlugin
             StarterDeckList.LoadAllStarterDecks(files);
             GramophoneData.LoadAllGramophone(files);
             LanguageData.LoadAllLanguages(files);
+            MaskData.LoadAllMasks(files);
             JSONLoader.Data.TalkingCards.LoadTalkingCards.InitAndLoad();
             // ^ Ambiguity between JSONLoader.Data and JLPlugin.Data is annoying. = u= -Kelly
             
