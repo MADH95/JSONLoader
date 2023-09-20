@@ -232,3 +232,37 @@ ___
 |StaticGlitch | Renders the card with the static animation                                                                                          |
 |TerrainBackground | Renders the card with terrain border                                                                               |
 |TerrainLayout | Renders card with terrain card layout                                                                                                 |
+### Languages
+| Suffix | Language          |
+|------|-------------------|
+| fr   | French            |
+| it   | Italian           |
+| de  | German            |
+| es  | Spanish           |
+| pt  | Portuguese        |
+| tr  | Turkish           |
+| ru  | Russian           |
+| ja  | Japanese          |
+| ko  | Korean            |
+| zhcn | Chinese (Simplified)|
+| zhtw | Chinese (Traditional)|
+### Mask Types
+|Value | Description |
+|-|-------------|
+|Prospector | 0           |
+|Woodcarver | 1           |
+|Angler | 2           |
+|Trapper | 3           |
+|Trader | 4           |
+|Doctor | 5           |
+### Mask Model Types
+|Value | Description |
+|-|-------------|
+|Prospector | 1           |
+|Woodcarver | 2           |
+|Angler | 3           |
+|Trapper | 4           |
+|Trader | 5           |
+|Doctor | 6           |
+|FlatMask | 101         |
+|Sphere | 102         |

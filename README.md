@@ -263,22 +263,6 @@ If you want to translate your cards into other languages, add the language suffi
 
 For example, if you want to translate the *displayedName* field into French, you would add a *displayedName_fr* field to your card. 
 
-The supported language suffixes are listed in the table below.
-
-| Suffix | Language          |
-|------|-------------------|
-| fr   | French            |
-| it   | Italian           |
-| de  | German            |
-| es  | Spanish           |
-| pt  | Portuguese        |
-| tr  | Turkish           |
-| ru  | Russian           |
-| ja  | Japanese          |
-| ko  | Korean            |
-| zhcn | Chinese (Simplified)|
-| zhtw | Chinese (Traditional)|
-
 **Example:**
 ```json
 {
@@ -301,6 +285,27 @@ The supported language suffixes are listed in the table below.
 }
 ```
 
+## Masks
+
+To replace a mask that a boss puts on their face you can do it in a few ways.
+
+### Replace a mask with a texture
+
+This will replace the angler mask model with a flat surface and apply a texture to it. The image dimensions are 1000x1500
+```json
+{
+  "maskName": "JSON_TestMask",
+  "type": "Override",
+  "texturePath": "testmask.png",
+  "maskType": "Angler"
+}
+```
+If you want to keep the original model but replace the texture you can add a field specifying the model type as below.
+```json
+  "modelType": "Angler"
+```
+
+### Randomize a mask
 
 
 
