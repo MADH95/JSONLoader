@@ -63,7 +63,7 @@ namespace JLPlugin
             GramophoneData.LoadAllGramophone(files);
             LanguageData.LoadAllLanguages(files);
             MaskData.LoadAllMasks(files);
-            JSONLoader.Data.TalkingCards.LoadTalkingCards.InitAndLoad();
+            JSONLoader.Data.TalkingCards.LoadTalkingCards.InitAndLoad(files);
             // ^ Ambiguity between JSONLoader.Data and JLPlugin.Data is annoying. = u= -Kelly
             
             CardSerializeInfo.LoadAllJLDR2(files); // Expects the lsit to only have cards at this stage
