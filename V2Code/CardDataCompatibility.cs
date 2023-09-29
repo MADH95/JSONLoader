@@ -83,8 +83,8 @@ namespace JLPlugin.Data
                 info.name = $"{info.modPrefix}_{this.name}";
             }
             
-            info.displayedName = this.displayedName;
-            info.description = this.description;
+            info.displayedName.Initialize(this.displayedName);
+            info.description.Initialize(this.description);
             info.metaCategories = this.metaCategories?.ToArray();
             info.cardComplexity = this.cardComplexity;
             info.temple = this.temple;

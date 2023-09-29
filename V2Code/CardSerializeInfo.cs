@@ -13,6 +13,7 @@ using InscryptionAPI.Localizing;
 using JSONLoader.V2Code;
 using TinyJson;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace JLPlugin.V2.Data
 {
@@ -27,31 +28,9 @@ namespace JLPlugin.V2.Data
 
         public string[] decals;
 
-        public string displayedName;
-        public string displayedName_fr;
-        public string displayedName_it;
-        public string displayedName_de;
-        public string displayedName_es;
-        public string displayedName_pt;
-        public string displayedName_tr;
-        public string displayedName_ru;
-        public string displayedName_ja;
-        public string displayedName_ko;
-        public string displayedName_zhcn;
-        public string displayedName_zhtw;
+        public LocalizableField displayedName = new("displayedName"); // displayedName, displayedName_es... etc
 
-        public string description;
-        public string description_fr;
-        public string description_it;
-        public string description_de;
-        public string description_es;
-        public string description_pt;
-        public string description_tr;
-        public string description_ru;
-        public string description_ja;
-        public string description_ko;
-        public string description_zhcn;
-        public string description_zhtw;
+        public LocalizableField description = new("description"); // description, description_ko... etc
 
         public int? baseAttack;
 
@@ -249,40 +228,42 @@ namespace JLPlugin.V2.Data
             ApplyLocaleField("description", description, out card.description);
         }
 
-        private void ApplyLocaleField(string field, string englishValue, out string cardInfoEnglishField)
+        private void ApplyLocaleField(string field, LocalizableField rows, out string cardInfoEnglishField)
         {
-            // English
-            cardInfoEnglishField = englishValue;
-            
-            // Go through our public fields and look for a field with the same prefix
-            // Get what code it should be and apply that
-            for (int i = 0; i < PUBLIC_FIELD_INFOS.Length; i++)
+            if (rows.rows.TryGetValue(rows.englishFieldName, out string english))
             {
-                FieldInfo fieldInfo = PUBLIC_FIELD_INFOS[i];
-                string fieldName = fieldInfo.Name;
-                if (!fieldName.StartsWith(field, StringComparison.Ordinal))
-                    continue;
+                cardInfoEnglishField = english;
+            }
+            else if(rows.rows.Count > 0)
+            {
+                cardInfoEnglishField = rows.rows.First().Value;
+            }
+            else
+            {
+                cardInfoEnglishField = null;
+                return;
+            }
 
-                string translatedValue = fieldInfo.GetValue(this) as string;
-                if (string.IsNullOrEmpty(translatedValue))
+            foreach (KeyValuePair<string,string> pair in rows.rows)
+            {
+                if (pair.Key == rows.englishFieldName) 
                     continue;
                 
-                int indexOf = fieldName.LastIndexOf("_", StringComparison.Ordinal);
-                if (indexOf >= 0)
+                int indexOf = pair.Key.LastIndexOf("_", StringComparison.Ordinal);
+                if (indexOf < 0) 
+                    continue;
+                
+                // Translations
+                int length = pair.Key.Length - indexOf - 1;
+                string code = pair.Key.Substring(indexOf + 1, length);
+                Language language = LocalizationManager.CodeToLanguage(code);
+                if (language != Language.NUM_LANGUAGES)
                 {
-                    // Translations
-                    int length = fieldName.Length - indexOf - 1;
-                    string code = fieldName.Substring(indexOf + 1, length);
-                    Language language = LocalizationManager.CodeToLanguage(code);
-                    if (language < Language.NUM_LANGUAGES)
-                    {
-                        Plugin.Log.LogDebug($"{displayedName} has translation for {field} in {language} with {translatedValue}");
-                        LocalizationManager.New(Plugin.PluginGuid, null, englishValue, translatedValue, language);
-                    }
-                    else
-                    {
-                        Plugin.Log.LogDebug($"Unknown language code {code} for card {displayedName} in field {field}");
-                    }
+                    LocalizationManager.Translate(Plugin.PluginGuid, null, cardInfoEnglishField, pair.Value, language);
+                }
+                else
+                {
+                    Plugin.Log.LogDebug($"Unknown language code {code} for card {displayedName} in field {field}");
                 }
             }
         }
@@ -416,6 +397,20 @@ namespace JLPlugin.V2.Data
                         retval += $"\t}},\n";
                     }
                 }
+                else if (field.FieldType.IsAssignableFrom(typeof(JSONParser.IFlexibleField)))
+                {
+                    object value = field.GetValue(this);
+                    if (value != null)
+                    {
+                        retval += ((JSONParser.IFlexibleField)value).ToJSON();
+                    }
+
+                    Dictionary<string, string> fieldVal = ((LocalizableField)field.GetValue(this)).rows;
+                    foreach (KeyValuePair<string,string> pair in fieldVal)
+                    {
+                        retval += $"\t\"{pair.Key}\": {pair.Value},\n";
+                    }
+                }
             }
             retval = retval.TrimEnd('\n', ',') + "\n}";
             return retval;
@@ -450,5 +445,50 @@ namespace JLPlugin.V2.Data
             }
         }
 
+    }
+
+    [Serializable]
+    public class LocalizableField : JSONParser.IFlexibleField
+    {
+        public Dictionary<string, string> rows;
+
+        public string englishFieldName;
+
+        public LocalizableField(string EnglishFieldName)
+        {
+            rows = new Dictionary<string, string>();
+            englishFieldName = EnglishFieldName;
+        }
+
+        public void Initialize(string initialValue)
+        {
+            rows[englishFieldName] = initialValue;
+        }
+        
+        public bool ContainsKey(string key)
+        {
+            return key.StartsWith(englishFieldName);
+        }
+
+        public void SetValue(string key, string value)
+        {
+            rows[key] = value;
+        }
+
+        public string ToJSON()
+        {
+            string json = "";
+            foreach (KeyValuePair<string,string> pair in rows)
+            {
+                json += $"\t\"{pair.Key}\": \"{pair.Value}\",\n";
+            }
+            
+            return json;
+        }
+
+        public override string ToString()
+        {
+            return rows.ToString();
+        }
     }
 }

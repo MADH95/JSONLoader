@@ -5,6 +5,8 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Runtime.Serialization;
 using System.Linq;
+using JLPlugin;
+using UnityEngine;
 
 namespace TinyJson
 {
@@ -340,9 +342,16 @@ namespace TinyJson
             return nameToMember;
         }
 
+        public interface IFlexibleField
+        {
+            bool ContainsKey(string key);
+            void SetValue(string key, string value);
+            string ToJSON();
+        }
+
         static object ParseObject(Type type, string json)
         {
-            object instance = FormatterServices.GetUninitializedObject(type);
+            object instance = Activator.CreateInstance(type);
 
             //The list is split into key/value pairs only, this means the split must be divisible by 2 to be valid JSON
             List<string> elems = Split(json);
@@ -369,15 +378,68 @@ namespace TinyJson
                 string key = elems[i].Substring(1, elems[i].Length - 2);
                 string value = elems[i + 1];
 
-                FieldInfo fieldInfo;
-                PropertyInfo propertyInfo;
-                if (nameToField.TryGetValue(key, out fieldInfo))
-                    fieldInfo.SetValue(instance, ParseValue(fieldInfo.FieldType, value));
-                else if (nameToProperty.TryGetValue(key, out propertyInfo))
-                    propertyInfo.SetValue(instance, ParseValue(propertyInfo.PropertyType, value), null);
+                if (nameToField.TryGetValue(key, out FieldInfo fieldInfo))
+                {
+                    SetField(fieldInfo, instance, value);
+                }
+                else if (nameToProperty.TryGetValue(key, out PropertyInfo propertyInfo))
+                {
+                    SetProperty(propertyInfo, instance, value);
+                }
+                else
+                {
+                    bool assigned = false;
+                    foreach (KeyValuePair<string,FieldInfo> pair in nameToField)
+                    {
+                        FieldInfo info = pair.Value;
+                        if (info.FieldType.GetInterfaces().Contains(typeof(IFlexibleField)))
+                        {
+                            object o = info.GetValue(instance);
+                            if (o is IFlexibleField field)
+                            {
+                                if (field.ContainsKey(key))
+                                {
+                                    field.SetValue(key, (string)ParseValue(typeof(String), value));
+                                    assigned = true;
+                                    break;
+                                }
+                            }
+                        }
+                    }
+
+                    if (!assigned)
+                    {
+                        Plugin.VerboseWarning($"{key} field not found for {type}");
+                    }
+                }
             }
 
             return instance;
+        }
+
+        private static void SetField(FieldInfo info, object o, string v)
+        {
+            if (info.FieldType.GetInterfaces().Contains(typeof(IFlexibleField)))
+            {
+                object fieldValue = info.GetValue(o);
+                if (fieldValue == null)
+                {
+                    Debug.LogError($"{info.Name} field is null! {info.FieldType} o:{o} instance:{o}");
+                }
+                else if(fieldValue is IFlexibleField flexibleField)
+                {
+                    flexibleField.SetValue(info.Name, (string)ParseValue(typeof(String), v));
+                }
+            }
+            else
+            {
+                info.SetValue(o, ParseValue(info.FieldType, v));
+            }
+        }
+
+        private static void SetProperty(PropertyInfo info, object o, string v)
+        {
+            info.SetValue(o, ParseValue(info.PropertyType, v), null);
         }
     }
 }

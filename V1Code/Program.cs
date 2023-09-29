@@ -24,6 +24,7 @@ namespace JLPlugin
         public const string PluginVersion = "2.4.0";
         
         internal static ConfigEntry<bool> betaCompatibility;
+        internal static ConfigEntry<bool> verboseLogging;
 
         internal static ManualLogSource Log;
 
@@ -40,9 +41,11 @@ namespace JLPlugin
             Log = Logger;
             Harmony harmony = new(PluginGuid);
             harmony.PatchAll();
+            
             betaCompatibility = Config.Bind("JSONLoader", "JDLR Backwards Compatibility", true, "Set to true to enable old-style JSON files (JLDR) to be read and converted to new-style files (JLDR2)");
+            verboseLogging = Config.Bind("JSONLoader", "Verbose Logging", false, "Set to true to see more logs on what JSONLoader is doing and what isn't working.");
+            
             Log.LogWarning("Note: JSONLoader now uses .jldr2 files, not .json files.");
-
             List<string> files = GetAllJLDRFiles();
             if (betaCompatibility.Value)
                 Log.LogWarning("Note: Backwards compatibility has been enabled. Old *.jldr files will be converted to *.jldr2 automatically. This will slow down your game loading!");
@@ -101,6 +104,18 @@ namespace JLPlugin
             FrameLoopManager.Instance.SetIterationDisabled(false);
             SaveManager.savingDisabled = false;
             MenuController.LoadGameFromMenu(false);
+        }
+
+        internal static void VerboseLog(string s)
+        {
+            if (verboseLogging.Value)
+                Log.LogInfo(s);
+        }
+        
+        internal static void VerboseWarning(string s)
+        {
+            if (verboseLogging.Value)
+                Log.LogWarning(s);
         }
     }
 }
