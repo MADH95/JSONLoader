@@ -7,6 +7,7 @@ using InscryptionAPI.Helpers;
 using InscryptionAPI.Localizing;
 using JLPlugin;
 using JLPlugin.V2.Data;
+using TinyJson;
 using UnityEngine;
 
 public static class ImportExportUtils
@@ -67,6 +68,23 @@ public static class ImportExportUtils
         }
     }
 
+    public static void ApplyValue(ref Sprite cardInfoValue, ref string serializeInfoValue, bool toCardInfo, string type, string fileName)
+    {
+        if (toCardInfo)
+        {
+            if (!string.IsNullOrEmpty(serializeInfoValue))
+                cardInfoValue = TextureHelper.GetImageAsTexture(serializeInfoValue).ConvertTexture();
+        }
+        else
+        {
+            if (cardInfoValue != null)
+            {
+                string path = Path.Combine(Plugin.ExportDirectory, type, "Assets", fileName + ".png");
+                serializeInfoValue = ExportTexture(cardInfoValue.texture, path);
+            }
+        }
+    }
+    
     public static void ApplyValue(ref Texture cardInfoValue, ref string serializeInfoValue, bool toCardInfo)
     {
         if (toCardInfo)
@@ -82,7 +100,7 @@ public static class ImportExportUtils
     }
 
     public static void ApplyValue(ref Texture2D cardInfoValue, ref string serializeInfoValue, bool toCardInfo,
-        string fileName)
+        string type, string fileName)
     {
         if (toCardInfo)
         {
@@ -93,7 +111,7 @@ public static class ImportExportUtils
         {
             if (cardInfoValue != null)
             {
-                string path = Path.Combine(Plugin.ExportDirectory, "Cards", "Assets", fileName + ".png");
+                string path = Path.Combine(Plugin.ExportDirectory, type, "Assets", fileName + ".png");
                 serializeInfoValue = ExportTexture(cardInfoValue, path);
             }
         }
@@ -155,7 +173,7 @@ public static class ImportExportUtils
         return Path.GetFileName(path);
     }
 
-    public static string[] ExportTextures(IEnumerable<Texture2D> texture, string fileName)
+    public static string[] ExportTextures(IEnumerable<Texture2D> texture, string type, string fileName)
     {
         int i = 0;
         List<string> paths = new List<string>();
@@ -163,14 +181,14 @@ public static class ImportExportUtils
         {
             i++;
 
-            string path = Path.Combine(Plugin.ExportDirectory, "Cards", "Assets", $"{fileName}_{i}.png");
+            string path = Path.Combine(Plugin.ExportDirectory, type, "Assets", $"{fileName}_{i}.png");
             paths.Add(ExportTexture(texture2D, path));
         }
 
         return paths.ToArray();
     }
 
-    public static void ApplyLocaleField(string field, ref LocalizableField rows, ref string cardInfoEnglishField, bool toCardInfo)
+    public static void ApplyLocaleField(string field, ref JSONParser.LocalizableField rows, ref string cardInfoEnglishField, bool toCardInfo)
     {
         if (toCardInfo)
         {
@@ -184,7 +202,7 @@ public static class ImportExportUtils
         }
     }
 
-    private static void ImportLocaleField(LocalizableField rows, string cardInfoEnglishField)
+    private static void ImportLocaleField(JSONParser.LocalizableField rows, string cardInfoEnglishField)
     {
         // From game to LocalizableField
         rows.rows.Clear();
@@ -207,7 +225,7 @@ public static class ImportExportUtils
     /// <param name="field"></param>
     /// <param name="rows"></param>
     /// <param name="cardInfoEnglishField"></param>
-    private static void ApplyLocaleField(string field, LocalizableField rows, out string cardInfoEnglishField)
+    private static void ApplyLocaleField(string field, JSONParser.LocalizableField rows, out string cardInfoEnglishField)
     {
         if (rows.rows.TryGetValue(rows.englishFieldName, out string english))
         {

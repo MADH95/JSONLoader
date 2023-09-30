@@ -1,8 +1,5 @@
-using BepInEx;
 using DiskCardGame;
 using InscryptionAPI.Card;
-using InscryptionAPI.Guid;
-using InscryptionAPI.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -10,11 +7,8 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using InscryptionAPI.Localizing;
-using JSONLoader.V2Code;
 using TinyJson;
 using UnityEngine;
-using UnityEngine.Serialization;
-using UnityEngine.UI;
 
 namespace JLPlugin.V2.Data
 {
@@ -29,9 +23,9 @@ namespace JLPlugin.V2.Data
 
         public string[] decals;
 
-        public LocalizableField displayedName = new("displayedName"); // displayedName, displayedName_es... etc
+        public JSONParser.LocalizableField displayedName = new("displayedName"); // displayedName, displayedName_es... etc
 
-        public LocalizableField description = new("description"); // description, description_ko... etc
+        public JSONParser.LocalizableField description = new("description"); // description, description_ko... etc
 
         public int? baseAttack;
 
@@ -138,7 +132,7 @@ namespace JLPlugin.V2.Data
             {
                 // TODO: Image
                 if (cardInfo.decals != null)
-                    serializeInfo.decals = ImportExportUtils.ExportTextures(cardInfo.decals.Cast<Texture2D>(), $"{cardName}_decals");
+                    serializeInfo.decals = ImportExportUtils.ExportTextures(cardInfo.decals.Cast<Texture2D>(), "Cards", $"{cardName}_decals");
             }
 
             if (toCardInfo)
@@ -209,7 +203,7 @@ namespace JLPlugin.V2.Data
                 if (cardInfo.portraitTex != null)
                 {
                     Texture2D t = cardInfo.portraitTex.texture;
-                    ImportExportUtils.ApplyValue(ref t, ref serializeInfo.texture, false, $"{cardName}_texture");
+                    ImportExportUtils.ApplyValue(ref t, ref serializeInfo.texture, false, "Cards", $"{cardName}_texture");
                 }
             }
             
@@ -223,7 +217,7 @@ namespace JLPlugin.V2.Data
                 if (cardInfo.alternatePortrait != null)
                 {
                     Texture2D t = cardInfo.alternatePortrait.texture;
-                    ImportExportUtils.ApplyValue(ref t, ref serializeInfo.altTexture, false, $"{cardName}_altTexture");
+                    ImportExportUtils.ApplyValue(ref t, ref serializeInfo.altTexture, false, "Cards", $"{cardName}_altTexture");
                 }
             }
 
@@ -238,7 +232,7 @@ namespace JLPlugin.V2.Data
                 if (sprite != null)
                 {
                     Texture2D t = sprite.texture;
-                    ImportExportUtils.ApplyValue(ref t, ref serializeInfo.emissionTexture, false, $"{cardName}_emissionTexture");
+                    ImportExportUtils.ApplyValue(ref t, ref serializeInfo.emissionTexture, false, "Cards", $"{cardName}_emissionTexture");
                 }
             }
 
@@ -277,7 +271,7 @@ namespace JLPlugin.V2.Data
                 if (sprite != null)
                 {
                     Texture2D t = sprite.texture;
-                    ImportExportUtils.ApplyValue(ref t, ref serializeInfo.altEmissionTexture, false, $"{cardName}_altEmissionTexture");
+                    ImportExportUtils.ApplyValue(ref t, ref serializeInfo.altEmissionTexture, false, "Cards", $"{cardName}_altEmissionTexture");
                 }
             }
 
@@ -291,12 +285,12 @@ namespace JLPlugin.V2.Data
                 if (cardInfo.pixelPortrait != null)
                 {
                     Texture2D t = cardInfo.pixelPortrait.texture;
-                    ImportExportUtils.ApplyValue(ref t, ref serializeInfo.texture, false, $"{cardName}_pixelTexture");
+                    ImportExportUtils.ApplyValue(ref t, ref serializeInfo.texture, false, "Cards", $"{cardName}_pixelTexture");
                 }
             }
         }
 
-        private void ApplyLocaleField(string field, LocalizableField rows, out string cardInfoEnglishField)
+        private void ApplyLocaleField(string field, JSONParser.LocalizableField rows, out string cardInfoEnglishField)
         {
             if (rows.rows.TryGetValue(rows.englishFieldName, out string english))
             {
@@ -469,7 +463,7 @@ namespace JLPlugin.V2.Data
                         retval += ((JSONParser.IFlexibleField)value).ToJSON();
                     }
 
-                    Dictionary<string, string> fieldVal = ((LocalizableField)field.GetValue(this)).rows;
+                    Dictionary<string, string> fieldVal = ((JSONParser.LocalizableField)field.GetValue(this)).rows;
                     foreach (KeyValuePair<string,string> pair in fieldVal)
                     {
                         retval += $"\t\"{pair.Key}\": {pair.Value},\n";
@@ -508,51 +502,24 @@ namespace JLPlugin.V2.Data
                 }
             }
         }
-
-    }
-
-    [Serializable]
-    public class LocalizableField : JSONParser.IFlexibleField
-    {
-        public Dictionary<string, string> rows;
-
-        public string englishFieldName;
-
-        public LocalizableField(string EnglishFieldName)
-        {
-            rows = new Dictionary<string, string>();
-            englishFieldName = EnglishFieldName;
-        }
-
-        public void Initialize(string englishValue)
-        {
-            rows[englishFieldName] = englishValue;
-        }
         
-        public bool ContainsKey(string key)
+        public static void ExportAllCards()
         {
-            return key.StartsWith(englishFieldName);
-        }
-
-        public void SetValue(string key, string value)
-        {
-            rows[key] = value;
-        }
-
-        public string ToJSON()
-        {
-            string json = "";
-            foreach (KeyValuePair<string,string> pair in rows)
+            Plugin.Log.LogInfo($"Exporting {CardManager.AllCardsCopy.Count} cards.");
+            foreach (CardInfo card in CardManager.AllCardsCopy)
             {
-                json += $"\t\"{pair.Key}\": \"{pair.Value}\",\n";
+                CardSerializeInfo info = new CardSerializeInfo();
+                CardSerializeInfo.Apply(card, info, false, card.name);
+                
+                string path = Path.Combine(Plugin.ExportDirectory, "Cards", card.name + ".jldr2");
+                string directory = Path.GetDirectoryName(path);
+                if (!System.IO.Directory.Exists(directory))
+                {
+                    System.IO.Directory.CreateDirectory(directory);
+                }
+                
+                info.WriteToFile(path, true);
             }
-            
-            return json;
-        }
-
-        public override string ToString()
-        {
-            return rows.ToString();
         }
     }
 }

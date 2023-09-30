@@ -96,27 +96,23 @@ namespace JLPlugin
 
             if ((Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift)) && Input.GetKeyDown(KeyCode.X))
             {
-                ExportAllCards();
+                ExportAllToJLDR2();
             }
         }
 
-        public void ExportAllCards()
+        public void ExportAllToJLDR2()
         {
-            Log.LogInfo($"Exporting {CardManager.AllCardsCopy.Count} cards.");
-            foreach (CardInfo card in CardManager.AllCardsCopy)
-            {
-                CardSerializeInfo info = new CardSerializeInfo();
-                CardSerializeInfo.Apply(card, info, false, card.name);
-                
-                string path = Path.Combine(ExportDirectory, "Cards", card.name + ".jldr2");
-                string directory = Path.GetDirectoryName(path);
-                if (!System.IO.Directory.Exists(directory))
-                {
-                    System.IO.Directory.CreateDirectory(directory);
-                }
-                
-                info.WriteToFile(path, true);
-            }
+            TribeList.ExportAllTribes();
+            // SigilData.LoadAllSigils(files);
+            // Data.EncounterData.LoadAllEncounters(files);
+            // StarterDeckList.LoadAllStarterDecks(files);
+            // GramophoneData.LoadAllGramophone(files);
+            // LanguageData.LoadAllLanguages(files);
+            // MaskData.LoadAllMasks(files);
+            // JSONLoader.Data.TalkingCards.LoadTalkingCards.InitAndLoad(files);
+            // ^ Ambiguity between JSONLoader.Data and JLPlugin.Data is annoying. = u= -Kelly
+            
+            CardSerializeInfo.ExportAllCards();
         }
 
         public static void ReloadVanilla()
