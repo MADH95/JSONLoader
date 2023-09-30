@@ -79,7 +79,7 @@ namespace JLPlugin.Data
 
             if (this.metaCategories != null)
             {
-                info.AddMetaCategories(this.metaCategories.Select(elem => ParseEnum<AbilityMetaCategory>(elem)).ToArray());
+                info.AddMetaCategories(this.metaCategories.Select(ImportExportUtils.ParseEnum<AbilityMetaCategory>).ToArray());
             }
             else
             {

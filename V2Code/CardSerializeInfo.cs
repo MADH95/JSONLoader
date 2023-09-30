@@ -14,6 +14,7 @@ using JSONLoader.V2Code;
 using TinyJson;
 using UnityEngine;
 using UnityEngine.Serialization;
+using UnityEngine.UI;
 
 namespace JLPlugin.V2.Data
 {
@@ -100,132 +101,199 @@ namespace JLPlugin.V2.Data
 
         public string filePath;
 
-        public static T ParseEnum<T>(string value) where T : unmanaged, System.Enum
+        
+        public static void Apply(CardInfo cardInfo, CardSerializeInfo serializeInfo, bool toCardInfo, string cardName)
         {
-            T result;
-            if (Enum.TryParse<T>(value, out result))
-                return result;
+            ImportExportUtils.ApplyLocaleField("displayedName", ref serializeInfo.displayedName, ref cardInfo.displayedName, toCardInfo);
+            ImportExportUtils.ApplyLocaleField("description", ref serializeInfo.description, ref cardInfo.description, toCardInfo);
 
-            int idx = Math.Max(value.LastIndexOf('_'), value.LastIndexOf('.'));
+            ImportExportUtils.ApplyValue(ref cardInfo.baseAttack, ref serializeInfo.baseAttack, toCardInfo);
+            ImportExportUtils.ApplyValue(ref cardInfo.baseHealth, ref serializeInfo.baseHealth, toCardInfo);
+            ImportExportUtils.ApplyValue(ref cardInfo.cost, ref serializeInfo.bloodCost, toCardInfo);
+            ImportExportUtils.ApplyValue(ref cardInfo.bonesCost, ref serializeInfo.bonesCost, toCardInfo);
+            ImportExportUtils.ApplyValue(ref cardInfo.energyCost, ref serializeInfo.energyCost, toCardInfo);
+            ImportExportUtils.ApplyValue(ref cardInfo.gemsCost, ref serializeInfo.gemsCost, toCardInfo);
+            ImportExportUtils.ApplyValue(ref cardInfo.abilities, ref serializeInfo.abilities, toCardInfo);
+            ImportExportUtils.ApplyValue(ref cardInfo.specialAbilities, ref serializeInfo.specialAbilities, toCardInfo);
+            ImportExportUtils.ApplyValue(ref cardInfo.specialStatIcon, ref serializeInfo.specialStatIcon, toCardInfo);
+            ImportExportUtils.ApplyValue(ref cardInfo.metaCategories, ref serializeInfo.metaCategories, toCardInfo);
+            ImportExportUtils.ApplyValue(ref cardInfo.cardComplexity, ref serializeInfo.cardComplexity, toCardInfo);
+            ImportExportUtils.ApplyValue(ref cardInfo.onePerDeck, ref serializeInfo.onePerDeck, toCardInfo);
+            ImportExportUtils.ApplyValue(ref cardInfo.temple, ref serializeInfo.temple, toCardInfo);
+            ImportExportUtils.ApplyValue(ref cardInfo.titleGraphic, ref serializeInfo.titleGraphic, toCardInfo);
+            ImportExportUtils.ApplyValue(ref cardInfo.hideAttackAndHealth, ref serializeInfo.hideAttackAndHealth, toCardInfo);
+            ImportExportUtils.ApplyValue(ref cardInfo.appearanceBehaviour, ref serializeInfo.appearanceBehaviour, toCardInfo);
+            ImportExportUtils.ApplyValue(ref cardInfo.tribes, ref serializeInfo.tribes, toCardInfo);
+            ImportExportUtils.ApplyValue(ref cardInfo.traits, ref serializeInfo.traits, toCardInfo);
+            ImportExportUtils.ApplyValue(ref cardInfo.defaultEvolutionName, ref serializeInfo.defaultEvolutionName, toCardInfo);
+            ImportExportUtils.ApplyValue(ref cardInfo.flipPortraitForStrafe, ref serializeInfo.flipPortraitForStrafe, toCardInfo);
+            ImportExportUtils.ApplyValue(ref cardInfo.onePerDeck, ref serializeInfo.onePerDeck, toCardInfo);
 
-            if (idx < 0)
-                throw new InvalidCastException($"Cannot parse {value} as {typeof(T).FullName}");
+            if (toCardInfo)
+            {
+                if (serializeInfo.decals != null && serializeInfo.decals.Length > 0)
+                    cardInfo.AddDecal(serializeInfo.decals);
+            }
+            else
+            {
+                // TODO: Image
+                if (cardInfo.decals != null)
+                    serializeInfo.decals = ImportExportUtils.ExportTextures(cardInfo.decals.Cast<Texture2D>(), $"{cardName}_decals");
+            }
 
-            string guid = value.Substring(0, idx);
-            string name = value.Substring(idx + 1);
-            return GuidManager.GetEnumValue<T>(guid, name);
-        }
+            if (toCardInfo)
+            {
+                if (!string.IsNullOrEmpty(serializeInfo.evolveIntoName))
+                    cardInfo.SetEvolve(serializeInfo.evolveIntoName, serializeInfo.evolveTurns.HasValue ? serializeInfo.evolveTurns.Value : 1);
+            }
+            else
+            {
+                if (cardInfo.evolveParams != null)
+                {
+                    serializeInfo.evolveIntoName = cardInfo.evolveParams.evolution?.name;
+                    serializeInfo.evolveTurns = cardInfo.evolveParams.turnsToEvolve;
+                }
+            }
 
-        private void ApplyCardInfo(CardInfo card)
-        {
-            if (this.decals != null && this.decals.Length > 0)
-                card.AddDecal(this.decals);
+            if (toCardInfo)
+            {
+                if (!string.IsNullOrEmpty(serializeInfo.tailName))
+                    cardInfo.SetTail(serializeInfo.tailName, serializeInfo.tailLostPortrait);
+            }
+            else
+            {
+                if (cardInfo.tailParams != null)
+                {
+                    serializeInfo.tailName = cardInfo.tailParams.tail?.name;
+                    serializeInfo.tailLostPortrait = cardInfo.tailParams.tailLostPortrait?.ToString(); // TODO: Image
+                }
+            }
 
-            ApplyLocalisations(card);
+            if (toCardInfo)
+            {
+                if (!string.IsNullOrEmpty(serializeInfo.iceCubeName))
+                    cardInfo.SetIceCube(serializeInfo.iceCubeName);
+            }
+            else
+            {
+                if (cardInfo.iceCubeParams != null)
+                {
+                    serializeInfo.iceCubeName = cardInfo.iceCubeParams.creatureWithin.name;
+                }
+            }
 
-            if (this.baseAttack.HasValue)
-                card.baseAttack = this.baseAttack.Value;
+            if (toCardInfo)
+            {
+                if (serializeInfo.extensionProperties != null)
+                    foreach (var item in serializeInfo.extensionProperties)
+                        cardInfo.SetExtendedProperty(item.Key, item.Value);
+                
+                cardInfo.SetExtendedProperty("JSONFilePath", serializeInfo.filePath);
+            }
+            else
+            {
+                Dictionary<string,string> dictionary = CardManager.GetCardExtensionTable(cardInfo);
+                if (dictionary != null && dictionary.Count > 0)
+                {
+                    serializeInfo.extensionProperties = dictionary;
+                }
+            }
 
-            if (this.baseHealth.HasValue)
-                card.baseHealth = this.baseHealth.Value;
-
-            if (this.bloodCost.HasValue)
-                card.cost = this.bloodCost.Value;
-
-            if (this.bonesCost.HasValue)
-                card.bonesCost = this.bonesCost.Value;
-
-            if (this.energyCost.HasValue)
-                card.energyCost = this.energyCost.Value;
-
-            if (this.gemsCost != null)
-                card.gemsCost = this.gemsCost.Select(s => ParseEnum<GemType>(s)).ToList();
-
-            if (this.abilities != null && this.abilities.Length > 0)
-                card.abilities = new(this.abilities.Select(s => ParseEnum<Ability>(s)).ToArray());
-
-            if (this.specialAbilities != null && this.specialAbilities.Length > 0)
-                card.specialAbilities = new(this.specialAbilities.Select(s => ParseEnum<SpecialTriggeredAbility>(s)).ToArray());
-
-            if (!string.IsNullOrEmpty(this.specialStatIcon))
-                card.specialStatIcon = ParseEnum<SpecialStatIcon>(this.specialStatIcon);
-
-            if (this.metaCategories != null && this.metaCategories.Length > 0)
-                card.metaCategories = new(this.metaCategories.Select(s => ParseEnum<CardMetaCategory>(s)).ToArray());
-
-            if (!string.IsNullOrEmpty(this.cardComplexity))
-                card.cardComplexity = ParseEnum<CardComplexity>(this.cardComplexity);
-
-            if (this.onePerDeck.HasValue)
-                card.onePerDeck = this.onePerDeck.Value;
-
-            if (!string.IsNullOrEmpty(this.temple))
-                card.temple = ParseEnum<CardTemple>(this.temple);
-
-            if (!string.IsNullOrEmpty(this.titleGraphic))
-                card.titleGraphic = TextureHelper.GetImageAsTexture(this.titleGraphic);
-
-            if (this.hideAttackAndHealth.HasValue)
-                card.hideAttackAndHealth = this.hideAttackAndHealth.Value;
-
-            if (this.appearanceBehaviour != null && this.appearanceBehaviour.Length > 0)
-                card.appearanceBehaviour = new(this.appearanceBehaviour.Select(s => ParseEnum<CardAppearanceBehaviour.Appearance>(s)).ToArray());
-
-            if (!string.IsNullOrEmpty(this.texture))
-                card.SetPortrait(this.texture);
+            if (toCardInfo)
+            {
+                if (!string.IsNullOrEmpty(serializeInfo.texture))
+                    cardInfo.SetPortrait(serializeInfo.texture);
+            }
+            else
+            {
+                if (cardInfo.portraitTex != null)
+                {
+                    Texture2D t = cardInfo.portraitTex.texture;
+                    ImportExportUtils.ApplyValue(ref t, ref serializeInfo.texture, false, $"{cardName}_texture");
+                }
+            }
             
-            if (!string.IsNullOrEmpty(this.altTexture))
-                card.SetAltPortrait(this.altTexture);
+            if (toCardInfo)
+            {
+                if (!string.IsNullOrEmpty(serializeInfo.altTexture))
+                    cardInfo.SetAltPortrait(serializeInfo.altTexture);
+            }
+            else
+            {
+                if (cardInfo.alternatePortrait != null)
+                {
+                    Texture2D t = cardInfo.alternatePortrait.texture;
+                    ImportExportUtils.ApplyValue(ref t, ref serializeInfo.altTexture, false, $"{cardName}_altTexture");
+                }
+            }
 
-            if (!string.IsNullOrEmpty(this.emissionTexture))
-                card.SetEmissivePortrait(this.emissionTexture);
+            if (toCardInfo)
+            {
+                if (!string.IsNullOrEmpty(serializeInfo.emissionTexture))
+                    cardInfo.SetEmissivePortrait(serializeInfo.emissionTexture);
+            }
+            else
+            {
+                Sprite sprite = cardInfo.GetEmissivePortrait();
+                if (sprite != null)
+                {
+                    Texture2D t = sprite.texture;
+                    ImportExportUtils.ApplyValue(ref t, ref serializeInfo.emissionTexture, false, $"{cardName}_emissionTexture");
+                }
+            }
 
-            if (!string.IsNullOrEmpty(this.holoPortraitPrefab))
-                card.holoPortraitPrefab = Resources.Load<GameObject>(this.holoPortraitPrefab);
+            if (toCardInfo)
+            {
+                if (!string.IsNullOrEmpty(serializeInfo.holoPortraitPrefab))
+                    cardInfo.holoPortraitPrefab = Resources.Load<GameObject>(serializeInfo.holoPortraitPrefab);
+            }
+            else
+            {
+                // TODO: Prefabs
+                if(cardInfo.holoPortraitPrefab != null)
+                    serializeInfo.holoPortraitPrefab = cardInfo.holoPortraitPrefab.ToString();
+            }
 
-            if (!string.IsNullOrEmpty(this.animatedPortrait))
-                card.animatedPortrait = Resources.Load<GameObject>(this.animatedPortrait);
+            if (toCardInfo)
+            {
+                if (!string.IsNullOrEmpty(serializeInfo.animatedPortrait))
+                    cardInfo.animatedPortrait = Resources.Load<GameObject>(serializeInfo.animatedPortrait);
+            }
+            else
+            {
+                // TODO: Prefabs
+                if(cardInfo.animatedPortrait != null)
+                    serializeInfo.holoPortraitPrefab = cardInfo.animatedPortrait.ToString();
+            }
 
-            if (!string.IsNullOrEmpty(this.altEmissionTexture))
-                card.SetEmissiveAltPortrait(this.altEmissionTexture);
+            if (toCardInfo)
+            {
+                if (!string.IsNullOrEmpty(serializeInfo.altEmissionTexture))
+                    cardInfo.SetEmissiveAltPortrait(serializeInfo.altEmissionTexture);
+            }
+            else
+            {
+                Sprite sprite = cardInfo.GetEmissiveAltPortrait();
+                if (sprite != null)
+                {
+                    Texture2D t = sprite.texture;
+                    ImportExportUtils.ApplyValue(ref t, ref serializeInfo.altEmissionTexture, false, $"{cardName}_altEmissionTexture");
+                }
+            }
 
-            if (!string.IsNullOrEmpty(this.pixelTexture))
-                card.SetPixelPortrait(this.pixelTexture);
-
-            if (this.tribes != null && this.tribes.Length > 0)
-                card.tribes = new(this.tribes.Select(s => ParseEnum<Tribe>(s)).ToArray());
-
-            if (this.traits != null && this.traits.Length > 0)
-                card.traits = new(this.traits.Select(s => ParseEnum<Trait>(s)).ToArray());
-
-            if (!string.IsNullOrEmpty(this.evolveIntoName))
-                card.SetEvolve(this.evolveIntoName, this.evolveTurns.HasValue ? this.evolveTurns.Value : 1);
-
-            if (!string.IsNullOrEmpty(this.defaultEvolutionName))
-                card.defaultEvolutionName = this.defaultEvolutionName;
-
-            if (!string.IsNullOrEmpty(this.tailName))
-                card.SetTail(this.tailName, this.tailLostPortrait);
-
-            if (!string.IsNullOrEmpty(this.iceCubeName))
-                card.SetIceCube(this.iceCubeName);
-
-            if (this.flipPortraitForStrafe.HasValue)
-                card.flipPortraitForStrafe = this.flipPortraitForStrafe.Value;
-
-
-            if (this.extensionProperties != null)
-                foreach (var item in this.extensionProperties)
-                    card.SetExtendedProperty(item.Key, item.Value);
-
-
-            card.SetExtendedProperty("JSONFilePath", this.filePath);
-        }
-
-        private void ApplyLocalisations(CardInfo card)
-        {
-            ApplyLocaleField("displayedName", displayedName, out card.displayedName);
-            ApplyLocaleField("description", description, out card.description);
+            if (toCardInfo)
+            {
+                if (!string.IsNullOrEmpty(serializeInfo.pixelTexture))
+                    cardInfo.SetPixelPortrait(serializeInfo.pixelTexture);
+            }
+            else
+            {
+                if (cardInfo.pixelPortrait != null)
+                {
+                    Texture2D t = cardInfo.pixelPortrait.texture;
+                    ImportExportUtils.ApplyValue(ref t, ref serializeInfo.texture, false, $"{cardName}_pixelTexture");
+                }
+            }
         }
 
         private void ApplyLocaleField(string field, LocalizableField rows, out string cardInfoEnglishField)
@@ -277,15 +345,16 @@ namespace JLPlugin.V2.Data
             CardInfo existingCard = UpdateCard ? ScriptableObjectLoader<CardInfo>.AllData.Find((CardInfo x) => x.name == this.name) : CardManager.BaseGameCards.CardByName(this.name);
             if (existingCard != null)
             {
-                Plugin.Log.LogDebug($"Modifying {this.name} using {this.ToJSON()}");
-                this.ApplyCardInfo(existingCard);
+                Plugin.VerboseLog($"Modifying {this.name} using {this.ToJSON()}");
+                Apply(existingCard, this, true, existingCard.name);
             }
             else
             {
+                Plugin.VerboseLog($"New Card {this.name} using {this.ToJSON()}");
                 string localModPrefix = this.modPrefix ?? DEFAULT_MOD_PREFIX;
                 CardInfo newCard = ScriptableObject.CreateInstance<CardInfo>();
                 newCard.name = this.name.StartsWith($"{localModPrefix}_") ? this.name : $"{localModPrefix}_{this.name}";
-                this.ApplyCardInfo(newCard);
+                Apply(newCard, this, true, newCard.name);
                 CardManager.Add(localModPrefix, newCard);
             }
         }
@@ -301,11 +370,6 @@ namespace JLPlugin.V2.Data
             }
             else
             {
-                string localModPrefix = this.modPrefix ?? DEFAULT_MOD_PREFIX;
-                CardInfo newCard = ScriptableObject.CreateInstance<CardInfo>();
-                newCard.name = this.name.StartsWith($"{localModPrefix}_") ? this.name : $"{localModPrefix}_{this.name}";
-                this.ApplyCardInfo(newCard);
-
                 // Remove from NewCards using reflection
                 ObservableCollection<CardInfo> NewCards = (ObservableCollection<CardInfo>)typeof(CardManager)
                     .GetField("NewCards", BindingFlags.Static | BindingFlags.NonPublic).GetValue(null);
@@ -331,7 +395,7 @@ namespace JLPlugin.V2.Data
             if (baseGameCard != null)
             {
                 Plugin.Log.LogDebug($"Modifying {this.name} using {this.ToJSON()}");
-                this.ApplyCardInfo(baseGameCard);
+                Apply(baseGameCard, this, true, name);
                 return baseGameCard;
             }
             else
@@ -339,12 +403,12 @@ namespace JLPlugin.V2.Data
                 string localModPrefix = this.modPrefix ?? DEFAULT_MOD_PREFIX;
                 CardInfo newCard = ScriptableObject.CreateInstance<CardInfo>();
                 newCard.name = this.name.StartsWith($"{localModPrefix}_") ? this.name : $"{localModPrefix}_{this.name}";
-                this.ApplyCardInfo(newCard);
+                Apply(newCard, this, true, name);
                 return newCard;
             }
         }
 
-        internal string WriteToFile(string filename, bool overwrite = true)
+        public string WriteToFile(string filename, bool overwrite = true)
         {
             Plugin.Log.LogDebug($"Writing card {this.name ?? "Unnamed"} to {filename}");
             if (!filename.EndsWith("2")) // we now play with jldr2 files
@@ -384,7 +448,7 @@ namespace JLPlugin.V2.Data
                 {
                     bool? fieldVal = (bool?)field.GetValue(this);
                     if (fieldVal.HasValue)
-                        retval += $"\t\"{field.Name}\": {fieldVal.Value},\n";
+                        retval += $"\t\"{field.Name}\": {(fieldVal.Value ? "true" : "false")},\n";
                 }
                 else if (field.FieldType == typeof(Dictionary<string, string>))
                 {
@@ -460,9 +524,9 @@ namespace JLPlugin.V2.Data
             englishFieldName = EnglishFieldName;
         }
 
-        public void Initialize(string initialValue)
+        public void Initialize(string englishValue)
         {
-            rows[englishFieldName] = initialValue;
+            rows[englishFieldName] = englishValue;
         }
         
         public bool ContainsKey(string key)

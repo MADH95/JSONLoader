@@ -65,7 +65,7 @@ namespace JLPlugin.Data
                 if (encounterInfo.dominantTribes != null)
                 {
                     encounter.dominantTribes = encounterInfo.dominantTribes
-                        .Select(x => CardSerializeInfo.ParseEnum<Tribe>(x)).ToList();
+                        .Select(ImportExportUtils.ParseEnum<Tribe>).ToList();
                 }
 
                 if (encounterInfo.randomReplacementCards != null)
@@ -77,7 +77,7 @@ namespace JLPlugin.Data
                 if (encounterInfo.redundantAbilities != null)
                 {
                     encounter.SetRedundantAbilities(encounterInfo.redundantAbilities
-                        .Select(s => CardSerializeInfo.ParseEnum<Ability>(s)).ToArray());
+                        .Select(ImportExportUtils.ParseEnum<Ability>).ToArray());
                 }
 
                 foreach (TurnInfo turndata in encounterInfo.turns)

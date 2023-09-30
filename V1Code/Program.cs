@@ -10,6 +10,7 @@ using JLPlugin.Data;
 using JLPlugin.V2.Data;
 using JSONLoader.Data;
 using System.Linq;
+using InscryptionAPI.Card;
 using JSONLoader.V2Code;
 using UnityEngine;
 
@@ -23,6 +24,9 @@ namespace JLPlugin
         public const string PluginName = "JSONLoader";
         public const string PluginVersion = "2.4.0";
         
+        public static string Directory = "";
+        public static string ExportDirectory => Path.Combine(Directory, "Exported");
+        
         internal static ConfigEntry<bool> betaCompatibility;
         internal static ConfigEntry<bool> verboseLogging;
 
@@ -30,8 +34,8 @@ namespace JLPlugin
 
         private static List<string> GetAllJLDRFiles()
         {
-            return Directory.GetFiles(Paths.PluginPath, "*.jldr*", SearchOption.AllDirectories)
-                .Where((a)=> (a.EndsWith(".jldr") || a.EndsWith(".jldr2")) && !a.Contains("_example.jldr2"))
+            return System.IO.Directory.GetFiles(Paths.PluginPath, "*.jldr*", SearchOption.AllDirectories)
+                .Where((a)=> (a.EndsWith(".jldr") || a.EndsWith(".jldr2")) && !a.Contains(Directory))
                 .ToList();
         }
         
@@ -39,6 +43,7 @@ namespace JLPlugin
         {
             Logger.LogInfo($"Loaded {PluginName}!");
             Log = Logger;
+            Directory = Path.GetDirectoryName(Info.Location);
             Harmony harmony = new(PluginGuid);
             harmony.PatchAll();
             
@@ -87,6 +92,30 @@ namespace JLPlugin
                 {
                     ReloadVanilla();
                 }
+            }
+
+            if ((Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift)) && Input.GetKeyDown(KeyCode.X))
+            {
+                ExportAllCards();
+            }
+        }
+
+        public void ExportAllCards()
+        {
+            Log.LogInfo($"Exporting {CardManager.AllCardsCopy.Count} cards.");
+            foreach (CardInfo card in CardManager.AllCardsCopy)
+            {
+                CardSerializeInfo info = new CardSerializeInfo();
+                CardSerializeInfo.Apply(card, info, false, card.name);
+                
+                string path = Path.Combine(ExportDirectory, "Cards", card.name + ".jldr2");
+                string directory = Path.GetDirectoryName(path);
+                if (!System.IO.Directory.Exists(directory))
+                {
+                    System.IO.Directory.CreateDirectory(directory);
+                }
+                
+                info.WriteToFile(path, true);
             }
         }
 

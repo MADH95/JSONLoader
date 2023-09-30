@@ -72,7 +72,7 @@ namespace JLPlugin.SigilCode
                 }
             }
 
-            List<GemType> GemCost = abilityData.activationCost?.gemCost?.Select(s => ParseEnum<GemType>(s)).ToList() ?? new List<GemType>();
+            List<GemType> GemCost = abilityData.activationCost?.gemCost?.Select(ImportExportUtils.ParseEnum<GemType>).ToList() ?? new List<GemType>();
             foreach (GemType Gem in GemCost)
             {
                 if (!Singleton<ResourcesManager>.Instance.HasGem(Gem))

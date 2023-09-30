@@ -1,7 +1,6 @@
 ﻿using DiskCardGame;
 using System.Collections;
 using UnityEngine;
-using static JLPlugin.V2.Data.CardSerializeInfo;
 
 namespace JLPlugin.Data
 {
@@ -21,7 +20,7 @@ namespace JLPlugin.Data
 
         public IEnumerator Strafe(AbilityBehaviourData abilityData, moveCards movecardinfo, CardSlot SlotToMove)
         {
-            StrafeType strafeType = ParseEnum<StrafeType>(SigilData.ConvertArgument(movecardinfo.strafe.direction, abilityData));
+            StrafeType strafeType = ImportExportUtils.ParseEnum<StrafeType>(SigilData.ConvertArgument(movecardinfo.strafe.direction, abilityData));
             switch (strafeType)
             {
                 case StrafeType.normal:

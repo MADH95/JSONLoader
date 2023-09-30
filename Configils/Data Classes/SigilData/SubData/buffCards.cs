@@ -93,7 +93,7 @@ namespace JLPlugin.Data
 
                     if (buffcardsinfo.removeAbilities != null)
                     {
-                        List<Ability> removeSigils = SigilData.ConvertArgument(buffcardsinfo.removeAbilities, abilitydata).Select(x => CardSerializeInfo.ParseEnum<Ability>(x)).ToList();
+                        List<Ability> removeSigils = SigilData.ConvertArgument(buffcardsinfo.removeAbilities, abilitydata).Select(ImportExportUtils.ParseEnum<Ability>).ToList();
 
                         card.temporaryMods.ForEach(x => x.abilities = x.abilities.Except(removeSigils).ToList());
                         card.Status.hiddenAbilities.AddRange(removeSigils);
@@ -101,7 +101,7 @@ namespace JLPlugin.Data
                     }
                     if (buffcardsinfo.addAbilities != null)
                     {
-                        List<Ability> addSigils = SigilData.ConvertArgument(buffcardsinfo.addAbilities.Select(x => x.name).ToList(), abilitydata).Select(x => CardSerializeInfo.ParseEnum<Ability>(x)).ToList();
+                        List<Ability> addSigils = SigilData.ConvertArgument(buffcardsinfo.addAbilities.Select(x => x.name).ToList(), abilitydata).Select(ImportExportUtils.ParseEnum<Ability>).ToList();
 
                         card.temporaryMods.ForEach(x => x.negateAbilities = x.negateAbilities.Except(addSigils).ToList());
                         card.Status.hiddenAbilities = card.Status.hiddenAbilities.Except(addSigils).ToList();
