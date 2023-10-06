@@ -104,7 +104,7 @@ namespace JLPlugin
         {
             TribeList.ExportAllTribes();
             // SigilData.LoadAllSigils(files);
-            // Data.EncounterData.LoadAllEncounters(files);
+            Data.EncounterData.ExportAllEncounters();
             // StarterDeckList.LoadAllStarterDecks(files);
             // GramophoneData.LoadAllGramophone(files);
             // LanguageData.LoadAllLanguages(files);

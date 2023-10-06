@@ -444,73 +444,165 @@ namespace TinyJson
         {
             info.SetValue(o, ParseValue(info.PropertyType, v), null);
         }
-        
+
         public static string ToJSON<T>(T t)
         {
-            if (!publicFieldInfoCache.TryGetValue(typeof(T), out FieldInfo[] PUBLIC_FIELD_INFOS))
+            return ToJSONInternal(typeof(T), t, "");
+        }
+
+        private static string ToJSONInternal(Type type, object t, string prefix)
+        {
+            try
             {
-                PUBLIC_FIELD_INFOS = typeof(T).GetFields(BindingFlags.Instance | BindingFlags.Public);
-                publicFieldInfoCache[typeof(T)] = PUBLIC_FIELD_INFOS;
-            }
-            
-            string retval = "{\n";
-            foreach (FieldInfo field in PUBLIC_FIELD_INFOS)
-            {
-                if (field.FieldType == typeof(string))
+                if (type == typeof(string))
                 {
-                    string fieldVal = (string)field.GetValue(t);
-                    if (!string.IsNullOrEmpty(fieldVal))
-                        retval += $"\t\"{field.Name}\": \"{fieldVal}\",\n";
+                    string fieldVal = (string)t;
+                    if (fieldVal != null)
+                    {
+                        return "\"" + fieldVal + "\"";
+                    }
+                    else
+                    {
+                        return "\"\"";
+                    }
                 }
-                else if (field.FieldType == typeof(string[]))
+                else if (type == typeof(string[]))
                 {
-                    string[] fieldVal = (string[])field.GetValue(t);
+                    string[] fieldVal = (string[])t;
                     if (fieldVal != null && fieldVal.Length > 0)
-                        retval += $"\t\"{field.Name}\": [{string.Join(",", fieldVal.Select(v => $"\"{v}\""))}],\n";
+                    {
+                        return $"[{string.Join(",", fieldVal)}]";
+                    }
+                    else
+                    {
+                        return "[]";
+                    }
                 }
-                else if (field.FieldType == typeof(int?))
+                else if (type == typeof(int?))
                 {
-                    int? fieldVal = (int?)field.GetValue(t);
+                    int? fieldVal = (int?)t;
                     if (fieldVal.HasValue)
-                        retval += $"\t\"{field.Name}\": {fieldVal.Value},\n";
+                        return fieldVal.Value.ToString();
+                    return "0";
                 }
-                else if (field.FieldType == typeof(bool?))
+                else if (type == typeof(bool?))
                 {
-                    bool? fieldVal = (bool?)field.GetValue(t);
+                    bool? fieldVal = (bool?)t;
                     if (fieldVal.HasValue)
-                        retval += $"\t\"{field.Name}\": {(fieldVal.Value ? "true" : "false")},\n";
+                        return fieldVal.Value ? "true" : "false";
+                    return "false";
                 }
-                else if (field.FieldType == typeof(Dictionary<string, string>))
+                else if (type == typeof(bool))
                 {
-                    Dictionary<string, string> fieldVal = (Dictionary<string, string>)field.GetValue(t);
+                    return (bool)t ? "true" : "false";
+                }
+                else if (type == typeof(Dictionary<string, string>))
+                {
+                    Dictionary<string, string> fieldVal = (Dictionary<string, string>)t;
                     if (fieldVal != null && fieldVal.Count > 0)
                     {
-                        retval += $"\t\"{field.Name}\": {{\n";
-                        foreach (var val in fieldVal.Where(kvp => !string.IsNullOrEmpty(kvp.Key) && !string.IsNullOrEmpty(kvp.Value)))
-                            retval += $"\t\t\"{val.Key}\": \"{val.Value}\",\n";
-                        retval += $"\t}},\n";
+                        string s = "{";
+                        int index = 0;
+                        foreach (KeyValuePair<string, string> pair in fieldVal)
+                        {
+                            if (index++ > 0)
+                            {
+                                s += $",\n\t{prefix}\"{pair.Key}\": \"{pair.Value}\"";
+                            }
+                            else
+                            {
+                                s += $"\n\t{prefix}\"{pair.Key}\": \"{pair.Value}\"";
+                            }
+                        }
+
+                        if (index > 0)
+                        {
+                            return $"{s}\n{prefix}}}";
+                        }
+
+                        return s + "}";
+                    }
+                    else
+                    {
+                        return "{}";
                     }
                 }
-                else if (field.FieldType.IsAssignableFrom(typeof(IFlexibleField)))
+                else if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(List<>))
                 {
-                    object value = field.GetValue(t);
+                    IList fieldVal = (IList)t;
+                    if (fieldVal != null && fieldVal.Count > 0)
+                    {
+                        Type subType = fieldVal.GetType().GetGenericArguments().Single();
+                        string join = "";
+                        string subPrefix = prefix + "\t";
+                        for (int i = 0; i < fieldVal.Count; i++)
+                        {
+                            object o = fieldVal[i];
+                            join += "\n" + subPrefix + ToJSONInternal(subType, o, subPrefix);
+                            if (i < fieldVal.Count - 1)
+                                join += ",";
+                        }
+
+                        // [
+                        // "Hello",
+                        // ]
+                        return $"[{join}\n{prefix}]";
+                    }
+                    else
+                    {
+                        return "[]";
+                    }
+                }
+                else if (type.IsAssignableFrom(typeof(IFlexibleField)))
+                {
+                    object value = t;
                     if (value != null)
                     {
-                        retval += ((IFlexibleField)value).ToJSON();
+                        return ((IFlexibleField)value).ToJSON();
                     }
 
-                    Dictionary<string, string> fieldVal = ((LocalizableField)field.GetValue(t)).rows;
-                    foreach (KeyValuePair<string,string> pair in fieldVal)
+                    Dictionary<string, string> fieldVal = ((LocalizableField)t).rows;
+                    return ToJSONInternal(fieldVal.GetType(), fieldVal, prefix);
+                }
+                else if (!type.IsValueType)
+                {
+                    if (!publicFieldInfoCache.TryGetValue(type, out FieldInfo[] PUBLIC_FIELD_INFOS))
                     {
-                        retval += $"\t\"{pair.Key}\": {pair.Value},\n";
+                        PUBLIC_FIELD_INFOS = type.GetFields(BindingFlags.Instance | BindingFlags.Public);
+                        publicFieldInfoCache[type] = PUBLIC_FIELD_INFOS;
                     }
+
+                    string s = "{";
+                    int index = 0;
+                    string subPrefix = prefix + "\t";
+                    foreach (FieldInfo fieldInfo in PUBLIC_FIELD_INFOS)
+                    {
+                        string value = ToJSONInternal(fieldInfo.FieldType, fieldInfo.GetValue(t), subPrefix);
+                        if (index++ > 0)
+                        {
+                            s += ",";
+                        }
+                        s += $"\n{subPrefix}\"{fieldInfo.Name}\": {value}";
+                    }
+
+                    if (index > 0)
+                    {
+                        return s + $"\n{prefix}" + "}";
+                    }
+
+                    return s + prefix + "}";
                 }
             }
-            retval = retval.TrimEnd('\n', ',') + "\n}";
-            return retval;
-        }
-    
+            catch (Exception e)
+            {
+                Plugin.Log.LogError($"Something went wrong while serializing JSON type: {type} value: {t}");
+                Plugin.Log.LogError(e);
+                throw;
+            }
 
+            throw new NotImplementedException($"Type not supported for JSON serialization {type}");
+        }
+        
         [Serializable]
         public class LocalizableField : IFlexibleField
         {

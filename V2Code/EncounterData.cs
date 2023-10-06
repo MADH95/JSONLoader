@@ -1,13 +1,12 @@
-﻿using BepInEx;
-using DiskCardGame;
+﻿using DiskCardGame;
 using InscryptionAPI.Card;
 using InscryptionAPI.Encounters;
 using InscryptionAPI.Regions;
-using JLPlugin.V2.Data;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using TinyJson;
+using UnityEngine;
 
 namespace JLPlugin.Data
 {
@@ -40,6 +39,105 @@ namespace JLPlugin.Data
             public string difficultyReplacement;
         }
 
+        public static void Process(EncounterBlueprintData encounter, EncounterInfo encounterInfo, bool toEncounter)
+        {
+            Plugin.Log.LogInfo($"Exporting {encounter.name} {encounter.turns}");
+            ImportExportUtils.ApplyProperty(()=>encounter.name, (a)=>encounter.name = a, ref encounterInfo.name, toEncounter);
+            ImportExportUtils.ApplyValue(ref encounter.minDifficulty, ref encounterInfo.minDifficulty, toEncounter);
+            ImportExportUtils.ApplyValue(ref encounter.maxDifficulty, ref encounterInfo.maxDifficulty, toEncounter);
+            
+            Plugin.Log.LogInfo($"dominantTribes {encounter.dominantTribes} {encounterInfo.dominantTribes}");
+            ImportExportUtils.ApplyEnumList(ref encounter.dominantTribes, ref encounterInfo.dominantTribes, toEncounter);
+            Plugin.Log.LogInfo($"dominantTribes done {encounter.dominantTribes} {encounterInfo.dominantTribes}");
+            ImportExportUtils.ApplyList(ref encounter.randomReplacementCards, ref encounterInfo.randomReplacementCards, toEncounter);
+            ImportExportUtils.ApplyEnumList(ref encounter.redundantAbilities, ref encounterInfo.redundantAbilities, toEncounter);
+
+            if (toEncounter)
+            {
+                foreach (TurnInfo turndata in encounterInfo.turns)
+                {
+                    List<EncounterBlueprintData.CardBlueprint> TurnCardList = new List<EncounterBlueprintData.CardBlueprint>();
+                    foreach (TurnCardInfo turncardinfodata in turndata.cardInfo)
+                    {
+                        EncounterBlueprintData.CardBlueprint TurnCardInfo = new EncounterBlueprintData.CardBlueprint();
+                        TurnCardInfo.card = CardManager.AllCardsCopy.CardByName(turncardinfodata.card);
+                        if (turncardinfodata.randomReplaceChance != null)
+                        {
+                            TurnCardInfo.randomReplaceChance = (int)turncardinfodata.randomReplaceChance;
+                        }
+
+                        if (turncardinfodata.difficultyReplacement != null)
+                        {
+                            TurnCardInfo.difficultyReplace = true;
+                            TurnCardInfo.replacement =
+                                CardManager.AllCardsCopy.CardByName(turncardinfodata.difficultyReplacement);
+                        }
+
+                        if (turncardinfodata.difficultyReq != null)
+                        {
+                            TurnCardInfo.difficultyReq = (int)turncardinfodata.difficultyReq;
+                        }
+
+                        TurnCardList.Add(TurnCardInfo);
+                    }
+
+                    encounter.AddTurn(TurnCardList.ToArray());
+                }
+            }
+            else
+            {
+                if (encounter.turns != null)
+                {
+                    Plugin.Log.LogInfo($"\t{encounter.turns} is not null {encounter.turns.Count}");
+                    encounterInfo.turns = new List<TurnInfo>();
+                    foreach (List<EncounterBlueprintData.CardBlueprint> turn in encounter.turns)
+                    {
+                        if(turn == null)
+                            continue;
+                        
+                        TurnInfo turnInfo = new TurnInfo();
+                        turnInfo.cardInfo = new List<TurnCardInfo>();
+                        foreach (EncounterBlueprintData.CardBlueprint card in turn)
+                        {
+                            TurnCardInfo turnCardInfo = new TurnCardInfo();
+                            turnCardInfo.randomReplaceChance = card.randomReplaceChance;
+                            turnCardInfo.difficultyReq = card.difficultyReq;
+                            
+                            if(card.card != null)
+                                turnCardInfo.card = card.card.name;
+                            
+                            if(card.replacement != null)
+                                turnCardInfo.difficultyReplacement = card.replacement.name;
+
+                            turnInfo.cardInfo.Add(turnCardInfo);
+                        }
+
+                        encounterInfo.turns.Add(turnInfo);
+                    }
+                    Plugin.Log.LogInfo($"\tTurns: {encounterInfo.turns.Count}");
+                }
+            }
+            
+            if (toEncounter)
+            {
+                if (encounterInfo.regions != null)
+                {
+                    foreach (RegionData Region in RegionManager.AllRegionsCopy
+                                 .Where(x => encounterInfo.regions.Contains(x.name)).ToList())
+                    {
+                        RegionExtensions.AddEncounters(Region, encounter);
+                    }
+                }
+            }
+            else
+            {
+                RegionData[] regionDatas = RegionManager.AllRegionsCopy.FindAll((a) =>
+                    a.encounters.FirstOrDefault((a) => a.name == encounter.name) != null).ToArray();
+                encounterInfo.regions = regionDatas.Select((a) => a.name).ToList();
+            }
+            Plugin.Log.LogInfo($"Done Exporting {encounter.name} {encounter.turns}");
+        }
+        
         public static void LoadAllEncounters(List<string> files)
         {
             for (int index = 0; index < files.Count; index++)
@@ -82,12 +180,10 @@ namespace JLPlugin.Data
 
                 foreach (TurnInfo turndata in encounterInfo.turns)
                 {
-                    List<EncounterBlueprintData.CardBlueprint> TurnCardList =
-                        new List<EncounterBlueprintData.CardBlueprint>();
+                    List<EncounterBlueprintData.CardBlueprint> TurnCardList = new List<EncounterBlueprintData.CardBlueprint>();
                     foreach (TurnCardInfo turncardinfodata in turndata.cardInfo)
                     {
-                        EncounterBlueprintData.CardBlueprint TurnCardInfo =
-                            new EncounterBlueprintData.CardBlueprint();
+                        EncounterBlueprintData.CardBlueprint TurnCardInfo = new EncounterBlueprintData.CardBlueprint();
                         TurnCardInfo.card = CardManager.AllCardsCopy.CardByName(turncardinfodata.card);
                         if (turncardinfodata.randomReplaceChance != null)
                         {
@@ -121,6 +217,28 @@ namespace JLPlugin.Data
                     }
                 }
             }
+        }
+
+        public static void ExportAllEncounters()
+        {
+            Plugin.Log.LogInfo($"Exporting {EncounterManager.AllEncountersCopy.Count} Encounters to JSON");
+            foreach (EncounterBlueprintData tribe in EncounterManager.AllEncountersCopy)
+            {
+                ExportEncounter(tribe);
+            }
+        }
+        
+        public static void ExportEncounter(EncounterBlueprintData info)
+        {
+            string path = Path.Combine(Plugin.ExportDirectory, "Encounters");
+            if (!Directory.Exists(path))
+                Directory.CreateDirectory(path);
+
+            EncounterInfo serializedTribe = new EncounterInfo();
+            Process(info, serializedTribe, false);
+            
+            string json = JSONParser.ToJSON(serializedTribe);
+            File.WriteAllText(Path.Combine(path, serializedTribe.name + ".jldr2"), json);
         }
     }
 }

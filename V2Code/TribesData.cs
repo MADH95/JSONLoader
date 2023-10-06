@@ -116,8 +116,8 @@ namespace JLPlugin.Data
             serializedTribe.guid = info.guid;
             serializedTribe.appearInTribeChoices = info.tribeChoice;
             
-            ImportExportUtils.ApplyValue(ref info.icon, ref serializedTribe.tribeIcon, false, "Tribes", $"{serializedTribe.guid}_{serializedTribe.name}_icon");
-            ImportExportUtils.ApplyValue(ref info.cardback, ref serializedTribe.choiceCardBackTexture, false, "Tribes", $"{serializedTribe.guid}_{serializedTribe.name}_choiceCardBackTexture");
+            ImportExportUtils.ApplyEnumList(ref info.icon, ref serializedTribe.tribeIcon, false, "Tribes", $"{serializedTribe.guid}_{serializedTribe.name}_icon");
+            ImportExportUtils.ApplyEnumList(ref info.cardback, ref serializedTribe.choiceCardBackTexture, false, "Tribes", $"{serializedTribe.guid}_{serializedTribe.name}_choiceCardBackTexture");
             
             string json = JSONParser.ToJSON(serializedTribe);
             File.WriteAllText(Path.Combine(path, serializedTribe.name + ".jldr2"), json);

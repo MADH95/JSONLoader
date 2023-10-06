@@ -1,12 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.SqlTypes;
 using System.IO;
 using System.Linq;
+using System.Reflection;
+using DiskCardGame;
+using InscryptionAPI.Card;
 using InscryptionAPI.Guid;
 using InscryptionAPI.Helpers;
 using InscryptionAPI.Localizing;
 using JLPlugin;
 using JLPlugin.V2.Data;
+using Sirenix.Utilities;
 using TinyJson;
 using UnityEngine;
 
@@ -28,7 +33,7 @@ public static class ImportExportUtils
         return GuidManager.GetEnumValue<T>(guid, name);
     }
 
-    public static void ApplyValue<T>(ref T cardInfoValue, ref T? serializeInfoValue, bool toCardInfo) where T : struct
+    public static void ApplyEnumList<T>(ref T cardInfoValue, ref T? serializeInfoValue, bool toCardInfo) where T : struct
     {
         if (toCardInfo)
         {
@@ -41,7 +46,7 @@ public static class ImportExportUtils
         }
     }
 
-    public static void ApplyValue<T>(ref T cardInfoValue, ref string serializeInfoValue, bool toCardInfo)
+    public static void ApplyEnumList<T>(ref T cardInfoValue, ref string serializeInfoValue, bool toCardInfo)
         where T : unmanaged, Enum
     {
         if (toCardInfo)
@@ -55,7 +60,23 @@ public static class ImportExportUtils
         }
     }
 
-    public static void ApplyValue(ref string cardInfoValue, ref string serializeInfoValue, bool toCardInfo)
+    public static void ApplyProperty<T,Y>(Func<T> getter, Action<T> setter, ref Y serializeInfoValue, bool toCardInfo)
+    {
+        if (toCardInfo)
+        {
+            T t = default;
+            ApplyValue(ref t, ref serializeInfoValue, true);
+            setter(t);
+                
+        }
+        else
+        {
+            T t = getter();
+            ApplyValue(ref t, ref serializeInfoValue, false);
+        }
+    }
+
+    public static void ApplyEnumList(ref string cardInfoValue, ref string serializeInfoValue, bool toCardInfo)
     {
         if (toCardInfo)
         {
@@ -68,7 +89,7 @@ public static class ImportExportUtils
         }
     }
 
-    public static void ApplyValue(ref Sprite cardInfoValue, ref string serializeInfoValue, bool toCardInfo, string type, string fileName)
+    public static void ApplyEnumList(ref Sprite cardInfoValue, ref string serializeInfoValue, bool toCardInfo, string type, string fileName)
     {
         if (toCardInfo)
         {
@@ -85,7 +106,7 @@ public static class ImportExportUtils
         }
     }
     
-    public static void ApplyValue(ref Texture cardInfoValue, ref string serializeInfoValue, bool toCardInfo)
+    public static void ApplyEnumList(ref Texture cardInfoValue, ref string serializeInfoValue, bool toCardInfo)
     {
         if (toCardInfo)
         {
@@ -99,7 +120,7 @@ public static class ImportExportUtils
         }
     }
 
-    public static void ApplyValue(ref Texture2D cardInfoValue, ref string serializeInfoValue, bool toCardInfo,
+    public static void ApplyEnumList(ref Texture2D cardInfoValue, ref string serializeInfoValue, bool toCardInfo,
         string type, string fileName)
     {
         if (toCardInfo)
@@ -117,7 +138,192 @@ public static class ImportExportUtils
         }
     }
 
-    public static void ApplyValue<T>(ref List<T> cardInfoValue, ref string[] serializeInfoValue, bool toCardInfo)
+    public static void ApplyValue<T, Y>(ref T a, ref Y b, bool toA)
+    {
+        if (toA)
+        {
+            ConvertValue(ref b, ref a);
+        }
+        else
+        {
+            ConvertValue(ref a, ref b);
+        }
+    }
+    
+    private static void ConvertValue<T, Y>(ref T from, ref Y to)
+    {
+        if (typeof(T) == typeof(Y))
+        {
+            to = (Y)(object)from;
+            return;
+        }
+        else if (AreNullableTypesEqual(from, to, out object fromValue, out object toValue, out bool fromHasValue, out bool toHasValue))
+        {
+            //Debug.Log($"Same types and someone is nullable");
+            if (fromHasValue)
+            {
+                to = (Y)fromValue;
+            }
+            else
+            {
+                Debug.LogError($"B has no value. {from}=>{fromValue}");
+            }
+            return;
+        }
+        else if (typeof(T).IsEnum && typeof(Y) == typeof(string))
+        {
+            to = (Y)(object)from.ToString();
+            return;
+        }
+        else if (typeof(T) == typeof(string) && typeof(Y).IsEnum)
+        {
+            object o = typeof(ImportExportUtils)
+                .GetMethod(nameof(ParseEnum))
+                .MakeGenericMethod(typeof(Y))
+                .Invoke(null, new object[] { from });
+            Debug.LogError($"string to enum: {from} => {o}");
+            to = (Y)o;
+            return;
+        }
+        else if (typeof(T) == typeof(CardInfo) && typeof(Y) == typeof(string))
+        {
+            if(from != null)
+                to = (Y)(object)((from as CardInfo).name);
+            return;
+        }
+        else if (typeof(T) == typeof(string) && typeof(Y) == typeof(CardInfo))
+        {
+            string s = (string)(object)from;
+            if(string.IsNullOrEmpty(s))
+                to = (Y)(object)CardLoader.GetCardByName(s);
+            return;
+        }
+        
+        Debug.LogError($"Unsupported conversion type: {typeof(T)} to {typeof(Y)}");
+    }
+
+    private static bool AreNullableTypesEqual<T, Y>(T t, Y y, out object a, out object b, out bool aHasValue, out bool bHasValue)
+    {
+        //Debug.Log($"AreNullableTypesEqual: {typeof(T)} to {typeof(Y)}");
+        aHasValue = false;
+        bHasValue = false;
+        a = null;
+        b = null;
+        
+        bool tIsNullable = typeof(T).IsGenericType && typeof(T).GetGenericTypeDefinition() == typeof(Nullable<>);
+        bool yIsNullable = typeof(Y).IsGenericType && typeof(Y).GetGenericTypeDefinition() == typeof(Nullable<>);
+        if (!tIsNullable && !yIsNullable)
+        {
+            //Debug.Log($"\t Neither are nullable");
+            return false;
+        }
+
+        Type tInnerType = tIsNullable ? Nullable.GetUnderlyingType(typeof(T)) : typeof(T);
+        Type yInnerType = yIsNullable ? Nullable.GetUnderlyingType(typeof(Y)) : typeof(Y);
+        if (tInnerType == yInnerType)
+        {
+            //Debug.Log($"\t Same Inner types: {t}({tInnerType}) {y}({yInnerType})");
+            if (tIsNullable)
+            {
+                a = GetValueFromNullable(t, out aHasValue);
+            }
+            else
+            {
+                a = t;
+                aHasValue = true;
+            }
+            
+            if (yIsNullable)
+            {
+                b = GetValueFromNullable(y, out bHasValue);
+            }
+            else
+            {
+                b = y;
+                bHasValue = true;
+            }
+
+            return true;
+        }
+
+        Debug.LogError($"Not same types {typeof(T)} {typeof(Y)}");
+        return false;
+    }
+
+    public static void ApplyList<T,Y>(ref List<T> cardInfoValue, ref List<Y> serializeInfoValue, bool toCardInfo)
+    {
+        if (typeof(T).IsEnum || typeof(Y).IsEnum)
+        {
+            Debug.LogError($"Cannot apply list of enums. {typeof(T)} to {typeof(Y)}");
+            return;
+        }
+        
+        if (toCardInfo)
+        {
+            if (serializeInfoValue == null)
+            {
+                return;
+            }
+
+            cardInfoValue = new List<T>();
+            for (var i = 0; i < serializeInfoValue.Count; i++)
+            {
+                Y y = serializeInfoValue[i];
+                T t = default;
+                ConvertValue(ref y, ref t);
+                cardInfoValue.Add(t);
+            }
+        }
+        else
+        {
+            if (cardInfoValue == null) 
+                return;
+            
+            
+            serializeInfoValue = new List<Y>();
+            for (var i = 0; i < cardInfoValue.Count; i++)
+            {
+                Y y = default;
+                T t = cardInfoValue[i];
+                ConvertValue(ref t, ref y);
+                serializeInfoValue.Add(y);
+            }
+        }
+    }
+    
+    public static void ApplyEnumList<T,Y>(ref List<T> cardInfoValue, ref List<Y> serializeInfoValue, bool toCardInfo)
+        where T : unmanaged, Enum
+    {
+        if (toCardInfo)
+        {
+            if (serializeInfoValue != null)
+            {
+                cardInfoValue = new List<T>();
+                for (var i = 0; i < serializeInfoValue.Count; i++)
+                {
+                    Y y = serializeInfoValue[i];
+                    T t = ParseEnum<T>(y.ToString());
+                    cardInfoValue.Add(t);
+                }
+            }
+        }
+        else
+        {
+            if (cardInfoValue != null)
+            {
+                serializeInfoValue = new List<Y>();
+                for (var i = 0; i < cardInfoValue.Count; i++)
+                {
+                    T t = cardInfoValue[i];
+                    Y y = default;
+                    ConvertValue(ref t, ref y);
+                    serializeInfoValue.Add(y);
+                }
+            }
+        }
+    }
+
+    public static void ApplyEnumList<T>(ref List<T> cardInfoValue, ref string[] serializeInfoValue, bool toCardInfo)
         where T : unmanaged, Enum
     {
         if (toCardInfo)
@@ -136,7 +342,10 @@ public static class ImportExportUtils
         }
         else
         {
-            serializeInfoValue = cardInfoValue.Select((a) => a.ToString()).ToArray();
+            if (cardInfoValue != null)
+            {
+                serializeInfoValue = cardInfoValue.Select((a) => a.ToString()).ToArray();
+            }
         }
     }
 
@@ -263,5 +472,27 @@ public static class ImportExportUtils
                 Plugin.Log.LogDebug($"Unknown language code {code} for card {cardInfoEnglishField} in field {field}");
             }
         }
+    }
+
+    private static object GetValueFromNullable<U>(U u, out bool hasValue)
+    {
+        Type type = typeof(U);
+        if (u != null)
+        {
+            bool v = (bool)type.GetProperty("HasValue", BindingFlags.Instance | BindingFlags.Public).GetValue(u);
+            if (v)
+            {
+                hasValue = true;
+                return type.GetProperty("Value", BindingFlags.Instance | BindingFlags.Public).GetValue(u);
+            }
+        }
+
+        hasValue = false;
+        Type underlyingType = Nullable.GetUnderlyingType(type);
+        if(underlyingType.IsValueType)
+        {
+            return Activator.CreateInstance(underlyingType);
+        }
+        return null;
     }
 }
