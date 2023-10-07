@@ -45,12 +45,9 @@ namespace JLPlugin.Data
             ImportExportUtils.ApplyProperty(()=>encounter.name, (a)=>encounter.name = a, ref encounterInfo.name, toEncounter);
             ImportExportUtils.ApplyValue(ref encounter.minDifficulty, ref encounterInfo.minDifficulty, toEncounter);
             ImportExportUtils.ApplyValue(ref encounter.maxDifficulty, ref encounterInfo.maxDifficulty, toEncounter);
-            
-            Plugin.Log.LogInfo($"dominantTribes {encounter.dominantTribes} {encounterInfo.dominantTribes}");
-            ImportExportUtils.ApplyEnumList(ref encounter.dominantTribes, ref encounterInfo.dominantTribes, toEncounter);
-            Plugin.Log.LogInfo($"dominantTribes done {encounter.dominantTribes} {encounterInfo.dominantTribes}");
-            ImportExportUtils.ApplyList(ref encounter.randomReplacementCards, ref encounterInfo.randomReplacementCards, toEncounter);
-            ImportExportUtils.ApplyEnumList(ref encounter.redundantAbilities, ref encounterInfo.redundantAbilities, toEncounter);
+            ImportExportUtils.ApplyValue(ref encounter.dominantTribes, ref encounterInfo.dominantTribes, toEncounter);
+            ImportExportUtils.ApplyValue(ref encounter.randomReplacementCards, ref encounterInfo.randomReplacementCards, toEncounter);
+            ImportExportUtils.ApplyValue(ref encounter.redundantAbilities, ref encounterInfo.redundantAbilities, toEncounter);
 
             if (toEncounter)
             {

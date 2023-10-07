@@ -1,17 +1,14 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
-using System.Data.SqlTypes;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using DiskCardGame;
-using InscryptionAPI.Card;
 using InscryptionAPI.Guid;
 using InscryptionAPI.Helpers;
 using InscryptionAPI.Localizing;
 using JLPlugin;
-using JLPlugin.V2.Data;
-using Sirenix.Utilities;
 using TinyJson;
 using UnityEngine;
 
@@ -33,33 +30,6 @@ public static class ImportExportUtils
         return GuidManager.GetEnumValue<T>(guid, name);
     }
 
-    public static void ApplyEnumList<T>(ref T cardInfoValue, ref T? serializeInfoValue, bool toCardInfo) where T : struct
-    {
-        if (toCardInfo)
-        {
-            if (serializeInfoValue.HasValue)
-                cardInfoValue = serializeInfoValue.Value;
-        }
-        else
-        {
-            serializeInfoValue = cardInfoValue;
-        }
-    }
-
-    public static void ApplyEnumList<T>(ref T cardInfoValue, ref string serializeInfoValue, bool toCardInfo)
-        where T : unmanaged, Enum
-    {
-        if (toCardInfo)
-        {
-            if (!string.IsNullOrEmpty(serializeInfoValue))
-                cardInfoValue = ParseEnum<T>(serializeInfoValue);
-        }
-        else
-        {
-            serializeInfoValue = cardInfoValue.ToString(); // TODO: Change to show the actual guid_name
-        }
-    }
-
     public static void ApplyProperty<T,Y>(Func<T> getter, Action<T> setter, ref Y serializeInfoValue, bool toCardInfo)
     {
         if (toCardInfo)
@@ -76,20 +46,7 @@ public static class ImportExportUtils
         }
     }
 
-    public static void ApplyEnumList(ref string cardInfoValue, ref string serializeInfoValue, bool toCardInfo)
-    {
-        if (toCardInfo)
-        {
-            if (!string.IsNullOrEmpty(serializeInfoValue))
-                cardInfoValue = serializeInfoValue;
-        }
-        else
-        {
-            serializeInfoValue = cardInfoValue;
-        }
-    }
-
-    public static void ApplyEnumList(ref Sprite cardInfoValue, ref string serializeInfoValue, bool toCardInfo, string type, string fileName)
+    public static void ApplySprite(ref Sprite cardInfoValue, ref string serializeInfoValue, bool toCardInfo, string type, string fileName)
     {
         if (toCardInfo)
         {
@@ -105,23 +62,8 @@ public static class ImportExportUtils
             }
         }
     }
-    
-    public static void ApplyEnumList(ref Texture cardInfoValue, ref string serializeInfoValue, bool toCardInfo)
-    {
-        if (toCardInfo)
-        {
-            if (!string.IsNullOrEmpty(serializeInfoValue))
-                cardInfoValue = TextureHelper.GetImageAsTexture(serializeInfoValue);
-        }
-        else
-        {
-            if (cardInfoValue != null)
-                serializeInfoValue = cardInfoValue.ToString(); // TODO: Export as image and save the path
-        }
-    }
 
-    public static void ApplyEnumList(ref Texture2D cardInfoValue, ref string serializeInfoValue, bool toCardInfo,
-        string type, string fileName)
+    public static void ApplySprite(ref Texture2D cardInfoValue, ref string serializeInfoValue, bool toCardInfo, string type, string fileName)
     {
         if (toCardInfo)
         {
@@ -169,6 +111,25 @@ public static class ImportExportUtils
                 Debug.LogError($"B has no value. {from}=>{fromValue}");
             }
             return;
+        }
+        else if (typeof(T).IsGenericType && typeof(T).GetGenericTypeDefinition() == typeof(List<>) && 
+                 typeof(Y).IsGenericType && typeof(Y).GetGenericTypeDefinition() == typeof(List<>))
+        {
+            // List to List
+            Type genericListType = typeof(List<>).MakeGenericType(typeof(Y));
+            IList toList = (IList)Activator.CreateInstance(genericListType);
+            to = (Y)toList;
+            if (from != null)
+            {
+                IList fromList = (IList)from;
+                for (int i = 0; i < fromList.Count; i++)
+                {
+                    T o = (T)fromList[i];
+                    Y o2 = default(Y);
+                    ConvertValue(ref o, ref o2);
+                    toList.Add(o2);
+                }
+            }
         }
         else if (typeof(T).IsEnum && typeof(Y) == typeof(string))
         {
@@ -248,105 +209,6 @@ public static class ImportExportUtils
 
         Debug.LogError($"Not same types {typeof(T)} {typeof(Y)}");
         return false;
-    }
-
-    public static void ApplyList<T,Y>(ref List<T> cardInfoValue, ref List<Y> serializeInfoValue, bool toCardInfo)
-    {
-        if (typeof(T).IsEnum || typeof(Y).IsEnum)
-        {
-            Debug.LogError($"Cannot apply list of enums. {typeof(T)} to {typeof(Y)}");
-            return;
-        }
-        
-        if (toCardInfo)
-        {
-            if (serializeInfoValue == null)
-            {
-                return;
-            }
-
-            cardInfoValue = new List<T>();
-            for (var i = 0; i < serializeInfoValue.Count; i++)
-            {
-                Y y = serializeInfoValue[i];
-                T t = default;
-                ConvertValue(ref y, ref t);
-                cardInfoValue.Add(t);
-            }
-        }
-        else
-        {
-            if (cardInfoValue == null) 
-                return;
-            
-            
-            serializeInfoValue = new List<Y>();
-            for (var i = 0; i < cardInfoValue.Count; i++)
-            {
-                Y y = default;
-                T t = cardInfoValue[i];
-                ConvertValue(ref t, ref y);
-                serializeInfoValue.Add(y);
-            }
-        }
-    }
-    
-    public static void ApplyEnumList<T,Y>(ref List<T> cardInfoValue, ref List<Y> serializeInfoValue, bool toCardInfo)
-        where T : unmanaged, Enum
-    {
-        if (toCardInfo)
-        {
-            if (serializeInfoValue != null)
-            {
-                cardInfoValue = new List<T>();
-                for (var i = 0; i < serializeInfoValue.Count; i++)
-                {
-                    Y y = serializeInfoValue[i];
-                    T t = ParseEnum<T>(y.ToString());
-                    cardInfoValue.Add(t);
-                }
-            }
-        }
-        else
-        {
-            if (cardInfoValue != null)
-            {
-                serializeInfoValue = new List<Y>();
-                for (var i = 0; i < cardInfoValue.Count; i++)
-                {
-                    T t = cardInfoValue[i];
-                    Y y = default;
-                    ConvertValue(ref t, ref y);
-                    serializeInfoValue.Add(y);
-                }
-            }
-        }
-    }
-
-    public static void ApplyEnumList<T>(ref List<T> cardInfoValue, ref string[] serializeInfoValue, bool toCardInfo)
-        where T : unmanaged, Enum
-    {
-        if (toCardInfo)
-        {
-            if (serializeInfoValue != null)
-            {
-                if (typeof(T).IsEnum)
-                {
-                    cardInfoValue = serializeInfoValue.Select(s => ParseEnum<T>(s)).ToList();
-                }
-                else
-                {
-                    cardInfoValue = serializeInfoValue.Select(s => Convert.ChangeType(s, typeof(T))).Cast<T>().ToList();
-                }
-            }
-        }
-        else
-        {
-            if (cardInfoValue != null)
-            {
-                serializeInfoValue = cardInfoValue.Select((a) => a.ToString()).ToArray();
-            }
-        }
     }
 
     private static string ExportTexture(Texture2D texture, string path)
