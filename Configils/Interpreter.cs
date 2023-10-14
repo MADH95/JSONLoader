@@ -6,6 +6,7 @@ using System.Text.RegularExpressions;
 namespace JLPlugin
 {
     using Data;
+    using DiskCardGame;
     using HarmonyLib;
     using InscryptionAPI.Saves;
     using PanoramicData.NCalcExtensions;
@@ -33,11 +34,11 @@ namespace JLPlugin
         public static Random random = new Random();
 
 
-        public static string Process(in string input, AbilityBehaviourData abilityData, bool sendDebug = true)
+        public static object Process(in string input, AbilityBehaviourData abilityData, Type type = null, bool sendDebug = true, Dictionary<string, object?> additionalParameters = null)
         {
-            string output = input;
+            object output = input;
 
-            if (Regex.Matches(output, RegexStrings.Expression) is var expressions
+            if (Regex.Matches(input, RegexStrings.Expression) is var expressions
             && expressions.Cast<Match>().Any(expressions => expressions.Success))
             {
                 foreach (Match expression in expressions)
@@ -45,23 +46,7 @@ namespace JLPlugin
                     string CalcInput = expression.Groups[0].Value;
                     string CalcContent = expression.Groups[1].Value;
 
-                    //Quick fix for the PlayerSlot and OpponentSlot variables, would be best to change it to actual
-                    //functions later if possible
-                    //if (Regex.Matches(CalcContent, RegexStrings.Function) is var ParContents
-                    //        && ParContents.Cast<Match>().Any(ParContents => ParContents.Success))
-                    //{
-                    //    foreach (Match ParContent in ParContents)
-                    //    {
-                    //        if (ParContent.Groups[1].Value != "PlayerSlot" && ParContent.Groups[1].Value != "OpponentSlot")
-                    //        {
-                    //            continue;
-                    //        }
-                    //        CalcContent = CalcContent.Replace(ParContent.Groups[3].Value, SigilData.ConvertArgument(ParContent.Groups[2].Value, abilityData, sendDebug));
-                    //    }
-                    //}
-
-                    //NoCache means the logs don't get spammed but it could cause some performance loss
-                    ExtendedExpression e = new ExtendedExpression(CalcContent);
+                    ExtendedExpression e = new ExtendedExpression(CalcContent) { Parameters = additionalParameters };
                     e.EvaluateFunction += ConfigilExtensions.Extend;
 
                     foreach (KeyValuePair<string, string> variable in abilityData.variables)
@@ -90,12 +75,21 @@ namespace JLPlugin
                         Plugin.Log.LogDebug($"input: {CalcInput}");
                     }
 
-                    string CalcOutput = e.Evaluate().ToString();
-                    output = output.Replace(CalcInput, CalcOutput);
+                    object CalcOutput = e.Evaluate();
 
-                    if (output == "True" || output == "False")
+                    //by default it will handle it as a string
+                    if (type == null || expressions.Count > 1)
                     {
-                        output = output.ToLower();
+                        if (CalcOutput.GetType() == typeof(bool))
+                        {
+                            CalcOutput = CalcOutput.ToString().ToLower();
+                        }
+                        //this looks very messy but casting here unfortunately causes an error
+                        output = output.ToString().Replace(CalcInput, CalcOutput.ToString());
+                    }
+                    else
+                    {
+                        output = CalcOutput;
                     }
 
                     if (sendDebug)
@@ -125,6 +119,31 @@ namespace JLPlugin
 
             for (int i = 1; i < fieldList.Count; ++i)
             {
+                if (obj.GetType() == typeof(PlayableCard))
+                {
+                    if (fieldList[i] == "TemporaryAbilities")
+                    {
+                        List<Ability> abilities = new List<Ability>();
+                        foreach (List<Ability> abilityList in ((PlayableCard)obj).TemporaryMods.Select(x => x.abilities).ToList())
+                        {
+                            abilities.AddRange(abilityList);
+                        }
+                        obj = abilities;
+                        break;
+                    }
+                    if (fieldList[i] == "AllAbilities")
+                    {
+                        List<Ability> abilities = new List<Ability>();
+                        foreach (List<Ability> abilityList in ((PlayableCard)obj).TemporaryMods.Select(x => x.abilities).ToList())
+                        {
+                            abilities.AddRange(abilityList);
+                        }
+                        abilities.AddRange(((PlayableCard)obj).Info.Abilities);
+                        obj = abilities;
+                        break;
+                    }
+                }
+
                 PropertyInfo property = obj?.GetType().GetProperty(fieldList[i]);
 
                 if (property is null)
@@ -152,41 +171,6 @@ namespace JLPlugin
                 //***I THINK***
 
                 break;
-            }
-
-            if (obj is IList)
-            {
-
-                //i have no clue why this specific way of casting works but i'l take it
-                obj = ((IList)obj).Cast<object>().ToList();
-
-                for (int i = 0; i < ((IList)obj).Count; i++)
-                {
-                    Dictionary<string, Dictionary<string, object>> SaveData = (Dictionary<string, Dictionary<string, object>>)AccessTools.Field(typeof(ModdedSaveData), "SaveData").GetValue(ModdedSaveManager.SaveData);
-                    object item = ((IList)obj)[i];
-
-                    foreach (KeyValuePair<string, object> keyValuePair in SaveData["cyantist.inscryption.api"])
-                    {
-                        if (keyValuePair.Key.StartsWith($"{item.GetType().Name}_"))
-                        {
-                            int AbilityID;
-                            if (!int.TryParse(item.ToString(), out AbilityID))
-                            {
-                                continue;
-                            }
-                            int ValueID = int.Parse((string)keyValuePair.Value);
-
-                            if (ValueID == AbilityID)
-                            {
-                                List<string> SubstringList = keyValuePair.Key.Split('_').ToList();
-                                ((IList)obj)[i] = $"{SubstringList[1]}_{SubstringList[2]}";
-                                break;
-                            }
-                        }
-                    }
-                }
-
-                obj = ((IList)obj).Cast<object>().ToList();
             }
 
             return obj;

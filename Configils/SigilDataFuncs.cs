@@ -57,24 +57,18 @@ namespace JLPlugin.Data
             //    Plugin.Log.LogWarning($"{fields[i].Name}: {values[i]}\n");
             //}
 
-
-            //There probably a more API oriented way of handling this, I'm just very confused how that all works atm
-            Texture2D sigilPixelTexture = new(17, 17);
-            if (!this.pixelTexture.IsNullOrWhiteSpace())
-            {
-                sigilPixelTexture.LoadImage(TextureHelper.ReadArtworkFileAsBytes(this.pixelTexture));
-                sigilPixelTexture.filterMode = FilterMode.Point;
-            }
-
             AbilityInfo info = AbilityManager.New(
                     this.GUID ?? Plugin.PluginGuid,
                     this.name ?? "",
                     this.description ?? "",
                     SigilType,
-                    (this.texture == null) ? new Texture2D(49, 49) : TextureHelper.GetImageAsTexture(this.texture, FilterMode.Point)
+                    this.texture.IsNullOrWhiteSpace() ? new Texture2D(49, 49) : TextureHelper.GetImageAsTexture(this.texture, FilterMode.Point)
                 );
 
-            info.SetPixelAbilityIcon(sigilPixelTexture);
+            info.SetPixelAbilityIcon(this.pixelTexture.IsNullOrWhiteSpace()
+                                    ? new Texture2D(17, 17) :
+                                    TextureHelper.GetImageAsTexture(this.pixelTexture, FilterMode.Point));
+
             info.powerLevel = this.powerLevel ?? 3;
 
             if (this.metaCategories != null)
@@ -139,6 +133,26 @@ namespace JLPlugin.Data
             });
         }
 
+        public static object ConvertArgumentToType(string value, AbilityBehaviourData abilitydata, Type type, bool sendDebug = true)
+        {
+            if (value == null)
+            {
+                return null;
+            }
+
+            object output = Interpreter.Process(value, abilitydata, type, sendDebug);
+            //using IsAssignableFrom because it has the added benefit of also detecting subclasses
+            if (type.IsAssignableFrom(output.GetType()))
+            {
+                return output;
+            }
+            else
+            {
+                Plugin.Log.LogError($"{output} is not of type {type}");
+                return null;
+            }
+        }
+
         public static string ConvertArgument(string value, AbilityBehaviourData abilitydata, bool sendDebug = true)
         {
             if (value == null)
@@ -155,17 +169,17 @@ namespace JLPlugin.Data
             //    value = StringList[random.Next(StringList.Count)];
             //}
 
-            return Interpreter.Process(value, abilitydata, sendDebug);
+            return Interpreter.Process(value, abilitydata, null, sendDebug).ToString();
         }
 
-        public static List<string> ConvertArgument(List<string> value, AbilityBehaviourData abilitydata)
+        public static List<string> ConvertArgument(List<string> value, AbilityBehaviourData abilitydata, bool sendDebug = true)
         {
             if (value == null)
             {
                 return null;
             }
 
-            return value.Select(x => Interpreter.Process(x, abilitydata)).ToList();
+            return value.Select(x => Interpreter.Process(x, abilitydata, null, sendDebug).ToString()).ToList();
         }
 
         public static Type GetType(string nameSpace, string typeName)

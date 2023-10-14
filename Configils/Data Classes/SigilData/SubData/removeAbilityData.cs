@@ -1,10 +1,10 @@
 ﻿namespace JLPlugin.Data
 {
     [System.Serializable]
-    public class addAbilityData
+    public class removeAbilityData
     {
         public string name;
-        public string infused;
+        public string all;
         public string list;
     }
 }

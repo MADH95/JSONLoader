@@ -72,7 +72,7 @@ namespace JLPlugin.SigilCode
                 }
             }
 
-            List<GemType> GemCost = abilityData.activationCost?.gemCost?.Select(s => ParseEnum<GemType>(s)).ToList() ?? new List<GemType>();
+            List<GemType> GemCost = abilityData.activationCost?.gemsCost?.Select(s => ParseEnum<GemType>(s)).ToList() ?? new List<GemType>();
             foreach (GemType Gem in GemCost)
             {
                 if (!Singleton<ResourcesManager>.Instance.HasGem(Gem))
@@ -177,6 +177,15 @@ namespace JLPlugin.SigilCode
 
         public override IEnumerator OnTurnEnd(bool playerTurnEnd)
         {
+            if (playerTurnEnd)
+            {
+                yield return TriggerSigil("OnPlayerEndOfTurn");
+            }
+            else
+            {
+                yield return TriggerSigil("OnOpponentEndOfTurn");
+            }
+
             if (base.PlayableCard.OpponentCard != playerTurnEnd)
             {
                 for (int i = 0; i < abilityData.abilityBehaviour.Count; i++)
@@ -195,6 +204,15 @@ namespace JLPlugin.SigilCode
 
         public override IEnumerator OnUpkeep(bool playerUpkeep)
         {
+            if (playerUpkeep)
+            {
+                yield return TriggerSigil("OnPlayerStartOfTurn");
+            }
+            else
+            {
+                yield return TriggerSigil("OnOpponentStartOfTurn");
+            }
+
             if (base.PlayableCard.OpponentCard != playerUpkeep)
             {
                 yield return TriggerSigil("OnStartOfTurn");

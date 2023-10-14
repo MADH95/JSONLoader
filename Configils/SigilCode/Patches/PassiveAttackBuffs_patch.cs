@@ -75,11 +75,19 @@ namespace JLPlugin.SigilCode
                     {
                         if (buffCards.addStats != null)
                         {
-                            __result += int.Parse(SigilData.ConvertArgument(buffCards.addStats.Split('/')[0], abilityBehaviour, false));
+                            string attackAdjustment = SigilData.ConvertArgument(buffCards.addStats.Split('/')[0], abilityBehaviour, false);
+                            if (attackAdjustment != "?")
+                            {
+                                __result += int.Parse(attackAdjustment);
+                            }
                         }
                         if (buffCards.setStats != null)
                         {
-                            __result = int.Parse(SigilData.ConvertArgument(buffCards.setStats.Split('/')[0], abilityBehaviour, false)) - slot.Card.Info.Attack;
+                            string attackAdjustment = SigilData.ConvertArgument(buffCards.setStats.Split('/')[0], abilityBehaviour, false);
+                            if (attackAdjustment != "?")
+                            {
+                                __result = int.Parse(attackAdjustment) - slot.Card.Info.Attack;
+                            }
                         }
                     }
                 }
