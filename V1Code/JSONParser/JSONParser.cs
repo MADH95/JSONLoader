@@ -471,7 +471,16 @@ namespace TinyJson
                     string[] fieldVal = (string[])t;
                     if (fieldVal != null && fieldVal.Length > 0)
                     {
-                        return $"[{string.Join(",", fieldVal)}]";
+                        string s = "[";
+                        for (var i = 0; i < fieldVal.Length; i++)
+                        {
+                            var s1 = fieldVal[i];
+                            s += "\"" + s1 + "\"";
+                            if (i < fieldVal.Length - 1)
+                                s += ",";
+                        }
+
+                        return s + "]";
                     }
                     else
                     {
@@ -495,6 +504,10 @@ namespace TinyJson
                 else if (type == typeof(bool))
                 {
                     return (bool)t ? "true" : "false";
+                }
+                else if (type == typeof(int) || type == typeof(long))
+                {
+                    return t.ToString();
                 }
                 else if (type == typeof(Dictionary<string, string>))
                 {

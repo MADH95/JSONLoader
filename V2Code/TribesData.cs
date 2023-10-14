@@ -40,19 +40,13 @@ namespace JLPlugin.Data
                 Plugin.Log.LogDebug($"Loading JLDR2 (tribes) {filename}");
                 TribeList tribeInfo = JSONParser.FromJson<TribeList>(File.ReadAllText(file));
 
-                foreach (var tribedata in tribeInfo.tribes)
+                foreach (TribeInfo tribedata in tribeInfo.tribes)
                 {
-                    Texture2D backTex;
-                    Texture2D iconTex;
+                    Texture2D backTex = null;
+                    Texture2D iconTex = null;
 
-                    if (!tribedata.tribeIcon.IsNullOrWhiteSpace())
-                    {
-                        iconTex = TextureHelper.GetImageAsTexture(tribedata.tribeIcon);
-                    }
-                    else
-                    {
-                        iconTex = null;
-                    }
+                    ImportExportUtils.SetID(tribedata.name);
+                    ImportExportUtils.ApplyValue(ref iconTex, ref tribedata.tribeIcon, true, "Tribes", "tribeIcon");
 
                     if (tribedata.choiceCardBackTexture.IsNullOrWhiteSpace())
                     {
@@ -71,7 +65,7 @@ namespace JLPlugin.Data
                     }
                     else
                     {
-                        backTex = TextureHelper.GetImageAsTexture(tribedata.choiceCardBackTexture);
+                        ImportExportUtils.ApplyValue(ref backTex, ref tribedata.choiceCardBackTexture, true, "Tribes", "choiceCardBackTexture");
                     }
 
                     TribeManager.Add(tribedata.guid, tribedata.name, iconTex, tribedata.appearInTribeChoices, backTex);
@@ -116,8 +110,10 @@ namespace JLPlugin.Data
             serializedTribe.guid = info.guid;
             serializedTribe.appearInTribeChoices = info.tribeChoice;
             
-            ImportExportUtils.ApplySprite(ref info.icon, ref serializedTribe.tribeIcon, false, "Tribes", $"{serializedTribe.guid}_{serializedTribe.name}_icon");
-            ImportExportUtils.ApplySprite(ref info.cardback, ref serializedTribe.choiceCardBackTexture, false, "Tribes", $"{serializedTribe.guid}_{serializedTribe.name}_choiceCardBackTexture");
+            ImportExportUtils.SetID(info.name);
+            ImportExportUtils.ApplyValue(ref info.icon, ref serializedTribe.tribeIcon, false, "Tribes", "tribeIcon");
+            ImportExportUtils.ApplyValue(ref info.cardback, ref serializedTribe.choiceCardBackTexture, false, "Tribes", "choiceCardBackTexture");
+            
             
             string json = JSONParser.ToJSON(serializedTribe);
             File.WriteAllText(Path.Combine(path, serializedTribe.name + ".jldr2"), json);

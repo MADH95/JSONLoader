@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text;
 using BepInEx;
+using InscryptionAPI;
 using InscryptionAPI.Localizing;
 using JLPlugin;
 using TinyJson;
@@ -117,6 +119,46 @@ namespace JSONLoader.V2Code
 
             fullFilePath = filesInDir[0].FullName;
             return true;
+        }
+
+        
+        public static void ExportAllLanguages()
+        {
+            Plugin.Log.LogInfo($"Exporting {LocalizationManager.AllLanguages.Count} languages.");
+            StringBuilder stringBuilder = new StringBuilder("id");
+            for (int i = 0; i < LocalizationManager.AllLanguages.Count; i++)
+            {
+                var language = LocalizationManager.AllLanguages[i];
+                stringBuilder.Append("," + language);
+            }
+
+            int keys = Localization.Translations.Count;
+            for (var i = 0; i < keys; i++)
+            {
+                Localization.Translation translation = Localization.Translations[i];
+                stringBuilder.Append($"\n{translation.id}");
+
+                for (var j = 0; j < LocalizationManager.AllLanguages.Count; j++)
+                {
+                    Language language = LocalizationManager.AllLanguages[j].Language;
+                    stringBuilder.Append(",");
+
+                    if (language == Language.English)
+                    {
+                        stringBuilder.Append(translation.englishString);
+                    }
+                    else if (translation.values.TryGetValue(language, out string word))
+                    {
+                        stringBuilder.Append(word);
+                    }
+                }
+            }
+
+            string path = Path.Combine(Plugin.ExportDirectory, "Languages");
+            if (!Directory.Exists(path))
+                Directory.CreateDirectory(path);
+            
+            File.WriteAllText(Path.Combine(path, "localisation_table.csv"), stringBuilder.ToString());
         }
     }
 }

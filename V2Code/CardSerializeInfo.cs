@@ -98,43 +98,41 @@ namespace JLPlugin.V2.Data
         
         public static void Apply(CardInfo cardInfo, CardSerializeInfo serializeInfo, bool toCardInfo, string cardName)
         {
+            ImportExportUtils.SetID(cardName);
+            
             ImportExportUtils.ApplyLocaleField("displayedName", ref serializeInfo.displayedName, ref cardInfo.displayedName, toCardInfo);
             ImportExportUtils.ApplyLocaleField("description", ref serializeInfo.description, ref cardInfo.description, toCardInfo);
 
-            ImportExportUtils.ApplyValue(ref cardInfo.baseAttack, ref serializeInfo.baseAttack, toCardInfo);
-            ImportExportUtils.ApplyValue(ref cardInfo.baseHealth, ref serializeInfo.baseHealth, toCardInfo);
-            ImportExportUtils.ApplyValue(ref cardInfo.cost, ref serializeInfo.bloodCost, toCardInfo);
-            ImportExportUtils.ApplyValue(ref cardInfo.bonesCost, ref serializeInfo.bonesCost, toCardInfo);
-            ImportExportUtils.ApplyValue(ref cardInfo.energyCost, ref serializeInfo.energyCost, toCardInfo);
-            ImportExportUtils.ApplyValue(ref cardInfo.gemsCost, ref serializeInfo.gemsCost, toCardInfo);
-            ImportExportUtils.ApplyValue(ref cardInfo.abilities, ref serializeInfo.abilities, toCardInfo);
-            ImportExportUtils.ApplyValue(ref cardInfo.specialAbilities, ref serializeInfo.specialAbilities, toCardInfo);
-            ImportExportUtils.ApplyValue(ref cardInfo.specialStatIcon, ref serializeInfo.specialStatIcon, toCardInfo);
-            ImportExportUtils.ApplyValue(ref cardInfo.metaCategories, ref serializeInfo.metaCategories, toCardInfo);
-            ImportExportUtils.ApplyValue(ref cardInfo.cardComplexity, ref serializeInfo.cardComplexity, toCardInfo);
-            ImportExportUtils.ApplyValue(ref cardInfo.onePerDeck, ref serializeInfo.onePerDeck, toCardInfo);
-            ImportExportUtils.ApplyValue(ref cardInfo.temple, ref serializeInfo.temple, toCardInfo);
-            ImportExportUtils.ApplyValue(ref cardInfo.titleGraphic, ref serializeInfo.titleGraphic, toCardInfo);
-            ImportExportUtils.ApplyValue(ref cardInfo.hideAttackAndHealth, ref serializeInfo.hideAttackAndHealth, toCardInfo);
-            ImportExportUtils.ApplyValue(ref cardInfo.appearanceBehaviour, ref serializeInfo.appearanceBehaviour, toCardInfo);
-            ImportExportUtils.ApplyValue(ref cardInfo.tribes, ref serializeInfo.tribes, toCardInfo);
-            ImportExportUtils.ApplyValue(ref cardInfo.traits, ref serializeInfo.traits, toCardInfo);
-            ImportExportUtils.ApplyValue(ref cardInfo.defaultEvolutionName, ref serializeInfo.defaultEvolutionName, toCardInfo);
-            ImportExportUtils.ApplyValue(ref cardInfo.flipPortraitForStrafe, ref serializeInfo.flipPortraitForStrafe, toCardInfo);
-            ImportExportUtils.ApplySprite(ref cardInfo.portraitTex, ref serializeInfo.texture, false, "Cards", $"{cardName}_texture");
-            ImportExportUtils.ApplySprite(ref cardInfo.alternatePortrait, ref serializeInfo.altTexture, false, "Cards", $"{cardName}_altTexture");
-
-            if (toCardInfo)
-            {
-                if (serializeInfo.decals != null && serializeInfo.decals.Length > 0)
-                    cardInfo.AddDecal(serializeInfo.decals);
-            }
-            else
-            {
-                // TODO: Image
-                if (cardInfo.decals != null)
-                    serializeInfo.decals = ImportExportUtils.ExportTextures(cardInfo.decals.Cast<Texture2D>(), "Cards", $"{cardName}_decals");
-            }
+            ImportExportUtils.ApplyProperty(()=> cardInfo.name, (a)=>cardInfo.name=a,ref serializeInfo.name, toCardInfo, "Cards", "name");
+            ImportExportUtils.ApplyValue(ref cardInfo.baseAttack, ref serializeInfo.baseAttack, toCardInfo, "Cards", "baseAttack");
+            ImportExportUtils.ApplyValue(ref cardInfo.baseHealth, ref serializeInfo.baseHealth, toCardInfo, "Cards", "baseHealth");
+            ImportExportUtils.ApplyValue(ref cardInfo.cost, ref serializeInfo.bloodCost, toCardInfo, "Cards", "cost");
+            ImportExportUtils.ApplyValue(ref cardInfo.bonesCost, ref serializeInfo.bonesCost, toCardInfo, "Cards", "bonesCost");
+            ImportExportUtils.ApplyValue(ref cardInfo.energyCost, ref serializeInfo.energyCost, toCardInfo, "Cards", "energyCost");
+            ImportExportUtils.ApplyValue(ref cardInfo.gemsCost, ref serializeInfo.gemsCost, toCardInfo, "Cards", "gemsCost");
+            ImportExportUtils.ApplyValue(ref cardInfo.abilities, ref serializeInfo.abilities, toCardInfo, "Cards", "abilities");
+            ImportExportUtils.ApplyValue(ref cardInfo.specialAbilities, ref serializeInfo.specialAbilities, toCardInfo, "Cards", "specialAbilities");
+            ImportExportUtils.ApplyValue(ref cardInfo.specialStatIcon, ref serializeInfo.specialStatIcon, toCardInfo, "Cards", "specialStatIcon");
+            ImportExportUtils.ApplyValue(ref cardInfo.metaCategories, ref serializeInfo.metaCategories, toCardInfo, "Cards", "metaCategories");
+            ImportExportUtils.ApplyValue(ref cardInfo.cardComplexity, ref serializeInfo.cardComplexity, toCardInfo, "Cards", "cardComplexity");
+            ImportExportUtils.ApplyValue(ref cardInfo.onePerDeck, ref serializeInfo.onePerDeck, toCardInfo, "Cards", "onePerDeck");
+            ImportExportUtils.ApplyValue(ref cardInfo.temple, ref serializeInfo.temple, toCardInfo, "Cards", "temple");
+            ImportExportUtils.ApplyValue(ref cardInfo.titleGraphic, ref serializeInfo.titleGraphic, toCardInfo, "Cards", "titleGraphic");
+            ImportExportUtils.ApplyValue(ref cardInfo.hideAttackAndHealth, ref serializeInfo.hideAttackAndHealth, toCardInfo, "Cards", "hideAttackAndHealth");
+            ImportExportUtils.ApplyValue(ref cardInfo.appearanceBehaviour, ref serializeInfo.appearanceBehaviour, toCardInfo, "Cards", "appearanceBehaviour");
+            ImportExportUtils.ApplyValue(ref cardInfo.tribes, ref serializeInfo.tribes, toCardInfo, "Cards", "tribes");
+            ImportExportUtils.ApplyValue(ref cardInfo.traits, ref serializeInfo.traits, toCardInfo, "Cards", "traits");
+            ImportExportUtils.ApplyValue(ref cardInfo.defaultEvolutionName, ref serializeInfo.defaultEvolutionName, toCardInfo, "Cards", "defaultEvolutionName");
+            ImportExportUtils.ApplyValue(ref cardInfo.flipPortraitForStrafe, ref serializeInfo.flipPortraitForStrafe, toCardInfo, "Cards", "flipPortraitForStrafe");
+            ImportExportUtils.ApplyValue(ref cardInfo.decals, ref serializeInfo.decals, toCardInfo, "Cards", "decals");
+            ImportExportUtils.ApplyValue(ref cardInfo.portraitTex, ref serializeInfo.texture, toCardInfo, "Cards", $"texture");
+            ImportExportUtils.ApplyValue(ref cardInfo.alternatePortrait, ref serializeInfo.altTexture, toCardInfo, "Cards", $"altTexture");
+            ImportExportUtils.ApplyValue(ref cardInfo.pixelPortrait, ref serializeInfo.pixelTexture, toCardInfo, "Cards", $"pixelTexture");
+            
+            Sprite emissivePortrait = cardInfo.GetEmissivePortrait();
+            Sprite emissiveAltPortrait = cardInfo.GetEmissiveAltPortrait();
+            ImportExportUtils.ApplyValue(ref emissivePortrait, ref serializeInfo.texture, toCardInfo, "Cards", $"texture");
+            ImportExportUtils.ApplyValue(ref emissiveAltPortrait, ref serializeInfo.texture, toCardInfo, "Cards", $"texture");
 
             if (toCardInfo)
             {
@@ -160,7 +158,7 @@ namespace JLPlugin.V2.Data
                 if (cardInfo.tailParams != null)
                 {
                     serializeInfo.tailName = cardInfo.tailParams.tail?.name;
-                    serializeInfo.tailLostPortrait = cardInfo.tailParams.tailLostPortrait?.ToString(); // TODO: Image
+                    ImportExportUtils.ApplyValue(ref cardInfo.tailParams.tailLostPortrait, ref serializeInfo.tailLostPortrait, toCardInfo, "Cards", $"tailLostPortrait");
                 }
             }
 
@@ -190,22 +188,14 @@ namespace JLPlugin.V2.Data
                 Dictionary<string,string> dictionary = CardManager.GetCardExtensionTable(cardInfo);
                 if (dictionary != null && dictionary.Count > 0)
                 {
+                    foreach (KeyValuePair<string,string> pair in dictionary)
+                    {
+                        if (pair.Key == "ModPrefix")
+                        {
+                            serializeInfo.modPrefix = pair.Value;
+                        }
+                    }
                     serializeInfo.extensionProperties = dictionary;
-                }
-            }
-            
-            if (toCardInfo)
-            {
-                if (!string.IsNullOrEmpty(serializeInfo.emissionTexture))
-                    cardInfo.SetEmissivePortrait(serializeInfo.emissionTexture);
-            }
-            else
-            {
-                Sprite sprite = cardInfo.GetEmissivePortrait();
-                if (sprite != null)
-                {
-                    Texture2D t = sprite.texture;
-                    ImportExportUtils.ApplySprite(ref t, ref serializeInfo.emissionTexture, false, "Cards", $"{cardName}_emissionTexture");
                 }
             }
 
@@ -231,35 +221,6 @@ namespace JLPlugin.V2.Data
                 // TODO: Prefabs
                 if(cardInfo.animatedPortrait != null)
                     serializeInfo.holoPortraitPrefab = cardInfo.animatedPortrait.ToString();
-            }
-
-            if (toCardInfo)
-            {
-                if (!string.IsNullOrEmpty(serializeInfo.altEmissionTexture))
-                    cardInfo.SetEmissiveAltPortrait(serializeInfo.altEmissionTexture);
-            }
-            else
-            {
-                Sprite sprite = cardInfo.GetEmissiveAltPortrait();
-                if (sprite != null)
-                {
-                    Texture2D t = sprite.texture;
-                    ImportExportUtils.ApplySprite(ref t, ref serializeInfo.altEmissionTexture, false, "Cards", $"{cardName}_altEmissionTexture");
-                }
-            }
-
-            if (toCardInfo)
-            {
-                if (!string.IsNullOrEmpty(serializeInfo.pixelTexture))
-                    cardInfo.SetPixelPortrait(serializeInfo.pixelTexture);
-            }
-            else
-            {
-                if (cardInfo.pixelPortrait != null)
-                {
-                    Texture2D t = cardInfo.pixelPortrait.texture;
-                    ImportExportUtils.ApplySprite(ref t, ref serializeInfo.texture, false, "Cards", $"{cardName}_pixelTexture");
-                }
             }
         }
 

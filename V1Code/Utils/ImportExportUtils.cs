@@ -14,6 +14,12 @@ using UnityEngine;
 
 public static class ImportExportUtils
 {
+    private static string ID;
+    public static void SetID(string id)
+    {
+        ID = id;
+    }
+    
     public static T ParseEnum<T>(string value) where T : unmanaged, System.Enum
     {
         T result;
@@ -30,137 +36,269 @@ public static class ImportExportUtils
         return GuidManager.GetEnumValue<T>(guid, name);
     }
 
-    public static void ApplyProperty<T,Y>(Func<T> getter, Action<T> setter, ref Y serializeInfoValue, bool toCardInfo)
+    public static void ApplyProperty<T,Y>(Func<T> getter, Action<T> setter, ref Y serializeInfoValue, bool toCardInfo, string category, string suffix)
     {
         if (toCardInfo)
         {
             T t = default;
-            ApplyValue(ref t, ref serializeInfoValue, true);
+            ApplyValue(ref t, ref serializeInfoValue, true, category, suffix);
             setter(t);
                 
         }
         else
         {
             T t = getter();
-            ApplyValue(ref t, ref serializeInfoValue, false);
+            ApplyValue(ref t, ref serializeInfoValue, false, category, suffix);
         }
     }
 
-    public static void ApplySprite(ref Sprite cardInfoValue, ref string serializeInfoValue, bool toCardInfo, string type, string fileName)
+    public static void ApplyProperty<T,Y>(ref T serializeInfoValue, Func<Y> getter, Action<Y> setter, bool toCardInfo, string category, string suffix)
     {
         if (toCardInfo)
         {
-            if (!string.IsNullOrEmpty(serializeInfoValue))
-                cardInfoValue = TextureHelper.GetImageAsTexture(serializeInfoValue).ConvertTexture();
+            Y y = getter();
+            ApplyValue(ref serializeInfoValue, ref y, false, category, suffix);
         }
         else
         {
-            if (cardInfoValue != null)
-            {
-                string path = Path.Combine(Plugin.ExportDirectory, type, "Assets", fileName + ".png");
-                serializeInfoValue = ExportTexture(cardInfoValue.texture, path);
-            }
+            Y y = default;
+            ApplyValue(ref serializeInfoValue, ref y, true, category, suffix);
+            setter(y);
         }
     }
 
-    public static void ApplySprite(ref Texture2D cardInfoValue, ref string serializeInfoValue, bool toCardInfo, string type, string fileName)
-    {
-        if (toCardInfo)
-        {
-            if (!string.IsNullOrEmpty(serializeInfoValue))
-                cardInfoValue = TextureHelper.GetImageAsTexture(serializeInfoValue);
-        }
-        else
-        {
-            if (cardInfoValue != null)
-            {
-                string path = Path.Combine(Plugin.ExportDirectory, type, "Assets", fileName + ".png");
-                serializeInfoValue = ExportTexture(cardInfoValue, path);
-            }
-        }
-    }
-
-    public static void ApplyValue<T, Y>(ref T a, ref Y b, bool toA)
+    public static void ApplyValue<T, Y>(ref T a, ref Y b, bool toA, string category, string suffix)
     {
         if (toA)
         {
-            ConvertValue(ref b, ref a);
+            ConvertValue(ref b, ref a, category, suffix);
         }
         else
         {
-            ConvertValue(ref a, ref b);
+            ConvertValue(ref a, ref b, category, suffix);
         }
     }
     
-    private static void ConvertValue<T, Y>(ref T from, ref Y to)
+    private static void ConvertValue<FromType, ToType>(ref FromType from, ref ToType to, string category, string suffix)
     {
-        if (typeof(T) == typeof(Y))
+        //Plugin.Log.LogInfo($"ConvertValue {typeof(FromType)} to {typeof(ToType)}");
+        Type fromType = typeof(FromType);
+        Type toType = typeof(ToType);
+        try
         {
-            to = (Y)(object)from;
-            return;
-        }
-        else if (AreNullableTypesEqual(from, to, out object fromValue, out object toValue, out bool fromHasValue, out bool toHasValue))
-        {
-            //Debug.Log($"Same types and someone is nullable");
-            if (fromHasValue)
+            if (fromType == toType)
             {
-                to = (Y)fromValue;
+                to = (ToType)(object)from;
+                return;
             }
-            else
+            else if (AreNullableTypesEqual(from, to, out object fromValue, out object _, out bool fromHasValue,
+                         out bool _))
             {
-                Debug.LogError($"B has no value. {from}=>{fromValue}");
-            }
-            return;
-        }
-        else if (typeof(T).IsGenericType && typeof(T).GetGenericTypeDefinition() == typeof(List<>) && 
-                 typeof(Y).IsGenericType && typeof(Y).GetGenericTypeDefinition() == typeof(List<>))
-        {
-            // List to List
-            Type genericListType = typeof(List<>).MakeGenericType(typeof(Y));
-            IList toList = (IList)Activator.CreateInstance(genericListType);
-            to = (Y)toList;
-            if (from != null)
-            {
-                IList fromList = (IList)from;
-                for (int i = 0; i < fromList.Count; i++)
+                //Debug.Log($"Same types and someone is nullable");
+                if (fromHasValue)
                 {
-                    T o = (T)fromList[i];
-                    Y o2 = default(Y);
-                    ConvertValue(ref o, ref o2);
-                    toList.Add(o2);
+                    to = (ToType)fromValue;
                 }
+                return;
+            }
+            else if (fromType.IsGenericType && fromType.GetGenericTypeDefinition() == typeof(List<>) &&
+                     toType.IsGenericType && toType.GetGenericTypeDefinition() == typeof(List<>))
+            {
+                // List to List
+                IList toList = (IList)Activator.CreateInstance(toType);
+                to = (ToType)toList;
+                if (from != null)
+                {
+                    IList fromList = (IList)from;
+                    for (int i = 0; i < fromList.Count; i++)
+                    {
+                        var o1 = fromList[i];
+                        var o2 = GetDefault(toType.GetGenericArguments().Single());
+
+                        object[] parameters = { o1, o2, category, $"{suffix}_{i+1}" };
+                        var m = typeof(ImportExportUtils).GetMethod(nameof(ConvertValue), BindingFlags.NonPublic | BindingFlags.Static)
+                            .MakeGenericMethod(fromType.GetGenericArguments().Single(), toType.GetGenericArguments().Single());
+                        
+                        m.Invoke(null, parameters);
+                        toList.Add(o2);
+                    }
+                }
+                return;
+            }
+            else if (fromType.IsGenericType && fromType.GetGenericTypeDefinition() == typeof(List<>) && toType.IsArray)
+            {
+                // List to Array
+                //Plugin.Log.LogInfo($"List to Array {from} {to}");
+                IList fromList = (IList)from;
+                int size = from == null ? 0 : fromList.Count;
+                Array toArray = Array.CreateInstance(toType.GetElementType(), size);
+                to = (ToType)(object)toArray;
+                if (from != null)
+                {
+                    for (int i = 0; i < fromList.Count; i++)
+                    {
+                        var o1 = fromList[i];
+                        var o2 = GetDefault(toType.GetElementType());
+
+                        object[] parameters = { o1, o2, category, $"{suffix}_{i+1}" };
+                        var m = typeof(ImportExportUtils).GetMethod(nameof(ConvertValue), BindingFlags.NonPublic | BindingFlags.Static)
+                            .MakeGenericMethod(fromType.GetGenericArguments().Single(), toType.GetElementType());
+                        
+                        m.Invoke(null, parameters);
+                        
+                        toArray.SetValue(parameters[1], i);
+                    }
+                }
+                
+                //Plugin.Log.LogInfo($"List to Array Done {from} {to}");
+                return;
+            }
+            else if (fromType.IsArray && toType.IsGenericType && toType.GetGenericTypeDefinition() == typeof(List<>))
+            {
+                // Array to List
+                IList toList = (IList)Activator.CreateInstance(toType);
+                to = (ToType)toList;
+                if (from != null)
+                {
+                    Array fromArray = (Array)(object)from;
+                    for (int i = 0; i < fromArray.Length; i++)
+                    {
+                        var o1 = fromArray.GetValue(i);
+                        var o2 = GetDefault(toType.GetGenericArguments().Single());
+
+                        object[] parameters = { o1, o2, category, $"{suffix}_{i+1}" };
+                        var m = typeof(ImportExportUtils).GetMethod(nameof(ConvertValue), BindingFlags.NonPublic | BindingFlags.Static)
+                            .MakeGenericMethod(fromType.GetElementType(), toType.GetGenericArguments().Single());
+                        
+                        m.Invoke(null, parameters);
+                        
+                        toList.Add(parameters[1]);
+                    }
+                }
+                
+                return;
+            }
+            else if (fromType.IsEnum && toType == typeof(string))
+            {
+                string oType = from.ToString();
+                if (int.TryParse(oType, out int value))
+                {
+                    // Custom type
+                    object[] parameters = { value, "guid", "name" };
+                    var m = typeof(GuidManager).GetMethod(nameof(GuidManager.TryGetGuidAndKeyEnumValue), BindingFlags.Public | BindingFlags.Static)
+                        .MakeGenericMethod(fromType);
+                    var result = (bool)m.Invoke(null, parameters);
+                    
+                    if (result)
+                    {
+                        string guid = (string)parameters[1];
+                        string key = (string)parameters[2];
+                        to = (ToType)(object)(guid + "_" + key);
+                    }
+                    else
+                    {
+                        Plugin.Log.LogError($"Failed to convert enum to string! '{from}'");
+                        to = (ToType)(object)oType;
+                    }
+                }
+                else
+                {
+                    to = (ToType)(object)oType;
+                }
+
+                return;
+            }
+            else if (fromType == typeof(string) && toType.IsEnum)
+            {
+                if (from != null)
+                {
+                    object o = typeof(ImportExportUtils)
+                        .GetMethod(nameof(ParseEnum), BindingFlags.Public | BindingFlags.Static)
+                        .MakeGenericMethod(toType)
+                        .Invoke(null, new object[] { from });
+                    to = (ToType)o;
+                }
+
+                return;
+            }
+            else if (fromType == typeof(CardInfo) && toType == typeof(string))
+            {
+                if (from != null)
+                    to = (ToType)(object)((from as CardInfo).name);
+                return;
+            }
+            else if (fromType == typeof(string) && toType == typeof(CardInfo))
+            {
+                string s = (string)(object)from;
+                if (string.IsNullOrEmpty(s))
+                    to = (ToType)(object)CardLoader.GetCardByName(s);
+                return;
+            }
+            else if (fromType == typeof(string) && (toType == typeof(Texture) || toType.IsSubclassOf(typeof(Texture))))
+            {
+                string path = (string)(object)from;
+                if (!string.IsNullOrEmpty(path))
+                {
+                    to = (ToType)(object)TextureHelper.GetImageAsTexture(path);
+                }
+            
+                return;
+            }
+            else if ((fromType == typeof(Texture) || fromType.IsSubclassOf(typeof(Texture))) && toType == typeof(string))
+            {
+                Texture texture = (Texture)(object)from;
+                if (texture != null)
+                {
+                    string path = Path.Combine(Plugin.ExportDirectory, category, "Assets", $"{ID}_{suffix}.png");
+                    to = (ToType)(object)ExportTexture(texture, path);
+                }
+
+                return;
+            }
+            else if (fromType == typeof(string) && toType == typeof(Sprite))
+            {
+                string path = (string)(object)from;
+                if (!string.IsNullOrEmpty(path))
+                {
+                    Texture2D imageAsTexture = TextureHelper.GetImageAsTexture(path);
+                    if (imageAsTexture != null)
+                    {
+                        to = (ToType)(object)imageAsTexture.ConvertTexture();
+                    }
+                }
+            
+                return;
+            }
+            else if (fromType == typeof(Sprite) && toType == typeof(string))
+            {
+                Sprite texture = (Sprite)(object)from;
+                if (texture != null)
+                {
+                    string path = Path.Combine(Plugin.ExportDirectory, category, "Assets", $"{ID}_{suffix}.png");
+                    to = (ToType)(object)ExportTexture(texture.texture, path);
+                }
+
+                return;
+            }
+            else if(fromType.GetInterfaces().Contains(typeof(IConvertible)) && toType.GetInterfaces().Contains(typeof(IConvertible)))
+            {
+                IConvertible a = from as IConvertible;
+                IConvertible b = to as IConvertible;
+                if (a != null && b != null)
+                {
+                    to = (ToType)Convert.ChangeType(a, toType);
+                }
+                return;
             }
         }
-        else if (typeof(T).IsEnum && typeof(Y) == typeof(string))
+        catch (Exception e)
         {
-            to = (Y)(object)from.ToString();
+            Debug.LogError($"Failed to convert: {fromType} to {toType}");
+            Debug.LogError(e);
             return;
         }
-        else if (typeof(T) == typeof(string) && typeof(Y).IsEnum)
-        {
-            object o = typeof(ImportExportUtils)
-                .GetMethod(nameof(ParseEnum))
-                .MakeGenericMethod(typeof(Y))
-                .Invoke(null, new object[] { from });
-            Debug.LogError($"string to enum: {from} => {o}");
-            to = (Y)o;
-            return;
-        }
-        else if (typeof(T) == typeof(CardInfo) && typeof(Y) == typeof(string))
-        {
-            if(from != null)
-                to = (Y)(object)((from as CardInfo).name);
-            return;
-        }
-        else if (typeof(T) == typeof(string) && typeof(Y) == typeof(CardInfo))
-        {
-            string s = (string)(object)from;
-            if(string.IsNullOrEmpty(s))
-                to = (Y)(object)CardLoader.GetCardByName(s);
-            return;
-        }
-        
-        Debug.LogError($"Unsupported conversion type: {typeof(T)} to {typeof(Y)}");
+
+        Plugin.Log.LogError($"Unsupported conversion type: {fromType} to {toType}\n{Environment.StackTrace}");
     }
 
     private static bool AreNullableTypesEqual<T, Y>(T t, Y y, out object a, out object b, out bool aHasValue, out bool bHasValue)
@@ -211,6 +349,22 @@ public static class ImportExportUtils
         return false;
     }
 
+    private static string ExportTexture(Texture texture, string path)
+    {
+        if (texture is Texture2D texture2D)
+        {
+            return ExportTexture(texture2D, path);
+        }
+        
+        Texture2D converted = Texture2D.CreateExternalTexture(
+            texture.width,
+            texture.height,
+            TextureFormat.RGBA32,
+            false, false,
+            texture.GetNativeTexturePtr());
+        return ExportTexture(converted, path);
+    }
+    
     private static string ExportTexture(Texture2D texture, string path)
     {
         if (!texture.isReadable)
@@ -234,6 +388,16 @@ public static class ImportExportUtils
         }
 
         byte[] bytes = texture.EncodeToPNG();
+        if (bytes == null)
+        {
+            Plugin.Log.LogError("Failed to turn into bytes??");
+        }
+
+        if (string.IsNullOrEmpty(path))
+        {
+            Plugin.Log.LogError("path is empty????");
+        }
+        
         var dirPath = Path.GetDirectoryName(path);
         if (!Directory.Exists(dirPath))
         {
@@ -354,6 +518,15 @@ public static class ImportExportUtils
         if(underlyingType.IsValueType)
         {
             return Activator.CreateInstance(underlyingType);
+        }
+        return null;
+    }
+    
+    public static object GetDefault(Type type)
+    {
+        if(type.IsValueType)
+        {
+            return Activator.CreateInstance(type);
         }
         return null;
     }

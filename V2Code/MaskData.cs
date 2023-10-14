@@ -6,7 +6,6 @@ using DiskCardGame;
 using InscryptionAPI.Masks;
 using JLPlugin;
 using TinyJson;
-using UnityEngine.Serialization;
 
 namespace JSONLoader.V2Code
 {

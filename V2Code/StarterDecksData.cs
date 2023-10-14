@@ -43,5 +43,33 @@ namespace JLPlugin.Data
                     $"Loaded JSON starter decks {string.Join(",", starterDeckInfo.decks.Select(s => s.name).ToList())}");
             }
         }
+        
+        public static void Process(StarterDeckManager.FullStarterDeck deckInfo, StarterDeckInfo serializeInfo, bool toDeckInfo)
+        {
+            ImportExportUtils.SetID(toDeckInfo ? serializeInfo.name : deckInfo.Info.name);
+            ImportExportUtils.ApplyProperty(()=>deckInfo.Info.name, (a)=>deckInfo.Info.name=a, ref serializeInfo.name, toDeckInfo, "StarterDecks", "name");
+            ImportExportUtils.ApplyProperty(()=>deckInfo.CardNames, (a)=>deckInfo.CardNames=a, ref serializeInfo.cards, toDeckInfo, "StarterDecks", "cards");
+            ImportExportUtils.ApplyValue(ref deckInfo.Info.iconSprite, ref serializeInfo.iconTexture, toDeckInfo, "StarterDecks", "iconTexture");
+            ImportExportUtils.ApplyProperty(()=>deckInfo.UnlockLevel, (a)=>deckInfo.UnlockLevel=a, ref serializeInfo.unlockLevel, toDeckInfo, "StarterDecks", "unlockLevel");
+        }
+
+        public static void ExportAllStarterDecks()
+        {
+            Plugin.Log.LogInfo($"Exporting {StarterDeckManager.AllDecks.Count} Starter decks");
+            foreach (StarterDeckManager.FullStarterDeck deck in StarterDeckManager.AllDecks)
+            {
+                StarterDeckInfo serializeDeck = new StarterDeckInfo();
+                Process(deck, serializeDeck, false);
+                
+                string path = Path.Combine(Plugin.ExportDirectory, "StarterDecks", serializeDeck.name + ".jldr2");
+                string directory = Path.GetDirectoryName(path);
+                if (!System.IO.Directory.Exists(directory))
+                {
+                    System.IO.Directory.CreateDirectory(directory);
+                }
+                
+                File.WriteAllText(path, JSONParser.ToJSON(serializeDeck));
+            }
+        }
     }
 }

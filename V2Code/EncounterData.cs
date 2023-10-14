@@ -41,13 +41,14 @@ namespace JLPlugin.Data
 
         public static void Process(EncounterBlueprintData encounter, EncounterInfo encounterInfo, bool toEncounter)
         {
-            Plugin.Log.LogInfo($"Exporting {encounter.name} {encounter.turns}");
-            ImportExportUtils.ApplyProperty(()=>encounter.name, (a)=>encounter.name = a, ref encounterInfo.name, toEncounter);
-            ImportExportUtils.ApplyValue(ref encounter.minDifficulty, ref encounterInfo.minDifficulty, toEncounter);
-            ImportExportUtils.ApplyValue(ref encounter.maxDifficulty, ref encounterInfo.maxDifficulty, toEncounter);
-            ImportExportUtils.ApplyValue(ref encounter.dominantTribes, ref encounterInfo.dominantTribes, toEncounter);
-            ImportExportUtils.ApplyValue(ref encounter.randomReplacementCards, ref encounterInfo.randomReplacementCards, toEncounter);
-            ImportExportUtils.ApplyValue(ref encounter.redundantAbilities, ref encounterInfo.redundantAbilities, toEncounter);
+            ImportExportUtils.SetID(toEncounter ? encounterInfo.name : encounter.name);
+            
+            ImportExportUtils.ApplyProperty(()=>encounter.name, (a)=>encounter.name = a, ref encounterInfo.name, toEncounter, "Encounters", "name");
+            ImportExportUtils.ApplyValue(ref encounter.minDifficulty, ref encounterInfo.minDifficulty, toEncounter, "Encounters", "minDifficulty");
+            ImportExportUtils.ApplyValue(ref encounter.maxDifficulty, ref encounterInfo.maxDifficulty, toEncounter, "Encounters", "maxDifficulty");
+            ImportExportUtils.ApplyValue(ref encounter.dominantTribes, ref encounterInfo.dominantTribes, toEncounter, "Encounters", "dominantTribes");
+            ImportExportUtils.ApplyValue(ref encounter.randomReplacementCards, ref encounterInfo.randomReplacementCards, toEncounter, "Encounters", "randomReplacementCards");
+            ImportExportUtils.ApplyValue(ref encounter.redundantAbilities, ref encounterInfo.redundantAbilities, toEncounter, "Encounters", "redundantAbilities");
 
             if (toEncounter)
             {
@@ -85,7 +86,6 @@ namespace JLPlugin.Data
             {
                 if (encounter.turns != null)
                 {
-                    Plugin.Log.LogInfo($"\t{encounter.turns} is not null {encounter.turns.Count}");
                     encounterInfo.turns = new List<TurnInfo>();
                     foreach (List<EncounterBlueprintData.CardBlueprint> turn in encounter.turns)
                     {
@@ -111,7 +111,6 @@ namespace JLPlugin.Data
 
                         encounterInfo.turns.Add(turnInfo);
                     }
-                    Plugin.Log.LogInfo($"\tTurns: {encounterInfo.turns.Count}");
                 }
             }
             
@@ -132,7 +131,6 @@ namespace JLPlugin.Data
                     a.encounters.FirstOrDefault((a) => a.name == encounter.name) != null).ToArray();
                 encounterInfo.regions = regionDatas.Select((a) => a.name).ToList();
             }
-            Plugin.Log.LogInfo($"Done Exporting {encounter.name} {encounter.turns}");
         }
         
         public static void LoadAllEncounters(List<string> files)

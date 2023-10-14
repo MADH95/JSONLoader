@@ -10,7 +10,6 @@ using JLPlugin.Data;
 using JLPlugin.V2.Data;
 using JSONLoader.Data;
 using System.Linq;
-using InscryptionAPI.Card;
 using JSONLoader.V2Code;
 using UnityEngine;
 
@@ -94,7 +93,7 @@ namespace JLPlugin
                 }
             }
 
-            if ((Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift)) && Input.GetKeyDown(KeyCode.X))
+            if (Input.GetKey(KeyCode.LeftControl) && Input.GetKey(KeyCode.RightControl) && Input.GetKeyDown(KeyCode.X))
             {
                 ExportAllToJLDR2();
             }
@@ -105,9 +104,9 @@ namespace JLPlugin
             TribeList.ExportAllTribes();
             // SigilData.LoadAllSigils(files);
             Data.EncounterData.ExportAllEncounters();
-            // StarterDeckList.LoadAllStarterDecks(files);
+            StarterDeckList.ExportAllStarterDecks();
             // GramophoneData.LoadAllGramophone(files);
-            // LanguageData.LoadAllLanguages(files);
+            LanguageData.ExportAllLanguages();
             // MaskData.LoadAllMasks(files);
             // JSONLoader.Data.TalkingCards.LoadTalkingCards.InitAndLoad(files);
             // ^ Ambiguity between JSONLoader.Data and JLPlugin.Data is annoying. = u= -Kelly
