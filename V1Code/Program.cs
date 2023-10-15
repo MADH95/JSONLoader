@@ -5,7 +5,6 @@ using BepInEx.Configuration;
 using BepInEx.Logging;
 using DiskCardGame;
 using HarmonyLib;
-using InscryptionAPI.Regions;
 using JLPlugin.Data;
 using JLPlugin.V2.Data;
 using JSONLoader.Data;
@@ -55,8 +54,6 @@ namespace JLPlugin
                 Log.LogWarning("Note: Backwards compatibility has been enabled. Old *.jldr files will be converted to *.jldr2 automatically. This will slow down your game loading!");
             if (betaCompatibility.Value)
                 Utils.JLUtils.LoadCardsFromFiles(files);
-
-            Log.LogDebug(string.Join(", ", RegionManager.AllRegionsCopy.Select(x => x.name)));
 
             LoadAll(files);
         }
