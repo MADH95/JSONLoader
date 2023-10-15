@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using TinyJson;
+using UnityEngine;
 
 namespace JLPlugin.Data
 {
@@ -52,28 +53,29 @@ namespace JLPlugin.Data
 
             if (toEncounter)
             {
-                foreach (TurnInfo turndata in encounterInfo.turns)
+                encounter.turns.Clear();
+                foreach (TurnInfo turnData in encounterInfo.turns)
                 {
                     List<EncounterBlueprintData.CardBlueprint> TurnCardList = new List<EncounterBlueprintData.CardBlueprint>();
-                    foreach (TurnCardInfo turncardinfodata in turndata.cardInfo)
+                    foreach (TurnCardInfo turnCardInfo in turnData.cardInfo)
                     {
                         EncounterBlueprintData.CardBlueprint TurnCardInfo = new EncounterBlueprintData.CardBlueprint();
-                        TurnCardInfo.card = CardManager.AllCardsCopy.CardByName(turncardinfodata.card);
-                        if (turncardinfodata.randomReplaceChance != null)
+                        TurnCardInfo.card = CardManager.AllCardsCopy.CardByName(turnCardInfo.card);
+                        if (turnCardInfo.randomReplaceChance != null)
                         {
-                            TurnCardInfo.randomReplaceChance = (int)turncardinfodata.randomReplaceChance;
+                            TurnCardInfo.randomReplaceChance = (int)turnCardInfo.randomReplaceChance;
                         }
 
-                        if (turncardinfodata.difficultyReplacement != null)
+                        if (turnCardInfo.difficultyReplacement != null)
                         {
                             TurnCardInfo.difficultyReplace = true;
                             TurnCardInfo.replacement =
-                                CardManager.AllCardsCopy.CardByName(turncardinfodata.difficultyReplacement);
+                                CardManager.AllCardsCopy.CardByName(turnCardInfo.difficultyReplacement);
                         }
 
-                        if (turncardinfodata.difficultyReq != null)
+                        if (turnCardInfo.difficultyReq != null)
                         {
-                            TurnCardInfo.difficultyReq = (int)turncardinfodata.difficultyReq;
+                            TurnCardInfo.difficultyReq = (int)turnCardInfo.difficultyReq;
                         }
 
                         TurnCardList.Add(TurnCardInfo);
@@ -145,72 +147,19 @@ namespace JLPlugin.Data
                 
                 files.RemoveAt(index--);
                 
-                Plugin.VerboseLog($"Loading JLDR2 (encounters) {filename}");
                 EncounterInfo encounterInfo = JSONParser.FromJson<EncounterInfo>(File.ReadAllText(file));
+                EncounterBlueprintData encounter = ScriptableObjectLoader<EncounterBlueprintData>.AllData.Find((a) => a.name == encounterInfo.name);
+                if (encounter == null)
+                {
+                    encounter = EncounterManager.New(encounterInfo.name);
+                    Plugin.VerboseLog($"Loading new JLDR2 (encounters) {filename}");
+                }
+                else
+                {
+                    Plugin.VerboseLog($"Loading replacement JLDR2 (encounters) {filename}");
+                }
 
-                EncounterBlueprintData encounter = EncounterManager.New(encounterInfo.name);
                 Process(encounter, encounterInfo, true, file);
-                /*if (encounterInfo.minDifficulty != null && encounterInfo.maxDifficulty != null)
-                {
-                    encounter.SetDifficulty((int)encounterInfo.minDifficulty, (int)encounterInfo.maxDifficulty);
-                }
-
-                if (encounterInfo.dominantTribes != null)
-                {
-                    encounter.dominantTribes = encounterInfo.dominantTribes
-                        .Select(ImportExportUtils.ParseEnum<Tribe>).ToList();
-                }
-
-                if (encounterInfo.randomReplacementCards != null)
-                {
-                    encounter.randomReplacementCards = encounterInfo.randomReplacementCards
-                        .Select(x => CardManager.AllCardsCopy.CardByName(x)).ToList();
-                }
-
-                if (encounterInfo.redundantAbilities != null)
-                {
-                    encounter.SetRedundantAbilities(encounterInfo.redundantAbilities
-                        .Select(ImportExportUtils.ParseEnum<Ability>).ToArray());
-                }
-
-                foreach (TurnInfo turndata in encounterInfo.turns)
-                {
-                    List<EncounterBlueprintData.CardBlueprint> TurnCardList = new List<EncounterBlueprintData.CardBlueprint>();
-                    foreach (TurnCardInfo turncardinfodata in turndata.cardInfo)
-                    {
-                        EncounterBlueprintData.CardBlueprint TurnCardInfo = new EncounterBlueprintData.CardBlueprint();
-                        TurnCardInfo.card = CardManager.AllCardsCopy.CardByName(turncardinfodata.card);
-                        if (turncardinfodata.randomReplaceChance != null)
-                        {
-                            TurnCardInfo.randomReplaceChance = (int)turncardinfodata.randomReplaceChance;
-                        }
-
-                        if (turncardinfodata.difficultyReplacement != null)
-                        {
-                            TurnCardInfo.difficultyReplace = true;
-                            TurnCardInfo.replacement =
-                                CardManager.AllCardsCopy.CardByName(turncardinfodata.difficultyReplacement);
-                        }
-
-                        if (turncardinfodata.difficultyReq != null)
-                        {
-                            TurnCardInfo.difficultyReq = (int)turncardinfodata.difficultyReq;
-                        }
-
-                        TurnCardList.Add(TurnCardInfo);
-                    }
-
-                    encounter.AddTurn(TurnCardList.ToArray());
-                }
-
-                if (encounterInfo.regions != null)
-                {
-                    foreach (RegionData Region in RegionManager.AllRegionsCopy
-                                 .Where(x => encounterInfo.regions.Contains(x.name)).ToList())
-                    {
-                        RegionExtensions.AddEncounters(Region, encounter);
-                    }
-                }*/
             }
         }
 
