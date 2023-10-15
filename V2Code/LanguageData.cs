@@ -3,13 +3,11 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using BepInEx;
-using InscryptionAPI;
 using InscryptionAPI.Localizing;
 using JLPlugin;
 using TinyJson;
 using TMPro;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 namespace JSONLoader.V2Code
 {
