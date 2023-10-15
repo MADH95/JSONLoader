@@ -20,7 +20,7 @@ namespace JLPlugin
     {
         public const string PluginGuid = "MADH.inscryption.JSONLoader";
         public const string PluginName = "JSONLoader";
-        public const string PluginVersion = "2.4.0";
+        public const string PluginVersion = "2.5.0";
         
         public static string Directory = "";
         public static string ExportDirectory => Path.Combine(Directory, "Exported");

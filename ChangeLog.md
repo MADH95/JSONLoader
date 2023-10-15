@@ -1,3 +1,58 @@
+## 2.5.0
+- Added custom mask support (With example .schema!)
+- Added custom language support using a language .jldr2
+- Added translation support for cards using *displayName* and *description*.
+- Added hotkey to export all compatible content to .jldr2  (Left Control + Right Control + X)
+- Reduced the amount of times JSONLoader looks for files when starting the game
+- Moved Change notes from Readme to ChangeLog.md
+- Added config to enable verbose logging to help debugging
+
+## 2.4.5 (configil patchnotes)
+- rewrote and cleaned up a ton of code
+- added the triggers: OnPlayerStartOfTurn, OnOpponentStartOfTurn, OnPlayerEndOfTurn and OnOpponentEndOfTurn
+- fixed retainMods removing the evolve sigil from the card because of some left over code from evolve
+- added targetCard to the card object
+- fixed a bug where the game would softlock when infused was not set in addAbilities
+- fixed targetCard only working with singular variables and not with things like functions, this does mean that targetCard will now require variables to be encased in parentheses to enable NCalc
+- fixed a bug where if you set one sigil to be infused in addAbilities that it would make all infused
+- changed removeAbilities to now be a list in this format:
+  "removeAbilities": [{
+  "list": "",
+  "name": "",
+  "all": ""
+  }]
+- added a new field to removeAbilities called "all", when this field is set to true all instances of a sigil will be removed from a card instead of just one (this also means that the default for removing sigils isn't removing all instances of that sigil anymore, but now just one)
+- added a new field called "list" to both addAbilities and removeAbilities, this field can be set to any list and will add/remove any sigils from that list from the targeted card
+- added a "damageSource" field to damageCards which functions like targetCard but changes what card the game will think the damage came from, this field can be set to "null" to have there be no damage source
+- changed gemCost in activationCost to be gemsCost instead to be in line with the card jldr2's
+- added a function called ListContains() which can be used to see if a list contains a certain object
+- added a couple of general use functions to check if a card has a certain "modifier" called: HasAbility(card, ability), HasTribe(card, tribe), HasTrait(card, trait) and HasSpecialAbility(card, specialAbility)
+- added a couple of functions to get the object of a specific type from it's name: Ability('GuidPlusName'), Tribe('GuidPlusName'), Trait('GuidPlusName') and SpecialAbility('GuidPlusName'). Here's an example of how you could use the Ability() function: (HasAbility([BaseCard], Ability('Submerge')))
+
+(an object is basically just a container with information about something, so for example the object of a sigil contains things like: the name, the guid, the description, the metacategories etc.)
+
+## 2.4.3
+- Actually added the file now
+
+## 2.4.2
+- Readded an important file that i deleted because i thought it wasn't important :P
+
+## 2.4.1
+- Fixed the patchnotes
+
+## 2.4.0 (configil patchnotes)
+- Added a maxEnergy field to gainCurrency (coded by UwUMacaroniTime)
+- Made configils run much faster and have better performance (coded by kelly betty)
+- Fixed any errors relating to a sigil trying to access the card that it is on after it has died or has been removed from the board
+- Fixed the passive trigger spamming the console and cards dying when their attack was set to 0 when using the passive trigger
+- Fixed gainCurrency foils only being visual and not actually increasing the foil amount
+- Added a [DamageAmount] variable to both OnStruck and OnDamage
+- Fixed runOnCondition not working for sendMessage
+- Added two new variables [card.TemporaryMods] and [card.AllAbilities]
+
+## 2.3.0
+- Added talking card support!
+
 ## 2.3.0
 - Added talking card support
 

@@ -1,10 +1,10 @@
 {
 	"name": "JSONCardLoader",
-	"version_number": "2.4.3",
+	"version_number": "2.5.0",
 	"website_url": "https://github.com/MADH95/JSONCardLoaderPlugin",
 	"description": "This is a BepInEx plugin made for Incryption to create custom cards, sigils, starter decks, tribes and encounters using JSON files and the API.",
 	"dependencies": [
 		"BepInEx-BepInExPack_Inscryption-5.4.1701",
-		"API_dev-API-2.9.1"
+		"API_dev-API-2.18.1"
 	]
 }
