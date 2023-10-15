@@ -32,7 +32,7 @@ namespace JLPlugin.Data
                 
                 files.RemoveAt(index--);
                 
-                Plugin.Log.LogDebug($"Loading JLDR2 (starter decks) {filename}");
+                Plugin.VerboseLog($"Loading JLDR2 (starter decks) {filename}");
                 StarterDeckList starterDeckInfo = JSONParser.FromJson<StarterDeckList>(File.ReadAllText(file));
 
                 foreach (var deckdata in starterDeckInfo.decks)

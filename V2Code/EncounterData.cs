@@ -145,7 +145,7 @@ namespace JLPlugin.Data
                 
                 files.RemoveAt(index--);
                 
-                Plugin.Log.LogDebug($"Loading JLDR2 (encounters) {filename}");
+                Plugin.VerboseLog($"Loading JLDR2 (encounters) {filename}");
                 EncounterInfo encounterInfo = JSONParser.FromJson<EncounterInfo>(File.ReadAllText(file));
 
                 EncounterBlueprintData encounter = EncounterManager.New(encounterInfo.name);

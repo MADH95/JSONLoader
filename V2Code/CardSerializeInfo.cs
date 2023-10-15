@@ -421,7 +421,7 @@ namespace JLPlugin.V2.Data
 
                 files.RemoveAt(index--);
 
-                Plugin.Log.LogDebug($"Loading JLDR2 Card {filename}");
+                Plugin.VerboseLog($"Loading JLDR2 Card {filename}");
                 try
                 {
                     CardSerializeInfo cardInfo = JSONParser.FromJson<CardSerializeInfo>(File.ReadAllText(file));

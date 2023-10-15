@@ -127,10 +127,10 @@ namespace JLPlugin.Data
                 
                 files.RemoveAt(index--);
                 
-                Plugin.Log.LogDebug($"Loading JLDR2 (sigil) {filename}");
+                Plugin.VerboseLog($"Loading JLDR2 (sigil) {filename}");
                 SigilData sigilInfo = JSONParser.FromJson<SigilData>(File.ReadAllText(file));
                 sigilInfo.GenerateNew();
-                Plugin.Log.LogDebug($"Loaded JSON sigil {sigilInfo.name}");
+                Plugin.VerboseLog($"Loaded JSON sigil {sigilInfo.name}");
             }
         }
 

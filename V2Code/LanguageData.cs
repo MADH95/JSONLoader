@@ -42,7 +42,7 @@ namespace JSONLoader.V2Code
                 
                 files.RemoveAt(index--);
                 
-                Plugin.Log.LogDebug($"Loading JLDR2 (language) {filename}");
+                Plugin.VerboseLog($"Loading JLDR2 (language) {filename}");
                 LanguageData languageInfo = JSONParser.FromJson<LanguageData>(File.ReadAllText(file));
 
                 string stringTablePath = languageInfo.stringTablePath;

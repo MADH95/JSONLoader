@@ -35,7 +35,7 @@ namespace JSONLoader.Data
                 
                 files.RemoveAt(index--);
                 
-                Plugin.Log.LogDebug($"Loading JLDR2 (gramophone) {filename}");
+                Plugin.VerboseLog($"Loading JLDR2 (gramophone) {filename}");
                 GramophoneInfo gramInfo = JSONParser.FromJson<GramophoneInfo>(File.ReadAllText(file));
 
                 string guidAndPrefix = $"{Plugin.PluginGuid}_{gramInfo.Prefix ?? string.Empty}";
