@@ -8,6 +8,6 @@ namespace JLPlugin.Data
         public int? bonesCost;
         public int? energyCost;
         public int? bloodCost;
-        public List<string> gemCost;
+        public List<string> gemsCost;
     }
 }

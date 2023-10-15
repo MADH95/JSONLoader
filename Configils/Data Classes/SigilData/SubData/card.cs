@@ -1,6 +1,9 @@
 ﻿using DiskCardGame;
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text.RegularExpressions;
+using static JLPlugin.Interpreter;
 
 namespace JLPlugin.Data
 {
@@ -10,6 +13,7 @@ namespace JLPlugin.Data
         public string name;
         public string retainMods;
         public string randomCardOnCondition;
+        public string targetCard;
 
         public static CardInfo getCard(card cardInfo, AbilityBehaviourData abilitydata)
         {
@@ -65,6 +69,10 @@ namespace JLPlugin.Data
                     card = cardsWithCondition[random.Next(cardsWithCondition.Count)];
                 }
             }
+            else if (cardInfo.targetCard != null)
+            {
+                card = ((Card)SigilData.ConvertArgumentToType(cardInfo.targetCard, abilitydata, typeof(Card))).Info;
+            }
             if (SigilData.ConvertArgument(cardInfo.retainMods, abilitydata) == "true")
             {
                 ModifyCard(card, abilitydata);
@@ -82,10 +90,6 @@ namespace JLPlugin.Data
             foreach (CardModificationInfo mod in abilitydata.self.Info.Mods.FindAll((CardModificationInfo x) => !x.nonCopyable))
             {
                 CardModificationInfo NewCardMod = (CardModificationInfo)mod.Clone();
-                if (NewCardMod.HasAbility(Ability.Evolve))
-                {
-                    NewCardMod.abilities.Remove(Ability.Evolve);
-                }
                 card.Mods.Add(NewCardMod);
             }
         }

@@ -1,11 +1,17 @@
-﻿using System.Collections.Generic;
+﻿using HarmonyLib;
+using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 
-public static class Extensions
+namespace JLPlugin
 {
-    public static void Append<K, V>(this Dictionary<K, V> first, Dictionary<K, V> second)
+    public static class Extensions
     {
-        second.ToList()
-            .ForEach(pair => first[pair.Key] = pair.Value);
+        public static void Append<K, V>(this Dictionary<K, V> first, Dictionary<K, V> second)
+        {
+            second.ToList()
+                .ForEach(pair => first[pair.Key] = pair.Value);
+        }
     }
 }

@@ -44,11 +44,7 @@ namespace JLPlugin.Data
                 {
                     if (transformCardsInfo.targetCard != null)
                     {
-                        if (Regex.Matches(transformCardsInfo.targetCard, RegexStrings.Variable) is var variables
-                        && variables.Cast<Match>().Any(variables => variables.Success))
-                        {
-                            CardToReplace = (PlayableCard)Interpreter.ProcessGeneratedVariable(variables[0].Groups[1].Value, abilitydata);
-                        }
+                        CardToReplace = (PlayableCard)SigilData.ConvertArgumentToType(transformCardsInfo.targetCard, abilitydata, typeof(PlayableCard));
                     }
                     else
                     {

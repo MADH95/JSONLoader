@@ -93,7 +93,7 @@ namespace JLPlugin.Data
                 {
                     foreach (Ability ability in SigilData.ConvertArgument(conditionInfo.cardAbilities, abilitydata).Select(s => CardSerializeInfo.ParseEnum<Ability>(s)).ToList())
                     {
-                        if (!cardinfo.abilities.Contains(abilitydata.ability))
+                        if (!cardinfo.Abilities.Contains(abilitydata.ability))
                         {
                             return false;
                         }

@@ -9,6 +9,7 @@ namespace JLPlugin.Data
     {
         public string runOnCondition;
         public slotData slot;
+        public string damageSource;
         public string damage;
 
         public static IEnumerator DamageSlots(AbilityBehaviourData abilitydata)
@@ -33,7 +34,19 @@ namespace JLPlugin.Data
                     int damage = int.Parse(SigilData.ConvertArgument(damageslotinfo.damage, abilitydata));
                     if (slot.Card != null)
                     {
-                        yield return slot.Card.TakeDamage(damage, slot.Card);
+                        PlayableCard damageSourceCard = abilitydata.self;
+                        if (damageslotinfo.damageSource != null)
+                        {
+                            if (SigilData.ConvertArgument(damageslotinfo.damageSource, abilitydata) == "null")
+                            {
+                                damageSourceCard = null;
+                            }
+                            else
+                            {
+                                damageSourceCard = ((PlayableCard)SigilData.ConvertArgumentToType(damageslotinfo.damageSource, abilitydata, typeof(PlayableCard)));
+                            }
+                        }
+                        yield return slot.Card.TakeDamage(damage, damageSourceCard);
                     }
                     else
                     {
