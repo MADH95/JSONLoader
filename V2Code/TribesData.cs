@@ -35,6 +35,7 @@ namespace JLPlugin.Data
                 if (!filename.EndsWith("_tribe.jldr2"))
                     continue;
 
+                ImportExportUtils.SetDebugPath(file);
                 files.RemoveAt(index--);
 
                 Plugin.VerboseLog($"Loading JLDR2 (tribes) {filename}");

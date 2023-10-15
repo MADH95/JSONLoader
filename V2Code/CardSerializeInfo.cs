@@ -12,7 +12,7 @@ using UnityEngine;
 
 namespace JLPlugin.V2.Data
 {
-    public class CardSerializeInfo
+    public class CardSerializeInfo : JSONParser.IInitializable
     {
         public const string DEFAULT_MOD_PREFIX = "JSON";
         private static FieldInfo[] PUBLIC_FIELD_INFOS = typeof(CardSerializeInfo).GetFields(BindingFlags.Instance | BindingFlags.Public);
@@ -23,9 +23,9 @@ namespace JLPlugin.V2.Data
 
         public string[] decals;
 
-        public JSONParser.LocalizableField displayedName = new("displayedName"); // displayedName, displayedName_es... etc
+        public JSONParser.LocalizableField displayedName;
 
-        public JSONParser.LocalizableField description = new("description"); // description, description_ko... etc
+        public JSONParser.LocalizableField description;
 
         public int? baseAttack;
 
@@ -95,13 +95,23 @@ namespace JLPlugin.V2.Data
 
         public string filePath;
 
-        
+        public CardSerializeInfo()
+        {
+            Initialize();
+        }
+
+        public void Initialize()
+        {
+            displayedName = new("displayedName"); // displayedName, displayedName_es... etc
+            description = new("description"); // description, description_ko... etc
+        }
+
         public static void Apply(CardInfo cardInfo, CardSerializeInfo serializeInfo, bool toCardInfo, string cardName)
         {
             ImportExportUtils.SetID(cardName);
             
-            ImportExportUtils.ApplyLocaleField("displayedName", ref serializeInfo.displayedName, ref cardInfo.displayedName, toCardInfo, cardName);
-            ImportExportUtils.ApplyLocaleField("description", ref serializeInfo.description, ref cardInfo.description, toCardInfo, cardName);
+            ImportExportUtils.ApplyLocaleField("displayedName", ref serializeInfo.displayedName, ref cardInfo.displayedName, toCardInfo);
+            ImportExportUtils.ApplyLocaleField("description", ref serializeInfo.description, ref cardInfo.description, toCardInfo);
 
             ImportExportUtils.ApplyProperty(()=> cardInfo.name, (a)=>cardInfo.name=a,ref serializeInfo.name, toCardInfo, "Cards", "name");
             ImportExportUtils.ApplyValue(ref cardInfo.baseAttack, ref serializeInfo.baseAttack, toCardInfo, "Cards", "baseAttack");
@@ -418,10 +428,15 @@ namespace JLPlugin.V2.Data
             {
                 string file = files[index];
                 string filename = file.Substring(file.LastIndexOf(Path.DirectorySeparatorChar) + 1);
-
+                if (filename.EndsWith("_talk.jldr2"))
+                {
+                    continue;
+                }
+                
                 files.RemoveAt(index--);
 
                 Plugin.VerboseLog($"Loading JLDR2 Card {filename}");
+                ImportExportUtils.SetDebugPath(file);
                 try
                 {
                     CardSerializeInfo cardInfo = JSONParser.FromJson<CardSerializeInfo>(File.ReadAllText(file));
@@ -442,14 +457,16 @@ namespace JLPlugin.V2.Data
             Plugin.Log.LogInfo($"Exporting {CardManager.AllCardsCopy.Count} cards.");
             foreach (CardInfo card in CardManager.AllCardsCopy)
             {
-                CardSerializeInfo info = new CardSerializeInfo();
-                CardSerializeInfo.Apply(card, info, false, card.name);
-                
                 string path = Path.Combine(Plugin.ExportDirectory, "Cards", card.name + ".jldr2");
+                ImportExportUtils.SetDebugPath(path);
+                
+                CardSerializeInfo info = new CardSerializeInfo();
+                Apply(card, info, false, card.name);
+                
                 string directory = Path.GetDirectoryName(path);
-                if (!System.IO.Directory.Exists(directory))
+                if (!Directory.Exists(directory))
                 {
-                    System.IO.Directory.CreateDirectory(directory);
+                    Directory.CreateDirectory(directory);
                 }
                 
                 info.WriteToFile(path, true);

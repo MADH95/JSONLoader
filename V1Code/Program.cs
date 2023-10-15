@@ -34,6 +34,7 @@ namespace JLPlugin
         {
             return System.IO.Directory.GetFiles(Paths.PluginPath, "*.jldr*", SearchOption.AllDirectories)
                 .Where((a)=> (a.EndsWith(".jldr") || a.EndsWith(".jldr2")) && !a.Contains(Directory))
+                .Select((a)=>a.ToLower())
                 .ToList();
         }
         
@@ -67,10 +68,9 @@ namespace JLPlugin
             GramophoneData.LoadAllGramophone(files);
             LanguageData.LoadAllLanguages(files);
             MaskData.LoadAllMasks(files);
+            CardSerializeInfo.LoadAllJLDR2(files);
             JSONLoader.Data.TalkingCards.LoadTalkingCards.InitAndLoad(files);
             // ^ Ambiguity between JSONLoader.Data and JLPlugin.Data is annoying. = u= -Kelly
-            
-            CardSerializeInfo.LoadAllJLDR2(files); // Expects the lsit to only have cards at this stage
         }
 
         public void Update()

@@ -43,8 +43,9 @@ namespace JLPlugin.Data
             }
         }
         
-        public static void Process(StarterDeckManager.FullStarterDeck deckInfo, StarterDeckInfo serializeInfo, bool toDeckInfo)
+        public static void Process(StarterDeckManager.FullStarterDeck deckInfo, StarterDeckInfo serializeInfo, bool toDeckInfo, string path)
         {
+            ImportExportUtils.SetDebugPath(path);
             ImportExportUtils.SetID(toDeckInfo ? serializeInfo.name : deckInfo.Info.name);
             ImportExportUtils.ApplyProperty(()=>deckInfo.Info.name, (a)=>deckInfo.Info.name=a, ref serializeInfo.name, toDeckInfo, "StarterDecks", "name");
             ImportExportUtils.ApplyProperty(()=>deckInfo.CardNames, (a)=>deckInfo.CardNames=a, ref serializeInfo.cards, toDeckInfo, "StarterDecks", "cards");
@@ -58,13 +59,13 @@ namespace JLPlugin.Data
             foreach (StarterDeckManager.FullStarterDeck deck in StarterDeckManager.AllDecks)
             {
                 StarterDeckInfo serializeDeck = new StarterDeckInfo();
-                Process(deck, serializeDeck, false);
-                
                 string path = Path.Combine(Plugin.ExportDirectory, "StarterDecks", serializeDeck.name + ".jldr2");
+                Process(deck, serializeDeck, false, path);
+                
                 string directory = Path.GetDirectoryName(path);
-                if (!System.IO.Directory.Exists(directory))
+                if (!Directory.Exists(directory))
                 {
-                    System.IO.Directory.CreateDirectory(directory);
+                    Directory.CreateDirectory(directory);
                 }
                 
                 File.WriteAllText(path, JSONParser.ToJSON(serializeDeck));

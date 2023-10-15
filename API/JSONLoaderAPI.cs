@@ -19,6 +19,7 @@ namespace JSONLoader.API
                 try
                 {
                     CardSerializeInfo cardInfo = JSONParser.FromJson<CardSerializeInfo>(card);
+                    ImportExportUtils.SetDebugPath(Environment.StackTrace);
                     cardInfo.Apply();
                     Plugin.Log.LogDebug($"Added card {cardInfo.name} using JSONLoader API");
                 }
@@ -54,6 +55,7 @@ namespace JSONLoader.API
         {
             try
             {
+                ImportExportUtils.SetDebugPath(Environment.StackTrace);
                 CardSerializeInfo cardInfo = JSONParser.FromJson<CardSerializeInfo>(json);
                 return cardInfo.ToCardInfo();
             }

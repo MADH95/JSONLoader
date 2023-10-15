@@ -15,9 +15,16 @@ using UnityEngine;
 public static class ImportExportUtils
 {
     private static string ID;
+    private static string DebugPath;
+    
     public static void SetID(string id)
     {
         ID = id;
+    }
+
+    public static void SetDebugPath(string path)
+    {
+        DebugPath = path;
     }
     
     public static T ParseEnum<T>(string value) where T : unmanaged, System.Enum
@@ -197,7 +204,7 @@ public static class ImportExportUtils
                     }
                     else
                     {
-                        Plugin.Log.LogError($"Failed to convert enum to string! '{from}'");
+                        Error($"Failed to convert enum to string! '{from}'");
                         to = (ToType)(object)oType;
                     }
                 }
@@ -210,7 +217,7 @@ public static class ImportExportUtils
             }
             else if (fromType == typeof(string) && toType.IsEnum)
             {
-                if (from != null)
+                if (!string.IsNullOrEmpty((string)(object)from))
                 {
                     object o = typeof(ImportExportUtils)
                         .GetMethod(nameof(ParseEnum), BindingFlags.Public | BindingFlags.Static)
@@ -230,7 +237,7 @@ public static class ImportExportUtils
             else if (fromType == typeof(string) && toType == typeof(CardInfo))
             {
                 string s = (string)(object)from;
-                if (string.IsNullOrEmpty(s))
+                if (!string.IsNullOrEmpty(s))
                     to = (ToType)(object)CardLoader.GetCardByName(s);
                 return;
             }
@@ -239,7 +246,14 @@ public static class ImportExportUtils
                 string path = (string)(object)from;
                 if (!string.IsNullOrEmpty(path))
                 {
-                    to = (ToType)(object)TextureHelper.GetImageAsTexture(path);
+                    try
+                    {
+                        to = (ToType)(object)TextureHelper.GetImageAsTexture(path);
+                    }
+                    catch (FileNotFoundException)
+                    {
+                        Error($"Failed to find texture {path}!");
+                    }
                 }
             
                 return;
@@ -292,21 +306,21 @@ public static class ImportExportUtils
             }
             else if (fromType == typeof(JSONParser.LocalizableField) && toType == typeof(string))
             {
-                Plugin.Log.LogError("Use ApplyLocaleField when converted from LocalizableField to string!");
+                Error("Use ApplyLocaleField when converted from LocalizableField to string!");
             }
             else if (fromType == typeof(string) && toType == typeof(JSONParser.LocalizableField))
             {
-                Plugin.Log.LogError("Use ApplyLocaleField when converted from string to LocalizableField!");
+                Error("Use ApplyLocaleField when converted from string to LocalizableField!");
             }
         }
         catch (Exception e)
         {
-            Debug.LogError($"Failed to convert: {fromType} to {toType}");
-            Debug.LogError(e);
+            Error($"Failed to convert: {fromType} to {toType}");
+            Exception(e);
             return;
         }
 
-        Plugin.Log.LogError($"Unsupported conversion type: {fromType} to {toType}\n{Environment.StackTrace}");
+        Error($"Unsupported conversion type: {fromType} to {toType}\n{Environment.StackTrace}");
     }
 
     private static bool AreNullableTypesEqual<T, Y>(T t, Y y, out object a, out object b, out bool aHasValue, out bool bHasValue)
@@ -353,7 +367,7 @@ public static class ImportExportUtils
             return true;
         }
 
-        Debug.LogError($"Not same types {typeof(T)} {typeof(Y)}");
+        Error($"Not same types {typeof(T)} {typeof(Y)}");
         return false;
     }
 
@@ -398,12 +412,12 @@ public static class ImportExportUtils
         byte[] bytes = texture.EncodeToPNG();
         if (bytes == null)
         {
-            Plugin.Log.LogError("Failed to turn into bytes??");
+            Error("Failed to turn into bytes??");
         }
 
         if (string.IsNullOrEmpty(path))
         {
-            Plugin.Log.LogError("path is empty????");
+            Error("path is empty????");
         }
         
         var dirPath = Path.GetDirectoryName(path);
@@ -431,21 +445,21 @@ public static class ImportExportUtils
         return paths.ToArray();
     }
 
-    public static void ApplyLocaleField(string field, ref JSONParser.LocalizableField rows, ref string cardInfoEnglishField, bool toCardInfo, string id)
+    public static void ApplyLocaleField(string field, ref JSONParser.LocalizableField rows, ref string cardInfoEnglishField, bool toCardInfo)
     {
         if (toCardInfo)
         {
-            ApplyLocaleField(field, rows, out cardInfoEnglishField, id);
+            ApplyLocaleField(field, rows, out cardInfoEnglishField);
         }
         else
         {
             string s = cardInfoEnglishField;
             cardInfoEnglishField = s;
-            ImportLocaleField(rows, cardInfoEnglishField, id);
+            ImportLocaleField(rows, cardInfoEnglishField);
         }
     }
 
-    private static void ImportLocaleField(JSONParser.LocalizableField rows, string cardInfoEnglishField, string id)
+    private static void ImportLocaleField(JSONParser.LocalizableField rows, string cardInfoEnglishField)
     {
         // From game to LocalizableField
         rows.rows.Clear();
@@ -458,12 +472,12 @@ public static class ImportExportUtils
             {
                 string code = LocalizationManager.LanguageToCode(pair.Key);
                 rows.SetValue($"{rows.englishFieldName}_{code}", pair.Value);
-                Plugin.VerboseLog($"{id} Loaded {cardInfoEnglishField} translation for {code} => {pair.Key}");
+                VerboseLog($"Loaded {cardInfoEnglishField} translation for {code} => {pair.Key}");
             }
         }
         else
         {
-            Plugin.VerboseLog($"{id} ApplyLocaleField could not find any translations from english '{cardInfoEnglishField}'");
+            VerboseLog($"ApplyLocaleField could not find any translations from english '{cardInfoEnglishField}'");
         }
     }
 
@@ -474,8 +488,7 @@ public static class ImportExportUtils
     /// <param name="rows"></param>
     /// <param name="cardInfoEnglishField"></param>
     /// <param name="toCardInfo"></param>
-    private static void ApplyLocaleField(string field, JSONParser.LocalizableField rows,
-        out string cardInfoEnglishField, string id)
+    private static void ApplyLocaleField(string field, JSONParser.LocalizableField rows, out string cardInfoEnglishField)
     {
         if (rows.rows.TryGetValue(rows.englishFieldName, out string english))
         {
@@ -488,11 +501,10 @@ public static class ImportExportUtils
         else
         {
             cardInfoEnglishField = null;
-            Plugin.VerboseError($"{id} ApplyLocaleField {field} could not find english field!");
             return;
         }
 
-        Plugin.VerboseLog($"{id} ApplyLocaleField {field} english {cardInfoEnglishField}");
+        VerboseLog($"ApplyLocaleField {field} english {cardInfoEnglishField}");
         foreach (KeyValuePair<string, string> pair in rows.rows)
         {
             if (pair.Key == rows.englishFieldName)
@@ -501,7 +513,7 @@ public static class ImportExportUtils
             int indexOf = pair.Key.LastIndexOf("_", StringComparison.Ordinal);
             if (indexOf < 0)
             {
-                Plugin.VerboseError($"Could not find _ of key {pair.Key} in field {field}!");
+                VerboseError($"Could not find _ of key {pair.Key} in field {field}!");
                 continue;
             }
 
@@ -512,11 +524,11 @@ public static class ImportExportUtils
             if (language != Language.NUM_LANGUAGES)
             {
                 LocalizationManager.Translate(Plugin.PluginGuid, null, cardInfoEnglishField, pair.Value, language);
-                Plugin.VerboseLog($"Translation {cardInfoEnglishField} to {code} = {pair.Value}");
+                VerboseLog($"Translation {cardInfoEnglishField} to {code} = {pair.Value}");
             }
             else
             {
-                Plugin.Log.LogError($"Unknown language code {code} for card {cardInfoEnglishField} in field {field}");
+                Error($"Unknown language code {code} for card {cardInfoEnglishField} in field {field}");
             }
         }
     }
@@ -542,13 +554,42 @@ public static class ImportExportUtils
         }
         return null;
     }
-    
-    public static object GetDefault(Type type)
+
+    private static object GetDefault(Type type)
     {
         if(type.IsValueType)
         {
             return Activator.CreateInstance(type);
         }
         return null;
+    }
+    
+    private static void VerboseLog(string message)
+    {
+        Plugin.VerboseLog($"[{DebugPath}][{ID}] {message}");
+    }
+    
+    private static void VerboseWarning(string message)
+    {
+        if (Plugin.verboseLogging.Value)
+            Plugin.VerboseWarning($"[{DebugPath}][{ID}] {message}");
+    }
+    
+    private static void VerboseError(string message)
+    {
+        if (Plugin.verboseLogging.Value)
+            Plugin.VerboseError($"[{DebugPath}][{ID}] {message}");
+    }
+    
+    private static void Error(string message)
+    {
+        if (Plugin.verboseLogging.Value)
+            Plugin.Log.LogError($"[{DebugPath}][{ID}] {message}");
+    }
+    
+    private static void Exception(Exception e)
+    {
+        if (Plugin.verboseLogging.Value)
+            Plugin.Log.LogError($"[{DebugPath}][{ID}] {e.Message}\n{e.StackTrace}");
     }
 }

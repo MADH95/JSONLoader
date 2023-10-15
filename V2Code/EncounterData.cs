@@ -38,8 +38,9 @@ namespace JLPlugin.Data
             public string difficultyReplacement;
         }
 
-        public static void Process(EncounterBlueprintData encounter, EncounterInfo encounterInfo, bool toEncounter)
+        public static void Process(EncounterBlueprintData encounter, EncounterInfo encounterInfo, bool toEncounter, string path)
         {
+            ImportExportUtils.SetDebugPath(path);
             ImportExportUtils.SetID(toEncounter ? encounterInfo.name : encounter.name);
             
             ImportExportUtils.ApplyProperty(()=>encounter.name, (a)=>encounter.name = a, ref encounterInfo.name, toEncounter, "Encounters", "name");
@@ -148,8 +149,8 @@ namespace JLPlugin.Data
                 EncounterInfo encounterInfo = JSONParser.FromJson<EncounterInfo>(File.ReadAllText(file));
 
                 EncounterBlueprintData encounter = EncounterManager.New(encounterInfo.name);
-
-                if (encounterInfo.minDifficulty != null && encounterInfo.maxDifficulty != null)
+                Process(encounter, encounterInfo, true, file);
+                /*if (encounterInfo.minDifficulty != null && encounterInfo.maxDifficulty != null)
                 {
                     encounter.SetDifficulty((int)encounterInfo.minDifficulty, (int)encounterInfo.maxDifficulty);
                 }
@@ -209,7 +210,7 @@ namespace JLPlugin.Data
                     {
                         RegionExtensions.AddEncounters(Region, encounter);
                     }
-                }
+                }*/
             }
         }
 
@@ -229,7 +230,7 @@ namespace JLPlugin.Data
                 Directory.CreateDirectory(path);
 
             EncounterInfo serializedTribe = new EncounterInfo();
-            Process(info, serializedTribe, false);
+            Process(info, serializedTribe, false, path);
             
             string json = JSONParser.ToJSON(serializedTribe);
             File.WriteAllText(Path.Combine(path, serializedTribe.name + ".jldr2"), json);

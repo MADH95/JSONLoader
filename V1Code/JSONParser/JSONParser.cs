@@ -353,7 +353,12 @@ namespace TinyJson
 
         static object ParseObject(Type type, string json)
         {
-            object instance = Activator.CreateInstance(type);
+            object instance = FormatterServices.GetUninitializedObject(type);
+            if (instance is IInitializable initializable)
+            {
+                // For LocaleFields to set themselves up since we can't use a constructor........
+                initializable.Initialize();
+            }
 
             //The list is split into key/value pairs only, this means the split must be divisible by 2 to be valid JSON
             List<string> elems = Split(json);
@@ -614,7 +619,12 @@ namespace TinyJson
 
             throw new NotImplementedException($"Type not supported for JSON serialization {type}");
         }
-        
+
+        public interface IInitializable
+        {
+            public void Initialize();
+        }
+
         [Serializable]
         public class LocalizableField : IFlexibleField
         {
