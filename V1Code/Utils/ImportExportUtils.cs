@@ -127,7 +127,7 @@ public static class ImportExportUtils
                             .MakeGenericMethod(fromType.GetGenericArguments().Single(), toType.GetGenericArguments().Single());
                         
                         m.Invoke(null, parameters);
-                        toList.Add(o2);
+                        toList.Add(parameters[1]);
                     }
                 }
                 return;
