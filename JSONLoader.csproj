@@ -39,9 +39,8 @@
   </ItemGroup>
   
   <ItemGroup>
-    <Reference Include="InscryptionAPI, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" >
+    <Reference Include="InscryptionAPI">
       <HintPath>libs\InscryptionAPI.dll</HintPath>
-      <Private>False</Private>
     </Reference>
   </ItemGroup>
 </Project>
