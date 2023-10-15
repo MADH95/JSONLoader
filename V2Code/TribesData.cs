@@ -72,7 +72,7 @@ namespace JLPlugin.Data
                     TribeManager.Add(tribedata.guid, tribedata.name, iconTex, tribedata.appearInTribeChoices, backTex);
                 }
 
-                Plugin.Log.LogDebug(
+                Plugin.VerboseLog(
                     $"Loaded JSON tribes {string.Join(",", tribeInfo.tribes.Select(s => s.name).ToList())}");
             }
         }

@@ -61,7 +61,7 @@ namespace JSONLoader.V2Code
                 if (modelType.HasValue)
                     customMask.SetModelType(modelType.Value);
 
-                Plugin.Log.LogDebug($"Loaded JSON mask from {filename}!");
+                Plugin.VerboseLog($"Loaded JSON mask from {filename}!");
             }
         }
 

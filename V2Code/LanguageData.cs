@@ -97,7 +97,7 @@ namespace JSONLoader.V2Code
                 LocalizationManager.NewLanguage(Plugin.PluginGuid, languageInfo.languageName,
                     languageInfo.languageCode, languageInfo.resetButtonText, stringTablePath, fontReplacements);
 
-                Plugin.Log.LogDebug($"Loaded JSON gramophone tracks from {filename}!");
+                Plugin.VerboseLog($"Loaded JSON gramophone tracks from {filename}!");
             }
         }
 

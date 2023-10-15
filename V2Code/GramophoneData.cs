@@ -44,7 +44,7 @@ namespace JSONLoader.Data
                     GramophoneManager.AddTrack(guidAndPrefix, track.Track, track.Volume ?? 1f);
                 }
 
-                Plugin.Log.LogDebug($"Loaded JSON gramophone tracks from {filename}!");
+                Plugin.VerboseLog($"Loaded JSON gramophone tracks from {filename}!");
             }
         }
     }

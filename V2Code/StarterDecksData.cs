@@ -38,7 +38,7 @@ namespace JLPlugin.Data
                     StarterDeckManager.New(Plugin.PluginGuid, deckdata.name, deckdata.iconTexture, deckdata.cards,
                         deckdata.unlockLevel);
 
-                Plugin.Log.LogDebug(
+                Plugin.VerboseLog(
                     $"Loaded JSON starter decks {string.Join(",", starterDeckInfo.decks.Select(s => s.name).ToList())}");
             }
         }
