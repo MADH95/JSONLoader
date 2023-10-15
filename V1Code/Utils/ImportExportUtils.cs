@@ -290,6 +290,14 @@ public static class ImportExportUtils
                 }
                 return;
             }
+            else if (fromType == typeof(JSONParser.LocalizableField) && toType == typeof(string))
+            {
+                Plugin.Log.LogError("Use ApplyLocaleField when converted from LocalizableField to string!");
+            }
+            else if (fromType == typeof(string) && toType == typeof(JSONParser.LocalizableField))
+            {
+                Plugin.Log.LogError("Use ApplyLocaleField when converted from string to LocalizableField!");
+            }
         }
         catch (Exception e)
         {
@@ -423,21 +431,21 @@ public static class ImportExportUtils
         return paths.ToArray();
     }
 
-    public static void ApplyLocaleField(string field, ref JSONParser.LocalizableField rows, ref string cardInfoEnglishField, bool toCardInfo)
+    public static void ApplyLocaleField(string field, ref JSONParser.LocalizableField rows, ref string cardInfoEnglishField, bool toCardInfo, string id)
     {
         if (toCardInfo)
         {
-            ApplyLocaleField(field, rows, out cardInfoEnglishField);
+            ApplyLocaleField(field, rows, out cardInfoEnglishField, id);
         }
         else
         {
             string s = cardInfoEnglishField;
             cardInfoEnglishField = s;
-            ImportLocaleField(rows, cardInfoEnglishField);
+            ImportLocaleField(rows, cardInfoEnglishField, id);
         }
     }
 
-    private static void ImportLocaleField(JSONParser.LocalizableField rows, string cardInfoEnglishField)
+    private static void ImportLocaleField(JSONParser.LocalizableField rows, string cardInfoEnglishField, string id)
     {
         // From game to LocalizableField
         rows.rows.Clear();
@@ -450,17 +458,24 @@ public static class ImportExportUtils
             {
                 string code = LocalizationManager.LanguageToCode(pair.Key);
                 rows.SetValue($"{rows.englishFieldName}_{code}", pair.Value);
+                Plugin.VerboseLog($"{id} Loaded {cardInfoEnglishField} translation for {code} => {pair.Key}");
             }
         }
+        else
+        {
+            Plugin.VerboseLog($"{id} ApplyLocaleField could not find any translations from english '{cardInfoEnglishField}'");
+        }
     }
-    
+
     /// <summary>
     /// From SerializeCardInfo to cardInfo
     /// </summary>
     /// <param name="field"></param>
     /// <param name="rows"></param>
     /// <param name="cardInfoEnglishField"></param>
-    private static void ApplyLocaleField(string field, JSONParser.LocalizableField rows, out string cardInfoEnglishField)
+    /// <param name="toCardInfo"></param>
+    private static void ApplyLocaleField(string field, JSONParser.LocalizableField rows,
+        out string cardInfoEnglishField, string id)
     {
         if (rows.rows.TryGetValue(rows.englishFieldName, out string english))
         {
@@ -473,9 +488,11 @@ public static class ImportExportUtils
         else
         {
             cardInfoEnglishField = null;
+            Plugin.VerboseError($"{id} ApplyLocaleField {field} could not find english field!");
             return;
         }
 
+        Plugin.VerboseLog($"{id} ApplyLocaleField {field} english {cardInfoEnglishField}");
         foreach (KeyValuePair<string, string> pair in rows.rows)
         {
             if (pair.Key == rows.englishFieldName)
@@ -483,7 +500,10 @@ public static class ImportExportUtils
 
             int indexOf = pair.Key.LastIndexOf("_", StringComparison.Ordinal);
             if (indexOf < 0)
+            {
+                Plugin.VerboseError($"Could not find _ of key {pair.Key} in field {field}!");
                 continue;
+            }
 
             // Translations
             int length = pair.Key.Length - indexOf - 1;
@@ -492,10 +512,11 @@ public static class ImportExportUtils
             if (language != Language.NUM_LANGUAGES)
             {
                 LocalizationManager.Translate(Plugin.PluginGuid, null, cardInfoEnglishField, pair.Value, language);
+                Plugin.VerboseLog($"Translation {cardInfoEnglishField} to {code} = {pair.Value}");
             }
             else
             {
-                Plugin.Log.LogDebug($"Unknown language code {code} for card {cardInfoEnglishField} in field {field}");
+                Plugin.Log.LogError($"Unknown language code {code} for card {cardInfoEnglishField} in field {field}");
             }
         }
     }

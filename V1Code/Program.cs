@@ -138,5 +138,11 @@ namespace JLPlugin
             if (verboseLogging.Value)
                 Log.LogWarning(s);
         }
+        
+        internal static void VerboseError(string s)
+        {
+            if (verboseLogging.Value)
+                Log.LogError(s);
+        }
     }
 }

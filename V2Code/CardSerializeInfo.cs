@@ -100,8 +100,8 @@ namespace JLPlugin.V2.Data
         {
             ImportExportUtils.SetID(cardName);
             
-            ImportExportUtils.ApplyLocaleField("displayedName", ref serializeInfo.displayedName, ref cardInfo.displayedName, toCardInfo);
-            ImportExportUtils.ApplyLocaleField("description", ref serializeInfo.description, ref cardInfo.description, toCardInfo);
+            ImportExportUtils.ApplyLocaleField("displayedName", ref serializeInfo.displayedName, ref cardInfo.displayedName, toCardInfo, cardName);
+            ImportExportUtils.ApplyLocaleField("description", ref serializeInfo.description, ref cardInfo.description, toCardInfo, cardName);
 
             ImportExportUtils.ApplyProperty(()=> cardInfo.name, (a)=>cardInfo.name=a,ref serializeInfo.name, toCardInfo, "Cards", "name");
             ImportExportUtils.ApplyValue(ref cardInfo.baseAttack, ref serializeInfo.baseAttack, toCardInfo, "Cards", "baseAttack");
