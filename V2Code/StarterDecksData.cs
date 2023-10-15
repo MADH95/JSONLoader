@@ -59,7 +59,7 @@ namespace JLPlugin.Data
             foreach (StarterDeckManager.FullStarterDeck deck in StarterDeckManager.AllDecks)
             {
                 StarterDeckInfo serializeDeck = new StarterDeckInfo();
-                string path = Path.Combine(Plugin.ExportDirectory, "StarterDecks", serializeDeck.name + ".jldr2");
+                string path = Path.Combine(Plugin.ExportDirectory, "StarterDecks", deck.Info.name + "_deck.jldr2");
                 Process(deck, serializeDeck, false, path);
                 
                 string directory = Path.GetDirectoryName(path);

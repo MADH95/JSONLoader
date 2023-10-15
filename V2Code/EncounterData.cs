@@ -233,7 +233,7 @@ namespace JLPlugin.Data
             Process(info, serializedTribe, false, path);
             
             string json = JSONParser.ToJSON(serializedTribe);
-            File.WriteAllText(Path.Combine(path, serializedTribe.name + ".jldr2"), json);
+            File.WriteAllText(Path.Combine(path, serializedTribe.name + "_encounter.jldr2"), json);
         }
     }
 }

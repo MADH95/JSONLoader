@@ -117,7 +117,7 @@ namespace JLPlugin.Data
             
             
             string json = JSONParser.ToJSON(serializedTribe);
-            File.WriteAllText(Path.Combine(path, serializedTribe.name + ".jldr2"), json);
+            File.WriteAllText(Path.Combine(path, serializedTribe.name + "_tribe.jldr2"), json);
         }
     }
 }
