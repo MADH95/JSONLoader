@@ -59,7 +59,7 @@ namespace JSONLoader.V2Code
                 
                 MaskManager.ModelType? modelType = GetModelType(mask.modelType);
                 if (modelType.HasValue)
-                    customMask.SetModelType(MaskManager.ModelType.Angler);
+                    customMask.SetModelType(modelType.Value);
 
                 Plugin.Log.LogDebug($"Loaded JSON mask from {filename}!");
             }
@@ -67,6 +67,9 @@ namespace JSONLoader.V2Code
 
         private static MaskManager.ModelType? GetModelType(string modelType)
         {
+            if (string.IsNullOrEmpty(modelType))
+                return MaskManager.ModelType.FlatMask;
+            
             if (Enum.TryParse(modelType, out MaskManager.ModelType bossType))
                 return bossType;
             
@@ -90,7 +93,7 @@ namespace JSONLoader.V2Code
             }
             
             Plugin.Log.LogError($"Could not parse mask type '{maskOverrideMask}'!");
-            return null;
+            return LeshyAnimationController.Mask.Prospector;
         }
 
         private static bool TryGetFullPath(string fileName, out string fullFilePath)
