@@ -13,7 +13,6 @@ using System.Text.RegularExpressions;
 using TinyJson;
 using UnityEngine;
 using static JLPlugin.Interpreter;
-using static JLPlugin.V2.Data.CardSerializeInfo;
 
 namespace JLPlugin.SigilCode
 {

@@ -7,10 +7,7 @@ namespace JLPlugin
 {
     using Data;
     using DiskCardGame;
-    using HarmonyLib;
-    using InscryptionAPI.Saves;
     using PanoramicData.NCalcExtensions;
-    using System.Collections;
     using System.Collections.Generic;
     using System.Reflection;
 

@@ -9,7 +9,6 @@ using System.Linq;
 using System.Reflection;
 using TinyJson;
 using UnityEngine;
-using static JLPlugin.V2.Data.CardSerializeInfo;
 
 namespace JLPlugin.Data
 {

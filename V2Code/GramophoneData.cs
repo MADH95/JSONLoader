@@ -1,10 +1,8 @@
 ﻿using System.Collections.Generic;
-using BepInEx;
 using JLPlugin;
 using System.IO;
 using TinyJson;
 using InscryptionAPI.Sound;
-using HarmonyLib;
 
 namespace JSONLoader.Data
 {

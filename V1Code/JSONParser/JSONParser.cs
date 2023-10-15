@@ -6,7 +6,6 @@ using System.Reflection;
 using System.Runtime.Serialization;
 using System.Linq;
 using JLPlugin;
-using JLPlugin.V2.Data;
 using UnityEngine;
 
 namespace TinyJson

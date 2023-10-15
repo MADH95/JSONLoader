@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using BepInEx;
 using InscryptionAPI.TalkingCards;
 using InscryptionAPI.TalkingCards.Animation;
 using InscryptionAPI.TalkingCards.Create;

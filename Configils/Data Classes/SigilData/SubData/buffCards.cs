@@ -1,13 +1,9 @@
 ﻿using DiskCardGame;
-using JLPlugin.V2.Data;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text.RegularExpressions;
 using UnityEngine;
-using static JLPlugin.Data.SigilData;
-using static JLPlugin.Interpreter;
 
 namespace JLPlugin.Data
 {

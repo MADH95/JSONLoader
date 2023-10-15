@@ -1,13 +1,11 @@
 using System.Collections.Generic;
 using System;
 using JLPlugin.V2.Data;
-using DiskCardGame;
 
 namespace JLPlugin.Data
 {
     using System.Linq;
     using InscryptionAPI.Card;
-    using Utils;
 
     public partial class CardData
     {
