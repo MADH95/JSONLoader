@@ -113,7 +113,7 @@ namespace JLPlugin.Data
                             List<Ability> sigils = new List<Ability>();
                             if (sigilData.name != null)
                             {
-                                sigils.Add(CardSerializeInfo.ParseEnum<Ability>(SigilData.ConvertArgument(sigilData.name, abilitydata)));
+                                sigils.Add(ImportExportUtils.ParseEnum<Ability>(SigilData.ConvertArgument(sigilData.name, abilitydata)));
                             }
                             if (sigilData.list != null)
                             {
@@ -158,7 +158,7 @@ namespace JLPlugin.Data
                             List<Ability> sigils = new List<Ability>();
                             if (sigilData.name != null)
                             {
-                                sigils.Add(CardSerializeInfo.ParseEnum<Ability>(SigilData.ConvertArgument(sigilData.name, abilitydata)));
+                                sigils.Add(ImportExportUtils.ParseEnum<Ability>(SigilData.ConvertArgument(sigilData.name, abilitydata)));
                             }
                             if (sigilData.list != null)
                             {

@@ -25,7 +25,7 @@ namespace JLPlugin.ConfigilFunctions
             }
 
             string specialAbilityName = (string)parameters[0];
-            functionArgs.Result = ParseEnum<SpecialTriggeredAbility>(specialAbilityName);
+            functionArgs.Result = ImportExportUtils.ParseEnum<SpecialTriggeredAbility>(specialAbilityName);
         }
     }
 }

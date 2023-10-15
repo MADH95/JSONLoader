@@ -25,7 +25,7 @@ namespace JLPlugin.ConfigilFunctions
             }
 
             string tribeName = (string)parameters[0];
-            functionArgs.Result = ParseEnum<Tribe>(tribeName);
+            functionArgs.Result = ImportExportUtils.ParseEnum<Tribe>(tribeName);
         }
     }
 }

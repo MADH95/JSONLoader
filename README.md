@@ -328,8 +328,6 @@ If you want to keep the original model but replace the texture you can add a fie
   "modelType": "Angler"
 ```
 
-### Randomize a mask
-
 
 
 ## Debugging
