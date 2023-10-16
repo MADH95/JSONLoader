@@ -1,10 +1,25 @@
+## 2.4.3
+- actually added the file now
+
+## 2.4.2
+- readded an important file that i deleted because i thought it wasn't important :P
+
+## 2.4.1
+- fixed the patchnotes
+
+## 2.4.0 (configil patchnotes)
+- added a maxEnergy field to gainCurrency (coded by UwUMacaroniTime)
+- made configils run much faster and have better performance (coded by kelly betty)
+- fixed any errors relating to a sigil trying to access the card that it is on after it has died or has been removed from the board
+- fixed the passive trigger spamming the console and cards dying when their attack was set to 0 when using the passive trigger
+- fixed gainCurrency foils only being visual and not actually increasing the foil amount
+- added a [DamageAmount] variable to both OnStruck and OnDamage
+- fixed runOnCondition not working for sendMessage
+- added two new variables [card.TemporaryMods] and [card.AllAbilities]
+
 ## 2.3.0
-- Added talking card support
-
-## 2.2.5
-- Fixed altTexture not working
-- Debug prints are now logged to debug instead of info
-
+- Added talking card support!
+	
 ## 2.2.4
 - Added gramophone support
 
@@ -27,7 +42,7 @@
 ## 2.1.1
 - Added configils (made by Lily#7394)
 
-## 2.1
+## 2.1.0
 - Added starter deck support with help from Lily
 
 ## 2.0.1
@@ -35,7 +50,7 @@
 - Base game cards are now edited directly instead of using the event. This fixes issues where copies of those cards still existed in other places but wouldn't get properly edited (example: Pack Rat).
 
 ## 2.0.0
-- Updated to align with API 2.0
+- Rewritten to be compatible with API 2.0
 
 ## 1.7.2
 - Added check for "_example" on the end of file name to remove example files from loading
