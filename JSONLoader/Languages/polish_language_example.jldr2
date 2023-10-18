@@ -2,5 +2,37 @@
     "languageName": "Polish",
     "languageCode": "nl",
     "resetButtonText": "Reset with Polish",
-    "stringTablePath": "polish_stringtable.csv"
+    "stringTablePath": "polish_stringtable.csv",
+    "fontReplacementPaths": [
+        {
+            "Type": "Liberation",
+            "AssetBundlePath": "comicsans",
+            "FontAssetName": "comic",
+            "TMPFontAssetName": "TMP_comic"
+        },
+        {
+            "Type": "Marksman",
+            "AssetBundlePath": "comicsans",
+            "FontAssetName": "comic",
+            "TMPFontAssetName": "TMP_comic"
+        },
+        {
+            "Type": "Misc3D",
+            "AssetBundlePath": "comicsans",
+            "FontAssetName": "comic",
+            "TMPFontAssetName": "TMP_comic"
+        },
+        {
+            "Type": "DaggerSquare",
+            "AssetBundlePath": "comicsans",
+            "FontAssetName": "comic",
+            "TMPFontAssetName": "TMP_comic"
+        },
+        {
+            "Type": "HeavyWeight",
+            "AssetBundlePath": "comicsans",
+            "FontAssetName": "comic",
+            "TMPFontAssetName": "TMP_comic"
+        }
+    ]
 }
