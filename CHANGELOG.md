@@ -56,12 +56,8 @@
 - Added talking card support!
 
 ## 2.3.0
-- Added talking card support
-
-## 2.2.5
-- Fixed altTexture not working
-- Debug prints are now logged to debug instead of info
-
+- Added talking card support!
+	
 ## 2.2.4
 - Added gramophone support
 
@@ -84,7 +80,7 @@
 ## 2.1.1
 - Added configils (made by Lily#7394)
 
-## 2.1
+## 2.1.0
 - Added starter deck support with help from Lily
 
 ## 2.0.1
@@ -92,7 +88,7 @@
 - Base game cards are now edited directly instead of using the event. This fixes issues where copies of those cards still existed in other places but wouldn't get properly edited (example: Pack Rat).
 
 ## 2.0.0
-- Updated to align with API 2.0
+- Rewritten to be compatible with API 2.0
 
 ## 1.7.2
 - Added check for "_example" on the end of file name to remove example files from loading
