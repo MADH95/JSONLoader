@@ -28,6 +28,23 @@ namespace JSONLoader.V2Code
         public string resetButtonText;
         public string stringTablePath;
         public List<Fonts> fontReplacementPaths;
+
+        private static Dictionary<string, AssetBundle> pathToLoadedAssetBundles = new();
+
+        private static AssetBundle LoadAssetBundle(string path)
+        {
+            if (pathToLoadedAssetBundles.TryGetValue(path, out AssetBundle bundle))
+            {
+                return bundle;
+            }
+
+            AssetBundle loadAssetBundle = AssetBundle.LoadFromFile(path);
+            if (loadAssetBundle != null)
+            {
+                pathToLoadedAssetBundles.Add(path, loadAssetBundle);
+            }
+            return loadAssetBundle;
+        }
         
         public static void LoadAllLanguages(List<string> files)
         {
@@ -65,7 +82,7 @@ namespace JSONLoader.V2Code
                             continue;
                         }
 
-                        AssetBundle bundle = AssetBundle.LoadFromFile(abPath);
+                        AssetBundle bundle = LoadAssetBundle(abPath);
                         if (bundle == null)
                         {
                             Plugin.Log.LogWarning(
