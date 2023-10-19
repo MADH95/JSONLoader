@@ -1,13 +1,15 @@
 ## 2.5.0
-- Bumped API requirement to 2.18.1 
-- Added custom mask support (With example .schema!)
-- Added custom language support using a language .jldr2
+- Bumped API requirement to 2.18.2
+- Added custom mask support (With example .jldr2 and .schema!)
+- Added custom language support (With example .jldr2 and .schema!)
 - Added translation support for cards using *displayName* and *description*.
+- Added support for overriding existing encounters
 - Added hotkey to export all compatible content to .jldr2  (Left Control + Right Control + X)
+- Added config to enable verbose logging to help debugging
+- Added Tribe .jldr2 example
 - Reduced the amount of times JSONLoader looks for files when starting the game
 - Moved Change notes from Readme to ChangeLog.md
-- Added config to enable verbose logging to help debugging
-- Light support for overriding existing encounters
+- Updated 8 Fucking bears card example. Includes custom tribe example
 
 ## 2.4.5 (configil patchnotes)
 - rewrote and cleaned up a ton of code
