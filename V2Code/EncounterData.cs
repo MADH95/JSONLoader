@@ -148,7 +148,7 @@ namespace JLPlugin.Data
                 files.RemoveAt(index--);
                 
                 EncounterInfo encounterInfo = JSONParser.FromJson<EncounterInfo>(File.ReadAllText(file));
-                EncounterBlueprintData encounter = ScriptableObjectLoader<EncounterBlueprintData>.AllData.Find((a) => a.name == encounterInfo.name);
+                EncounterBlueprintData encounter = GetBluePrint(encounterInfo.name);
                 if (encounter == null)
                 {
                     encounter = EncounterManager.New(encounterInfo.name);
@@ -161,6 +161,27 @@ namespace JLPlugin.Data
 
                 Process(encounter, encounterInfo, true, file);
             }
+            EncounterManager.SyncEncounterList();
+        }
+
+        private static EncounterBlueprintData GetBluePrint(string name)
+        {
+            foreach (EncounterBlueprintData data in EncounterManager.BaseGameEncounters)
+            {
+                if (data.name == name)
+                {
+                    return data;
+                }
+            }
+            foreach (EncounterBlueprintData data in EncounterManager.NewEncounters)
+            {
+                if (data.name == name)
+                {
+                    return data;
+                }
+            }
+
+            return null;
         }
 
         public static void ExportAllEncounters()
