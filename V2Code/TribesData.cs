@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using BepInEx;
 using InscryptionAPI.Card;
 using InscryptionAPI.Helpers;
 using System.IO;
@@ -49,7 +48,14 @@ namespace JLPlugin.Data
                     ImportExportUtils.SetID(tribedata.name);
                     ImportExportUtils.ApplyValue(ref iconTex, ref tribedata.tribeIcon, true, "Tribes", "tribeIcon");
 
-                    if (tribedata.choiceCardBackTexture.IsNullOrWhiteSpace())
+                    if (!string.IsNullOrEmpty(tribedata.choiceCardBackTexture))
+                    {
+                        Plugin.Log.LogInfo($"Loading {tribedata.name} back " + tribedata.choiceCardBackTexture);
+                        ImportExportUtils.ApplyValue(ref backTex, ref tribedata.choiceCardBackTexture, true, "Tribes",
+                            "choiceCardBackTexture");
+                    }
+                    
+                    if (backTex == null)
                     {
                         backTex = TextureHelper.GetImageAsTexture("default_card_rewardback_blank.png");
                         if (iconTex != null)
@@ -63,10 +69,6 @@ namespace JLPlugin.Data
 
                             backTex.Apply(false);
                         }
-                    }
-                    else
-                    {
-                        ImportExportUtils.ApplyValue(ref backTex, ref tribedata.choiceCardBackTexture, true, "Tribes", "choiceCardBackTexture");
                     }
 
                     TribeManager.Add(tribedata.guid, tribedata.name, iconTex, tribedata.appearInTribeChoices, backTex);
@@ -87,7 +89,7 @@ namespace JLPlugin.Data
                 
                 TribeManager.TribeInfo tribeInfo = new TribeManager.TribeInfo();
                 tribeInfo.name = tribe.ToString();
-                tribeInfo.guid = "";
+                tribeInfo.guid = tribeInfo.guid;
                 tribeInfo.tribeChoice = true;
                 tribeInfo.cardback = ResourceBank.Get<Texture2D>("Art/Cards/RewardBacks/card_rewardback_" + tribe.ToString().ToLowerInvariant());
                 tribeInfo.icon = ResourceBank.Get<Sprite>("Art/Cards/TribeIcons/tribeicon_" + tribe.ToString().ToLowerInvariant());
