@@ -1,9 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
-using BepInEx;
 using InscryptionAPI.TalkingCards;
 using InscryptionAPI.TalkingCards.Animation;
 using InscryptionAPI.TalkingCards.Create;
+using JLPlugin;
 using TinyJson;
 
 #nullable enable
@@ -11,19 +12,27 @@ namespace JSONLoader.Data.TalkingCards
 {
     internal static class LoadTalkingCards
     {
-        private static string[] GetTalkingJSON()
-            => Directory.GetFiles(Paths.PluginPath, "*_talk.jldr2", SearchOption.AllDirectories);
-
-        public static void LoadJSONCards()
+        public static void InitAndLoad(List<string> files)
         {
-            foreach(string file in GetTalkingJSON())
+            if (Plugin.betaCompatibility.Value)
+            {
+                string[] convertedFiles = RenameFiles.RenameAll();
+                if (convertedFiles != null)
+                {
+                    files.AddRange(convertedFiles);
+                }
+            }
+
+            for (var index = 0; index < files.Count; index++)
+            {
+                string file = files[index];
+                if (!file.EndsWith("_talk.jldr2"))
+                    continue;
+                
+                files.RemoveAt(index--);
+                
                 LoadTalkJSON(file);
-        }
-
-        public static void InitAndLoad()
-        {
-            RenameFiles.RenameAll(); // For seamless compatibility with my TalkingCardAPI. 
-            LoadJSONCards();
+            }
         }
 
         private static void LoadTalkJSON(string file)

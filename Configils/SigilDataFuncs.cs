@@ -9,7 +9,6 @@ using System.Linq;
 using System.Reflection;
 using TinyJson;
 using UnityEngine;
-using static JLPlugin.V2.Data.CardSerializeInfo;
 
 namespace JLPlugin.Data
 {
@@ -73,7 +72,7 @@ namespace JLPlugin.Data
 
             if (this.metaCategories != null)
             {
-                info.AddMetaCategories(this.metaCategories.Select(elem => ParseEnum<AbilityMetaCategory>(elem)).ToArray());
+                info.AddMetaCategories(this.metaCategories.Select(ImportExportUtils.ParseEnum<AbilityMetaCategory>).ToArray());
             }
             else
             {
@@ -109,16 +108,22 @@ namespace JLPlugin.Data
             return SigilDicts.SpecialArgumentList.TryGetValue(ability, out data) ? data.Item2 : null;
         }
 
-        public static void LoadAllSigils()
+        public static void LoadAllSigils(List<string> files)
         {
-            foreach (string file in Directory.EnumerateFiles(Paths.PluginPath, "*_sigil.jldr2", SearchOption.AllDirectories))
+            for (int index = 0; index < files.Count; index++)
             {
+                string file = files[index];
                 string filename = file.Substring(file.LastIndexOf(Path.DirectorySeparatorChar) + 1);
 
-                Plugin.Log.LogDebug($"Loading JLDR2 (sigil) {filename}");
+                if (!filename.EndsWith("_sigil.jldr2"))
+                    continue;
+                
+                files.RemoveAt(index--);
+                
+                Plugin.VerboseLog($"Loading JLDR2 (sigil) {filename}");
                 SigilData sigilInfo = JSONParser.FromJson<SigilData>(File.ReadAllText(file));
                 sigilInfo.GenerateNew();
-                Plugin.Log.LogDebug($"Loaded JSON sigil {sigilInfo.name}");
+                Plugin.VerboseLog($"Loaded JSON sigil {sigilInfo.name}");
             }
         }
 

@@ -256,6 +256,80 @@ You should put your mod's prefix in the "Prefix" field. You can add as many trac
 
 "Volume" should be the volume of your track, from 0 to 1, where 0 is silence and 1 is full volume. If you want your track to be at half volume, for example, you can put 0.5 in the Volume field.
 
+
+## Localization
+
+If you want to translate your cards into other languages, add the language suffix to the end of the field name. 
+
+For example, if you want to translate the *displayedName* field into French, you would add a *displayedName_fr* field to your card. 
+
+### Card localisation
+```json
+{
+  "name": "JSON_SuperHypeMan", 
+  "modPrefix": "ExampleMod", 
+  "baseAttack": 6, 
+  "baseHealth": 9, 
+  "displayedName": "Super Hype Man", 
+  "displayedName_fr": "Super Animateur", 
+  "displayedName_it": "Super Uomo dell'Eccitazione", 
+  "displayedName_de": "Super Stimmungsmacher", 
+  "displayedName_es": "Super Animador", 
+  "displayedName_pt": "Super Animador", 
+  "description_tr": "Süper Coşku Adamı", 
+  "description_ru": "Супер Человек-Аниматор", 
+  "description_ja": "スーパーハイプマン", 
+  "description_ko": "슈퍼 하이프 맨", 
+  "description_zhcn": "超级炒作男", 
+  "description_zhtw": "超級炒作男"
+}
+```
+
+### New Languages
+```json
+{
+    "languageName": "Polish",
+    "languageCode": "nl",
+    "resetButtonText": "Reset with Polish",
+    "stringTablePath": "stringtable.csv"
+}
+```
+### New Language Fonts
+```json
+{
+    "fontReplacementPaths": [
+        {
+        "Type": "Liberation",
+        "AssetBundlePath": "en_mainfont.assetbundle",
+        "FontAssetName": "en_mainfont",
+        "TMPFontAssetName": "en_mainfont"
+        }
+    ]
+}
+```
+
+## Masks
+
+To replace a mask that a boss puts on their face you can do it in a few ways.
+
+### Replace a mask with a texture
+
+This will replace the angler mask model with a flat surface and apply a texture to it. The image dimensions are 1000x1500
+```json
+{
+  "maskName": "JSON_TestMask",
+  "type": "Override",
+  "texturePath": "testmask.png",
+  "maskType": "Angler"
+}
+```
+If you want to keep the original model but replace the texture you can add a field specifying the model type as below.
+```json
+  "modelType": "Angler"
+```
+
+
+
 ## Debugging
 The easiest way to check if the plugin is working properly or to debug an error is to enable the console. This can be done by changing
 ```

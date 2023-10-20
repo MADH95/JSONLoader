@@ -1,0 +1,7 @@
+﻿{
+  "maskName": "JSON_Bear",
+  "type": "Override",
+  "texturePath": "mask_bear.png",
+  "maskType": "Prospector",
+  "modelType": "FlatMask"
+}

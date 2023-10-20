@@ -13,7 +13,6 @@ using System.Text.RegularExpressions;
 using TinyJson;
 using UnityEngine;
 using static JLPlugin.Interpreter;
-using static JLPlugin.V2.Data.CardSerializeInfo;
 
 namespace JLPlugin.SigilCode
 {
@@ -72,7 +71,7 @@ namespace JLPlugin.SigilCode
                 }
             }
 
-            List<GemType> GemCost = abilityData.activationCost?.gemsCost?.Select(s => ParseEnum<GemType>(s)).ToList() ?? new List<GemType>();
+            List<GemType> GemCost = abilityData.activationCost?.gemsCost?.Select(ImportExportUtils.ParseEnum<GemType>).ToList() ?? new List<GemType>();
             foreach (GemType Gem in GemCost)
             {
                 if (!Singleton<ResourcesManager>.Instance.HasGem(Gem))

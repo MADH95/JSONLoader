@@ -1,9 +1,8 @@
-﻿using BepInEx;
+﻿using System.Collections.Generic;
 using JLPlugin;
 using System.IO;
 using TinyJson;
 using InscryptionAPI.Sound;
-using HarmonyLib;
 
 namespace JSONLoader.Data
 {
@@ -22,27 +21,30 @@ namespace JSONLoader.Data
             public float? Volume;
         }
 
-        public static void LoadAllGramophone()
+        public static void LoadAllGramophone(List<string> files)
         {
-            foreach (string file in Directory.EnumerateFiles(Paths.PluginPath, "*.jldr2", SearchOption.AllDirectories))
+            for (int index = 0; index < files.Count; index++)
             {
+                string file = files[index];
                 string filename = file.Substring(file.LastIndexOf(Path.DirectorySeparatorChar) + 1);
 
-                if (filename.EndsWith("_gram.jldr2"))
+                if (!filename.EndsWith("_gram.jldr2")) 
+                    continue;
+                
+                files.RemoveAt(index--);
+                
+                Plugin.VerboseLog($"Loading JLDR2 (gramophone) {filename}");
+                GramophoneInfo gramInfo = JSONParser.FromJson<GramophoneInfo>(File.ReadAllText(file));
+
+                string guidAndPrefix = $"{Plugin.PluginGuid}_{gramInfo.Prefix ?? string.Empty}";
+
+                foreach (TrackData track in gramInfo.Tracks)
                 {
-                    Plugin.Log.LogDebug($"Loading JLDR2 (gramophone) {filename}");
-                    GramophoneInfo gramInfo = JSONParser.FromJson<GramophoneInfo>(File.ReadAllText(file));
-
-                    string guidAndPrefix = $"{Plugin.PluginGuid}_{gramInfo.Prefix ?? string.Empty}";
-
-                    foreach (TrackData track in gramInfo.Tracks)
-                    {
-                        if (track == null) continue;
-                        GramophoneManager.AddTrack(guidAndPrefix, track.Track, track.Volume ?? 1f);
-                    }
-
-                    Plugin.Log.LogDebug($"Loaded JSON gramophone tracks from {filename}!");
+                    if (track == null) continue;
+                    GramophoneManager.AddTrack(guidAndPrefix, track.Track, track.Volume ?? 1f);
                 }
+
+                Plugin.VerboseLog($"Loaded JSON gramophone tracks from {filename}!");
             }
         }
     }

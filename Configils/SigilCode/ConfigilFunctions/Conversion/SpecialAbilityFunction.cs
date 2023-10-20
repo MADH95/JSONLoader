@@ -3,7 +3,6 @@ using NCalc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using static JLPlugin.V2.Data.CardSerializeInfo;
 
 namespace JLPlugin.ConfigilFunctions
 {
@@ -25,7 +24,7 @@ namespace JLPlugin.ConfigilFunctions
             }
 
             string specialAbilityName = (string)parameters[0];
-            functionArgs.Result = ParseEnum<SpecialTriggeredAbility>(specialAbilityName);
+            functionArgs.Result = ImportExportUtils.ParseEnum<SpecialTriggeredAbility>(specialAbilityName);
         }
     }
 }

@@ -1,13 +1,9 @@
 ﻿using DiskCardGame;
-using JLPlugin.V2.Data;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text.RegularExpressions;
 using UnityEngine;
-using static JLPlugin.Data.SigilData;
-using static JLPlugin.Interpreter;
 
 namespace JLPlugin.Data
 {
@@ -113,7 +109,7 @@ namespace JLPlugin.Data
                             List<Ability> sigils = new List<Ability>();
                             if (sigilData.name != null)
                             {
-                                sigils.Add(CardSerializeInfo.ParseEnum<Ability>(SigilData.ConvertArgument(sigilData.name, abilitydata)));
+                                sigils.Add(ImportExportUtils.ParseEnum<Ability>(SigilData.ConvertArgument(sigilData.name, abilitydata)));
                             }
                             if (sigilData.list != null)
                             {
@@ -158,7 +154,7 @@ namespace JLPlugin.Data
                             List<Ability> sigils = new List<Ability>();
                             if (sigilData.name != null)
                             {
-                                sigils.Add(CardSerializeInfo.ParseEnum<Ability>(SigilData.ConvertArgument(sigilData.name, abilitydata)));
+                                sigils.Add(ImportExportUtils.ParseEnum<Ability>(SigilData.ConvertArgument(sigilData.name, abilitydata)));
                             }
                             if (sigilData.list != null)
                             {
