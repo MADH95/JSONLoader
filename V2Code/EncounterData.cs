@@ -57,10 +57,11 @@ namespace JLPlugin.Data
                 foreach (TurnInfo turnData in encounterInfo.turns)
                 {
                     List<EncounterBlueprintData.CardBlueprint> TurnCardList = new List<EncounterBlueprintData.CardBlueprint>();
-                    foreach (TurnCardInfo turnCardInfo in turnData.cardInfo)
+                    for (var i = 0; i < turnData.cardInfo.Count; i++)
                     {
+                        var turnCardInfo = turnData.cardInfo[i];
                         EncounterBlueprintData.CardBlueprint TurnCardInfo = new EncounterBlueprintData.CardBlueprint();
-                        TurnCardInfo.card = CardManager.AllCardsCopy.CardByName(turnCardInfo.card);
+                        ImportExportUtils.ApplyValue(ref TurnCardInfo.card, ref turnCardInfo.card, true, "Encounters", $"turn_{i+1}_card");
                         if (turnCardInfo.randomReplaceChance != null)
                         {
                             TurnCardInfo.randomReplaceChance = (int)turnCardInfo.randomReplaceChance;
@@ -69,8 +70,7 @@ namespace JLPlugin.Data
                         if (turnCardInfo.difficultyReplacement != null)
                         {
                             TurnCardInfo.difficultyReplace = true;
-                            TurnCardInfo.replacement =
-                                CardManager.AllCardsCopy.CardByName(turnCardInfo.difficultyReplacement);
+                            ImportExportUtils.ApplyValue(ref TurnCardInfo.replacement, ref turnCardInfo.difficultyReplacement, true, "Encounters", $"turn_{i+1}_difficultyReplacement");
                         }
 
                         if (turnCardInfo.difficultyReq != null)
@@ -89,23 +89,25 @@ namespace JLPlugin.Data
                 if (encounter.turns != null)
                 {
                     encounterInfo.turns = new List<TurnInfo>();
-                    foreach (List<EncounterBlueprintData.CardBlueprint> turn in encounter.turns)
+                    for (var i = 0; i < encounter.turns.Count; i++)
                     {
-                        if(turn == null)
+                        var turn = encounter.turns[i];
+                        if (turn == null)
                             continue;
-                        
+
                         TurnInfo turnInfo = new TurnInfo();
                         turnInfo.cardInfo = new List<TurnCardInfo>();
-                        foreach (EncounterBlueprintData.CardBlueprint card in turn)
+                        for (var j = 0; j < turn.Count; j++)
                         {
+                            var card = turn[j];
                             TurnCardInfo turnCardInfo = new TurnCardInfo();
                             turnCardInfo.randomReplaceChance = card.randomReplaceChance;
                             turnCardInfo.difficultyReq = card.difficultyReq;
-                            
-                            if(card.card != null)
+
+                            if (card.card != null)
                                 turnCardInfo.card = card.card.name;
-                            
-                            if(card.replacement != null)
+
+                            if (card.replacement != null)
                                 turnCardInfo.difficultyReplacement = card.replacement.name;
 
                             turnInfo.cardInfo.Add(turnCardInfo);
