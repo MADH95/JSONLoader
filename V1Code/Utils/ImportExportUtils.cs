@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using DiskCardGame;
+using InscryptionAPI.Card;
 using InscryptionAPI.Guid;
 using InscryptionAPI.Helpers;
 using InscryptionAPI.Localizing;
@@ -16,6 +17,7 @@ public static class ImportExportUtils
 {
     private static string ID;
     private static string DebugPath;
+    private static string LoggingSuffix;
     
     public static void SetID(string id)
     {
@@ -24,7 +26,8 @@ public static class ImportExportUtils
 
     public static void SetDebugPath(string path)
     {
-        DebugPath = path;
+        DebugPath = path.Substring(Plugin.BepInExDirectory.Length);
+        LoggingSuffix = "";
     }
     
     public static T ParseEnum<T>(string value) where T : unmanaged, System.Enum
@@ -88,6 +91,8 @@ public static class ImportExportUtils
     
     private static void ConvertValue<FromType, ToType>(ref FromType from, ref ToType to, string category, string suffix)
     {
+        LoggingSuffix = suffix;
+        
         //Plugin.Log.LogInfo($"ConvertValue {typeof(FromType)} to {typeof(ToType)}");
         Type fromType = typeof(FromType);
         Type toType = typeof(ToType);
@@ -112,6 +117,7 @@ public static class ImportExportUtils
                      toType.IsGenericType && toType.GetGenericTypeDefinition() == typeof(List<>))
             {
                 // List to List
+                //Plugin.Log.LogInfo($"List to List {from} {to}");
                 IList toList = (IList)Activator.CreateInstance(toType);
                 to = (ToType)toList;
                 if (from != null)
@@ -121,15 +127,11 @@ public static class ImportExportUtils
                     {
                         var o1 = fromList[i];
                         var o2 = GetDefault(toType.GetGenericArguments().Single());
-
-                        object[] parameters = { o1, o2, category, $"{suffix}_{i+1}" };
-                        var m = typeof(ImportExportUtils).GetMethod(nameof(ConvertValue), BindingFlags.NonPublic | BindingFlags.Static)
-                            .MakeGenericMethod(fromType.GetGenericArguments().Single(), toType.GetGenericArguments().Single());
-                        
-                        m.Invoke(null, parameters);
-                        toList.Add(parameters[1]);
+                        var converted = ConvertType(fromType, toType, o1, o2, category, $"{suffix}_{i+1}");
+                        toList.Add(converted);
                     }
                 }
+                //Plugin.Log.LogInfo($"List to List done with {to}");
                 return;
             }
             else if (fromType.IsGenericType && fromType.GetGenericTypeDefinition() == typeof(List<>) && toType.IsArray)
@@ -237,8 +239,32 @@ public static class ImportExportUtils
             else if (fromType == typeof(string) && toType == typeof(CardInfo))
             {
                 string s = (string)(object)from;
+                if (s != null)
+                {
+                    s = s.Trim(); // Avoid people adding spaces in for blank cards.....
+                }
+                
                 if (!string.IsNullOrEmpty(s))
-                    to = (ToType)(object)CardLoader.GetCardByName(s);
+                {
+                    to = (ToType)(object)CardManager.AllCardsCopy.CardByName(s);
+                    if (to == null)
+                    {
+                        // Name in the JSONLoader is incorrect. See if we can find it and tell the user
+                        CardInfo[] infos = FindSimilarCards(s);
+                        if (infos.Length == 0)
+                        {
+                            string allCardInfos = string.Join(", ", CardManager.AllCardsCopy.Select(c => c.name));
+                            Error($"Could not find CardInfo with name '{s}'!\nAllCards: {allCardInfos}");
+                        }
+                        else
+                        {
+                            to = (ToType)(object)infos[0];
+                            string cardNames = string.Join(" or ", infos.Select((a)=>"'" + a.name + "'"));
+                            Warning($"Could not find CardInfo with name '{s}'. Did you mean {cardNames}?"); 
+                        }
+                    }
+                }
+
                 return;
             }
             else if (fromType == typeof(string) && (toType == typeof(Texture) || toType.IsSubclassOf(typeof(Texture))))
@@ -321,6 +347,85 @@ public static class ImportExportUtils
         }
 
         Error($"Unsupported conversion type: {fromType} to {toType}\n{Environment.StackTrace}");
+    }
+
+    /// <summary>
+    /// Find cards that are similar to the misspelled card name by
+    /// Comparing each character looking to see if they match
+    /// Ignores case sensitivity, - and _
+    ///
+    /// TODO: Make this more generic so it can be used for other systems since this just compares strings.
+    /// </summary>
+    private static CardInfo[] FindSimilarCards(string misspelledCardName)
+    {
+        const int maxErrors = 4; // Minimum mistakes before we include the option
+        List<Tuple<int, CardInfo>> cardInfos = new List<Tuple<int, CardInfo>>();
+        
+        string sourceCardName = misspelledCardName.ToLower().Replace("-", "").Replace("_", "");
+        int errorMargin = Mathf.Clamp(sourceCardName.Length - 1, 1, maxErrors);
+        foreach (CardInfo cardInfo in CardManager.AllCardsCopy)
+        {
+            string realCardName = cardInfo.name.ToLower().Replace("-", "").Replace("_", "");
+            
+            // Skip cards that are TOOO different to ours
+            if (Mathf.Abs(sourceCardName.Length - realCardName.Length) > errorMargin)
+                continue;
+            
+            int match = 0;
+            int errors = Mathf.Max(0, sourceCardName.Length - realCardName.Length);
+            
+            // Go from right to left because most cards have a GUID at the start
+            int j = realCardName.Length - 1;
+            for (int i = sourceCardName.Length - 1; i >= 0 && j >= 0; --i, --j)
+            {
+                if (realCardName[j] == sourceCardName[i])
+                {
+                    match++;
+                }
+                else
+                {
+                    errors++;
+                    
+                    // if the margin of error is too small, skip
+                    if (errors > errorMargin)
+                        break;
+
+                    if (j > 0 && realCardName[j - 1] == sourceCardName[i])
+                    {
+                        // Maybe didn't add a character
+                        // realCardName = LFTD_Zombie
+                        // sourceCardName = LFTDZombie
+                        j--;
+                        match++;
+                    }
+                    else if (i > 0 && realCardName[j] == sourceCardName[i - 1])
+                    {
+                        // We have an extra character
+                        // realCardName = LFTD_Scavenger
+                        // sourceCardName = LFTD_Scavenger1
+                        i--;
+                        match++;
+                    }
+                }
+            }
+            
+            if (match > 0 && errors < errorMargin)
+                cardInfos.Add(new Tuple<int, CardInfo>(match, cardInfo));
+        }
+        
+        // Sort by highest match
+        cardInfos.Sort((a, b) => b.Item1 - a.Item1);
+        return cardInfos.Select((a) => a.Item2).ToArray();
+    }
+
+    private static object ConvertType(Type fromType, Type toType, object o1, object o2, string category, string suffix)
+    {
+        object[] parameters = { o1, o2, category, suffix };
+        var m = typeof(ImportExportUtils).GetMethod(nameof(ConvertValue), BindingFlags.NonPublic | BindingFlags.Static)
+            .MakeGenericMethod(fromType.GetGenericArguments().Single(), toType.GetGenericArguments().Single());
+
+        m.Invoke(null, parameters);
+        return parameters[1];
     }
 
     private static bool AreNullableTypesEqual<T, Y>(T t, Y y, out object a, out object b, out bool aHasValue, out bool bHasValue)
@@ -566,30 +671,39 @@ public static class ImportExportUtils
     
     private static void VerboseLog(string message)
     {
-        Plugin.VerboseLog($"[{DebugPath}][{ID}] {message}");
+        Plugin.VerboseLog($"[{DebugPath}][{ID}][{LoggingSuffix}] {message}");
     }
     
     private static void VerboseWarning(string message)
     {
         if (Plugin.verboseLogging.Value)
-            Plugin.VerboseWarning($"[{DebugPath}][{ID}] {message}");
+            Plugin.VerboseWarning($"[{DebugPath}][{ID}][{LoggingSuffix}] {message}");
     }
     
     private static void VerboseError(string message)
     {
         if (Plugin.verboseLogging.Value)
-            Plugin.VerboseError($"[{DebugPath}][{ID}] {message}");
+            Plugin.VerboseError($"[{DebugPath}][{ID}][{LoggingSuffix}] {message}");
+    }
+    
+    private static void Warning(string message)
+    {
+        if (Plugin.verboseLogging.Value)
+            VerboseWarning(message);
+        else
+            Plugin.Log.LogWarning($"[{ID}][{LoggingSuffix}] {message}");
     }
     
     private static void Error(string message)
     {
         if (Plugin.verboseLogging.Value)
-            Plugin.Log.LogError($"[{DebugPath}][{ID}] {message}");
+            VerboseError(message);
+        else
+            Plugin.Log.LogError($"[{ID}][{LoggingSuffix}] {message}");
     }
     
     private static void Exception(Exception e)
     {
-        if (Plugin.verboseLogging.Value)
-            Plugin.Log.LogError($"[{DebugPath}][{ID}] {e.Message}\n{e.StackTrace}");
+        Plugin.Log.LogError($"[{DebugPath}][{ID}][{LoggingSuffix}] {e.Message}\n{e.StackTrace}");
     }
 }
