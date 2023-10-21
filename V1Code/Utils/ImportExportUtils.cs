@@ -358,10 +358,11 @@ public static class ImportExportUtils
     /// </summary>
     private static CardInfo[] FindSimilarCards(string misspelledCardName)
     {
+        const int maxErrors = 4; // Minimum mistakes before we include the option
         List<Tuple<int, CardInfo>> cardInfos = new List<Tuple<int, CardInfo>>();
-
-        int errorMargin = 4; // Minimum mistakes before we include the option
+        
         string sourceCardName = misspelledCardName.ToLower().Replace("-", "").Replace("_", "");
+        int errorMargin = Mathf.Clamp(sourceCardName.Length - 1, 1, maxErrors);
         foreach (CardInfo cardInfo in CardManager.AllCardsCopy)
         {
             string realCardName = cardInfo.name.ToLower().Replace("-", "").Replace("_", "");
@@ -371,7 +372,7 @@ public static class ImportExportUtils
                 continue;
             
             int match = 0;
-            int errors = 0;
+            int errors = Mathf.Max(0, sourceCardName.Length - realCardName.Length);
             
             // Go from right to left because most cards have a GUID at the start
             int j = realCardName.Length - 1;
