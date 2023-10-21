@@ -18,12 +18,15 @@ namespace JLPlugin
     [BepInDependency("cyantist.inscryption.api", BepInDependency.DependencyFlags.HardDependency)]
     public class Plugin : BaseUnityPlugin
     {
+        public static Plugin Instance;
+        
         public const string PluginGuid = "MADH.inscryption.JSONLoader";
         public const string PluginName = "JSONLoader";
         public const string PluginVersion = "2.5.0";
         
-        public static string Directory = "";
-        public static string ExportDirectory => Path.Combine(Directory, "Exported");
+        public static string JSONLoaderDirectory = "";
+        public static string BepInExDirectory = "";
+        public static string ExportDirectory => Path.Combine(JSONLoaderDirectory, "Exported");
         
         internal static ConfigEntry<bool> betaCompatibility;
         internal static ConfigEntry<bool> verboseLogging;
@@ -33,16 +36,28 @@ namespace JLPlugin
         private static List<string> GetAllJLDRFiles()
         {
             return System.IO.Directory.GetFiles(Paths.PluginPath, "*.jldr*", SearchOption.AllDirectories)
-                .Where((a)=> (a.EndsWith(".jldr") || a.EndsWith(".jldr2")) && !a.Contains(Directory))
+                .Where((a)=> (a.EndsWith(".jldr") || a.EndsWith(".jldr2")) && !a.Contains(JSONLoaderDirectory))
                 .Select((a)=>a.ToLower())
                 .ToList();
         }
         
         private void Awake()
         {
-            Logger.LogInfo($"Loaded {PluginName}!");
+            Logger.LogInfo($"Loading {PluginName}!");
+            Instance = this;
             Log = Logger;
-            Directory = Path.GetDirectoryName(Info.Location);
+            JSONLoaderDirectory = Path.GetDirectoryName(Info.Location);
+
+            int bepInExIndex = Info.Location.LastIndexOf("BepInEx");
+            if (bepInExIndex > 0)
+            {
+                BepInExDirectory = Info.Location.Substring(0, bepInExIndex);
+            }
+            else
+            {
+                BepInExDirectory = Directory.GetParent(JSONLoaderDirectory)?.FullName ?? "";
+            }
+
             Harmony harmony = new(PluginGuid);
             harmony.PatchAll();
             
@@ -57,18 +72,24 @@ namespace JLPlugin
                 Utils.JLUtils.LoadCardsFromFiles(files);
 
             LoadAll(files);
+            
+            Logger.LogInfo($"Loaded {PluginName}!");
         }
 
         public void LoadAll(List<string> files)
         {
             TribeList.LoadAllTribes(files);
             SigilData.LoadAllSigils(files);
+            
+            // NOTE: I really don't want to do this, but I can't figure out how to get the game to load the cards from
+            // the JSON files without listing all the damn extension files....
+            CardSerializeInfo.LoadAllJLDR2(files);
+            
             Data.EncounterData.LoadAllEncounters(files);
             StarterDeckList.LoadAllStarterDecks(files);
             GramophoneData.LoadAllGramophone(files);
             LanguageData.LoadAllLanguages(files);
             MaskData.LoadAllMasks(files);
-            CardSerializeInfo.LoadAllJLDR2(files);
             JSONLoader.Data.TalkingCards.LoadTalkingCards.InitAndLoad(files);
             // ^ Ambiguity between JSONLoader.Data and JLPlugin.Data is annoying. = u= -Kelly
         }

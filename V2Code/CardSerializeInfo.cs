@@ -428,7 +428,14 @@ namespace JLPlugin.V2.Data
             {
                 string file = files[index];
                 string filename = file.Substring(file.LastIndexOf(Path.DirectorySeparatorChar) + 1);
-                if (filename.EndsWith("_talk.jldr2"))
+                if (filename.EndsWith("_encounter.jldr2") || 
+                    filename.EndsWith("_tribe.jldr2") || 
+                    filename.EndsWith("_sigil.jldr2") || 
+                    filename.EndsWith("_deck.jldr2") || 
+                    filename.EndsWith("_gram.jldr2") || 
+                    filename.EndsWith("_language.jldr2") || 
+                    filename.EndsWith("_mask.jldr2") || 
+                    filename.EndsWith("_talk.jldr2"))
                 {
                     continue;
                 }
