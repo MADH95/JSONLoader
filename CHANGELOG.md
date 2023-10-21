@@ -1,3 +1,8 @@
+## 2.5.1
+- Fixed Encounters throwing errors when importing cards form mods
+- Incorrectly named cards will now throw an error and suggest names of similarly named cards.
+- Errors in .jldr2 files now log more information when they occur.
+
 ## 2.5.0
 - Bumped API requirement to 2.18.2
 - Added custom mask support (With example .jldr2 and .schema!)
