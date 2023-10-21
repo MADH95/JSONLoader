@@ -50,7 +50,7 @@ namespace JLPlugin.Data
 
                     if (!string.IsNullOrEmpty(tribedata.choiceCardBackTexture))
                     {
-                        Plugin.Log.LogInfo($"Loading {tribedata.name} back " + tribedata.choiceCardBackTexture);
+                        Plugin.VerboseLog($"Loading {tribedata.name} back " + tribedata.choiceCardBackTexture);
                         ImportExportUtils.ApplyValue(ref backTex, ref tribedata.choiceCardBackTexture, true, "Tribes",
                             "choiceCardBackTexture");
                     }
