@@ -141,9 +141,12 @@ namespace JLPlugin.V2.Data
             
             Sprite emissivePortrait = cardInfo.GetEmissivePortrait();
             Sprite emissiveAltPortrait = cardInfo.GetEmissiveAltPortrait();
-            ImportExportUtils.ApplyValue(ref emissivePortrait, ref serializeInfo.texture, toCardInfo, "Cards", $"texture");
-            ImportExportUtils.ApplyValue(ref emissiveAltPortrait, ref serializeInfo.texture, toCardInfo, "Cards", $"texture");
-
+            ImportExportUtils.ApplyValue(ref emissivePortrait, ref serializeInfo.emissionTexture, toCardInfo, "Cards", $"emissionTexture");
+            ImportExportUtils.ApplyValue(ref emissiveAltPortrait, ref serializeInfo.altEmissionTexture, toCardInfo, "Cards", $"altEmissionTexture");
+            if(cardInfo.portraitTex != null && emissivePortrait != null)
+                cardInfo.SetEmissivePortrait(emissivePortrait);
+            if(cardInfo.alternatePortrait != null && emissiveAltPortrait != null)
+                cardInfo.SetEmissiveAltPortrait(emissiveAltPortrait);
             if (toCardInfo)
             {
                 if (!string.IsNullOrEmpty(serializeInfo.evolveIntoName))
