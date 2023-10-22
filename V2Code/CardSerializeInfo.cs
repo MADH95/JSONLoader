@@ -139,6 +139,7 @@ namespace JLPlugin.V2.Data
             ImportExportUtils.ApplyValue(ref cardInfo.alternatePortrait, ref serializeInfo.altTexture, toCardInfo, "Cards", $"altTexture");
             ImportExportUtils.ApplyValue(ref cardInfo.pixelPortrait, ref serializeInfo.pixelTexture, toCardInfo, "Cards", $"pixelTexture");
             
+            // Emissions
             Sprite emissivePortrait = cardInfo.GetEmissivePortrait();
             Sprite emissiveAltPortrait = cardInfo.GetEmissiveAltPortrait();
             ImportExportUtils.ApplyValue(ref emissivePortrait, ref serializeInfo.emissionTexture, toCardInfo, "Cards", $"emissionTexture");
@@ -147,6 +148,8 @@ namespace JLPlugin.V2.Data
                 cardInfo.SetEmissivePortrait(emissivePortrait);
             if(cardInfo.alternatePortrait != null && emissiveAltPortrait != null)
                 cardInfo.SetEmissiveAltPortrait(emissiveAltPortrait);
+
+            // Evolutions
             if (toCardInfo)
             {
                 if (!string.IsNullOrEmpty(serializeInfo.evolveIntoName))
@@ -161,6 +164,7 @@ namespace JLPlugin.V2.Data
                 }
             }
 
+            // Tails
             if (toCardInfo)
             {
                 if (!string.IsNullOrEmpty(serializeInfo.tailName))
@@ -175,6 +179,7 @@ namespace JLPlugin.V2.Data
                 }
             }
 
+            // IceCube
             if (toCardInfo)
             {
                 if (!string.IsNullOrEmpty(serializeInfo.iceCubeName))
@@ -188,6 +193,7 @@ namespace JLPlugin.V2.Data
                 }
             }
 
+            // Extension Properties
             if (toCardInfo)
             {
                 if (serializeInfo.extensionProperties != null)
@@ -212,6 +218,7 @@ namespace JLPlugin.V2.Data
                 }
             }
 
+            // Holo Prefabs
             if (toCardInfo)
             {
                 if (!string.IsNullOrEmpty(serializeInfo.holoPortraitPrefab))
@@ -224,6 +231,7 @@ namespace JLPlugin.V2.Data
                     serializeInfo.holoPortraitPrefab = cardInfo.holoPortraitPrefab.ToString();
             }
 
+            // Animated Portraits
             if (toCardInfo)
             {
                 if (!string.IsNullOrEmpty(serializeInfo.animatedPortrait))
@@ -438,6 +446,7 @@ namespace JLPlugin.V2.Data
                     filename.EndsWith("_gram.jldr2") || 
                     filename.EndsWith("_language.jldr2") || 
                     filename.EndsWith("_mask.jldr2") || 
+                    filename.EndsWith("_example.jldr2") || 
                     filename.EndsWith("_talk.jldr2"))
                 {
                     continue;
