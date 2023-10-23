@@ -9,8 +9,8 @@ using JLPlugin.Data;
 using JLPlugin.V2.Data;
 using JSONLoader.Data;
 using System.Linq;
+using JLPlugin.Hotkeys;
 using JSONLoader.V2Code;
-using UnityEngine;
 
 namespace JLPlugin
 {
@@ -30,8 +30,11 @@ namespace JLPlugin
         
         internal static ConfigEntry<bool> betaCompatibility;
         internal static ConfigEntry<bool> verboseLogging;
+        internal static ConfigEntry<string> reloadHotkey;
+        internal static ConfigEntry<string> exportHotkey;
 
         internal static ManualLogSource Log;
+        private HotkeyController hotkeyController;
 
         private static List<string> GetAllJLDRFiles()
         {
@@ -63,6 +66,8 @@ namespace JLPlugin
             
             betaCompatibility = Config.Bind("JSONLoader", "JDLR Backwards Compatibility", true, "Set to true to enable old-style JSON files (JLDR) to be read and converted to new-style files (JLDR2)");
             verboseLogging = Config.Bind("JSONLoader", "Verbose Logging", false, "Set to true to see more logs on what JSONLoader is doing and what isn't working.");
+            exportHotkey = Config.Bind("Hotkeys", "Reload JLDR2 and game", "LeftControl+RightControl+X", "Restarts the game and reloads all JLDR2 files.");
+            reloadHotkey = Config.Bind("Hotkeys", "Export all to JLDR2", "LeftShift+R", "Exports all data in the game back to .JLDR2 files.");
             
             Log.LogWarning("Note: JSONLoader now uses .jldr2 files, not .json files.");
             List<string> files = GetAllJLDRFiles();
@@ -72,6 +77,10 @@ namespace JLPlugin
                 Utils.JLUtils.LoadCardsFromFiles(files);
 
             LoadAll(files);
+
+            hotkeyController = new HotkeyController();
+            hotkeyController.AddHotkey(reloadHotkey.Value, ReloadGame);
+            hotkeyController.AddHotkey(exportHotkey.Value, ExportAllToJLDR2);
             
             Logger.LogInfo($"Loaded {PluginName}!");
         }
@@ -96,24 +105,22 @@ namespace JLPlugin
 
         public void Update()
         {
-            if ((Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift)) && Input.GetKeyDown(KeyCode.R))
+            hotkeyController.Update();
+        }
+
+        private void ReloadGame()
+        {
+            List<string> files = GetAllJLDRFiles();
+            LoadAll(files);
+            SigilCode.CachedCardData.Flush();
+            if (SaveFile.IsAscension)
             {
-                List<string> files = GetAllJLDRFiles();
-                LoadAll(files);
-                SigilCode.CachedCardData.Flush();
-                if (SaveFile.IsAscension)
-                {
-                    ReloadKaycees();
-                }
-                if (SaveManager.SaveFile.IsPart1)
-                {
-                    ReloadVanilla();
-                }
+                ReloadKaycees();
             }
 
-            if (Input.GetKey(KeyCode.LeftControl) && Input.GetKey(KeyCode.RightControl) && Input.GetKeyDown(KeyCode.X))
+            if (SaveManager.SaveFile.IsPart1)
             {
-                ExportAllToJLDR2();
+                ReloadVanilla();
             }
         }
 
