@@ -554,7 +554,7 @@ public static class ImportExportUtils
     {
         if (toCardInfo)
         {
-            ApplyLocaleField(field, rows, out cardInfoEnglishField);
+            ApplyLocaleField(field, rows, ref cardInfoEnglishField);
         }
         else
         {
@@ -593,7 +593,7 @@ public static class ImportExportUtils
     /// <param name="rows"></param>
     /// <param name="cardInfoEnglishField"></param>
     /// <param name="toCardInfo"></param>
-    private static void ApplyLocaleField(string field, JSONParser.LocalizableField rows, out string cardInfoEnglishField)
+    private static void ApplyLocaleField(string field, JSONParser.LocalizableField rows, ref string cardInfoEnglishField)
     {
         if (rows.rows.TryGetValue(rows.englishFieldName, out string english))
         {
@@ -605,7 +605,6 @@ public static class ImportExportUtils
         }
         else
         {
-            cardInfoEnglishField = null;
             return;
         }
 
