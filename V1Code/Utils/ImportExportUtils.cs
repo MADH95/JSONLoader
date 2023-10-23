@@ -93,7 +93,6 @@ public static class ImportExportUtils
     {
         LoggingSuffix = suffix;
         
-        //Plugin.Log.LogInfo($"ConvertValue {typeof(FromType)} to {typeof(ToType)}");
         Type fromType = typeof(FromType);
         Type toType = typeof(ToType);
         try
@@ -118,10 +117,10 @@ public static class ImportExportUtils
             {
                 // List to List
                 //Plugin.Log.LogInfo($"List to List {from} {to}");
-                IList toList = (IList)Activator.CreateInstance(toType);
-                to = (ToType)toList;
                 if (from != null)
                 {
+                    IList toList = (IList)Activator.CreateInstance(toType);
+                    to = (ToType)toList;
                     IList fromList = (IList)from;
                     for (int i = 0; i < fromList.Count; i++)
                     {
@@ -138,12 +137,12 @@ public static class ImportExportUtils
             {
                 // List to Array
                 //Plugin.Log.LogInfo($"List to Array {from} {to}");
-                IList fromList = (IList)from;
-                int size = from == null ? 0 : fromList.Count;
-                Array toArray = Array.CreateInstance(toType.GetElementType(), size);
-                to = (ToType)(object)toArray;
                 if (from != null)
                 {
+                    IList fromList = (IList)from;
+                    int size = from == null ? 0 : fromList.Count;
+                    Array toArray = Array.CreateInstance(toType.GetElementType(), size);
+                    to = (ToType)(object)toArray;
                     for (int i = 0; i < fromList.Count; i++)
                     {
                         var o1 = fromList[i];
@@ -165,10 +164,10 @@ public static class ImportExportUtils
             else if (fromType.IsArray && toType.IsGenericType && toType.GetGenericTypeDefinition() == typeof(List<>))
             {
                 // Array to List
-                IList toList = (IList)Activator.CreateInstance(toType);
-                to = (ToType)toList;
                 if (from != null)
                 {
+                    IList toList = (IList)Activator.CreateInstance(toType);
+                    to = (ToType)toList;
                     Array fromArray = (Array)(object)from;
                     for (int i = 0; i < fromArray.Length; i++)
                     {
