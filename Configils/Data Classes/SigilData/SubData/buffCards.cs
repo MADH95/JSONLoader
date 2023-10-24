@@ -40,7 +40,7 @@ namespace JLPlugin.Data
                 AddStats(abilitydata, buffcardsinfo, mod);
                 SetStats(abilitydata, buffcardsinfo, mod, card);
                 
-                if (buffcardsinfo.addAbilities == null && buffcardsinfo.removeAbilities == null) 
+                if (buffcardsinfo.addAbilities != null || buffcardsinfo.removeAbilities != null) 
                     yield return PlayTransformAnimation(card);
                 
                 RemoveAbilities(abilitydata, buffcardsinfo, card, mod);
