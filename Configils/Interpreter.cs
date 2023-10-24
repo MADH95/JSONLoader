@@ -2,6 +2,7 @@
 using System;
 using System.Linq;
 using System.Text.RegularExpressions;
+using MonoMod.Utils;
 
 namespace JLPlugin
 {
@@ -43,8 +44,13 @@ namespace JLPlugin
                     string CalcInput = expression.Groups[0].Value;
                     string CalcContent = expression.Groups[1].Value;
 
-                    ExtendedExpression e = new ExtendedExpression(CalcContent) { Parameters = additionalParameters };
+                    ExtendedExpression e = new ExtendedExpression(CalcContent);
                     e.EvaluateFunction += ConfigilExtensions.Extend;
+
+                    if (additionalParameters != null)
+                    {
+                        e.Parameters.AddRange(additionalParameters);
+                    }
 
                     foreach (KeyValuePair<string, string> variable in abilityData.variables)
                     {
