@@ -145,7 +145,17 @@ namespace JLPlugin.Data
                 return null;
             }
 
-            object output = Interpreter.Process(value, abilitydata, type, sendDebug);
+            object output = null;
+            try
+            {
+                output = Interpreter.Process(value, abilitydata, type, sendDebug);
+            }
+            catch (Exception)
+            {
+                Plugin.Log.LogError($"[{abilitydata.GetType()}] Error converting argument '{value}' to '{type}'");
+                throw;
+            }
+            
             //using IsAssignableFrom because it has the added benefit of also detecting subclasses
             if (type.IsAssignableFrom(output.GetType()))
             {
@@ -174,7 +184,15 @@ namespace JLPlugin.Data
             //    value = StringList[random.Next(StringList.Count)];
             //}
 
-            return Interpreter.Process(value, abilitydata, null, sendDebug).ToString();
+            try
+            {
+                return Interpreter.Process(value, abilitydata, null, sendDebug).ToString();
+            }
+            catch (Exception)
+            {
+                Plugin.Log.LogError($"[{abilitydata.GetType()}] Error converting argument '{value}' to string");
+                throw;
+            }
         }
 
         public static List<string> ConvertArgument(List<string> value, AbilityBehaviourData abilitydata, bool sendDebug = true)
