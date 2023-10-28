@@ -1,3 +1,10 @@
+## 2.5.2
+- Fixed Emissions not working
+- Fixed mods with a custom tribe failing to load
+- Fixed cards overriden with JSON missing fields that aren't specified
+- Exposed hotkeys as configs to fit individual needs. (See config for more info)
+- _example cards are ignored yet again (This wasn't meant to be removed)
+
 ## 2.5.1
 - Fixed Encounters throwing errors when importing cards form mods
 - Incorrectly named cards will now throw an error and suggest names of similarly named cards.
