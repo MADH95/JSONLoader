@@ -66,8 +66,8 @@ namespace JLPlugin
             
             betaCompatibility = Config.Bind("JSONLoader", "JDLR Backwards Compatibility", true, "Set to true to enable old-style JSON files (JLDR) to be read and converted to new-style files (JLDR2)");
             verboseLogging = Config.Bind("JSONLoader", "Verbose Logging", false, "Set to true to see more logs on what JSONLoader is doing and what isn't working.");
-            exportHotkey = Config.Bind("Hotkeys", "Reload JLDR2 and game", "LeftControl+RightControl+X", "Restarts the game and reloads all JLDR2 files.");
-            reloadHotkey = Config.Bind("Hotkeys", "Export all to JLDR2", "LeftShift+R", "Exports all data in the game back to .JLDR2 files.");
+            reloadHotkey = Config.Bind("Hotkeys", "Reload JLDR2 and game", "LeftControl+RightControl+X", "Restarts the game and reloads all JLDR2 files.");
+            exportHotkey = Config.Bind("Hotkeys", "Export all to JLDR2", "LeftShift+R", "Exports all data in the game back to .JLDR2 files.");
             
             Log.LogWarning("Note: JSONLoader now uses .jldr2 files, not .json files.");
             List<string> files = GetAllJLDRFiles();
