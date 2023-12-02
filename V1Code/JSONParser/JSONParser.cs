@@ -338,7 +338,7 @@ namespace TinyJson
                         name = dataMemberAttribute.Name;
                 }
 
-                nameToMember.Add(name, member);
+                nameToMember.Add(name.ToLower(), member);
             }
 
             return nameToMember;
@@ -382,7 +382,7 @@ namespace TinyJson
             {
                 if (elems[i].Length <= 2)
                     continue;
-                string key = elems[i].Substring(1, elems[i].Length - 2);
+                string key = elems[i].Substring(1, elems[i].Length - 2).ToLower();
                 string value = elems[i + 1];
 
                 if (nameToField.TryGetValue(key, out FieldInfo fieldInfo))
