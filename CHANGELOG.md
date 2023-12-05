@@ -1,3 +1,8 @@
+## 2.5.3
+- JSON is no longer case sensitive and can be upper or lower case to avoid errors.
+- Tribe file extensions now support tribe.jldr2 and tribes.jldr2 to avoid errors.
+- Fixed reload and export hotkeys inverted.
+
 ## 2.5.2
 - Fixed Emissions not working
 - Fixed mods with a custom tribe failing to load
