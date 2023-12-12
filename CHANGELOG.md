@@ -1,4 +1,4 @@
-# Most Recent Changes:
+# Most Recent Change:
 
 ## 2.4.4
 - Null
@@ -37,7 +37,7 @@
 - Added config to enable verbose logging to help debugging
 - Added Tribe .jldr2 example
 - Reduced the amount of times JSONLoader looks for files when starting the game
-- Moved Change notes from Readme to ChangeLog.md
+- Moved Change notes from Readme to CHANGELOG.md
 - Updated 8 Fucking bears card example. Includes custom tribe example
 
 ## 2.5.1
@@ -149,7 +149,7 @@
 - Added config to enable verbose logging to help debugging
 - Added Tribe .jldr2 example
 - Reduced the amount of times JSONLoader looks for files when starting the game
-- Moved Change notes from Readme to ChangeLog.md
+- Moved Change notes from Readme to CHANGELOG.md
 - Updated 8 Fucking bears card example. Includes custom tribe example
 
 ## 2.5.1
