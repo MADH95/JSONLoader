@@ -27,7 +27,7 @@
 - Added config to enable verbose logging to help debugging
 - Added Tribe .jldr2 example
 - Reduced the amount of times JSONLoader looks for files when starting the game
-- Moved Change notes from Readme to ChangeLog.md
+- Moved Change notes from Readme to CHANGELOG.md
 - Updated 8 Fucking bears card example. Includes custom tribe example
 
 ## 2.4.5 (configil patchnotes)
@@ -54,6 +54,23 @@
 
 (an object is basically just a container with information about something, so for example the object of a sigil contains things like: the name, the guid, the description, the metacategories etc.)
 
+## 2.4.4
+- Null
+
+## 2.4.3
+- Actually added the file now
+
+# Older Changelogs:
+
+<details open>
+<summary>Click-Me</summary>
+<br>
+
+# Changelog sense 2.0.0:
+
+## 2.4.4
+- Null
+
 ## 2.4.3
 - Actually added the file now
 
@@ -76,9 +93,6 @@
 ## 2.3.0
 - Added talking card support!
 
-## 2.3.0
-- Added talking card support!
-	
 ## 2.2.4
 - Added gramophone support
 
@@ -92,11 +106,11 @@
 ## 2.2.2
 - Added tribe support
 
-## 2.2.1
-- Added card and sigil reloading and fixed a ton of bugs with configils
-
 ## 2.2.0
 - Added API for adding cards
+
+## 2.2.1
+- Added card and sigil reloading and fixed a ton of bugs with configils
 
 ## 2.1.1
 - Added configils (made by Lily#7394)
@@ -110,6 +124,8 @@
 
 ## 2.0.0
 - Rewritten to be compatible with API 2.0
+
+# Changelog sense 1.0.0
 
 ## 1.7.2
 - Added check for "_example" on the end of file name to remove example files from loading
@@ -138,6 +154,12 @@
 - Changed default "metaCategories" to be an empty list
 - Added ChangeLog.md
 
+## v1.5.2
+- Null
+
+## v1.5.1
+- Null
+
 ## v1.5.0
 - Compatability patch for InscryptionAPI v1.11
 - Refactored Code:
@@ -163,6 +185,9 @@
 ## v1.3.8
 - Fixed bug where "altTexture", "pixelTexture" and "titleGraphic" were being set to "texture"
 
+## v1.3.7
+- Null
+
 ## v1.3.6
 - Fixed linking error from update v1.3.5
 Refactored Code:
@@ -178,12 +203,21 @@ Refactored Code:
 	+ EvolveData, TailData, and IceCubeData are now in their own file together
 	+ JLUtils was created to host utility functions like assignment helpers and validity checks
 
+## v1.3.4
+- Null
+
 ## v1.3.3
 - updated error logging for user
 
 ## v1.3.2
 - Added ability to edit existing cards with the use of "fieldsToEdit" with example card *OP-ossum.json*
 - Added better error logging for user
+
+## v1.3.1
+- Null
+
+## v1.3.0
+- Null
 
 ## v1.2.1
 - Compatablity patch for InscryptionAPI v1.8
@@ -209,3 +243,5 @@ Refactored Code:
 	+ EvolveParams
 	+ TailParams
 	+ IceCubeParams
+
+</details>

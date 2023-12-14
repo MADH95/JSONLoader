@@ -218,7 +218,7 @@
 | GainGemOrange               | Counts as Orange gem cost                                                                                                                                                        |
 | GainGemTriple               | Counts as all 3 gems when in play                                                                                                                                                |
 | GemDependant                | When played, and at start of turn, will die if you control no gems                                                                                                               |
-| GemsDraw                    | Unused                                                                                                                                                                           |
+| GemsDraw                    | When played, gain x cards based on how many cards with the gem trait are on the field.                                                                                           |
 | GuardDog                    | When a card is played opposite an empty slot, will move there                                                                                                                    |
 | Haunter                     | Unused                                                                                                                                                                           |
 | HydraEgg                    | Bizarre ability that will cause the card to transform into a Hydra if the player's deck contains cards with 1-5 attack, 1-5 health, and one of each of the game's default tribes |
@@ -290,56 +290,10 @@
 ## Regions
 
 | Region             | Description                    |
-|--------------------|--------------------------------|
+| ------------------ | ------------------------------ |
 | Alpine             | This is The Trappers Region    |
 | Forest             | This is The Prospectors Region |
 | Midnight           | This is Leshy's area in ACT 1. |
 | Midnight_Ascension | This is Leshy's area in KCM    |
 | Pirateville        | This is Royal's area           |
 | Wetlands           | This is Anglers Area           |
-
----
-
-## Languages
-
-| Suffix | Language              |
-|--------|-----------------------|
-| fr     | French                |
-| it     | Italian               |
-| de     | German                |
-| es     | Spanish               |
-| pt     | Portuguese            |
-| tr     | Turkish               |
-| ru     | Russian               |
-| ja     | Japanese              |
-| ko     | Korean                |
-| zhcn   | Chinese (Simplified)  |
-| zhtw   | Chinese (Traditional) |
-
----
-
-## Mask Types
-
-| Value      | Description |
-|------------|-------------|
-| Prospector | 0           |
-| Woodcarver | 1           |
-| Angler     | 2           |
-| Trapper    | 3           |
-| Trader     | 4           |
-| Doctor     | 5           |
-
----
-
-## Mask Model Types
-
-| Value      | Description |
-|------------|-------------|
-| Prospector | 1           |
-| Woodcarver | 2           |
-| Angler     | 3           |
-| Trapper    | 4           |
-| Trader     | 5           |
-| Doctor     | 6           |
-| FlatMask   | 101         |
-| Sphere     | 102         |
