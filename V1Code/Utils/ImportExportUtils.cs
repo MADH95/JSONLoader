@@ -674,19 +674,19 @@ public static class ImportExportUtils
     
     private static void VerboseWarning(string message)
     {
-        if (Plugin.verboseLogging.Value)
+        if (Configs.VerboseLogging)
             Plugin.VerboseWarning($"[{DebugPath}][{ID}][{LoggingSuffix}] {message}");
     }
     
     private static void VerboseError(string message)
     {
-        if (Plugin.verboseLogging.Value)
+        if (Configs.VerboseLogging)
             Plugin.VerboseError($"[{DebugPath}][{ID}][{LoggingSuffix}] {message}");
     }
     
     private static void Warning(string message)
     {
-        if (Plugin.verboseLogging.Value)
+        if (Configs.VerboseLogging)
             VerboseWarning(message);
         else
             Plugin.Log.LogWarning($"[{ID}][{LoggingSuffix}] {message}");
@@ -694,7 +694,7 @@ public static class ImportExportUtils
     
     private static void Error(string message)
     {
-        if (Plugin.verboseLogging.Value)
+        if (Configs.VerboseLogging)
             VerboseError(message);
         else
             Plugin.Log.LogError($"[{ID}][{LoggingSuffix}] {message}");

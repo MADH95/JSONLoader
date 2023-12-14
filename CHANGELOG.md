@@ -1,9 +1,14 @@
-# Most Recent Changes (5 Important):
+## 2.5.3
+- JSON is no longer case sensitive and can be upper or lower case to avoid errors.
+- Tribe file extensions now support tribe.jldr2 and tribes.jldr2 to avoid errors.
+- Fixed reload and export hotkeys inverted.
+- Fixed JSONLoader not loader cards with non-english characters.
 
 ## 2.5.2
 - Fixed Emissions not working
 - Fixed mods with a custom tribe failing to load
 - Fixed cards overriden with JSON missing fields that aren't specified
+- Fixed Configils breaking due to parameters not being parsed correctly
 - Exposed hotkeys as configs to fit individual needs. (See config for more info)
 - _example cards are ignored yet again (This wasn't meant to be removed)
 

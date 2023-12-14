@@ -14,7 +14,7 @@ namespace JSONLoader.Data.TalkingCards
     {
         public static void InitAndLoad(List<string> files)
         {
-            if (Plugin.betaCompatibility.Value)
+            if (Configs.BetaCompatibility)
             {
                 string[] convertedFiles = RenameFiles.RenameAll();
                 if (convertedFiles != null)

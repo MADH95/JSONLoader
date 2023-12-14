@@ -22,16 +22,11 @@ namespace JLPlugin
         
         public const string PluginGuid = "MADH.inscryption.JSONLoader";
         public const string PluginName = "JSONLoader";
-        public const string PluginVersion = "2.5.2";
+        public const string PluginVersion = "2.5.3";
         
         public static string JSONLoaderDirectory = "";
         public static string BepInExDirectory = "";
         public static string ExportDirectory => Path.Combine(JSONLoaderDirectory, "Exported");
-        
-        internal static ConfigEntry<bool> betaCompatibility;
-        internal static ConfigEntry<bool> verboseLogging;
-        internal static ConfigEntry<string> reloadHotkey;
-        internal static ConfigEntry<string> exportHotkey;
 
         internal static ManualLogSource Log;
         private HotkeyController hotkeyController;
@@ -40,7 +35,6 @@ namespace JLPlugin
         {
             return System.IO.Directory.GetFiles(Paths.PluginPath, "*.jldr*", SearchOption.AllDirectories)
                 .Where((a)=> (a.EndsWith(".jldr") || a.EndsWith(".jldr2")) && !a.Contains(JSONLoaderDirectory))
-                .Select((a)=>a.ToLower())
                 .ToList();
         }
         
@@ -64,23 +58,21 @@ namespace JLPlugin
             Harmony harmony = new(PluginGuid);
             harmony.PatchAll();
             
-            betaCompatibility = Config.Bind("JSONLoader", "JDLR Backwards Compatibility", true, "Set to true to enable old-style JSON files (JLDR) to be read and converted to new-style files (JLDR2)");
-            verboseLogging = Config.Bind("JSONLoader", "Verbose Logging", false, "Set to true to see more logs on what JSONLoader is doing and what isn't working.");
-            exportHotkey = Config.Bind("Hotkeys", "Reload JLDR2 and game", "LeftControl+RightControl+X", "Restarts the game and reloads all JLDR2 files.");
-            reloadHotkey = Config.Bind("Hotkeys", "Export all to JLDR2", "LeftShift+R", "Exports all data in the game back to .JLDR2 files.");
+            Configs.InitializeConfigs(Config);
             
             Log.LogWarning("Note: JSONLoader now uses .jldr2 files, not .json files.");
             List<string> files = GetAllJLDRFiles();
-            if (betaCompatibility.Value)
+            if (Configs.BetaCompatibility)
+            {
                 Log.LogWarning("Note: Backwards compatibility has been enabled. Old *.jldr files will be converted to *.jldr2 automatically. This will slow down your game loading!");
-            if (betaCompatibility.Value)
                 Utils.JLUtils.LoadCardsFromFiles(files);
+            }
 
             LoadAll(files);
 
             hotkeyController = new HotkeyController();
-            hotkeyController.AddHotkey(reloadHotkey.Value, ReloadGame);
-            hotkeyController.AddHotkey(exportHotkey.Value, ExportAllToJLDR2);
+            hotkeyController.AddHotkey(Configs.ReloadHotkey, ReloadGame);
+            hotkeyController.AddHotkey(Configs.ExportHotkey, ExportAllToJLDR2);
             
             Logger.LogInfo($"Loaded {PluginName}!");
         }
@@ -157,19 +149,19 @@ namespace JLPlugin
 
         internal static void VerboseLog(string s)
         {
-            if (verboseLogging.Value)
+            if (Configs.VerboseLogging)
                 Log.LogInfo(s);
         }
         
         internal static void VerboseWarning(string s)
         {
-            if (verboseLogging.Value)
+            if (Configs.VerboseLogging)
                 Log.LogWarning(s);
         }
         
         internal static void VerboseError(string s)
         {
-            if (verboseLogging.Value)
+            if (Configs.VerboseLogging)
                 Log.LogError(s);
         }
     }
