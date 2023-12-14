@@ -2,6 +2,7 @@
 - JSON is no longer case sensitive and can be upper or lower case to avoid errors.
 - Tribe file extensions now support tribe.jldr2 and tribes.jldr2 to avoid errors.
 - Fixed reload and export hotkeys inverted.
+- Fixed JSONLoader not loader cards with non-english characters.
 
 ## 2.5.2
 - Fixed Emissions not working

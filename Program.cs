@@ -35,7 +35,6 @@ namespace JLPlugin
         {
             return System.IO.Directory.GetFiles(Paths.PluginPath, "*.jldr*", SearchOption.AllDirectories)
                 .Where((a)=> (a.EndsWith(".jldr") || a.EndsWith(".jldr2")) && !a.Contains(JSONLoaderDirectory))
-                .Select((a)=>a.ToLower())
                 .ToList();
         }
         
