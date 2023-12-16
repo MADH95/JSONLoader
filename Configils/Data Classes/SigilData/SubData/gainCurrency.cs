@@ -1,4 +1,5 @@
 ﻿using DiskCardGame;
+using InscryptionAPI;
 using System.Collections;
 
 namespace JLPlugin.Data

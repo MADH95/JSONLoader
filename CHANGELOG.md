@@ -1,9 +1,47 @@
-# Most Recent Changes (5 Important):
+## 2.5.3
+- fixed abilityLearnedDialogue
+- rewrote buffCards (again) to make it cleaner and work faster
+- added the changeAppearance field which has this format:
+
+"changeAppearance": [{
+    "changePortrait": "portrait.png",
+    "changeName": "Elder ([BaseCard.Info.displayedName])",
+    "addDecals": [ "decal1.png", "decal2.png" ],
+    "removeDecals": [ "decal3.png", "decal4.png" ]
+}]
+
+- added the OnDamageDirectly trigger which triggers when a card deals direct damage to the opponent, it has two variables [HitSlot] and [DamageAmount]
+- added the [DeathSlot] variable to the OnPreKill and OnPreDeath triggers
+- added a field called isPermanent to buffCards
+- made buffCards and transformCards point the camera at the hand instead of the board if the card that they're modifying is in the hand
+- added a function called SetVar which has this format: SetVar('function_name', 5) (currently gets resets after all actions caused by the current trigger have happened, but i will try to fix that later though)
+- added support for comments in any jldr2 file, comments are to be used in this format:
+
+//This changes the appearance of a card
+"changeAppearance": [{
+    "changePortrait": "portrait.png", //This changes the portrait of the card
+    "changeName": "Elder ([BaseCard.Info.displayedName])", //This is just like evolve!
+    "addDecals": [ "decal.png" ] //And last but not least i add a decal to the card here
+}]
+
+- fixed generated variables causing an error if one of their variables were null
+- updated NCalcExtensions to the latest version
+- made it so all fields in configils can be empty or only whitespace without it causing an error
+- cleaned up some code
+- rewrote the readme and some file names for better consistency
+- updated the card names file, changelog and the configils documentation
+
+--changes made by James <3--
+- fields in JSONLoader are no longer case sensitive and can be upper or lower case to avoid errors.
+- Tribe file extensions now support tribe.jldr2 and tribes.jldr2 to avoid errors.
+- Fixed reload and export hotkeys inverted.
+- Fixed JSONLoader not loading cards with non-english characters.
 
 ## 2.5.2
 - Fixed Emissions not working
 - Fixed mods with a custom tribe failing to load
 - Fixed cards overriden with JSON missing fields that aren't specified
+- Fixed Configils breaking due to parameters not being parsed correctly
 - Exposed hotkeys as configs to fit individual needs. (See config for more info)
 - _example cards are ignored yet again (This wasn't meant to be removed)
 
@@ -22,7 +60,7 @@
 - Added config to enable verbose logging to help debugging
 - Added Tribe .jldr2 example
 - Reduced the amount of times JSONLoader looks for files when starting the game
-- Moved Change notes from Readme to CHANGELOG.md
+- Moved Change notes from Readme to ChangeLog.md
 - Updated 8 Fucking bears card example. Includes custom tribe example
 
 ## 2.4.5 (configil patchnotes)
@@ -49,23 +87,6 @@
 
 (an object is basically just a container with information about something, so for example the object of a sigil contains things like: the name, the guid, the description, the metacategories etc.)
 
-## 2.4.4
-- Null
-
-## 2.4.3
-- Actually added the file now
-
-# Older Changelogs:
-
-<details open>
-<summary>Click-Me</summary>
-<br>
-
-# Changelog sense 2.0.0:
-
-## 2.4.4
-- Null
-
 ## 2.4.3
 - Actually added the file now
 
@@ -88,6 +109,9 @@
 ## 2.3.0
 - Added talking card support!
 
+## 2.3.0
+- Added talking card support!
+	
 ## 2.2.4
 - Added gramophone support
 
@@ -101,11 +125,11 @@
 ## 2.2.2
 - Added tribe support
 
-## 2.2.0
-- Added API for adding cards
-
 ## 2.2.1
 - Added card and sigil reloading and fixed a ton of bugs with configils
+
+## 2.2.0
+- Added API for adding cards
 
 ## 2.1.1
 - Added configils (made by Lily#7394)
@@ -119,8 +143,6 @@
 
 ## 2.0.0
 - Rewritten to be compatible with API 2.0
-
-# Changelog sense 1.0.0
 
 ## 1.7.2
 - Added check for "_example" on the end of file name to remove example files from loading
@@ -149,12 +171,6 @@
 - Changed default "metaCategories" to be an empty list
 - Added ChangeLog.md
 
-## v1.5.2
-- Null
-
-## v1.5.1
-- Null
-
 ## v1.5.0
 - Compatability patch for InscryptionAPI v1.11
 - Refactored Code:
@@ -180,9 +196,6 @@
 ## v1.3.8
 - Fixed bug where "altTexture", "pixelTexture" and "titleGraphic" were being set to "texture"
 
-## v1.3.7
-- Null
-
 ## v1.3.6
 - Fixed linking error from update v1.3.5
 Refactored Code:
@@ -198,21 +211,12 @@ Refactored Code:
 	+ EvolveData, TailData, and IceCubeData are now in their own file together
 	+ JLUtils was created to host utility functions like assignment helpers and validity checks
 
-## v1.3.4
-- Null
-
 ## v1.3.3
 - updated error logging for user
 
 ## v1.3.2
 - Added ability to edit existing cards with the use of "fieldsToEdit" with example card *OP-ossum.json*
 - Added better error logging for user
-
-## v1.3.1
-- Null
-
-## v1.3.0
-- Null
 
 ## v1.2.1
 - Compatablity patch for InscryptionAPI v1.8
@@ -238,5 +242,3 @@ Refactored Code:
 	+ EvolveParams
 	+ TailParams
 	+ IceCubeParams
-
-</details>
