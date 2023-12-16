@@ -1,10 +1,6 @@
-﻿using HarmonyLib;
-using InscryptionAPI.Saves;
-using JLPlugin.ConfigilFunctions;
+﻿using JLPlugin.ConfigilFunctions;
 using NCalc;
-using PanoramicData.NCalcExtensions;
 using System;
-using System.Collections.Generic;
 
 namespace JLPlugin.Data
 {
