@@ -16,7 +16,7 @@ using static JLPlugin.Interpreter;
 
 namespace JLPlugin.SigilCode
 {
-    public class ConfigurableSpecial : ConfigurableSpecialBase, IOnBellRung, IOnOtherCardAddedToHand, IOnCardAssignedToSlotContext
+    public class ConfigurableSpecial : ConfigurableSpecialBase, IOnBellRung, IOnOtherCardAddedToHand, IOnCardAssignedToSlotContext, IOnCardDealtDamageDirectly
     {
         public override int Priority
         {
@@ -225,9 +225,9 @@ namespace JLPlugin.SigilCode
         {
             if (deathSlot.Card != null)
             {
-                yield return TriggerSigil("OnPreDeath", new Dictionary<string, object>() { ["AttackerCard"] = killer }, deathSlot.Card);
+                yield return TriggerSigil("OnPreDeath", new Dictionary<string, object>() { ["AttackerCard"] = killer, ["DeathSlot"] = deathSlot }, deathSlot.Card);
             }
-            yield return TriggerSigil("OnPreKill", new Dictionary<string, object>() { ["VictimCard"] = deathSlot.Card }, killer);
+            yield return TriggerSigil("OnPreKill", new Dictionary<string, object>() { ["VictimCard"] = deathSlot.Card, ["DeathSlot"] = deathSlot }, killer);
             yield break;
         }
 
@@ -286,6 +286,16 @@ namespace JLPlugin.SigilCode
                 yield return TriggerSigil("OnMove", new Dictionary<string, object>() { ["OldSlot"] = oldSlot }, card);
             }
             yield break;
+        }
+
+        public bool RespondsToCardDealtDamageDirectly(PlayableCard attacker, CardSlot opposingSlot, int damage)
+        {
+            return true;
+        }
+
+        public IEnumerator OnCardDealtDamageDirectly(PlayableCard attacker, CardSlot opposingSlot, int damage)
+        {
+            yield return TriggerSigil("OnDamageDirectly", new Dictionary<string, object>() { ["HitSlot"] = opposingSlot, ["DamageAmount"] = damage }, attacker);
         }
 
         public IEnumerator TriggerSigil(string trigger, Dictionary<string, object> variableList = null, PlayableCard cardToCheck = null)
@@ -355,7 +365,7 @@ namespace JLPlugin.SigilCode
                     behaviourData.generatedVariables[variable.Key] = variable.Value;
                 }
             }
-            yield return SigilData.RunActions(behaviourData, base.PlayableCard);
+            yield return SigilData.RunActions(behaviourData, base.PlayableCard, base.specialAbility);
             yield break;
         }
 

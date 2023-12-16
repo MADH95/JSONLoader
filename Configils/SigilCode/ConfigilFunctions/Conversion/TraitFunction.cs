@@ -25,7 +25,7 @@ namespace JLPlugin.ConfigilFunctions
             }
 
             string traitName = (string)parameters[0];
-            functionArgs.Result = ParseEnum<Trait>(traitName);
+            functionArgs.Result = ImportExportUtils.ParseEnum<Trait>(traitName);
         }
     }
 }

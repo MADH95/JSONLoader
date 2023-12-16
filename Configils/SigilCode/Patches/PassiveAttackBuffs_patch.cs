@@ -73,7 +73,7 @@ namespace JLPlugin.SigilCode
                     }
                     if (chosenSlot == __instance.slot)
                     {
-                        if (buffCards.addStats != null)
+                        if (!string.IsNullOrEmpty(buffCards.addStats))
                         {
                             string attackAdjustment = SigilData.ConvertArgument(buffCards.addStats.Split('/')[0], abilityBehaviour, false);
                             if (attackAdjustment != "?")
@@ -81,7 +81,7 @@ namespace JLPlugin.SigilCode
                                 __result += int.Parse(attackAdjustment);
                             }
                         }
-                        if (buffCards.setStats != null)
+                        if (!string.IsNullOrEmpty(buffCards.setStats))
                         {
                             string attackAdjustment = SigilData.ConvertArgument(buffCards.setStats.Split('/')[0], abilityBehaviour, false);
                             if (attackAdjustment != "?")

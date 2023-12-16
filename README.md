@@ -1,25 +1,22 @@
 # JSON Loader V2
 
-This is a BepInEx plugin made for Incryption to create custom cards using JSON files and the API.
-It can parse custom cards and pass them to APIPlugin to load them into the game.
+This is a mod made for Incryption to create custom cards, sigils, starter decks, tribes, encounters and more using JSON files.
 
-Version 2.0 of this mod is designed to create full compatibility with Version 2.0+ of the API. JSON card files compatible with this API will have an extension of .JLDR2
+Version 2.0 of this mod is designed to create full compatibility with Version 2.0+ of the API. JSON files compatible with this API will have an extension of .JLDR2
 
 ## Reloading
 
-In the newest version of JSON Loader you can press "shift + r" to apply the changes you made to your cards and/or sigils without restarting the game.
+As a mod creator using JSONLoader you can press "shift + r" to apply the changes you've made to any jldr2 files without having to restart the game.
 
-## Configils
+## Validation and GUI editing
 
-Besides cards JSON Loader also allows you to create sigils. To do this, your file needs to end in '_sigil.jldr2'.
+You can use this [online JSON Schema validator](https://www.jsonschemavalidator.net) to avoid syntax errors, and make sure the fields are correct in your jldr2 files. Just put the contents of the corresponding schema from the Schema folder located in the JSONLoader files or on the github page in the left hand panel, and the contents of the jldr2 file that you want to validate in the right hand panel. If the json appears to be invalid the website will tell you where the error is and what exactly is wrong.
 
-Here is the [documentation](https://docs.google.com/document/d/1QLAfomaTcatm-foU2P1ZoqGQFFvhCfmEnN4jIxAWceQ/edit?usp=sharing) for making sigils.
+There is also a [GUI](https://json-editor.github.io/json-editor/) based version that is an option, just input a schema in the panel at the bottom of the page and copy the json from the right hand panel when done!
 
-## Talking Cards
+## Where do my files go?
 
-The latest version of JSONLoader allows you to create talking cards! To do this, your file needs to end in '\_talk.jldr2'.
-
-All of the documentation for that can be found [here](https://github.com/KBMackenzie/InscryptionJSONDump/blob/main/Documentation/Talking_Card_Guide.md)!
+Files go anywhere in the plugins folder, along with the artwork required for said file.
 
 ## Converting Existing Cards to JLDR2
 
@@ -31,15 +28,15 @@ For the most part, JLDR2 and JLDR are the same. The key differences are outlined
 
 ### Abilities and Special Abilities
 
-Previously, base game abilities and mod-added abilities were handled differently; they were completely separate parts of the file. Now, base game abilities and mod-added abilities are kept in the same list. Base game abilities are referred to by their enumerated name, such as "Flying" or "Reach." Mod-added abilities are referred to by a combination of the Mod GUID and their name. For example, the "Deathburst" ability from Void's sigil pack (part of the popular "All the Sigils" mod) is referred by the string "extraVoid.inscryption.voidSigils.Deathburst"; in this example, "Deathburst" is the name of the ability, and "extraVoid.inscryption.voidSigils" is the GUID of the mod. 
+Previously, base game abilities and mod-added abilities were handled differently; they were completely separate parts of the file. Now, base game abilities and mod-added abilities are kept in the same list. Base game abilities are referred to by their enumerated name, such as "Flying" or "Reach." Mod-added abilities are referred to by a combination of the Mod GUID and their name. For example, the "Deathburst" ability from Void's sigil pack (part of the popular "All the Sigils" mod) is referred by the string "ATS.Deathburst"; in this example, "Deathburst" is the name of the ability, and "ATS" is the GUID of the mod. 
 
 So to create a card with both Flying and Deathburst, you would do something like the following:
 
 ```json
-"abilities": [ "Flying", "extraVoid.inscryption.voidSigils.Deathburst" ]
+"abilities": [ "Flying", "ATS.Deathburst" ]
 ```
 
-This holds true for all custom enumerations on a card. In the case of Abilities and Special Abilities, this is very different behaviour from previous versions of JSON Loader. However, all enumerations are treated this way. For example, mod added Traits, Metacategories, special stat icons, etc can all be handled exactly the same way.
+This holds true for all custom enumerations on a card. In the case of Abilities and Special Abilities, this is very different behaviour from previous versions of JSONLoader. However, all enumerations are treated this way. For example, mod added Traits, Metacategories, special stat icons, etc can all be handled exactly the same way.
 
 ### Evolve, Ice Cube, and Tail
 
@@ -75,56 +72,33 @@ Previously, these parameters were set as individual objects on the card. In a JL
 
 As you can see, the JLDR2 file has fewer child objects that have to be defined; the evolve, tail, and ice cube parameters are now on the card itself, reducing the overall size of the card file.
 
-## Installation
-
-### Automatic
-Simply download with Thunderstore Mod Manager!
-
-### Manual
-To install this plugin you first need to install BepInEx as a mod loader for Inscryption. A guide to do this can be found [here](https://docs.bepinex.dev/articles/user_guide/installation/index.html#where-to-download-bepinex)
-
-You will also need version 1.12+ of the [InscryptionAPI](https://github.com/ScottWilson0903/InscryptionAPI) plugin.
-
-Finally, you simply need to put the **JSONLoader.dll** folder in **BepInEx/plugins**.
-
 ## Custom Cards
 
-To create your own cards you just create a .jldr2 file (written in json) and fill in all the fields you want your card to have (fields you don't include will be defaulted). The *name* field is required, and the rest are optional with default values (though that would be a boring card). Those fields and their values are specified in the table below. For reference, an example custom card (8 f\*cking bears.jldr) is included in the **Cards** folder in this repo.
+To create your own cards you just create a .jldr2 file (written in json) and fill in all the fields you want your card to have (fields you don't include will be defaulted). The *name* field is required, and the rest are optional with default values (though that would be a boring card). Those fields and their values are specified in the table below. For reference, an example custom card (8 more f\*cking bears_example.jldr2) is included in the **Cards** folder in this repo.
 
 ### New Cards and Card Prefixes
 
 If you are creating a new card, you need to consider how to name your card so that it does not end up accidentally sharing a name with someone else's card in the future. The accepted way to prevent naming collisions in the community is to prefix the names of your cards with a simple name or code representing your card pack. For example, if you are adding a bunch of cards for Act 3 themed around the all-time classic action movie The Matrix, you might prefix all of your cards with "matrix_" - for example, "matrix_Neo" and "matrix_Trinity." Then, if someone comes along after you and creates a card pack based on mythology and religion, and they also want to create a card called Trinity, they will name their card "myth_Trinity," and we no longer have any issues with having two cards *named* "Trinity." Note that they can both still be called "Trinity" on the card, but the internal game name is different.
 
-Cards that are loaded via JSON should indicate what their specific prefix is using the *modPrefix* field. This helps the card loading process recognize that you have properly prefixed your card and aren't simply using snake_case naming for multi-word cards. More specifically, we can't tell if a card named "Snow_Man" represents a snowman card, or if it's a card named "Man" with a mod prefix of "Snow."
+Cards that are loaded via JSONLoader should indicate what their specific prefix is using the *modPrefix* field. This helps the card loading process recognize that you have properly prefixed your card and aren't simply using snake_case naming for multi-word cards. More specifically, we can't tell if a card named "Snow_Man" represents a snowman card, or if it's a card named "Man" with a mod prefix of "Snow."
 
-Note that if your card's name and prefix don't match, the game will force it to match. So if your card's name is "StrongBad" and your card prefix is "HSR", your card will be named "HSR_StrongBad" in game. 
+Note that if your card's name and prefix don't match, the game will force it to match. So if your card's name is "StrongBad" and your card prefix is "HSR", the internal name of your card will be "HSR_StrongBad".
 
 ### Editing base game cards
 
 To edit a card from the base game, you similarly create a .jldr2 file and fill in the fields you want to edit on the card. You must include the *name* to be able to identify the card; the mod prefix is not necessary. Any fields you fill out will be changed, and everything else will stay the same. Note that you can only edit cards from the base game this way: you cannot edit cards from other mods.
 
-### Validation and GUI editing
+## The fields
 
-You can use this [online JSON Schema validator](https://www.jsonschemavalidator.net/s/T7KtwMc7) to avoid syntax errors, and make sure the fields are correct in your json files.
-
-There is also a [GUI](https://tinyurl.com/492ytnj7) based verion that is an option, just copy the json from the right hand panel when done!
-
-### Where do my files go?
-
-Files go anywhere in the plugins folder, along with  the artwork required for the card.
-
-# The JLDR2 File
-
-Cards have lots of fields that can be filled - this is a list of all field names and their purpose. The fields you wish to include in the .jldr file should be copied exactly from this table, and any fields that refer to *Enums.md* or *Card Names.txt* should have their strings be copied exactly from there.
+Cards have lots of fields that can be filled - this is a list of all field names and their purposes. The fields you wish to include in the .jldr2 file should be copied exactly from this table, and any fields that refer to *[Enums.md](https://github.com/MADH95/JSONLoader/blob/master/Enums.md)* or *[Card Names.md](https://github.com/MADH95/JSONLoader/blob/master/Card%20Names.md)* should have their strings be copied exactly from there.
 
 | Field | Description |
 |------|-------------|
-| fieldsToEdit | **[Required: Editing]** A string array for the fields you wish to edit. The fields must be the exact names as in the left hand side of this table |
-| name | **[Required]** A string for the name the game will use to identify the card - should contain no spaces. When editing, this field must match the card's name (See *Card Names.txt* for a list of ingame card names) |
+| name | **[Required]** A string for the name the game will use to identify the card - should contain no spaces. When editing, this field must match the card's name (See *[Card Names.md](https://github.com/MADH95/JSONLoader/blob/master/Card%20Names.md)* for a list of ingame card names) |
 | displayedName | **[Optional]** **[Default: ""]** A string for the name displayed on the card |
 | description | **[Optional]** **[Default: ""]** A string for the description Leshy gives when you find the card |
-| metaCategories | **[Optional]** A string array of meta catagories the card has. See *Enums.md* for the list that the game ships with. These can also be fully qualified guid+ability strings if they were added by another mod. |
-| cardComplexity | **[Optional]** **[Default: Vanilla]** A string for the complexity of the card (See *Enums.md* for a list of levels of complexity) |
+| metaCategories | **[Optional]** A string array of meta catagories the card has. See *[Enums.md](https://github.com/MADH95/JSONLoader/blob/master/Enums.md)* for the list that the game ships with. These can also be fully qualified guid+ability strings if they were added by another mod. |
+| cardComplexity | **[Optional]** **[Default: Vanilla]** A string for the complexity of the card (See *[Enums.md](https://github.com/MADH95/JSONLoader/blob/master/Enums.md)* for a list of levels of complexity) |
 | temple | **[Optional]** **[Default: Nature]** A string for which Scrybe created the card |
 | baseAttack | **[Optional]** **[Default: 0]** An integer value for the attack of a card |
 | baseHealth | **[Optional]** **[Default: 1]** An integer value for the health of a card |
@@ -132,12 +106,12 @@ Cards have lots of fields that can be filled - this is a list of all field names
 | bloodCost | **[Optional]** **[Default: 0]** An integer value for the blood cost of a card |
 | bonesCost | **[Optional]** An integer value for the bones cost of a card |
 | energyCost | **[Optional]** An integer value for the energy cost of a card |
-| gemsCost | **[Optional]** A string array for the gems cost of a card (See *Enums.md* for a list of gems) |
-| specialStatIcon | **[Optional]** An string for which special stat icon the card has. See *Enums.md* for the list that the game ships with. These can also be fully qualified guid+ability strings if they were added by another mod. |
-| tribes | **[Optional]** An string array for the tribes the card belongs to. See *Enums.md* for the list that the game ships with. These can also be fully qualified guid+ability strings if they were added by another mod. |
-| traits | **[Optional]** An string array for the traits a card has. See *Enums.md* for the list that the game ships with. These can also be fully qualified guid+ability strings if they were added by another mod. |
-| specialAbilities | **[Optional]** A string array for the special abilities a card has. See *Enums.md* for the list that the game ships with. These can also be fully qualified guid+ability strings if they were added by another mod. |
-| abilities | **[Optional]** A string array for the sigils a card has. See *Enums.md* for the list that the game ships with. These can also be fully qualified guid+ability strings if they were added by another mod. |
+| gemsCost | **[Optional]** A string array for the gems cost of a card (See *[Enums.md](https://github.com/MADH95/JSONLoader/blob/master/Enums.md)* for a list of gems) |
+| specialStatIcon | **[Optional]** An string for which special stat icon the card has. See *[Enums.md](https://github.com/MADH95/JSONLoader/blob/master/Enums.md)* for the list that the game ships with. These can also be fully qualified guid+ability strings if they were added by another mod. |
+| tribes | **[Optional]** An string array for the tribes the card belongs to. See *[Enums.md](https://github.com/MADH95/JSONLoader/blob/master/Enums.md)* for the list that the game ships with. These can also be fully qualified guid+ability strings if they were added by another mod. |
+| traits | **[Optional]** An string array for the traits a card has. See *[Enums.md](https://github.com/MADH95/JSONLoader/blob/master/Enums.md)* for the list that the game ships with. These can also be fully qualified guid+ability strings if they were added by another mod. |
+| specialAbilities | **[Optional]** A string array for the special abilities a card has. See *[Enums.md](https://github.com/MADH95/JSONLoader/blob/master/Enums.md)* for the list that the game ships with. These can also be fully qualified guid+ability strings if they were added by another mod. |
+| abilities | **[Optional]** A string array for the sigils a card has. See *[Enums.md](https://github.com/MADH95/JSONLoader/blob/master/Enums.md)* for the list that the game ships with. These can also be fully qualified guid+ability strings if they were added by another mod. |
 | evolveIntoName | **[Optional]** The name of the card that this card will evolve into when it has the Evolve sigil |
 | evolveTurns | **[Optional]** The number of turns to evolve |
 | defaultEvolutionName | **[Optional]** The name the card will have when it evolves (when it doesn't have evolve_ fields set) |
@@ -146,7 +120,7 @@ Cards have lots of fields that can be filled - this is a list of all field names
 | iceCubeName | **[Optional]** The name of the card generated when the card has the IceCube ability |
 | flipPortraitForStrafe | **[Optional]** A boolean to determine if the cards portrait should flip when it uses one of the strafe sigils |
 | onePerDeck | **[Optional]** A boolean value that toggles if there can be only one of the card per deck |
-| appearanceBehaviour | **[Optional]** A string array for the behaviours the cards appearance should have. See *Enums.md* for the list that the game ships with. These can also be fully qualified guid+ability strings if they were added by another mod. |
+| appearanceBehaviour | **[Optional]** A string array for the behaviours the cards appearance should have. See *[Enums.md](https://github.com/MADH95/JSONLoader/blob/master/Enums.md)* for the list that the game ships with. These can also be fully qualified guid+ability strings if they were added by another mod. |
 | texture | **[Optional]** A string for the name of the card's image (must be .png). If it is in a subfolder within *Artwork* the subfolder should preceed the file name seperated by a '/' (or your system equivelent) |
 | altTexture | **[Optional]** A string for the name of the card's alternate image (must be .png) |
 | emissionTexture | **[Optional]** A string for the name of the card's emission image (must be .png) |
@@ -155,9 +129,21 @@ Cards have lots of fields that can be filled - this is a list of all field names
 | animatedPortrait | **[Unavailable]** |
 | decals | **[Optional]** A string array for the texture names of a card decals (must be .png) |
 
+## Configils
+
+Besides cards JSONLoader also allows you to create sigils. To do this, your file needs to end in '_sigil.jldr2'.
+
+Here is the [documentation](https://docs.google.com/document/d/1QLAfomaTcatm-foU2P1ZoqGQFFvhCfmEnN4jIxAWceQ/edit?usp=sharing) for making sigils.
+
+## Talking Cards
+
+JSONLoader also allows you to create talking cards! To do this, your file needs to end in '\_talk.jldr2'.
+
+All of the documentation for that can be found [here](https://github.com/KBMackenzie/InscryptionJSONDump/blob/main/Documentation/Talking_Card_Guide.md)!
+
 ## Starter Decks
 
-The latest version of JSON Loader allows you to create starter decks. To do this, your file needs to end in '_deck.jldr2' and should look like this:
+JSONLoader also allows you to create starter decks. To do this, your file needs to end in '_deck.jldr2' and should look like this:
 
 ```json
 {
@@ -176,11 +162,11 @@ The latest version of JSON Loader allows you to create starter decks. To do this
 }
 ```
 
-Note that you can define any number of starter decks in a single '*_deck.jldr2' file, and that the expected format of a '_deck.jldr2' file looks very different than other jldr2 files.
+Note that you can define any number of starter decks in a single '_deck.jldr2' file, and that the expected format of a '_deck.jldr2' file looks very different than that of other jldr2 files.
 
 ## Tribes
 
-The latest version of JSON Loader allows you to create tribes. To do this, your file needs to end in '_tribe.jldr2' and should look like this:
+JSONLoader also allows you to create tribes. To do this, your file needs to end in '_tribe.jldr2' or '_tribes.jldr2' and should look like this:
 
 ```json
 {
@@ -201,11 +187,11 @@ The latest version of JSON Loader allows you to create tribes. To do this, your 
 }
 ```
 
-Note that much like starter decks, any number of tribes can be defined in a single '*_tribe.jldr2' file. Also note that if a tribe doesn't have a choiceCardBackTexture, one will be auto-generated based on the tribe's icon.
+Note that much like starter decks, any number of tribes can be defined in a single '_tribe.jldr2' file. Also note that if a tribe doesn't have a choiceCardBackTexture, one will be auto-generated based on the tribe's icon.
 
 ## Encounters
 
-The latest version of JSON Loader allows you to create encounters. To do this, your file needs to end in '_encounter.jldr2' and should look like this:
+JSONLoader also allows you to create encounters. To do this, your file needs to end in '_encounter.jldr2' and should look like this:
 
 ```json
 {
@@ -227,12 +213,12 @@ The latest version of JSON Loader allows you to create encounters. To do this, y
 }
 ```
 
-These are all vanilla regions:
+These are all the vanilla regions that you can use for your encounters:
 Alpine, Forest, Midnight, Midnight_Ascension, Pirateville, Wetlands
 
 ## Gramophone
 
-The latest version of JSON Loader allows you to add music tracks to the Gramophone in Leshy's cabin.
+JSONLoader also allows you to add music tracks to the Gramophone in Leshy's cabin.
 To do this, your file needs to end in '_gram.jldr2' and should look like this:
 
 ```json
@@ -256,6 +242,90 @@ You should put your mod's prefix in the "Prefix" field. You can add as many trac
 
 "Volume" should be the volume of your track, from 0 to 1, where 0 is silence and 1 is full volume. If you want your track to be at half volume, for example, you can put 0.5 in the Volume field.
 
+
+## Localization
+
+If you want to translate your cards into other languages, add the language suffix to the end of the field name. 
+
+For example, if you want to translate the *displayedName* field into French, you would add a *displayedName_fr* field to your card. 
+
+### Card localisation
+```json
+{
+  "name": "JSON_SuperHypeMan", 
+  "modPrefix": "ExampleMod", 
+  "baseAttack": 6, 
+  "baseHealth": 9, 
+  "displayedName": "Super Hype Man", 
+  "displayedName_fr": "Super Animateur", 
+  "displayedName_it": "Super Uomo dell'Eccitazione", 
+  "displayedName_de": "Super Stimmungsmacher", 
+  "displayedName_es": "Super Animador", 
+  "displayedName_pt": "Super Animador", 
+  "description_tr": "Süper Coşku Adamı", 
+  "description_ru": "Супер Человек-Аниматор", 
+  "description_ja": "スーパーハイプマン", 
+  "description_ko": "슈퍼 하이프 맨", 
+  "description_zhcn": "超级炒作男", 
+  "description_zhtw": "超級炒作男"
+}
+```
+
+### New Languages
+```json
+{
+    "languageName": "Polish",
+    "languageCode": "nl",
+    "resetButtonText": "Reset with Polish",
+    "stringTablePath": "stringtable.csv"
+}
+```
+### New Language Fonts
+```json
+{
+    "fontReplacementPaths": [
+        {
+        "Type": "Liberation",
+        "AssetBundlePath": "en_mainfont.assetbundle",
+        "FontAssetName": "en_mainfont",
+        "TMPFontAssetName": "en_mainfont"
+        }
+    ]
+}
+```
+
+## Masks
+
+To replace a mask that a boss puts on their face you can do it in a few ways.
+
+### Replace a mask with a texture
+
+This will replace the angler mask model with a flat surface and apply a texture to it. The image dimensions are 1000x1500
+```json
+{
+  "maskName": "JSON_TestMask",
+  "type": "Override",
+  "texturePath": "testmask.png",
+  "maskType": "Angler"
+}
+```
+If you want to keep the original model but replace the texture you can add a field specifying the model type as below.
+```json
+  "modelType": "Angler"
+```
+
+## Installation
+
+### Automatic
+Simply download with Thunderstore Mod Manager!
+
+### Manual
+To install this plugin you first need to install BepInEx as a mod loader for Inscryption. A guide to do this can be found [here](https://docs.bepinex.dev/articles/user_guide/installation/index.html#where-to-download-bepinex)
+
+You will also need the newest version of the [InscryptionAPI](https://github.com/ScottWilson0903/InscryptionAPI) plugin.
+
+Finally, you simply need to put the **JSONLoader.dll** folder in **BepInEx/plugins**.
+
 ## Debugging
 The easiest way to check if the plugin is working properly or to debug an error is to enable the console. This can be done by changing
 ```
@@ -277,67 +347,8 @@ in **Inscryption/BepInEx/Config/BepInEx.cfg**
 
 ___
 
-To add cards to your starting hand to test if your cards work, you can download my [deck building mod](https://inscryption.thunderstore.io/package/MADH95Mods/DeckbuilderMod/)
+To add cards to your deck to test if your cards work, you can download the [debug menu mod](https://inscryption.thunderstore.io/package/JamesGames/DebugMenu/)
 
 ___
 
-If you want help debugging you can ask in the #jsonloader channel in the [Inscryption modding discord](https://discord.gg/QrJEF5Denm).
-
-## Changelog 
-
-<details>
-<summary>Changelog</summary>
-2.4.3
-- actually added the file now
-
-2.4.2
-- readded an important file that i deleted because i thought it wasn't important :P
-
-2.4.1
-- fixed the patchnotes
-
-2.4.0 (configil patchnotes)
-- added a maxEnergy field to gainCurrency (coded by UwUMacaroniTime)
-- made configils run much faster and have better performance (coded by kelly betty)
-- fixed any errors relating to a sigil trying to access the card that it is on after it has died or has been removed from the board
-- fixed the passive trigger spamming the console and cards dying when their attack was set to 0 when using the passive trigger
-- fixed gainCurrency foils only being visual and not actually increasing the foil amount
-- added a [DamageAmount] variable to both OnStruck and OnDamage
-- fixed runOnCondition not working for sendMessage
-- added two new variables [card.TemporaryMods] and [card.AllAbilities]
-
-2.3.0
-- Added talking card support!
-	
-2.2.4
-- Added gramophone support
-
-2.2.3
-- Added encounter support
-- Removed the [PlayerSlot()] and [OpponentSlot()] variable and replaced it with the GetSlot() function with this format:
-  GetSlot(index, isOpponentSlot, fields) 
-  (fields is everything that you would have after the first dot of the original variable in single quotation marks)
-- Fixed a ton more configil bugs
-
-2.2.2
-- Added tribe support
-
-2.2.1
-- Added card and sigil reloading and fixed a ton of bugs with configils
-
-2.2.0
-- Added API for adding cards
-
-2.1.1
-- Added configils (made by Lily#7394)
-
-2.1
-- Added starter deck support with help from Lily
-
-2.0.1
-- Fixed a defect with converting JLDR to JLDR2 as it relates to editing base game cards
-- Base game cards are now edited directly instead of using the event. This fixes issues where copies of those cards still existed in other places but wouldn't get properly edited (example: Pack Rat).
-
-2.0.0
-- Rewritten to be compatible with API 2.0
-</details>
+If you want help debugging you can ask in the #jsonloader channel in the [Inscryption modding discord server](https://discord.gg/QrJEF5Denm).

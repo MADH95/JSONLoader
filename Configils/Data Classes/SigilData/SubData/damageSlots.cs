@@ -29,13 +29,13 @@ namespace JLPlugin.Data
                 {
                     slot = abilitydata.self.Slot;
                 }
-                if (slot != null)
+                if (slot != null && !string.IsNullOrWhiteSpace(damageslotinfo.damage))
                 {
                     int damage = int.Parse(SigilData.ConvertArgument(damageslotinfo.damage, abilitydata));
                     if (slot.Card != null)
                     {
                         PlayableCard damageSourceCard = abilitydata.self;
-                        if (damageslotinfo.damageSource != null)
+                        if (!string.IsNullOrWhiteSpace(damageslotinfo.damageSource))
                         {
                             if (SigilData.ConvertArgument(damageslotinfo.damageSource, abilitydata) == "null")
                             {

@@ -73,7 +73,7 @@ namespace JLPlugin.SigilCode
                     }
                     if (chosenSlot == __instance.slot)
                     {
-                        if (buffCards.addStats != null)
+                        if (!string.IsNullOrEmpty(buffCards.addStats))
                         {
                             string healthAdjustment = SigilData.ConvertArgument(buffCards.addStats.Split('/')[1], abilityBehaviour, false);
                             if (healthAdjustment != "?")
@@ -81,7 +81,7 @@ namespace JLPlugin.SigilCode
                                 __result += int.Parse(healthAdjustment);
                             }
                         }
-                        if (buffCards.setStats != null)
+                        if (!string.IsNullOrEmpty(buffCards.setStats))
                         {
                             string healthAdjustment = SigilData.ConvertArgument(buffCards.setStats.Split('/')[1], abilityBehaviour, false);
                             if (healthAdjustment != "?")

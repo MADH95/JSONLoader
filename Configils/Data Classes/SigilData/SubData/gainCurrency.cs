@@ -20,7 +20,7 @@ namespace JLPlugin.Data
                 yield break;
             }
 
-            if (abilitydata.gainCurrency.bones != null)
+            if (!string.IsNullOrWhiteSpace(abilitydata.gainCurrency.bones))
             {
                 int boneamount = int.Parse(SigilData.ConvertArgument(abilitydata.gainCurrency.bones, abilitydata));
                 if (boneamount > 0)
@@ -32,7 +32,8 @@ namespace JLPlugin.Data
                     yield return Singleton<ResourcesManager>.Instance.SpendBones(boneamount * -1);
                 }
             }
-            if (abilitydata.gainCurrency.energy != null)
+
+            if (!string.IsNullOrWhiteSpace(abilitydata.gainCurrency.energy))
             {
                 int energyamount = int.Parse(SigilData.ConvertArgument(abilitydata.gainCurrency.energy, abilitydata));
                 if (energyamount > 0)
@@ -44,7 +45,8 @@ namespace JLPlugin.Data
                     yield return Singleton<ResourcesManager>.Instance.SpendEnergy(energyamount * -1);
                 }
             }
-            if (abilitydata.gainCurrency.maxEnergy != null)
+
+            if (!string.IsNullOrWhiteSpace(abilitydata.gainCurrency.maxEnergy))
             {
                 int maxEnergyamount = int.Parse(SigilData.ConvertArgument(abilitydata.gainCurrency.maxEnergy, abilitydata));
 
@@ -57,7 +59,8 @@ namespace JLPlugin.Data
                     Singleton<ResourcesManager>.Instance.PlayerMaxEnergy -= maxEnergyamount;
                 }
             }
-            if (abilitydata.gainCurrency.foils != null)
+
+            if (!string.IsNullOrWhiteSpace(abilitydata.gainCurrency.foils))
             {
                 int foilamount = int.Parse(SigilData.ConvertArgument(abilitydata.gainCurrency.foils, abilitydata));
                 if (foilamount > 0)

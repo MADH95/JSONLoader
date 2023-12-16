@@ -15,7 +15,8 @@
         "type": "object",
         "required": [
           "name",
-          "guid"
+          "guid",
+          "tribeIcon"
         ],
         "additionalProperties": false,
         "properties": {
@@ -32,7 +33,7 @@
             "pattern": "^[a-zA-Z\\d_]+$"
           },
           "tribeIcon": {
-            "description": "The image to use when displaying the tribe icon in the top-left corner of a card, as well as for auto-generated backs",
+            "description": "The image to use when displaying the tribe icon in the top-left corner of a card, as well as for auto-generated backs Size:109x149",
             "type": "string",
             "pattern": "^[a-zA-Z\\d_]+.png$"
           },
@@ -42,7 +43,7 @@
             "default": true
           },
           "choiceCardBackTexture": {
-            "description": "The image to use for the card representing the tribe in a tribe choice",
+            "description": "The image to use for the card representing the tribe in a tribe choice Size:125x190 You can find some examples in this mod: https://inscryption.thunderstore.io/package/The_Unwanted_but_Useful_Libraries/Tribal_Libary/",
             "type": "string",
             "pattern": "^[a-zA-Z\\d_]+.png$"
           }

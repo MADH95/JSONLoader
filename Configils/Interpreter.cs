@@ -9,6 +9,7 @@ namespace JLPlugin
     using DiskCardGame;
     using HarmonyLib;
     using InscryptionAPI.Saves;
+    using MonoMod.Utils;
     using PanoramicData.NCalcExtensions;
     using System.Collections;
     using System.Collections.Generic;
@@ -46,8 +47,13 @@ namespace JLPlugin
                     string CalcInput = expression.Groups[0].Value;
                     string CalcContent = expression.Groups[1].Value;
 
-                    ExtendedExpression e = new ExtendedExpression(CalcContent) { Parameters = additionalParameters };
-                    e.EvaluateFunction += ConfigilExtensions.Extend;
+                    ExtendedExpression e = new ExtendedExpression(CalcContent);
+                    e.EvaluateFunction += (functionName, functionArgs) => ConfigilExtensions.Extend(functionName, functionArgs, abilityData);
+
+                    if (additionalParameters != null)
+                    {
+                        e.Parameters.AddRange(additionalParameters);
+                    }
 
                     foreach (KeyValuePair<string, string> variable in abilityData.variables)
                     {
@@ -119,6 +125,8 @@ namespace JLPlugin
 
             for (int i = 1; i < fieldList.Count; ++i)
             {
+                if (obj == null) return null;
+
                 if (obj.GetType() == typeof(PlayableCard))
                 {
                     if (fieldList[i] == "TemporaryAbilities")
@@ -144,11 +152,11 @@ namespace JLPlugin
                     }
                 }
 
-                PropertyInfo property = obj?.GetType().GetProperty(fieldList[i]);
+                PropertyInfo property = obj.GetType().GetProperty(fieldList[i]);
 
                 if (property is null)
                 {
-                    FieldInfo field = obj?.GetType().GetField(fieldList[i]);
+                    FieldInfo field = obj.GetType().GetField(fieldList[i]);
 
                     if (field is null)
                     {

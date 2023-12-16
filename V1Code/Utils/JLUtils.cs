@@ -14,43 +14,47 @@ namespace JLPlugin.Utils
     [Obsolete]
     public static class JLUtils
     {
-        public static void LoadCardsFromFiles()
+        public static void LoadCardsFromFiles(List<string> files)
         {
-            Dictionary<string, Data.CardData> loadedJldrs = new();
-            foreach ( string file in Directory.EnumerateFiles( Paths.PluginPath, "*.jldr", SearchOption.AllDirectories ) )
+            Dictionary<string, CardData> loadedJldrs = new();
+            for (int index = files.Count - 1; index >= 0; index--)
             {
-                string filename = file.Substring( file.LastIndexOf( Path.DirectorySeparatorChar ) + 1 );
+                string file = files[index];
+                string filename = file.Substring(file.LastIndexOf(Path.DirectorySeparatorChar) + 1);
+                if (!file.EndsWith(".jldr"))
+                    continue;
 
-                Data.CardData card = CreateFromJSON( File.ReadAllText( file ) );
+                files.RemoveAt(index);
 
-                if ( card is null )
+                CardData card = File.ReadAllText(file).FromJson<CardData>();
+                if (card == null)
                 {
-                    Plugin.Log.LogWarning( $"Failed to load { filename }" );
-
+                    Plugin.Log.LogWarning($"Failed to load {filename}");
                     continue;
                 }
 
                 loadedJldrs.Add(file, card);
             }
 
-            List<Data.CardData> allCards = loadedJldrs.Values.ToList();
-
+            List<CardData> allCards = loadedJldrs.Values.ToList();
             foreach (var item in loadedJldrs)
             {
                 string file = item.Key;
-                Data.CardData card = item.Value;
+                CardData card = item.Value;
 
                 // Convert to JLDR2 and write back for now
                 CardSerializeInfo info = card.ConvertToV2(allCards);
                 if (info != null)
-                    info.WriteToFile(file, false);
-                else   
+                {
+                    string newPath = info.WriteToFile(file, false);
+                    files.Add(newPath);
+                }
+                else
+                {
                     Plugin.Log.LogError($"{file} is a JLDR without a valid name");
+                }
             }
         }
-
-        public static CardData CreateFromJSON( string jsonString )
-            => JSONParser.FromJson<CardData>( jsonString );
 
         public static Texture2D LoadTexture2D( string image )
         {

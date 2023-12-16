@@ -29,7 +29,7 @@ namespace JLPlugin.Data
                 return null;
             }
 
-            if (cardInfo.name != null)
+            if (!string.IsNullOrWhiteSpace(cardInfo.name))
             {
                 card = CardLoader.GetCardByName(SigilData.ConvertArgument(cardInfo.name, abilitydata));
             }
@@ -69,7 +69,7 @@ namespace JLPlugin.Data
                     card = cardsWithCondition[random.Next(cardsWithCondition.Count)];
                 }
             }
-            else if (cardInfo.targetCard != null)
+            else if (!string.IsNullOrEmpty(cardInfo.targetCard))
             {
                 card = ((Card)SigilData.ConvertArgumentToType(cardInfo.targetCard, abilitydata, typeof(Card))).Info;
             }

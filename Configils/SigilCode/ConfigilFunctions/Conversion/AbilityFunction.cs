@@ -25,7 +25,7 @@ namespace JLPlugin.ConfigilFunctions
             }
 
             string abilityName = (string)parameters[0];
-            functionArgs.Result = ParseEnum<Ability>(abilityName);
+            functionArgs.Result = ImportExportUtils.ParseEnum<Ability>(abilityName);
         }
     }
 }

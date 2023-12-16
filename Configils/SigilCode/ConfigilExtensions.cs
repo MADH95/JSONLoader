@@ -6,11 +6,11 @@ using PanoramicData.NCalcExtensions;
 using System;
 using System.Collections.Generic;
 
-namespace JLPlugin
+namespace JLPlugin.Data
 {
     public static class ConfigilExtensions
     {
-        public static void Extend(string functionName, FunctionArgs functionArgs)
+        public static void Extend(string functionName, FunctionArgs functionArgs, AbilityBehaviourData abilitydata)
         {
             if (functionArgs == null)
             {
@@ -20,7 +20,10 @@ namespace JLPlugin
             switch (functionName)
             {
                 case "Random":
-                    RandomPar.Evaluate(functionArgs);
+                    RandomParFunction.Evaluate(functionArgs);
+                    return;
+                case "SetVar":
+                    SetVarFunction.Evaluate(functionArgs, abilitydata);
                     return;
                 case "GetSlot":
                     GetSlot.Evaluate(functionArgs);

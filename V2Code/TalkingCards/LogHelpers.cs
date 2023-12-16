@@ -5,12 +5,12 @@ namespace JSONLoader.Data.TalkingCards
     internal static class LogHelpers
     {
         internal static void LogInfo(string message)
-            => Plugin.Log?.LogInfo(message);
+            => Plugin.VerboseLog(message);
 
         internal static void LogError(string message)
-            => Plugin.Log?.LogError(message);
+            => Plugin.VerboseLog(message);
 
         internal static void DebugLog(string message)
-            => Plugin.Log?.LogDebug(message);
+            => Plugin.VerboseLog(message);
     }
 }

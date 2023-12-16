@@ -17,7 +17,7 @@ using static JLPlugin.V2.Data.CardSerializeInfo;
 
 namespace JLPlugin.SigilCode
 {
-    public class ConfigurableMain : ConfigurableBase, IOnBellRung, IOnOtherCardAddedToHand, IOnCardAssignedToSlotContext
+    public class ConfigurableMain : ConfigurableBase, IOnBellRung, IOnOtherCardAddedToHand, IOnCardAssignedToSlotContext, IOnCardDealtDamageDirectly
     {
         public override int BonesCost
         {
@@ -72,7 +72,7 @@ namespace JLPlugin.SigilCode
                 }
             }
 
-            List<GemType> GemCost = abilityData.activationCost?.gemsCost?.Select(s => ParseEnum<GemType>(s)).ToList() ?? new List<GemType>();
+            List<GemType> GemCost = abilityData.activationCost?.gemsCost?.Select(s => ImportExportUtils.ParseEnum<GemType>(s)).ToList() ?? new List<GemType>();
             foreach (GemType Gem in GemCost)
             {
                 if (!Singleton<ResourcesManager>.Instance.HasGem(Gem))
@@ -151,6 +151,7 @@ namespace JLPlugin.SigilCode
             {
                 yield return TriggerSigil("OnDetect", null, otherCard.Slot.opposingSlot.Card);
             }
+
             yield return TriggerSigil("OnResolveOnBoard", null, otherCard);
             yield break;
         }
@@ -295,12 +296,11 @@ namespace JLPlugin.SigilCode
         {
             if (deathSlot.Card != null)
             {
-                yield return TriggerSigil("OnPreDeath", new Dictionary<string, object>() { ["AttackerCard"] = killer }, deathSlot.Card);
+                yield return TriggerSigil("OnPreDeath", new Dictionary<string, object>() { ["AttackerCard"] = killer, ["DeathSlot"] = deathSlot }, deathSlot.Card);
             }
-            yield return TriggerSigil("OnPreKill", new Dictionary<string, object>() { ["VictimCard"] = deathSlot.Card }, killer);
+            yield return TriggerSigil("OnPreKill", new Dictionary<string, object>() { ["VictimCard"] = deathSlot.Card, ["DeathSlot"] = deathSlot }, killer);
             yield break;
         }
-
 
         public override bool RespondsToSlotTargetedForAttack(CardSlot slot, PlayableCard attacker)
         {
@@ -356,6 +356,16 @@ namespace JLPlugin.SigilCode
                 yield return TriggerSigil("OnMove", new Dictionary<string, object>() { ["OldSlot"] = oldSlot }, card);
             }
             yield break;
+        }
+
+        public bool RespondsToCardDealtDamageDirectly(PlayableCard attacker, CardSlot opposingSlot, int damage)
+        {
+            return true;
+        }
+
+        public IEnumerator OnCardDealtDamageDirectly(PlayableCard attacker, CardSlot opposingSlot, int damage)
+        {
+            yield return TriggerSigil("OnDamageDirectly", new Dictionary<string, object>() { ["HitSlot"] = opposingSlot, ["DamageAmount"] = damage }, attacker);
         }
 
         public IEnumerator TriggerSigil(string trigger, Dictionary<string, object> variableList = null, PlayableCard cardToCheck = null)
@@ -425,6 +435,8 @@ namespace JLPlugin.SigilCode
                     behaviourData.generatedVariables[variable.Key] = variable.Value;
                 }
             }
+
+            yield return base.LearnAbility(0f);
             yield return SigilData.RunActions(behaviourData, base.PlayableCard, ability);
             yield break;
         }

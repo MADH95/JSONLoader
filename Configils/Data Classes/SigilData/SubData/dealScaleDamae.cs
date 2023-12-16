@@ -16,6 +16,9 @@ namespace JLPlugin.Data
                 yield break;
             }
 
+            if (string.IsNullOrWhiteSpace(abilitydata.dealScaleDamage.damage))
+                yield break;
+
             int damage = int.Parse(SigilData.ConvertArgument(abilitydata.dealScaleDamage.damage, abilitydata));
             if (damage > 0)
             {

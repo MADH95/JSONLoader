@@ -1,0 +1,77 @@
+﻿{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "properties": {
+    "languageName": {
+      "title": "Name",
+      "description": "Name of your language (eg: Polish)",
+      "type": "string"
+    },
+    "languageCode": {
+      "title": "Code",
+      "description": "Short code description of your language from https://www.loc.gov/standards/iso639-2/php/code_list.php (eg: Polish = pl)",
+      "type": "string"
+    },
+    "resetButtonText": {
+      "title": "Reset Button Text",
+      "description": "What text do you want to appear on the Reset button before someone switches to your language. Best to put this in your language of choice!  (eg: Zresetuj do języka polskiego)",
+      "type": "string"
+    },
+    "stringTablePath": {
+      "title": "String table file name",
+      "description": "Name of your .csv with all the translations. (eg: https://tinyurl.com/3dehr53j Download polish sheet as a .csv and edit the 3rd column with your translations!)",
+      "type": "string"
+    },
+    "fontReplacementPaths": {
+      "title": "Font Replacements",
+      "description": "Does your language need a font to show? Then you'll need to make a font asset bundle!",
+      "type": "array",
+      "items": [
+        {
+          "type": "object",
+          "properties": {
+            "Type": {
+              "title": "Font Replace",
+              "description": "Replace this font in Inscryption with yiour font.",
+              "type": "string",
+              "enum": [
+                "Liberation",
+                "Marksman",
+                "Misc3D",
+                "DaggerSquare",
+                "HeavyWeight"
+              ]
+            },
+            "AssetBundlePath": {
+              "title": "Asset Bundle Name",
+              "description": "Name of the asset bundle you want to load for your font",
+              "type": "string"
+            },
+            "FontAssetName": {
+              "title": "Font Asset Name",
+              "description": "Name of the Font within your asset bundle that you want to use to show.",
+              "type": "string"
+            },
+            "TMPFontAssetName": {
+              "title": "Text Mesh pro Font Asset Name",
+              "description": "Name of the Font within your asset bundle that you want to use to show.",
+              "type": "string"
+            }
+          },
+          "required": [
+            "Type",
+            "AssetBundlePath",
+            "FontAssetName",
+            "TMPFontAssetName"
+          ]
+        }
+      ]
+    }
+  },
+  "required": [
+    "languageName",
+    "languageCode",
+    "resetButtonText",
+    "stringTablePath"
+  ]
+}

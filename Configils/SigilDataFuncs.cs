@@ -73,7 +73,7 @@ namespace JLPlugin.Data
 
             if (this.metaCategories != null)
             {
-                info.AddMetaCategories(this.metaCategories.Select(elem => ParseEnum<AbilityMetaCategory>(elem)).ToArray());
+                info.AddMetaCategories(this.metaCategories.Select(elem => ImportExportUtils.ParseEnum<AbilityMetaCategory>(elem)).ToArray());
             }
             else
             {
@@ -109,16 +109,22 @@ namespace JLPlugin.Data
             return SigilDicts.SpecialArgumentList.TryGetValue(ability, out data) ? data.Item2 : null;
         }
 
-        public static void LoadAllSigils()
+        public static void LoadAllSigils(List<string> files)
         {
-            foreach (string file in Directory.EnumerateFiles(Paths.PluginPath, "*_sigil.jldr2", SearchOption.AllDirectories))
+            for (int index = 0; index < files.Count; index++)
             {
+                string file = files[index];
                 string filename = file.Substring(file.LastIndexOf(Path.DirectorySeparatorChar) + 1);
 
-                Plugin.Log.LogDebug($"Loading JLDR2 (sigil) {filename}");
+                if (!filename.EndsWith("_sigil.jldr2"))
+                    continue;
+
+                files.RemoveAt(index--);
+
+                Plugin.VerboseLog($"Loading JLDR2 (sigil) {filename}");
                 SigilData sigilInfo = JSONParser.FromJson<SigilData>(File.ReadAllText(file));
                 sigilInfo.GenerateNew();
-                Plugin.Log.LogDebug($"Loaded JSON sigil {sigilInfo.name}");
+                Plugin.VerboseLog($"Loaded JSON sigil {sigilInfo.name}");
             }
         }
 
@@ -140,7 +146,17 @@ namespace JLPlugin.Data
                 return null;
             }
 
-            object output = Interpreter.Process(value, abilitydata, type, sendDebug);
+            object output = null;
+            try
+            {
+                output = Interpreter.Process(value, abilitydata, type, sendDebug);
+            }
+            catch (Exception)
+            {
+                Plugin.Log.LogError($"[{abilitydata.GetType()}] Error converting argument '{value}' to '{type}'");
+                throw;
+            }
+
             //using IsAssignableFrom because it has the added benefit of also detecting subclasses
             if (type.IsAssignableFrom(output.GetType()))
             {
@@ -155,68 +171,20 @@ namespace JLPlugin.Data
 
         public static string ConvertArgument(string value, AbilityBehaviourData abilitydata, bool sendDebug = true)
         {
-            if (value == null)
+            if (string.IsNullOrEmpty(value))
             {
                 return null;
             }
 
-            //if (value.Contains("|"))
-            //{
-            //regex instead of splitting so it does not mistake the or operator (||) for randomization
-            //    var random = new Random();
-            //    MatchCollection randomMatchList = Regex.Matches(value, @"(?:(?:\((?>[^()]+|\((?<number>)|\)(?<-number>))*(?(number)(?!))\))|[^|])+");
-            //    List<string> StringList = randomMatchList.Cast<Match>().Select(match => match.Value).ToList();
-            //    value = StringList[random.Next(StringList.Count)];
-            //}
-
-            return Interpreter.Process(value, abilitydata, null, sendDebug).ToString();
-        }
-
-        public static List<string> ConvertArgument(List<string> value, AbilityBehaviourData abilitydata, bool sendDebug = true)
-        {
-            if (value == null)
+            try
             {
-                return null;
+                return Interpreter.Process(value, abilitydata, null, sendDebug).ToString();
             }
-
-            return value.Select(x => Interpreter.Process(x, abilitydata, null, sendDebug).ToString()).ToList();
-        }
-
-        public static Type GetType(string nameSpace, string typeName)
-        {
-            string text = nameSpace + "." + typeName;
-            Type type = Type.GetType(text);
-            if (type != null)
+            catch (Exception)
             {
-                return type;
+                Plugin.Log.LogError($"[{abilitydata.GetType()}] Error converting argument '{value}' to string");
+                throw;
             }
-            if (text.Contains("."))
-            {
-                Assembly assembly = Assembly.Load(text.Substring(0, text.IndexOf('.')));
-                if (assembly == null)
-                {
-                    return null;
-                }
-                type = assembly.GetType(text);
-                if (type != null)
-                {
-                    return type;
-                }
-            }
-            AssemblyName[] referencedAssemblies = Assembly.GetExecutingAssembly().GetReferencedAssemblies();
-            for (int i = 0; i < referencedAssemblies.Length; i++)
-            {
-                Assembly assembly2 = Assembly.Load(referencedAssemblies[i]);
-                if (assembly2 != null)
-                {
-                    type = assembly2.GetType(text);
-                    if (type != null)
-                    {
-                        return type;
-                    }
-                }
-            }
-            return null;
         }
 
         public static List<string> DefaultActionOrder = new List<string>()
@@ -228,6 +196,7 @@ namespace JLPlugin.Data
             "drawCards",
             "placeCards",
             "transformCards",
+            "changeAppearance",
             "buffCards",
             "moveCards",
             "damageSlots",
@@ -240,12 +209,20 @@ namespace JLPlugin.Data
          * i think keeping delays action-specific rather than putting them here is probably the
          * best thing to do! */
 
-        public static IEnumerator RunActions(AbilityBehaviourData abilitydata, PlayableCard self, Ability ability = new Ability())
+        public static IEnumerator RunActions(AbilityBehaviourData abilitydata, PlayableCard self, System.Object ability = null)
         {
             //Plugin.Log.LogInfo($"This behaviour has the trigger: {abilitydata.trigger.triggerType}");
 
             abilitydata.self = self;
-            abilitydata.ability = ability;
+
+            if (ability is Ability)
+            {
+                abilitydata.ability = (Ability)ability;
+            }
+            else
+            {
+                abilitydata.specialAbility = (SpecialTriggeredAbility)ability;
+            }
 
             List<string> CompleteActionOrder = DefaultActionOrder;
             if (abilitydata.actionOrder != null)
@@ -333,6 +310,14 @@ namespace JLPlugin.Data
                         }
                         break;
 
+                    case nameof(AbilityBehaviourData.changeAppearance):
+
+                        if (abilitydata.changeAppearance != null)
+                        {
+                            yield return changeAppearance.ChangeAppearance(abilitydata);
+                        }
+                        break;
+
                     case nameof(AbilityBehaviourData.buffCards):
 
                         if (abilitydata.buffCards != null)
@@ -400,6 +385,8 @@ namespace JLPlugin.Data
 
             Dictionary<string, object> GeneratedVariableDictionary = new Dictionary<string, object>()
             {
+                { "LastDrawnCard", null },
+                { "DamageAmount", null },
                 { "DeathSlot", null },
                 { "HitSlot", null },
                 { "AttackerCard", null },

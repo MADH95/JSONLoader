@@ -13,12 +13,10 @@ namespace JLPlugin.Data
 
         public static CardSlot GetSlot(slotData slotdata, AbilityBehaviourData abilitydata, bool sendDebug = true)
         {
-            if (slotdata == null)
-            {
-                return null;
-            }
+            if (slotdata == null) return null;
+            if (string.IsNullOrWhiteSpace(slotdata.index)) return null;
 
-            if (slotdata.randomSlotOnCondition != null)
+            if (!string.IsNullOrWhiteSpace(slotdata.randomSlotOnCondition))
             {
                 var random = new Random();
 
@@ -49,7 +47,7 @@ namespace JLPlugin.Data
             }
 
             CardSlot slot = Singleton<BoardManager>.Instance.playerSlots[index];
-            if (slotdata.isOpponentSlot != null)
+            if (!string.IsNullOrWhiteSpace(slotdata.isOpponentSlot))
             {
                 if (SigilData.ConvertArgument(slotdata.isOpponentSlot, abilitydata, sendDebug) == "true")
                 {
