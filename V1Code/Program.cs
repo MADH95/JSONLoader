@@ -37,7 +37,7 @@ namespace JLPlugin
         private static List<string> GetAllJLDRFiles()
         {
             return System.IO.Directory.GetFiles(Paths.PluginPath, "*.jldr*", SearchOption.AllDirectories)
-                .Where((a) => (a.EndsWith(".jldr") || a.EndsWith(".jldr2")) && !a.Contains(JSONLoaderDirectory))
+                .Where((a) => (a.EndsWith(".jldr") || a.EndsWith(".jldr2")) && !a.Contains(Path.Combine(JSONLoaderDirectory, "Examples")))
                 .ToList();
         }
 
@@ -80,8 +80,6 @@ namespace JLPlugin
             hotkeyController.AddHotkey(Configs.ExportHotkey, ExportAllToJLDR2);
 
             Logger.LogInfo($"Loaded {PluginName}!");
-
-            Plugin.Log.LogInfo(ConfigilUtils.GetConfigByGuid("community.inscryption.patch", "Sigil Display", "Merge_On_Botom"));
         }
 
         public static void LogFields()
