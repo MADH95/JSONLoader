@@ -266,4 +266,4 @@
 | Ruby Golem          | RubyGolem                 |
 | Stim Mage           | StimMage                  |
 | Limoncello          | !GIANTCARD_SHIP           |
-| Vertebrae           | Snek_Neck                 |
+| Vertebrae           | Snelk_Neck                 |
