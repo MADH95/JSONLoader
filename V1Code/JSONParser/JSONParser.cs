@@ -653,11 +653,13 @@ namespace TinyJson
             public Dictionary<string, string> rows;
 
             public string englishFieldName;
+            public string englishFieldNameLower;
 
             public LocalizableField(string EnglishFieldName)
             {
                 rows = new Dictionary<string, string>();
                 englishFieldName = EnglishFieldName;
+                englishFieldNameLower = EnglishFieldName.ToLower();
             }
 
             public void Initialize(string englishValue)
@@ -667,7 +669,7 @@ namespace TinyJson
 
             public bool ContainsKey(string key)
             {
-                return key.StartsWith(englishFieldName);
+                return key.StartsWith(englishFieldNameLower);
             }
 
             public void SetValue(string key, string value)
