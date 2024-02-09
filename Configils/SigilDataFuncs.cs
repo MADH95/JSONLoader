@@ -86,7 +86,10 @@ namespace JLPlugin.Data
             ImportExportUtils.ApplyValue(ref convertedPixelTexture, ref pixelTexture, true, "Configils", "pixelTexture");
             info.SetPixelAbilityIcon(convertedPixelTexture == null ? new Texture2D(17, 17) : convertedPixelTexture);
 
-            info.activated = this.abilityBehaviour.Any(x => x.trigger?.triggerType == "OnActivate");
+            if (abilityBehaviour != null)
+            {
+                info.activated = this.abilityBehaviour.Any(x => x.trigger?.triggerType == "OnActivate");
+            }
 
             // Below is an example of the TriggerType enum being used. This current implementation doesn't make good use of it as the enum
             // would need converted from the string each time. Perhaps there's a method where the list of strings are converted and stored
