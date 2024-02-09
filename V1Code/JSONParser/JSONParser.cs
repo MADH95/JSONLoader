@@ -7,7 +7,7 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.Serialization;
 using System.Text;
-using System.Text.RegularExpressions;
+using BepInEx;
 using Sirenix.Utilities;
 using UnityEngine;
 
@@ -38,7 +38,24 @@ namespace TinyJson
         [ThreadStatic] static Dictionary<Type, Dictionary<string, PropertyInfo>> propertyInfoCache;
         [ThreadStatic] static Dictionary<Type, FieldInfo[]> publicFieldInfoCache;
 
+        private static string LogPrefix = "";
+        
+        public static T FromFilePath<T>(this string filePath)
+        {
+            LogPrefix = filePath.Replace(Paths.PluginPath, "");
+            if (LogPrefix.StartsWith("/") || LogPrefix.StartsWith("\\"))
+                LogPrefix = LogPrefix.Substring(1);
+            
+            return FromJsonInternal<T>(File.ReadAllText(filePath));
+        }
+
         public static T FromJson<T>(this string json)
+        {
+            LogPrefix = "Unspecified Path";
+            return FromJsonInternal<T>(json);
+        }
+        
+        private static T FromJsonInternal<T>(this string json)
         {
             // Initialize, if needed, the ThreadStatic variables
             if (propertyInfoCache == null) propertyInfoCache = new Dictionary<Type, Dictionary<string, PropertyInfo>>();
@@ -443,17 +460,27 @@ namespace TinyJson
                         if (similarFields != null && similarFields.Length > 0)
                         {
                             string fields = string.Join(" or ", similarFields.Select((a) => "'" + a + "'"));
-                            Plugin.Log.LogError($"{key} field not found for {type}. Did you mean {fields}?");
+                            LogError($"{key} field not found for {type}. Did you mean {fields}?");
                         }
                         else
                         {
-                            Plugin.Log.LogError($"{key} field not found for {type}. Could not find a field with a similar name!");
+                            LogError($"{key} field not found for {type}. Could not find a field with a similar name!");
                         }
                     }
                 }
             }
 
             return instance;
+        }
+
+        private static void LogError(string message)
+        {
+            Plugin.Log.LogError($"[{LogPrefix}] {message}");
+        }
+
+        private static void LogError(Exception exception)
+        {
+            Plugin.Log.LogError($"[{LogPrefix}] {exception}");
         }
 
         private static string[] FindSimilarFields(string key, Dictionary<string,FieldInfo> nameToField, Dictionary<string,PropertyInfo> nameToProperty)
@@ -472,7 +499,7 @@ namespace TinyJson
                 object fieldValue = info.GetValue(o);
                 if (fieldValue == null)
                 {
-                    Debug.LogError($"{info.Name} field is null! Type: {info.FieldType} o:{o} instance:{o}");
+                    LogError($"{info.Name} field is null! Type: {info.FieldType} o:{o} instance:{o}");
                 }
                 else if (fieldValue is IFlexibleField flexibleField)
                 {
@@ -653,8 +680,8 @@ namespace TinyJson
             }
             catch (Exception e)
             {
-                Plugin.Log.LogError($"Something went wrong while serializing JSON type: {type} value: {t}");
-                Plugin.Log.LogError(e);
+                LogError($"Something went wrong while serializing JSON type: {type} value: {t}");
+                LogError(e);
                 throw;
             }
 

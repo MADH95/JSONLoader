@@ -46,7 +46,7 @@ namespace JSONLoader.Data.TalkingCards
 
             try
             {
-                TalkingJSONData? talk = JSONParser.FromJson<TalkingJSONData>(File.ReadAllText(file));
+                TalkingJSONData? talk = JSONParser.FromFilePath<TalkingJSONData>(file);
                 if (talk == null) return;
                 //FileLog.Log($"Loading card: {talk.cardName}");
                 TalkingCardManager.Create(talk.GetFaceData(), GeneratePortrait.DialogueDummy);

@@ -128,7 +128,7 @@ namespace JLPlugin.Data
                 ImportExportUtils.SetDebugPath(file);
                 try
                 {
-                    SigilData sigilInfo = JSONParser.FromJson<SigilData>(File.ReadAllText(file));
+                    SigilData sigilInfo = JSONParser.FromFilePath<SigilData>(file);
 
                     ImportExportUtils.SetID(sigilInfo.GUID + "_" + sigilInfo.name.EnglishValue);
                     sigilInfo.GenerateNew();

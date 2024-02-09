@@ -118,7 +118,7 @@ namespace JLPlugin.SigilCode
                     {
                         CachedCardData.Add(
                                 filePath: filepath,
-                                data: JSONParser.FromJson<CardSerializeInfo>(File.ReadAllText(filepath))
+                                data: JSONParser.FromFilePath<CardSerializeInfo>(filepath)
                             );
                     }
                     CardSerializeInfo cardinfo = CachedCardData.Get(filepath);
