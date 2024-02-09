@@ -35,7 +35,7 @@ namespace JLPlugin.Data
 
                 FullSpecialTriggeredAbility specialAbility = SpecialTriggeredAbilityManager.Add(
                     this.GUID ?? Plugin.PluginGuid,
-                    this.name ?? "",
+                    this.name.EnglishValue ?? "",
                     SigilType
                     );
 
@@ -57,34 +57,34 @@ namespace JLPlugin.Data
             //    Plugin.Log.LogWarning($"{fields[i].Name}: {values[i]}\n");
             //}
 
+            Texture2D convertedTexture = null;
+            ImportExportUtils.ApplyValue(ref convertedTexture, ref texture, true, "Configils", "texture");
+            
             AbilityInfo info = AbilityManager.New(
-                    this.GUID ?? Plugin.PluginGuid,
-                    this.name ?? "",
-                    this.description ?? "",
-                    SigilType,
-                    this.texture.IsNullOrWhiteSpace() ? new Texture2D(49, 49) : TextureHelper.GetImageAsTexture(this.texture, FilterMode.Point)
+                    guid: this.GUID ?? Plugin.PluginGuid,
+                    rulebookName: this.name.EnglishValue ?? "",
+                    rulebookDescription: this.description.EnglishValue ?? "",
+                    behavior: SigilType,
+                    tex: convertedTexture == null ? new Texture2D(49, 49) : convertedTexture
                 );
+            
+            string temp = "_";
+            ImportExportUtils.ApplyLocaleField("name", ref this.name, ref temp, true);
+            ImportExportUtils.ApplyLocaleField("description", ref this.description, ref temp, true);
+            ImportExportUtils.ApplyValue(ref info.powerLevel, ref this.powerLevel, true, "Configils", "powerLevel");
+            ImportExportUtils.ApplyValue(ref info.canStack, ref this.canStack, true, "Configils", "canStack");
+            ImportExportUtils.ApplyValue(ref info.opponentUsable, ref opponentUsable, true, "Configils", "opponentUsable");
+            ImportExportUtils.ApplyValue(ref info.abilityLearnedDialogue, ref abilityLearnedDialogue, true, "Configils", "abilityLearnedDialogue");
 
-            info.SetPixelAbilityIcon(this.pixelTexture.IsNullOrWhiteSpace()
-                                    ? new Texture2D(17, 17) :
-                                    TextureHelper.GetImageAsTexture(this.pixelTexture, FilterMode.Point));
-
-            info.powerLevel = this.powerLevel ?? 3;
-
-            if (this.metaCategories != null)
-            {
-                info.AddMetaCategories(this.metaCategories.Select(elem => ImportExportUtils.ParseEnum<AbilityMetaCategory>(elem)).ToArray());
-            }
-            else
+            ImportExportUtils.ApplyValue(ref info.metaCategories, ref this.metaCategories, true, "Configils", "metaCategories");
+            if (metaCategories == null || metaCategories.Count == 0)
             {
                 info.SetDefaultPart1Ability();
             }
-
-            info.canStack = this.canStack ?? false;
-            info.opponentUsable = this.opponentUsable ?? false;
-
-            //Is this custom dialogue events? can we not use API?
-            info.abilityLearnedDialogue = SetAbilityInfoDialogue(this.abilityLearnedDialogue) ?? new DialogueEvent.LineSet();
+            
+            Texture2D convertedPixelTexture = null;
+            ImportExportUtils.ApplyValue(ref convertedPixelTexture, ref pixelTexture, true, "Configils", "pixelTexture");
+            info.SetPixelAbilityIcon(convertedPixelTexture == null ? new Texture2D(17, 17) : convertedPixelTexture);
 
             info.activated = this.abilityBehaviour.Any(x => x.trigger?.triggerType == "OnActivate");
 
@@ -122,9 +122,20 @@ namespace JLPlugin.Data
                 files.RemoveAt(index--);
 
                 Plugin.VerboseLog($"Loading JLDR2 (sigil) {filename}");
-                SigilData sigilInfo = JSONParser.FromJson<SigilData>(File.ReadAllText(file));
-                sigilInfo.GenerateNew();
-                Plugin.VerboseLog($"Loaded JSON sigil {sigilInfo.name}");
+                ImportExportUtils.SetDebugPath(file);
+                try
+                {
+                    SigilData sigilInfo = JSONParser.FromJson<SigilData>(File.ReadAllText(file));
+
+                    ImportExportUtils.SetID(sigilInfo.GUID + "_" + sigilInfo.name.EnglishValue);
+                    sigilInfo.GenerateNew();
+                    Plugin.VerboseLog($"Loaded JSON sigil {sigilInfo.name}");
+                }
+                catch (Exception e)
+                {
+                    Plugin.Log.LogError($"Failed to load {filename}: {e.Message}");
+                    Plugin.Log.LogError(e);
+                }
             }
         }
 

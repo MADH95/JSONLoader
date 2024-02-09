@@ -453,7 +453,7 @@ namespace TinyJson
                 object fieldValue = info.GetValue(o);
                 if (fieldValue == null)
                 {
-                    Debug.LogError($"{info.Name} field is null! {info.FieldType} o:{o} instance:{o}");
+                    Debug.LogError($"{info.Name} field is null! Type: {info.FieldType} o:{o} instance:{o}");
                 }
                 else if (fieldValue is IFlexibleField flexibleField)
                 {
@@ -650,6 +650,8 @@ namespace TinyJson
         [Serializable]
         public class LocalizableField : IFlexibleField
         {
+            public string EnglishValue => rows[englishFieldName];
+            
             public Dictionary<string, string> rows;
 
             public string englishFieldName;

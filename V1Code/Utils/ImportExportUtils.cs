@@ -329,6 +329,17 @@ public static class ImportExportUtils
                 }
                 return;
             }
+            else if (fromType == typeof(string) && toType == typeof(DialogueEvent.LineSet))
+            {
+                to = (ToType)(object)new DialogueEvent.LineSet(new List<DialogueEvent.Line>
+                {
+                    new DialogueEvent.Line
+                    {
+                        text = from as string
+                    }
+                });
+                return;
+            }
             else if (fromType == typeof(JSONParser.LocalizableField) && toType == typeof(string))
             {
                 Error("Use ApplyLocaleField when converted from LocalizableField to string!");
@@ -591,7 +602,6 @@ public static class ImportExportUtils
     /// <param name="field"></param>
     /// <param name="rows"></param>
     /// <param name="cardInfoEnglishField"></param>
-    /// <param name="toCardInfo"></param>
     private static void ApplyLocaleField(string field, JSONParser.LocalizableField rows, ref string cardInfoEnglishField)
     {
         if (rows.rows.TryGetValue(rows.englishFieldName, out string english))
