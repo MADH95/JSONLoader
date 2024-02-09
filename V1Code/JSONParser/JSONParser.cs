@@ -8,6 +8,7 @@ using System.Reflection;
 using System.Runtime.Serialization;
 using System.Text;
 using System.Text.RegularExpressions;
+using Sirenix.Utilities;
 using UnityEngine;
 
 namespace TinyJson
@@ -438,12 +439,30 @@ namespace TinyJson
 
                     if (!assigned)
                     {
-                        Plugin.VerboseWarning($"{key} field not found for {type}");
+                        string[] similarFields = FindSimilarFields(key, nameToField, nameToProperty);
+                        if (similarFields != null && similarFields.Length > 0)
+                        {
+                            string fields = string.Join(" or ", similarFields.Select((a) => "'" + a + "'"));
+                            Plugin.Log.LogError($"{key} field not found for {type}. Did you mean {fields}?");
+                        }
+                        else
+                        {
+                            Plugin.Log.LogError($"{key} field not found for {type}. Could not find a field with a similar name!");
+                        }
                     }
                 }
             }
 
             return instance;
+        }
+
+        private static string[] FindSimilarFields(string key, Dictionary<string,FieldInfo> nameToField, Dictionary<string,PropertyInfo> nameToProperty)
+        {
+            HashSet<string> allFields = new HashSet<string>();
+            allFields.AddRange(nameToField.Keys);
+            allFields.AddRange(nameToProperty.Keys);
+
+            return ImportExportUtils.FindSimilarStrings(key, allFields);
         }
 
         private static void SetField(FieldInfo info, object o, string v)
