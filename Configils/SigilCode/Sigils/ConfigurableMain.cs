@@ -247,7 +247,7 @@ namespace JLPlugin.SigilCode
                     int healthLevel = int.Parse(OnHealthLevelMatch.Cast<Match>().ToList()[0].Groups[1].Value);
                     if (target.Health <= healthLevel)
                     {
-                        TriggerBehaviour(behaviourData, new Dictionary<string, object>() { ["AttackerCard"] = attacker }, target);
+                        yield return TriggerBehaviour(behaviourData, new Dictionary<string, object>() { ["AttackerCard"] = attacker }, target);
                     }
                 }
             }
