@@ -97,11 +97,11 @@ namespace JLPlugin.SigilCode
         }
 
 
-        public void Start()
+        public IEnumerator Start()
         {
             /* Adding this check since this seems to be the root of the null exceptions in Start()!! 
              * According to Debug.Assert(). >< */
-            if (abilityData?.abilityBehaviour == null) return;
+            if (abilityData?.abilityBehaviour == null) yield break;
 
             foreach (AbilityBehaviourData behaviourData in abilityData.abilityBehaviour)
             {
@@ -137,7 +137,8 @@ namespace JLPlugin.SigilCode
                 }
                 SigilData.UpdateVariables(behaviourData, base.PlayableCard);
             }
-            TriggerSigil("OnLoad");
+            
+            yield return TriggerSigil("OnLoad");
         }
 
         public override bool RespondsToOtherCardResolve(PlayableCard otherCard)
