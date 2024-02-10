@@ -1,3 +1,14 @@
+## 2.5.5
+- incorrectly named fields will now log to console and suggest the correct name
+- errors resulting from loading a .jldr2 file will show the file path now
+- configils can now support localization
+- fixed jsonloader not loading everything else if 1 configil errors
+- fixed a bug where configils will break if abilityBehaviour is not specified
+- fixed localization not working
+- fixed OnLoad and OnHealthLevel not working
+- fixed Behaviours not running when a card is attacked and killed
+
+
 ## 2.5.3
 - fixed abilityLearnedDialogue
 - rewrote buffCards (again) to make it cleaner and work faster
