@@ -19,10 +19,30 @@ public abstract class ABaseConfigilLogic
     public abstract IEnumerator LearnAbility(float startDelay = 0.0f);
     
     private SigilData abilityData;
+    private Dictionary<string, List<AbilityBehaviourData>> abilityBehaviours;
 
     public ABaseConfigilLogic(SigilData abilityData)
     {
         this.abilityData = abilityData;
+
+        abilityBehaviours = new Dictionary<string, List<AbilityBehaviourData>>();
+        for (var i = 0; i < abilityData.abilityBehaviour.Count; i++)
+        {
+            var behaviourData = abilityData.abilityBehaviour[i];
+            string triggerType = behaviourData.trigger?.triggerType;
+            if (string.IsNullOrEmpty(triggerType))
+            {
+                Plugin.Log.LogError($"AbilityBehaviourData {i} has no triggerType {abilityData.name.EnglishValue}!");
+                continue;
+            }
+
+            if (!abilityBehaviours.ContainsKey(triggerType))
+            {
+                abilityBehaviours[triggerType] = new List<AbilityBehaviourData>();
+            }
+
+            abilityBehaviours[triggerType].Add(behaviourData);
+        }
     }
     
 
@@ -117,7 +137,7 @@ public abstract class ABaseConfigilLogic
 
     public bool RespondsToOtherCardResolve(PlayableCard otherCard)
     {
-        return true;
+        return abilityBehaviours.ContainsKey("OnDetect") || abilityBehaviours.ContainsKey("OnResolveOnBoard");
     }
 
     public IEnumerator OnOtherCardResolve(PlayableCard otherCard)
@@ -132,7 +152,7 @@ public abstract class ABaseConfigilLogic
 
     public bool RespondsToOtherCardAssignedToSlot(PlayableCard otherCard)
     {
-        return true;
+        return abilityBehaviours.ContainsKey("OnDetect");
     }
 
     // Token: 0x0600157B RID: 5499 RVA: 0x000497BE File Offset: 0x000479BE
@@ -146,7 +166,9 @@ public abstract class ABaseConfigilLogic
 
     public bool RespondsToTurnEnd(bool playerTurnEnd)
     {
-        return true;
+        return abilityBehaviours.ContainsKey("OnPlayerEndOfTurn") || 
+               abilityBehaviours.ContainsKey("OnOpponentEndOfTurn") || 
+               abilityBehaviours.ContainsKey("OnEndOfTurn");
     }
 
     public IEnumerator OnTurnEnd(bool playerTurnEnd)
@@ -172,7 +194,9 @@ public abstract class ABaseConfigilLogic
 
     public bool RespondsToUpkeep(bool playerUpkeep)
     {
-        return true;
+        return abilityBehaviours.ContainsKey("OnPlayerStartOfTurn") || 
+               abilityBehaviours.ContainsKey("OnOpponentStartOfTurn") || 
+               abilityBehaviours.ContainsKey("OnStartOfTurn");
     }
 
     public IEnumerator OnUpkeep(bool playerUpkeep)
@@ -194,7 +218,9 @@ public abstract class ABaseConfigilLogic
 
     public bool RespondsToOtherCardDealtDamage(PlayableCard attacker, int amount, PlayableCard target)
     {
-        return true;
+        return abilityBehaviours.ContainsKey("OnStruck") || 
+               abilityBehaviours.ContainsKey("OnDamage") || 
+               abilityBehaviours.ContainsKey("OnHealthLevel");
     }
 
     public IEnumerator OnOtherCardDealtDamage(PlayableCard attacker, int amount, PlayableCard target)
@@ -228,7 +254,8 @@ public abstract class ABaseConfigilLogic
 
     public bool RespondsToOtherCardDie(PlayableCard card, CardSlot deathSlot, bool fromCombat, PlayableCard killer)
     {
-        return true;
+        return abilityBehaviours.ContainsKey("OnDie") || 
+               abilityBehaviours.ContainsKey("OnKill");
     }
 
     public IEnumerator OnOtherCardDie(PlayableCard card, CardSlot deathSlot, bool fromCombat, PlayableCard killer)
@@ -246,7 +273,7 @@ public abstract class ABaseConfigilLogic
 
     public bool RespondsToSacrifice()
     {
-        return true;
+        return abilityBehaviours.ContainsKey("OnSacrifice");
     }
 
     // Token: 0x06001553 RID: 5459 RVA: 0x000494CF File Offset: 0x000476CF
@@ -257,7 +284,8 @@ public abstract class ABaseConfigilLogic
 
     public bool RespondsToOtherCardPreDeath(CardSlot deathSlot, bool fromCombat, PlayableCard killer)
     {
-        return fromCombat;
+        return fromCombat && abilityBehaviours.ContainsKey("OnPreDeath") || 
+               abilityBehaviours.ContainsKey("OnPreKill");
     }
 
     // Token: 0x06001B49 RID: 6985 RVA: 0x0005A16A File Offset: 0x0005836A
@@ -273,7 +301,7 @@ public abstract class ABaseConfigilLogic
 
     public bool RespondsToSlotTargetedForAttack(CardSlot slot, PlayableCard attacker)
     {
-        return true;
+        return abilityBehaviours.ContainsKey("OnAttack");
     }
 
     public IEnumerator OnSlotTargetedForAttack(CardSlot slot, PlayableCard attacker)
@@ -283,7 +311,8 @@ public abstract class ABaseConfigilLogic
 
     public bool RespondsToBellRung(bool playerCombatPhase)
     {
-        return true;
+        return abilityBehaviours.ContainsKey("OnCombatStart") || 
+               abilityBehaviours.ContainsKey("OnEnemyCombatStart");
     }
 
     public IEnumerator OnBellRung(bool playerCombatPhase)
@@ -303,7 +332,7 @@ public abstract class ABaseConfigilLogic
 
     public bool RespondsToOtherCardAddedToHand(PlayableCard card)
     {
-        return true;
+        return abilityBehaviours.ContainsKey("OnAddedToHand");
     }
 
     public IEnumerator OnOtherCardAddedToHand(PlayableCard card)
@@ -313,7 +342,7 @@ public abstract class ABaseConfigilLogic
 
     public bool RespondsToCardAssignedToSlotContext(PlayableCard card, CardSlot oldSlot, CardSlot newSlot)
     {
-        return true;
+        return abilityBehaviours.ContainsKey("OnMove");
     }
 
     public IEnumerator OnCardAssignedToSlotContext(PlayableCard card, CardSlot oldSlot, CardSlot newSlot)
@@ -326,7 +355,7 @@ public abstract class ABaseConfigilLogic
 
     public bool RespondsToCardDealtDamageDirectly(PlayableCard attacker, CardSlot opposingSlot, int damage)
     {
-        return true;
+        return abilityBehaviours.ContainsKey("OnDamageDirectly");
     }
 
     public IEnumerator OnCardDealtDamageDirectly(PlayableCard attacker, CardSlot opposingSlot, int damage)
@@ -337,19 +366,13 @@ public abstract class ABaseConfigilLogic
     public IEnumerator TriggerSigil(string trigger, Dictionary<string, object> variableList = null,
         PlayableCard cardToCheck = null)
     {
-        foreach (AbilityBehaviourData behaviourData in abilityData.abilityBehaviour)
+        if (!abilityBehaviours.TryGetValue(trigger, out List<AbilityBehaviourData> behaviours))
         {
-            if (behaviourData.trigger?.triggerType == null)
-            {
-                continue;
-            }
-
-            //Plugin.Log.LogInfo($"{behaviourData.trigger.triggerType}, {trigger}");
-            if (behaviourData.trigger.triggerType != trigger)
-            {
-                continue;
-            }
-
+            yield break;
+        }
+        
+        foreach (AbilityBehaviourData behaviourData in behaviours)
+        {
             if (behaviourData.trigger.activatesForCardsWithCondition != null && cardToCheck == null)
             {
                 foreach (PlayableCard card in Singleton<BoardManager>.Instance.AllSlots.Select(x => x.Card).OfType<PlayableCard>().ToList())
@@ -364,8 +387,7 @@ public abstract class ABaseConfigilLogic
         }
     }
 
-    public IEnumerator TriggerBehaviour(AbilityBehaviourData behaviourData,
-        Dictionary<string, object> variableList = null, PlayableCard cardToCheck = null)
+    public IEnumerator TriggerBehaviour(AbilityBehaviourData behaviourData, Dictionary<string, object> variableList = null, PlayableCard cardToCheck = null)
     {
         //this is to prevent errors relating to the sigil trying to access
         //the card that it's on after it has been removed from said card
@@ -407,22 +429,21 @@ public abstract class ABaseConfigilLogic
         yield return SigilData.RunActions(behaviourData, PlayableCard, ability);
     }
 
-    public bool CheckCard(ref AbilityBehaviourData behaviourData, PlayableCard Card)
+    private bool CheckCard(ref AbilityBehaviourData behaviourData, PlayableCard card)
     {
-        behaviourData.generatedVariables["TriggerCard"] = Card;
-        string condition =
-            SigilData.ConvertArgument(behaviourData.trigger?.activatesForCardsWithCondition, behaviourData);
+        behaviourData.generatedVariables["TriggerCard"] = card;
+        string condition = SigilData.ConvertArgument(behaviourData.trigger?.activatesForCardsWithCondition, behaviourData);
         return condition == "true";
     }
 
     public bool CanActivate()
     {
-        AbilityBehaviourData behaviourData = abilityData.abilityBehaviour.Where(x => x.trigger?.triggerType == "OnActivate").ToList()[0];
-        if (behaviourData == null)
+        if (!abilityBehaviours.TryGetValue("OnActivate", out List<AbilityBehaviourData> onActivateBehaviours))
         {
             return false;
         }
-
+        
+        AbilityBehaviourData behaviourData = onActivateBehaviours[0];
         SigilData.UpdateVariables(behaviourData, PlayableCard);
         return (SigilData.ConvertArgument(behaviourData.trigger?.activatesForCardsWithCondition, behaviourData) ?? "true") == "true";
     }
