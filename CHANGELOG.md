@@ -1,3 +1,7 @@
+## 2.5.4
+- made it so JSONLoader now loads files that end in "_example.jldr2"
+- made it so JSONLoader now ignores the "Examples" folder instead of the whole JSONLoader folder
+
 ## 2.5.3
 - fixed abilityLearnedDialogue
 - rewrote buffCards (again) to make it cleaner and work faster

@@ -1,6 +1,6 @@
 {
 	"name": "JSONCardLoader",
-	"version_number": "2.5.3",
+	"version_number": "2.5.4",
 	"website_url": "https://github.com/MADH95/JSONCardLoaderPlugin",
 	"description": "A mod made for Incryption to create custom cards, sigils, starter decks, tribes, encounters and more using JSON files.",
 	"dependencies": [
