@@ -36,6 +36,12 @@ public abstract class ABaseConfigilLogic
                 continue;
             }
 
+            // Some trigger types have arguments after them. This is to catch just the trigger type.
+            if (triggerType.StartsWith("OnHealthLevel"))
+            {
+                triggerType = "OnHealthLevel";
+            }
+            
             if (!abilityBehaviours.ContainsKey(triggerType))
             {
                 abilityBehaviours[triggerType] = new List<AbilityBehaviourData>();
@@ -225,21 +231,14 @@ public abstract class ABaseConfigilLogic
 
     public IEnumerator OnOtherCardDealtDamage(PlayableCard attacker, int amount, PlayableCard target)
     {
-        foreach (AbilityBehaviourData behaviourData in abilityData.abilityBehaviour)
+        if (abilityBehaviours.TryGetValue("OnHealthLevel", out List<AbilityBehaviourData> healthLevelBehaviours))
         {
-            if (behaviourData.trigger?.triggerType == null)
+            foreach (AbilityBehaviourData behaviourData in healthLevelBehaviours)
             {
-                continue;
-            }
-
-            if (!behaviourData.trigger.triggerType.Contains("OnHealthLevel"))
-            {
-                continue;
-            }
-
-            MatchCollection OnHealthLevelMatch = Regex.Matches(behaviourData.trigger?.triggerType, @"OnHealthLevel\((.*?)\)");
-            if (OnHealthLevelMatch.Cast<Match>().ToList().Count > 0)
-            {
+                MatchCollection OnHealthLevelMatch = Regex.Matches(behaviourData.trigger.triggerType, @"OnHealthLevel\((.*?)\)");
+                if (OnHealthLevelMatch.Cast<Match>().ToList().Count <= 0) 
+                    continue;
+                
                 int healthLevel = int.Parse(OnHealthLevelMatch.Cast<Match>().ToList()[0].Groups[1].Value);
                 if (target.Health <= healthLevel)
                 {
