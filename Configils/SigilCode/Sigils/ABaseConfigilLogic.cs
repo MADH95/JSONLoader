@@ -18,8 +18,8 @@ public abstract class ABaseConfigilLogic
     public abstract Card Card { get; }
     public abstract IEnumerator LearnAbility(float startDelay = 0.0f);
     
-    private SigilData abilityData;
-    private Dictionary<string, List<AbilityBehaviourData>> abilityBehaviours;
+    private readonly SigilData abilityData;
+    private readonly Dictionary<string, List<AbilityBehaviourData>> abilityBehaviours;
 
     public ABaseConfigilLogic(SigilData abilityData)
     {
@@ -243,13 +243,13 @@ public abstract class ABaseConfigilLogic
                 int healthLevel = int.Parse(OnHealthLevelMatch.Cast<Match>().ToList()[0].Groups[1].Value);
                 if (target.Health <= healthLevel)
                 {
-                    yield return TriggerBehaviour(behaviourData, new Dictionary<string, object>() { ["AttackerCard"] = attacker }, target);
+                    yield return TriggerBehaviour(behaviourData, ("AttackerCard", attacker), target);
                 }
             }
         }
 
-        yield return TriggerSigil("OnStruck", new Dictionary<string, object>() { ["AttackerCard"] = attacker, ["DamageAmount"] = amount }, target);
-        yield return TriggerSigil("OnDamage", new Dictionary<string, object>() { ["VictimCard"] = target, ["DamageAmount"] = amount }, attacker);
+        yield return TriggerSigil("OnStruck", ("AttackerCard", attacker, "DamageAmount", amount), target);
+        yield return TriggerSigil("OnDamage", ("VictimCard", target, "DamageAmount", amount), attacker);
     }
 
     public bool RespondsToOtherCardDie(PlayableCard card, CardSlot deathSlot, bool fromCombat, PlayableCard killer)
@@ -263,10 +263,10 @@ public abstract class ABaseConfigilLogic
         yield return new WaitForSeconds(0.3f);
         if (fromCombat)
         {
-            yield return TriggerSigil("OnDie", new Dictionary<string, object>() { ["AttackerCard"] = killer, ["DeathSlot"] = deathSlot }, card);
+            yield return TriggerSigil("OnDie", ("AttackerCard", killer, "DeathSlot", deathSlot), card);
             if (killer != null)
             {
-                yield return TriggerSigil("OnKill", new Dictionary<string, object>() { ["VictimCard"] = card, ["DeathSlot"] = deathSlot }, killer);
+                yield return TriggerSigil("OnKill", ("VictimCard",card, "DeathSlot", deathSlot), killer);
             }
         }
     }
@@ -279,13 +279,13 @@ public abstract class ABaseConfigilLogic
     // Token: 0x06001553 RID: 5459 RVA: 0x000494CF File Offset: 0x000476CF
     public IEnumerator OnSacrifice()
     {
-        yield return TriggerSigil("OnSacrifice", new Dictionary<string, object>() { ["SacrificeTargetCard"] = Singleton<BoardManager>.Instance.CurrentSacrificeDemandingCard });
+        yield return TriggerSigil("OnSacrifice", ("SacrificeTargetCard", Singleton<BoardManager>.Instance.CurrentSacrificeDemandingCard));
     }
 
     public bool RespondsToOtherCardPreDeath(CardSlot deathSlot, bool fromCombat, PlayableCard killer)
     {
-        return fromCombat && abilityBehaviours.ContainsKey("OnPreDeath") || 
-               abilityBehaviours.ContainsKey("OnPreKill");
+        return fromCombat && 
+               (abilityBehaviours.ContainsKey("OnPreDeath") || abilityBehaviours.ContainsKey("OnPreKill"));
     }
 
     // Token: 0x06001B49 RID: 6985 RVA: 0x0005A16A File Offset: 0x0005836A
@@ -293,10 +293,10 @@ public abstract class ABaseConfigilLogic
     {
         if (deathSlot.Card != null)
         {
-            yield return TriggerSigil("OnPreDeath", new Dictionary<string, object>() { ["AttackerCard"] = killer, ["DeathSlot"] = deathSlot }, deathSlot.Card);
+            yield return TriggerSigil("OnPreDeath", ("AttackerCard", killer, "DeathSlot", deathSlot), deathSlot.Card);
         }
 
-        yield return TriggerSigil("OnPreKill", new Dictionary<string, object>() { ["VictimCard"] = deathSlot.Card, ["DeathSlot"] = deathSlot }, killer);
+        yield return TriggerSigil("OnPreKill", ("VictimCard", deathSlot.Card, "DeathSlot", deathSlot), killer);
     }
 
     public bool RespondsToSlotTargetedForAttack(CardSlot slot, PlayableCard attacker)
@@ -306,7 +306,7 @@ public abstract class ABaseConfigilLogic
 
     public IEnumerator OnSlotTargetedForAttack(CardSlot slot, PlayableCard attacker)
     {
-        yield return TriggerSigil("OnAttack", new Dictionary<string, object>() { ["HitSlot"] = slot }, attacker);
+        yield return TriggerSigil("OnAttack", ("HitSlot", slot), attacker);
     }
 
     public bool RespondsToBellRung(bool playerCombatPhase)
@@ -349,7 +349,7 @@ public abstract class ABaseConfigilLogic
     {
         if (oldSlot != null)
         {
-            yield return TriggerSigil("OnMove", new Dictionary<string, object>() { ["OldSlot"] = oldSlot }, card);
+            yield return TriggerSigil("OnMove", ("OldSlot", oldSlot), card);
         }
     }
 
@@ -360,11 +360,10 @@ public abstract class ABaseConfigilLogic
 
     public IEnumerator OnCardDealtDamageDirectly(PlayableCard attacker, CardSlot opposingSlot, int damage)
     {
-        yield return TriggerSigil("OnDamageDirectly", new Dictionary<string, object>() { ["HitSlot"] = opposingSlot, ["DamageAmount"] = damage }, attacker);
+        yield return TriggerSigil("OnDamageDirectly", ("HitSlot", opposingSlot, "DamageAmount", damage), attacker);
     }
 
-    public IEnumerator TriggerSigil(string trigger, Dictionary<string, object> variableList = null,
-        PlayableCard cardToCheck = null)
+    public IEnumerator TriggerSigil(string trigger, TriggerVariables variableList = null, PlayableCard cardToCheck = null)
     {
         if (!abilityBehaviours.TryGetValue(trigger, out List<AbilityBehaviourData> behaviours))
         {
@@ -387,7 +386,7 @@ public abstract class ABaseConfigilLogic
         }
     }
 
-    public IEnumerator TriggerBehaviour(AbilityBehaviourData behaviourData, Dictionary<string, object> variableList = null, PlayableCard cardToCheck = null)
+    public IEnumerator TriggerBehaviour(AbilityBehaviourData behaviourData, TriggerVariables variableList = null, PlayableCard cardToCheck = null)
     {
         //this is to prevent errors relating to the sigil trying to access
         //the card that it's on after it has been removed from said card
