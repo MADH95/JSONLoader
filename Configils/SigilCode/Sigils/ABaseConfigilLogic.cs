@@ -72,7 +72,6 @@ public abstract class ABaseConfigilLogic
         }
 
         yield return TriggerSigil("OnActivate");
-        yield break;
     }
 
 
@@ -136,7 +135,6 @@ public abstract class ABaseConfigilLogic
         }
 
         yield return TriggerSigil("OnResolveOnBoard", null, otherCard);
-        yield break;
     }
 
     public bool RespondsToOtherCardAssignedToSlot(PlayableCard otherCard)
@@ -151,8 +149,6 @@ public abstract class ABaseConfigilLogic
         {
             yield return TriggerSigil("OnDetect", null, otherCard.Slot.opposingSlot.Card);
         }
-
-        yield break;
     }
 
     public bool RespondsToTurnEnd(bool playerTurnEnd)
@@ -179,7 +175,6 @@ public abstract class ABaseConfigilLogic
             }
             yield return TriggerSigil("OnEndOfTurn");
         }
-        yield break;
     }
 
     public bool RespondsToUpkeep(bool playerUpkeep)
@@ -202,8 +197,6 @@ public abstract class ABaseConfigilLogic
         {
             yield return TriggerSigil("OnStartOfTurn");
         }
-
-        yield break;
     }
 
     public bool RespondsToOtherCardDealtDamage(PlayableCard attacker, int amount, PlayableCard target)
@@ -263,8 +256,6 @@ public abstract class ABaseConfigilLogic
                     new Dictionary<string, object>() { ["VictimCard"] = card, ["DeathSlot"] = deathSlot }, killer);
             }
         }
-
-        yield break;
     }
 
     public bool RespondsToSacrifice()
@@ -298,7 +289,6 @@ public abstract class ABaseConfigilLogic
 
         yield return TriggerSigil("OnPreKill",
             new Dictionary<string, object>() { ["VictimCard"] = deathSlot.Card, ["DeathSlot"] = deathSlot }, killer);
-        yield break;
     }
 
     public bool RespondsToSlotTargetedForAttack(CardSlot slot, PlayableCard attacker)
@@ -309,7 +299,6 @@ public abstract class ABaseConfigilLogic
     public IEnumerator OnSlotTargetedForAttack(CardSlot slot, PlayableCard attacker)
     {
         yield return TriggerSigil("OnAttack", new Dictionary<string, object>() { ["HitSlot"] = slot }, attacker);
-        yield break;
     }
 
     public bool RespondsToBellRung(bool playerCombatPhase)
@@ -330,8 +319,6 @@ public abstract class ABaseConfigilLogic
             //Plugin.Log.LogInfo("OPPONENT COMBAT STARTED");
             yield return TriggerSigil("OnEnemyCombatStart");
         }
-
-        yield break;
     }
 
     public bool RespondsToOtherCardAddedToHand(PlayableCard card)
@@ -342,7 +329,6 @@ public abstract class ABaseConfigilLogic
     public IEnumerator OnOtherCardAddedToHand(PlayableCard card)
     {
         yield return TriggerSigil("OnAddedToHand", null, card);
-        yield break;
     }
 
     public bool RespondsToCardAssignedToSlotContext(PlayableCard card, CardSlot oldSlot, CardSlot newSlot)
@@ -356,8 +342,6 @@ public abstract class ABaseConfigilLogic
         {
             yield return TriggerSigil("OnMove", new Dictionary<string, object>() { ["OldSlot"] = oldSlot }, card);
         }
-
-        yield break;
     }
 
     public bool RespondsToCardDealtDamageDirectly(PlayableCard attacker, CardSlot opposingSlot, int damage)
@@ -400,8 +384,6 @@ public abstract class ABaseConfigilLogic
                 yield return TriggerBehaviour(behaviourData, variableList, cardToCheck ?? PlayableCard);
             }
         }
-
-        yield break;
     }
 
     public IEnumerator TriggerBehaviour(AbilityBehaviourData behaviourData,
@@ -445,7 +427,6 @@ public abstract class ABaseConfigilLogic
 
         yield return LearnAbility(0f);
         yield return SigilData.RunActions(behaviourData, PlayableCard, ability);
-        yield break;
     }
 
     public bool CheckCard(ref AbilityBehaviourData behaviourData, PlayableCard Card)
