@@ -15,7 +15,9 @@ namespace JLPlugin.Data
 {
     using InscryptionAPI.Card;
     using InscryptionAPI.Helpers;
+    using JSONLoader.API;
     using SigilCode;
+    using System.Reflection.Emit;
     using static InscryptionAPI.Card.SpecialTriggeredAbilityManager;
     using SigilTuple = Tuple<Type, SigilData>;
 
@@ -122,6 +124,7 @@ namespace JLPlugin.Data
                 files.RemoveAt(index--);
 
                 Plugin.VerboseLog($"Loading JLDR2 (sigil) {filename}");
+
                 SigilData sigilInfo = JSONParser.FromJson<SigilData>(File.ReadAllText(file));
                 sigilInfo.GenerateNew();
                 Plugin.VerboseLog($"Loaded JSON sigil {sigilInfo.name}");
@@ -200,7 +203,8 @@ namespace JLPlugin.Data
             "buffCards",
             "moveCards",
             "damageSlots",
-            "attackSlots"
+            "attackSlots",
+            "customActions"
         };
 
         /* the delays in runactions() seem misplaced! removing them seems to help a lot with the
@@ -350,6 +354,11 @@ namespace JLPlugin.Data
                         }
                         break;
 
+                    case nameof(AbilityBehaviourData.customActions):
+
+                        yield return customActions.runCustomActions(abilitydata);
+                        break;
+
                     default:
                         break;
                 }
@@ -382,6 +391,7 @@ namespace JLPlugin.Data
                 { "ScaleBalance", Singleton<LifeManager>.Instance.Balance.ToString() }
             };
             abilitydata.variables.Append(VariableDictionary);
+            abilitydata.variables = JSONLoaderAPI.GetModifiedVariableList(abilitydata.variables);
 
             Dictionary<string, object> GeneratedVariableDictionary = new Dictionary<string, object>()
             {
