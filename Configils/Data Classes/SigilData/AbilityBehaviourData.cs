@@ -22,6 +22,7 @@ namespace JLPlugin.Data
         public List<attackSlots> attackSlots;
         public List<extraAttacks> extraAttacks;
         public messageData showMessage;
+        public Dictionary<string, List<Dictionary<string, string>>> customActions;
 
         public Dictionary<string, string> variables;
         public Dictionary<string, object> generatedVariables;
