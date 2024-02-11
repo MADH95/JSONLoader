@@ -26,9 +26,8 @@ namespace JLPlugin.SigilCode
 
             if ((!__instance.triggeredAbilities.Exists((Tuple<Ability, AbilityBehaviour> x) => x.Item1 == ability) || AbilitiesUtil.GetInfo(ability).canStack) && !AbilitiesUtil.GetInfo(ability).passive)
             {
-                ConfigurableBase configil = __instance.gameObject.AddComponent(SigilType) as ConfigurableBase;
-                configil.abilityData = SigilData.GetAbilityArguments(ability);
-                configil.ability = ability;
+                ConfigurableMain configil = __instance.gameObject.AddComponent(SigilType) as ConfigurableMain;
+                configil.Initialize(SigilData.GetAbilityArguments(ability), ability);
                 __instance.triggeredAbilities.Add(new Tuple<Ability, AbilityBehaviour>(ability, configil));
             }
             return false;
