@@ -9,6 +9,30 @@ namespace JSONLoader.API
 {
     public static class JSONLoaderAPI
     {
+        public class ConfigilAction
+        {
+            public string actionName { get; set; }
+            public List<string> fields { get; set; }
+            public Action<Dictionary<string, string>> functionToCall { get; set; }
+        }
+
+        public static List<ConfigilAction> customActionList = new List<ConfigilAction>();
+        public static void AddAction(ConfigilAction action)
+        {
+            customActionList.Add(action);
+        }
+
+        public static void AddActions(List<ConfigilAction> actions)
+        {
+            customActionList.AddRange(actions);
+        }
+
+        public static event Func<Dictionary<string, string>, Dictionary<string, string>> ModifyVariableList;
+
+        public static Dictionary<string, string> GetModifiedVariableList(Dictionary<string, string> variables)
+        {
+            return ModifyVariableList(variables);
+        }
 
         public static void AddCard(string json) { AddCards(json); }
 
