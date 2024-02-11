@@ -31,15 +31,13 @@ public abstract class ABaseConfigilLogic
         int BloodCost = abilityData.activationCost?.bloodCost ?? 0;
         if (BloodCost > 0)
         {
-            List<CardSlot> occupiedSlots =
-                Singleton<BoardManager>.Instance.PlayerSlotsCopy.FindAll((CardSlot x) =>
-                    x.Card != null && x.Card != PlayableCard);
+            List<CardSlot> occupiedSlots = Singleton<BoardManager>.Instance.PlayerSlotsCopy.FindAll(x => x.Card != null && x.Card != PlayableCard);
 
             if (Singleton<BoardManager>.Instance != null &&
                 Singleton<BoardManager>.Instance.AvailableSacrificeValueInSlots(occupiedSlots) >= BloodCost)
             {
                 Singleton<BoardManager>.Instance.CancelledSacrifice = false;
-                yield return SacrificeHelper.ChooseSacrificesForCard(Singleton<BoardManager>.Instance, occupiedSlots,
+                yield return Singleton<BoardManager>.Instance.ChooseSacrificesForCard(occupiedSlots,
                     PlayableCard, BloodCost);
                 if (Singleton<BoardManager>.Instance.CancelledSacrifice)
                 {
@@ -49,23 +47,19 @@ public abstract class ABaseConfigilLogic
             else
             {
                 PlayableCard.Anim.LightNegationEffect();
-                AudioController.Instance.PlaySound2D("toneless_negate", MixerGroup.GBCSFX, 0.2f, 0f, null, null, null,
-                    null, false);
+                AudioController.Instance.PlaySound2D("toneless_negate", MixerGroup.GBCSFX, 0.2f);
                 yield return new WaitForSeconds(0.25f);
                 yield break;
             }
         }
 
-        List<GemType> GemCost =
-            abilityData.activationCost?.gemsCost?.Select(s => ImportExportUtils.ParseEnum<GemType>(s)).ToList() ??
-            new List<GemType>();
+        var GemCost = abilityData.activationCost?.gemsCost?.Select(ImportExportUtils.ParseEnum<GemType>).ToList() ?? new List<GemType>();
         foreach (GemType Gem in GemCost)
         {
             if (!Singleton<ResourcesManager>.Instance.HasGem(Gem))
             {
                 PlayableCard.Anim.LightNegationEffect();
-                AudioController.Instance.PlaySound2D("toneless_negate", MixerGroup.GBCSFX, 0.2f, 0f, null, null, null,
-                    null, false);
+                AudioController.Instance.PlaySound2D("toneless_negate", MixerGroup.GBCSFX, 0.2f);
                 yield return new WaitForSeconds(0.25f);
                 yield break;
             }
@@ -107,8 +101,7 @@ public abstract class ABaseConfigilLogic
                     foreach (KeyValuePair<string, string> property in cardinfo.extensionProperties)
                     {
                         if (Regex.Matches(property.Key, $"variable: {Interpreter.RegexStrings.Variable}") is var
-                                variables
-                            && variables.Cast<Match>().Any(variables => variables.Success))
+                                variables && variables.Cast<Match>().Any(v => v.Success))
                         {
                             behaviourData.variables[variables[0].Groups[1].Value] = property.Value;
                         }
@@ -218,24 +211,19 @@ public abstract class ABaseConfigilLogic
                 continue;
             }
 
-            MatchCollection OnHealthLevelMatch =
-                Regex.Matches(behaviourData.trigger?.triggerType, @"OnHealthLevel\((.*?)\)");
+            MatchCollection OnHealthLevelMatch = Regex.Matches(behaviourData.trigger?.triggerType, @"OnHealthLevel\((.*?)\)");
             if (OnHealthLevelMatch.Cast<Match>().ToList().Count > 0)
             {
                 int healthLevel = int.Parse(OnHealthLevelMatch.Cast<Match>().ToList()[0].Groups[1].Value);
                 if (target.Health <= healthLevel)
                 {
-                    yield return TriggerBehaviour(behaviourData,
-                        new Dictionary<string, object>() { ["AttackerCard"] = attacker }, target);
+                    yield return TriggerBehaviour(behaviourData, new Dictionary<string, object>() { ["AttackerCard"] = attacker }, target);
                 }
             }
         }
 
-        yield return TriggerSigil("OnStruck",
-            new Dictionary<string, object>() { ["AttackerCard"] = attacker, ["DamageAmount"] = amount }, target);
-        yield return TriggerSigil("OnDamage",
-            new Dictionary<string, object>() { ["VictimCard"] = target, ["DamageAmount"] = amount }, attacker);
-        yield break;
+        yield return TriggerSigil("OnStruck", new Dictionary<string, object>() { ["AttackerCard"] = attacker, ["DamageAmount"] = amount }, target);
+        yield return TriggerSigil("OnDamage", new Dictionary<string, object>() { ["VictimCard"] = target, ["DamageAmount"] = amount }, attacker);
     }
 
     public bool RespondsToOtherCardDie(PlayableCard card, CardSlot deathSlot, bool fromCombat, PlayableCard killer)
@@ -248,12 +236,10 @@ public abstract class ABaseConfigilLogic
         yield return new WaitForSeconds(0.3f);
         if (fromCombat)
         {
-            yield return TriggerSigil("OnDie",
-                new Dictionary<string, object>() { ["AttackerCard"] = killer, ["DeathSlot"] = deathSlot }, card);
+            yield return TriggerSigil("OnDie", new Dictionary<string, object>() { ["AttackerCard"] = killer, ["DeathSlot"] = deathSlot }, card);
             if (killer != null)
             {
-                yield return TriggerSigil("OnKill",
-                    new Dictionary<string, object>() { ["VictimCard"] = card, ["DeathSlot"] = deathSlot }, killer);
+                yield return TriggerSigil("OnKill", new Dictionary<string, object>() { ["VictimCard"] = card, ["DeathSlot"] = deathSlot }, killer);
             }
         }
     }
@@ -266,10 +252,7 @@ public abstract class ABaseConfigilLogic
     // Token: 0x06001553 RID: 5459 RVA: 0x000494CF File Offset: 0x000476CF
     public IEnumerator OnSacrifice()
     {
-        yield return TriggerSigil("OnSacrifice",
-            new Dictionary<string, object>()
-                { ["SacrificeTargetCard"] = Singleton<BoardManager>.Instance.CurrentSacrificeDemandingCard });
-        yield break;
+        yield return TriggerSigil("OnSacrifice", new Dictionary<string, object>() { ["SacrificeTargetCard"] = Singleton<BoardManager>.Instance.CurrentSacrificeDemandingCard });
     }
 
     public bool RespondsToOtherCardPreDeath(CardSlot deathSlot, bool fromCombat, PlayableCard killer)
@@ -282,13 +265,10 @@ public abstract class ABaseConfigilLogic
     {
         if (deathSlot.Card != null)
         {
-            yield return TriggerSigil("OnPreDeath",
-                new Dictionary<string, object>() { ["AttackerCard"] = killer, ["DeathSlot"] = deathSlot },
-                deathSlot.Card);
+            yield return TriggerSigil("OnPreDeath", new Dictionary<string, object>() { ["AttackerCard"] = killer, ["DeathSlot"] = deathSlot }, deathSlot.Card);
         }
 
-        yield return TriggerSigil("OnPreKill",
-            new Dictionary<string, object>() { ["VictimCard"] = deathSlot.Card, ["DeathSlot"] = deathSlot }, killer);
+        yield return TriggerSigil("OnPreKill", new Dictionary<string, object>() { ["VictimCard"] = deathSlot.Card, ["DeathSlot"] = deathSlot }, killer);
     }
 
     public bool RespondsToSlotTargetedForAttack(CardSlot slot, PlayableCard attacker)
@@ -351,8 +331,7 @@ public abstract class ABaseConfigilLogic
 
     public IEnumerator OnCardDealtDamageDirectly(PlayableCard attacker, CardSlot opposingSlot, int damage)
     {
-        yield return TriggerSigil("OnDamageDirectly",
-            new Dictionary<string, object>() { ["HitSlot"] = opposingSlot, ["DamageAmount"] = damage }, attacker);
+        yield return TriggerSigil("OnDamageDirectly", new Dictionary<string, object>() { ["HitSlot"] = opposingSlot, ["DamageAmount"] = damage }, attacker);
     }
 
     public IEnumerator TriggerSigil(string trigger, Dictionary<string, object> variableList = null,
@@ -373,8 +352,7 @@ public abstract class ABaseConfigilLogic
 
             if (behaviourData.trigger.activatesForCardsWithCondition != null && cardToCheck == null)
             {
-                foreach (PlayableCard card in Singleton<BoardManager>.Instance.AllSlots.Select(x => x.Card)
-                             .OfType<PlayableCard>().ToList())
+                foreach (PlayableCard card in Singleton<BoardManager>.Instance.AllSlots.Select(x => x.Card).OfType<PlayableCard>().ToList())
                 {
                     yield return TriggerBehaviour(behaviourData, variableList, card);
                 }
