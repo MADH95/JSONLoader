@@ -464,13 +464,18 @@ namespace TinyJson
                         }
                         else
                         {
-                            LogError($"{key} field not found for {type}. Could not find a field with a similar name!");
+                            LogWarning($"{key} field not found for {type}. Could not find a field with a similar name. Are you sure you need this field?");
                         }
                     }
                 }
             }
 
             return instance;
+        }
+
+        private static void LogWarning(string message)
+        {
+            Plugin.Log.LogWarning($"[{LogPrefix}] {message}");
         }
 
         private static void LogError(string message)
