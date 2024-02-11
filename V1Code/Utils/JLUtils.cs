@@ -26,7 +26,7 @@ namespace JLPlugin.Utils
 
                 files.RemoveAt(index);
 
-                CardData card = File.ReadAllText(file).FromJson<CardData>();
+                CardData card = JSONParser.FromFilePath<CardData>(file);
                 if (card == null)
                 {
                     Plugin.Log.LogWarning($"Failed to load {filename}");

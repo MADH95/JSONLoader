@@ -58,7 +58,7 @@ namespace JSONLoader.V2Code
                 files.RemoveAt(index--);
                 
                 Plugin.VerboseLog($"Loading JLDR2 (language) {filename}");
-                LanguageData languageInfo = JSONParser.FromJson<LanguageData>(File.ReadAllText(file));
+                LanguageData languageInfo = JSONParser.FromFilePath<LanguageData>(file);
 
                 string stringTablePath = languageInfo.stringTablePath;
                 if (!TryGetFullPath(stringTablePath, out stringTablePath))

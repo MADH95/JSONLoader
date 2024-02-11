@@ -38,7 +38,7 @@ namespace JLPlugin.Data
                 files.RemoveAt(index--);
 
                 Plugin.VerboseLog($"Loading JLDR2 (tribes) {filename}");
-                TribeList tribeInfo = JSONParser.FromJson<TribeList>(File.ReadAllText(file));
+                TribeList tribeInfo = JSONParser.FromFilePath<TribeList>(file);
 
                 foreach (TribeInfo tribedata in tribeInfo.tribes)
                 {

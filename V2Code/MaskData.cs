@@ -37,7 +37,7 @@ namespace JSONLoader.V2Code
                 files.RemoveAt(index--);
                 
                 Plugin.VerboseLog($"Loading JLDR2 (mask) {filename}");
-                MaskData mask = JSONParser.FromJson<MaskData>(File.ReadAllText(file));
+                MaskData mask = JSONParser.FromFilePath<MaskData>(file);
 
                 LeshyAnimationController.Mask? bossType = GetMask(mask.maskType);
                 if (!bossType.HasValue)

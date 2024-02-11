@@ -26,8 +26,8 @@ namespace JLPlugin.SigilCode
 
             if (!__instance.specialAbilities.Exists((Tuple<SpecialTriggeredAbility, SpecialCardBehaviour> x) => x.Item1 == ability))
             {
-                ConfigurableSpecialBase specialConfigil = __instance.gameObject.AddComponent(SigilType) as ConfigurableSpecialBase;
-                specialConfigil.abilityData = SigilData.GetAbilityArguments(ability);
+                ConfigurableSpecial specialConfigil = __instance.gameObject.AddComponent(SigilType) as ConfigurableSpecial;
+                specialConfigil.Initialize(SigilData.GetAbilityArguments(ability), ability);
                 __instance.specialAbilities.Add(new Tuple<SpecialTriggeredAbility, SpecialCardBehaviour>(ability, specialConfigil));
             }
             return false;

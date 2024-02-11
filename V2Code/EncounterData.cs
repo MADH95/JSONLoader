@@ -149,7 +149,7 @@ namespace JLPlugin.Data
                 
                 files.RemoveAt(index--);
                 
-                EncounterInfo encounterInfo = JSONParser.FromJson<EncounterInfo>(File.ReadAllText(file));
+                EncounterInfo encounterInfo = JSONParser.FromFilePath<EncounterInfo>(file);
                 EncounterBlueprintData encounter = GetBluePrint(encounterInfo.name);
                 if (encounter == null)
                 {

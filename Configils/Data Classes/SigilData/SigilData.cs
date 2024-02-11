@@ -1,11 +1,14 @@
 ﻿using System.Collections.Generic;
+using TinyJson;
 
 namespace JLPlugin.Data
 {
     [System.Serializable]
-    public partial class SigilData
+    public partial class SigilData : JSONParser.IInitializable
     {
-        public string name, GUID, description;
+        public string GUID;
+        public JSONParser.LocalizableField name;
+        public JSONParser.LocalizableField description;
         public List<string> metaCategories;
         public string texture;
         public string pixelTexture;
@@ -20,5 +23,17 @@ namespace JLPlugin.Data
         public activationCost activationCost;
 
         public List<AbilityBehaviourData> abilityBehaviour;
+    
+        public SigilData()
+        {
+            // Required for JSONParser to work properly with Localisation
+            Initialize();
+        }
+
+        public void Initialize()
+        {
+            name = new("name"); // name, name_es... etc
+            description = new("description"); // description, description_ko... etc
+        }
     }
 }

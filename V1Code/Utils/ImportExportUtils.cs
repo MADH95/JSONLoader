@@ -329,6 +329,17 @@ public static class ImportExportUtils
                 }
                 return;
             }
+            else if (fromType == typeof(string) && toType == typeof(DialogueEvent.LineSet))
+            {
+                to = (ToType)(object)new DialogueEvent.LineSet(new List<DialogueEvent.Line>
+                {
+                    new DialogueEvent.Line
+                    {
+                        text = from as string
+                    }
+                });
+                return;
+            }
             else if (fromType == typeof(JSONParser.LocalizableField) && toType == typeof(string))
             {
                 Error("Use ApplyLocaleField when converted from LocalizableField to string!");
@@ -349,22 +360,38 @@ public static class ImportExportUtils
     }
 
     /// <summary>
-    /// Find cards that are similar to the misspelled card name by
+    /// Finds similar cards with the same name
+    /// </summary>
+    /// <returns></returns>
+    public static CardInfo[] FindSimilarCards(string misspelledCardName)
+    {
+        return FindSimilar(misspelledCardName, CardManager.AllCardsCopy, (a) => a.name);
+    }
+    
+    /// <summary>
+    /// Finds similar cards with the same name
+    /// </summary>
+    /// <returns></returns>
+    public static string[] FindSimilarStrings(string misspelledCardName, IEnumerable<string> collection)
+    {
+        return FindSimilar(misspelledCardName, collection, static (a) => a);
+    }
+    
+    /// <summary>
+    /// Find elements that are similar to the misspelled string by
     /// Comparing each character looking to see if they match
     /// Ignores case sensitivity, - and _
-    ///
-    /// TODO: Make this more generic so it can be used for other systems since this just compares strings.
     /// </summary>
-    private static CardInfo[] FindSimilarCards(string misspelledCardName)
+    public static T[] FindSimilar<T>(string misspelledCardName, IEnumerable<T> allElements, Func<T,string> getter)
     {
         const int maxErrors = 4; // Minimum mistakes before we include the option
-        List<Tuple<int, CardInfo>> cardInfos = new List<Tuple<int, CardInfo>>();
+        List<Tuple<int, T>> cardInfos = new List<Tuple<int, T>>();
 
         string sourceCardName = misspelledCardName.ToLower().Replace("-", "").Replace("_", "");
         int errorMargin = Mathf.Clamp(sourceCardName.Length - 1, 1, maxErrors);
-        foreach (CardInfo cardInfo in CardManager.AllCardsCopy)
+        foreach (T cardInfo in allElements)
         {
-            string realCardName = cardInfo.name.ToLower().Replace("-", "").Replace("_", "");
+            string realCardName = getter(cardInfo).ToLower().Replace("-", "").Replace("_", "");
 
             // Skip cards that are TOOO different to ours
             if (Mathf.Abs(sourceCardName.Length - realCardName.Length) > errorMargin)
@@ -409,7 +436,7 @@ public static class ImportExportUtils
             }
 
             if (match > 0 && errors < errorMargin)
-                cardInfos.Add(new Tuple<int, CardInfo>(match, cardInfo));
+                cardInfos.Add(new Tuple<int, T>(match, cardInfo));
         }
 
         // Sort by highest match
@@ -591,7 +618,6 @@ public static class ImportExportUtils
     /// <param name="field"></param>
     /// <param name="rows"></param>
     /// <param name="cardInfoEnglishField"></param>
-    /// <param name="toCardInfo"></param>
     private static void ApplyLocaleField(string field, JSONParser.LocalizableField rows, ref string cardInfoEnglishField)
     {
         if (rows.rows.TryGetValue(rows.englishFieldName, out string english))
