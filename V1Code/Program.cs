@@ -7,7 +7,6 @@ using HarmonyLib;
 using JLPlugin.Data;
 using JLPlugin.Hotkeys;
 using JLPlugin.V2.Data;
-using JSONLoader.API;
 using JSONLoader.Data;
 using JSONLoader.V2Code;
 using System;
@@ -15,8 +14,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using UnityEngine;
-using static JSONLoader.API.JSONLoaderAPI;
 
 namespace JLPlugin
 {
@@ -83,39 +80,6 @@ namespace JLPlugin
             hotkeyController.AddHotkey(Configs.ExportHotkey, ExportAllToJLDR2);
 
             Logger.LogInfo($"Loaded {PluginName}!");
-
-            JSONLoaderAPI.ModifyVariableList += AddCustomVariables;
-
-            ConfigilAction GlitchScreenAction = new ConfigilAction()
-            {
-                actionName = "glitchScreen",
-                fields = new List<string>() { "intensity", "amount" },
-                functionToCall = GlitchScreen
-            };
-
-            JSONLoaderAPI.AddAction(GlitchScreenAction);
-        }
-
-        public static Dictionary<string, string> AddCustomVariables(Dictionary<string, string> variables)
-        {
-            variables["ItemAmount"] = Singleton<ItemsManager>.Instance.Consumables.Count.ToString();
-
-            GameObject CurrentMask = Singleton<LeshyAnimationController>.Instance.CurrentMask;
-            variables["CurrentMask"] = (CurrentMask == null) ? "no mask" : CurrentMask.name;
-
-            return variables;
-        }
-
-        public static void GlitchScreen(Dictionary<string, string> fields)
-        {
-            float intensity = 1f;
-            if (fields["intensity"] != null)
-            {
-                intensity = int.Parse(fields["intensity"]);
-            }
-
-            AudioController.Instance.PlaySound2D("glitch", MixerGroup.None, 1f, 0f, null, null, null, null, false);
-            Singleton<UIManager>.Instance.Effects.GetEffect<ScreenGlitchEffect>().SetIntensity(intensity, 0.2f);
         }
 
         public static void LogFields()
