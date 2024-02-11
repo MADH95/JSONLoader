@@ -20,14 +20,17 @@ namespace JLPlugin.Data
                     continue;
                 }
 
-                yield return new WaitForSeconds(0.3f);
+                // yield return new WaitForSeconds(0.3f);
                 Singleton<ViewManager>.Instance.SwitchToView(View.Default, false, false);
 
                 card cardInfo = drawcardsinfo.card;
                 CardInfo cardinfo = Data.card.getCard(cardInfo, abilitydata);
                 if (cardinfo != null)
                 {
-                    yield return Singleton<CardSpawner>.Instance.SpawnCardToHand(cardinfo, new List<CardModificationInfo>(), new Vector3(0f, 0f, 0f), 0, null);
+                    PlayableCard CardInHand = CardSpawner.SpawnPlayableCard(cardinfo);
+                    yield return Singleton<PlayerHand>.Instance.AddCardToHand(CardInHand, new Vector3(0f, 0f, 0f), 0);
+
+                    abilitydata.generatedVariables["LastDrawnCard"] = CardInHand;
                     yield return new WaitForSeconds(0.45f);
                 }
             }

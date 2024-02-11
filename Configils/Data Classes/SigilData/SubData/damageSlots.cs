@@ -9,6 +9,7 @@ namespace JLPlugin.Data
     {
         public string runOnCondition;
         public slotData slot;
+        public string damageSource;
         public string damage;
 
         public static IEnumerator DamageSlots(AbilityBehaviourData abilitydata)
@@ -20,7 +21,7 @@ namespace JLPlugin.Data
                     continue;
                 }
 
-                yield return new WaitForSeconds(0.3f);
+                // yield return new WaitForSeconds(0.3f);
                 Singleton<ViewManager>.Instance.SwitchToView(View.Board, false, false);
 
                 CardSlot slot = slotData.GetSlot(damageslotinfo.slot, abilitydata);
@@ -28,12 +29,24 @@ namespace JLPlugin.Data
                 {
                     slot = abilitydata.self.Slot;
                 }
-                if (slot != null)
+                if (slot != null && !string.IsNullOrWhiteSpace(damageslotinfo.damage))
                 {
                     int damage = int.Parse(SigilData.ConvertArgument(damageslotinfo.damage, abilitydata));
                     if (slot.Card != null)
                     {
-                        yield return slot.Card.TakeDamage(damage, slot.Card);
+                        PlayableCard damageSourceCard = abilitydata.self;
+                        if (!string.IsNullOrWhiteSpace(damageslotinfo.damageSource))
+                        {
+                            if (SigilData.ConvertArgument(damageslotinfo.damageSource, abilitydata) == "null")
+                            {
+                                damageSourceCard = null;
+                            }
+                            else
+                            {
+                                damageSourceCard = ((PlayableCard)SigilData.ConvertArgumentToType(damageslotinfo.damageSource, abilitydata, typeof(PlayableCard)));
+                            }
+                        }
+                        yield return slot.Card.TakeDamage(damage, damageSourceCard);
                     }
                     else
                     {
@@ -41,7 +54,7 @@ namespace JLPlugin.Data
                     }
                 }
             }
-            yield return new WaitForSeconds(0.3f);
+            // yield return new WaitForSeconds(0.3f);
             yield break;
         }
     }

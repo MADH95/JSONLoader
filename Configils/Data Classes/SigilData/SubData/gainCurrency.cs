@@ -1,4 +1,5 @@
 ﻿using DiskCardGame;
+using InscryptionAPI;
 using System.Collections;
 
 namespace JLPlugin.Data
@@ -9,6 +10,7 @@ namespace JLPlugin.Data
         public string runOnCondition;
         public string bones;
         public string energy;
+        public string maxEnergy;
         public string foils;
 
         public static IEnumerator GainCurrency(AbilityBehaviourData abilitydata)
@@ -18,39 +20,57 @@ namespace JLPlugin.Data
                 yield break;
             }
 
-            if (abilitydata.gainCurrency.bones != null)
+            if (!string.IsNullOrWhiteSpace(abilitydata.gainCurrency.bones))
             {
                 int boneamount = int.Parse(SigilData.ConvertArgument(abilitydata.gainCurrency.bones, abilitydata));
                 if (boneamount > 0)
                 {
                     yield return Singleton<ResourcesManager>.Instance.AddBones(boneamount);
                 }
-                if (boneamount < 0)
+                else if (boneamount < 0)
                 {
                     yield return Singleton<ResourcesManager>.Instance.SpendBones(boneamount * -1);
                 }
             }
-            if (abilitydata.gainCurrency.energy != null)
+
+            if (!string.IsNullOrWhiteSpace(abilitydata.gainCurrency.energy))
             {
                 int energyamount = int.Parse(SigilData.ConvertArgument(abilitydata.gainCurrency.energy, abilitydata));
                 if (energyamount > 0)
                 {
                     yield return Singleton<ResourcesManager>.Instance.AddEnergy(energyamount);
                 }
-                if (energyamount < 0)
+                else if (energyamount < 0)
                 {
                     yield return Singleton<ResourcesManager>.Instance.SpendEnergy(energyamount * -1);
                 }
             }
-            if (abilitydata.gainCurrency.foils != null)
+
+            if (!string.IsNullOrWhiteSpace(abilitydata.gainCurrency.maxEnergy))
+            {
+                int maxEnergyamount = int.Parse(SigilData.ConvertArgument(abilitydata.gainCurrency.maxEnergy, abilitydata));
+
+                if (maxEnergyamount > 0)
+                {
+                    yield return Singleton<ResourcesManager>.Instance.AddMaxEnergy(maxEnergyamount);
+                }
+                else if (maxEnergyamount < 0) // sketchy, may bug
+                {
+                    Singleton<ResourcesManager>.Instance.PlayerMaxEnergy -= maxEnergyamount;
+                }
+            }
+
+            if (!string.IsNullOrWhiteSpace(abilitydata.gainCurrency.foils))
             {
                 int foilamount = int.Parse(SigilData.ConvertArgument(abilitydata.gainCurrency.foils, abilitydata));
                 if (foilamount > 0)
                 {
+                    RunState.Run.currency += foilamount;
                     yield return Singleton<CurrencyBowl>.Instance.DropWeightsIn(foilamount);
                 }
-                if (foilamount < 0)
+                else if (foilamount < 0)
                 {
+                    RunState.Run.currency -= foilamount;
                     yield return Singleton<CurrencyBowl>.Instance.TakeWeights(foilamount * -1);
                 }
             }

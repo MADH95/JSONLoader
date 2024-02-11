@@ -25,9 +25,6 @@ namespace JLPlugin.Data
                     continue;
                 }
 
-                yield return new WaitForSeconds(0.3f);
-                Singleton<ViewManager>.Instance.SwitchToView(View.Board, false, false);
-
                 PlayableCard CardToReplace = null;
                 if (transformCardsInfo.slot != null)
                 {
@@ -42,13 +39,9 @@ namespace JLPlugin.Data
                 }
                 else
                 {
-                    if (transformCardsInfo.targetCard != null)
+                    if (!string.IsNullOrWhiteSpace(transformCardsInfo.targetCard))
                     {
-                        if (Regex.Matches(transformCardsInfo.targetCard, RegexStrings.Variable) is var variables
-                        && variables.Cast<Match>().Any(variables => variables.Success))
-                        {
-                            CardToReplace = (PlayableCard)Interpreter.ProcessGeneratedVariable(variables[0].Groups[1].Value, abilitydata);
-                        }
+                        CardToReplace = (PlayableCard)SigilData.ConvertArgumentToType(transformCardsInfo.targetCard, abilitydata, typeof(PlayableCard));
                     }
                     else
                     {
@@ -58,6 +51,9 @@ namespace JLPlugin.Data
 
                 if (CardToReplace != null)
                 {
+                    bool CardIsInHand = Singleton<PlayerHand>.Instance.CardsInHand.Contains(CardToReplace);
+                    Singleton<ViewManager>.Instance.SwitchToView(CardIsInHand ? View.Hand : View.Board, false, false);
+
                     CardInfo cardinfo = Data.card.getCard(transformCardsInfo.card, abilitydata);
 
                     yield return CardToReplace.TransformIntoCard(cardinfo);
@@ -68,7 +64,7 @@ namespace JLPlugin.Data
                 }
             }
 
-            yield return new WaitForSeconds(0.3f);
+            // yield return new WaitForSeconds(0.3f);
             yield break;
         }
     }

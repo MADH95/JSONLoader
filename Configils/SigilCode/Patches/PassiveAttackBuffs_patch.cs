@@ -66,24 +66,28 @@ namespace JLPlugin.SigilCode
                         continue;
                     }
 
-                    CardSlot chosenSlot = slotData.GetSlot(buffCards.slot, abilityBehaviour);
+                    CardSlot chosenSlot = slotData.GetSlot(buffCards.slot, abilityBehaviour, false);
                     if (buffCards.slot == null)
                     {
                         chosenSlot = slot;
                     }
                     if (chosenSlot == __instance.slot)
                     {
-                        if (buffCards.addStats != null)
+                        if (!string.IsNullOrEmpty(buffCards.addStats))
                         {
-                            __result += int.Parse(SigilData.ConvertArgument(buffCards.addStats.Split('/')[0], abilityBehaviour, false));
+                            string attackAdjustment = SigilData.ConvertArgument(buffCards.addStats.Split('/')[0], abilityBehaviour, false);
+                            if (attackAdjustment != "?")
+                            {
+                                __result += int.Parse(attackAdjustment);
+                            }
                         }
-                        if (buffCards.setStats != null)
+                        if (!string.IsNullOrEmpty(buffCards.setStats))
                         {
-                            __result = int.Parse(SigilData.ConvertArgument(buffCards.setStats.Split('/')[0], abilityBehaviour, false)) - slot.Card.Info.Attack;
-                        }
-                        if ((__instance.Info.Health + __result) <= 0)
-                        {
-                            BoardManager.Instance.StartCoroutine(__instance.Die(false));
+                            string attackAdjustment = SigilData.ConvertArgument(buffCards.setStats.Split('/')[0], abilityBehaviour, false);
+                            if (attackAdjustment != "?")
+                            {
+                                __result = int.Parse(attackAdjustment) - slot.Card.Info.Attack;
+                            }
                         }
                     }
                 }

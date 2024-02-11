@@ -1,0 +1,42 @@
+﻿{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Gramophone API",
+  "description": "Easily add tracks to the gramophone in Leshy's cabin in Inscryption with JSON!",
+  "type": "object",
+  "properties": {
+    "Prefix": {
+      "description": "Your mod's prefix.",
+      "type": "string"
+    },
+    "Tracks": {
+      "description": "Your music tracks. These will be added to the Gramophone in Leshy's cabin.",
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/track"
+      }
+    }
+  },
+  "required": [ "Prefix", "Tracks" ],
+  "$defs": {
+    "track": {
+      "title": "track",
+      "description": "A music track.",
+      "type": "object",
+      "properties": {
+        "Track": {
+          "description": "A relative path to an audio file. Supported formats: MP3, WAV, OGG, AIFF.",
+          "type": "string",
+          "pattern": ".*\\.(mp3|wav|ogg|aiff|aif)$"
+        },
+        "Volume": {
+          "description": "Your music track's volume, between 0 and 1.",
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1,
+          "default": 1
+        }
+      },
+      "required": [ "Track", "Volume" ]
+    }
+  }
+}

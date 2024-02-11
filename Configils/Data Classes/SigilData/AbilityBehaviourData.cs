@@ -12,6 +12,7 @@ namespace JLPlugin.Data
         public List<placeCards> placeCards;
         public List<buffCards> buffCards;
         public List<transformCards> transformCards;
+        public List<changeAppearance> changeAppearance;
         public gainCurrency gainCurrency;
         public dealScaleDamage dealScaleDamage;
         public List<drawCards> drawCards;
@@ -26,6 +27,7 @@ namespace JLPlugin.Data
         public Dictionary<string, object> generatedVariables;
         public PlayableCard self;
         public int? TurnsInPlay;
-        public Ability ability;
+        public Ability? ability;
+        public SpecialTriggeredAbility? specialAbility;
     }
 }

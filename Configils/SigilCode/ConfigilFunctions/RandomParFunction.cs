@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace JLPlugin.ConfigilFunctions
 {
-    internal static class RandomPar
+    internal static class RandomParFunction
     {
         internal static void Evaluate(FunctionArgs functionArgs)
         {

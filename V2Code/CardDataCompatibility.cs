@@ -1,13 +1,11 @@
 using System.Collections.Generic;
 using System;
 using JLPlugin.V2.Data;
-using DiskCardGame;
 
 namespace JLPlugin.Data
 {
     using System.Linq;
     using InscryptionAPI.Card;
-    using Utils;
 
     public partial class CardData
     {
@@ -83,8 +81,8 @@ namespace JLPlugin.Data
                 info.name = $"{info.modPrefix}_{this.name}";
             }
             
-            info.displayedName = this.displayedName;
-            info.description = this.description;
+            info.displayedName.Initialize(this.displayedName);
+            info.description.Initialize(this.description);
             info.metaCategories = this.metaCategories?.ToArray();
             info.cardComplexity = this.cardComplexity;
             info.temple = this.temple;

@@ -5,5 +5,6 @@
     {
         public string name;
         public string infused;
+        public string list;
     }
 }

@@ -21,7 +21,16 @@ namespace JLPlugin.Data
 
         public IEnumerator Strafe(AbilityBehaviourData abilityData, moveCards movecardinfo, CardSlot SlotToMove)
         {
-            StrafeType strafeType = ParseEnum<StrafeType>(SigilData.ConvertArgument(movecardinfo.strafe.direction, abilityData));
+            StrafeType strafeType;
+            if (string.IsNullOrWhiteSpace(movecardinfo.strafe.direction))
+            {
+                strafeType = StrafeType.right;
+            }
+            else
+            {
+                strafeType = ImportExportUtils.ParseEnum<StrafeType>(SigilData.ConvertArgument(movecardinfo.strafe.direction, abilityData));
+            }
+
             switch (strafeType)
             {
                 case StrafeType.normal:
@@ -57,9 +66,9 @@ namespace JLPlugin.Data
         // Token: 0x0600159E RID: 5534 RVA: 0x00049972 File Offset: 0x00047B72
         public IEnumerator MoveToSlot(AbilityBehaviourData abilityData, moveCards movecardinfo, CardSlot destination, bool destinationValid, CardSlot SlotToMove)
         {
-            if ((SigilData.ConvertArgument(movecardinfo.strafe.flipSigil, abilityData) ?? "true") == "true")
+            if ((SigilData.ConvertArgument(movecardinfo.strafe.flipSigil, abilityData) ?? "true") == "true" && abilityData.ability != null)
             {
-                SlotToMove.Card.RenderInfo.SetAbilityFlipped(abilityData.ability, this.movingLeft);
+                SlotToMove.Card.RenderInfo.SetAbilityFlipped((Ability)abilityData.ability, this.movingLeft);
             }
             SlotToMove.Card.RenderInfo.flippedPortrait = (this.movingLeft && SlotToMove.Card.Info.flipPortraitForStrafe);
             SlotToMove.Card.RenderCard();
