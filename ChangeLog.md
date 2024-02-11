@@ -8,6 +8,10 @@
 - fixed OnLoad and OnHealthLevel not working
 - fixed Behaviours not running when a card is attacked and killed
 
+## 2.5.4
+- made it so JSONLoader now loads files that end in "_example.jldr2"
+- made it so JSONLoader now ignores the "Examples" folder instead of the whole JSONLoader folder
+
 
 ## 2.5.3
 - fixed abilityLearnedDialogue
