@@ -135,6 +135,7 @@ namespace JLPlugin
             GramophoneData.LoadAllGramophone(files);
             LanguageData.LoadAllLanguages(files);
             MaskData.LoadAllMasks(files);
+            RegionSerializeInfo.LoadAllRegions(files);
             JSONLoader.Data.TalkingCards.LoadTalkingCards.InitAndLoad(files);
             // ^ Ambiguity between JSONLoader.Data and JLPlugin.Data is annoying. = u= -Kelly
         }

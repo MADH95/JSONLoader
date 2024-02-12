@@ -447,6 +447,7 @@ namespace JLPlugin.V2.Data
                     filename.EndsWith("_gram.jldr2") ||
                     filename.EndsWith("_language.jldr2") ||
                     filename.EndsWith("_mask.jldr2") ||
+                    filename.EndsWith("_region.jldr2") ||
                     filename.EndsWith("_talk.jldr2"))
                 {
                     continue;
