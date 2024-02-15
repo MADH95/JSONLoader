@@ -37,6 +37,7 @@ namespace TinyJson
         [ThreadStatic] static Dictionary<Type, Dictionary<string, FieldInfo>> fieldInfoCache;
         [ThreadStatic] static Dictionary<Type, Dictionary<string, PropertyInfo>> propertyInfoCache;
         [ThreadStatic] static Dictionary<Type, FieldInfo[]> publicFieldInfoCache;
+        [ThreadStatic] static Dictionary<Type, PropertyInfo[]> publicPropertyInfoCache;
 
         private static string LogPrefix = "";
         
@@ -63,6 +64,7 @@ namespace TinyJson
             if (stringBuilder == null) stringBuilder = new StringBuilder();
             if (splitArrayPool == null) splitArrayPool = new Stack<List<string>>();
             if (publicFieldInfoCache == null) publicFieldInfoCache = new Dictionary<Type, FieldInfo[]>();
+            if (publicPropertyInfoCache == null) publicPropertyInfoCache = new Dictionary<Type, PropertyInfo[]>();
 
             //Remove all whitespace not within strings to make parsing simpler
             stringBuilder.Length = 0;
@@ -210,6 +212,7 @@ namespace TinyJson
             }
             if (type.IsPrimitive)
             {
+                // Int/float/boolean
                 var result = Convert.ChangeType(json, type, System.Globalization.CultureInfo.InvariantCulture);
                 return result;
             }
@@ -244,14 +247,14 @@ namespace TinyJson
             }
             if (type.IsArray)
             {
-                Type arrayType = type.GetElementType();
+                Type elementType = type.GetElementType();
                 if (json[0] != '[' || json[json.Length - 1] != ']')
                     return null;
 
                 List<string> elems = Split(json);
-                Array newArray = Array.CreateInstance(arrayType, elems.Count);
+                Array newArray = Array.CreateInstance(elementType, elems.Count);
                 for (int i = 0; i < elems.Count; i++)
-                    newArray.SetValue(ParseValue(arrayType, elems[i]), i);
+                    newArray.SetValue(ParseValue(elementType, elems[i]), i);
                 splitArrayPool.Push(elems);
                 return newArray;
             }
@@ -409,7 +412,7 @@ namespace TinyJson
             Dictionary<string, PropertyInfo> nameToProperty;
             if (!fieldInfoCache.TryGetValue(type, out nameToField))
             {
-                nameToField = CreateMemberNameDictionary(type.GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.FlattenHierarchy));
+                nameToField = CreateMemberNameDictionary(type.GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.FlattenHierarchy));
                 fieldInfoCache.Add(type, nameToField);
             }
             if (!propertyInfoCache.TryGetValue(type, out nameToProperty))
@@ -425,8 +428,9 @@ namespace TinyJson
                 string key = elems[i].Substring(1, elems[i].Length - 2).ToLower();
                 string value = elems[i + 1];
 
-                if (nameToField.TryGetValue(key, out FieldInfo fieldInfo))
+                if (nameToField.TryGetValue(key, out FieldInfo fieldInfo) && (!fieldInfo.IsPrivate || fieldInfo.GetAttribute<SerializeField>() != null))
                 {
+                    // Public fields or private ones with [SerializeField] set
                     SetField(fieldInfo, instance, value);
                 }
                 else if (nameToProperty.TryGetValue(key, out PropertyInfo propertyInfo))
@@ -543,26 +547,13 @@ namespace TinyJson
                         return "\"\"";
                     }
                 }
-                else if (type == typeof(string[]))
+                else if (type.IsArray)
                 {
-                    string[] fieldVal = (string[])t;
-                    if (fieldVal != null && fieldVal.Length > 0)
+                    if (t == null)
                     {
-                        string s = "[";
-                        for (var i = 0; i < fieldVal.Length; i++)
-                        {
-                            var s1 = fieldVal[i];
-                            s += "\"" + s1 + "\"";
-                            if (i < fieldVal.Length - 1)
-                                s += ",";
-                        }
-
-                        return s + "]";
+                        return "null";
                     }
-                    else
-                    {
-                        return "[]";
-                    }
+                    return JsonInternalArray(t, prefix);
                 }
                 else if (type == typeof(int?))
                 {
@@ -585,6 +576,10 @@ namespace TinyJson
                 else if (type == typeof(int) || type == typeof(long))
                 {
                     return t.ToString();
+                }
+                else if (type == typeof(float))
+                {
+                    return $"{t}";
                 }
                 else if (type == typeof(Dictionary<string, string>))
                 {
@@ -656,10 +651,20 @@ namespace TinyJson
                 }
                 else if (!type.IsValueType)
                 {
+                    if (t == null)
+                    {
+                        return "null";
+                    }
+                    
                     if (!publicFieldInfoCache.TryGetValue(type, out FieldInfo[] PUBLIC_FIELD_INFOS))
                     {
-                        PUBLIC_FIELD_INFOS = type.GetFields(BindingFlags.Instance | BindingFlags.Public);
+                        PUBLIC_FIELD_INFOS = type.GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
                         publicFieldInfoCache[type] = PUBLIC_FIELD_INFOS;
+                    } 
+                    if (!publicPropertyInfoCache.TryGetValue(type, out PropertyInfo[] PUBLIC_PROPERTY_INFOS))
+                    {
+                        PUBLIC_PROPERTY_INFOS = type.GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.SetProperty);
+                        publicPropertyInfoCache[type] = PUBLIC_PROPERTY_INFOS;
                     }
 
                     string s = "{";
@@ -667,12 +672,26 @@ namespace TinyJson
                     string subPrefix = prefix + "\t";
                     foreach (FieldInfo fieldInfo in PUBLIC_FIELD_INFOS)
                     {
+                        if (fieldInfo.IsPrivate && fieldInfo.GetAttribute<SerializeField>() == null)
+                            continue;
+                        
+                        Plugin.Log.LogInfo($"{fieldInfo.Name} => {fieldInfo.FieldType} => {fieldInfo.GetValue(t)}");
                         string value = ToJSONInternal(fieldInfo.FieldType, fieldInfo.GetValue(t), subPrefix);
                         if (index++ > 0)
                         {
                             s += ",";
                         }
                         s += $"\n{subPrefix}\"{fieldInfo.Name}\": {value}";
+                    }
+                    foreach (PropertyInfo property in PUBLIC_PROPERTY_INFOS)
+                    {
+                        Plugin.Log.LogInfo($"{property.Name} => {property.PropertyType} => {property.GetValue(t)}");
+                        string value = ToJSONInternal(property.PropertyType, property.GetValue(t), subPrefix);
+                        if (index++ > 0)
+                        {
+                            s += ",";
+                        }
+                        s += $"\n{subPrefix}\"{property.Name}\": {value}";
                     }
 
                     if (index > 0)
@@ -691,6 +710,50 @@ namespace TinyJson
             }
 
             throw new NotImplementedException($"Type not supported for JSON serialization {type}");
+        }
+
+        private static string JsonInternalArray(object t, string prefix)
+        {
+            Array array = (Array)t;
+            if (array != null)
+            {
+                Type elementType = array.GetType().GetElementType();
+                        
+                string s = "";
+                s += "[";
+                for (var j = 0; j < array.Length; j++)
+                {
+                    s += ToJSONInternal(elementType, array.GetValue(j), prefix + "\t");
+                    if (j < array.Length - 1)
+                        s += ",\n" + prefix + "\t";
+                }
+
+                s += "]";
+                return s;
+            }
+            else
+            {
+                return "[]";
+            }
+        }
+
+        private static int Dimensions(Type type)
+        {
+            int dimensions = 0;
+            int index = 0;
+            while (index < type.Name.Length)
+            {
+                int i = type.Name.IndexOf("[]", index, StringComparison.Ordinal);
+                if(i < 0)
+                {
+                    break;
+                }
+            
+                dimensions++;
+                index = i + 1;
+            }
+
+            return dimensions;
         }
 
         public interface IInitializable
