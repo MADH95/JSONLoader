@@ -45,33 +45,43 @@ namespace JLPlugin.Data
                     Texture2D backTex = null;
                     Texture2D iconTex = null;
 
-                    ImportExportUtils.SetID(tribedata.name);
-                    ImportExportUtils.ApplyValue(ref iconTex, ref tribedata.tribeIcon, true, "Tribes", "tribeIcon");
-
-                    if (!string.IsNullOrEmpty(tribedata.choiceCardBackTexture))
+                    try
                     {
-                        Plugin.VerboseLog($"Loading {tribedata.name} back " + tribedata.choiceCardBackTexture);
-                        ImportExportUtils.ApplyValue(ref backTex, ref tribedata.choiceCardBackTexture, true, "Tribes",
-                            "choiceCardBackTexture");
-                    }
+                        ImportExportUtils.SetID(tribedata.name);
+                        ImportExportUtils.ApplyValue(ref iconTex, ref tribedata.tribeIcon, true, "Tribes", "tribeIcon");
 
-                    if (backTex == null)
-                    {
-                        backTex = TextureHelper.GetImageAsTexture("default_card_rewardback_blank.png");
-                        if (iconTex != null)
+                        if (!string.IsNullOrEmpty(tribedata.choiceCardBackTexture))
                         {
-                            Color32[] iconPixels = iconTex.GetPixels32();
-                            for (int i = 0; i < iconPixels.Length; i++)
-                            {
-                                if (iconPixels[i].a >= 1)
-                                    backTex.SetPixel((i % iconTex.width) + 12, (i / iconTex.width) + 12, iconPixels[i]);
-                            }
-
-                            backTex.Apply(false);
+                            Plugin.VerboseLog($"Loading {tribedata.name} back " + tribedata.choiceCardBackTexture);
+                            ImportExportUtils.ApplyValue(ref backTex, ref tribedata.choiceCardBackTexture, true,
+                                "Tribes",
+                                "choiceCardBackTexture");
                         }
-                    }
 
-                    TribeManager.Add(tribedata.guid, tribedata.name, iconTex, tribedata.appearInTribeChoices, backTex);
+                        if (backTex == null)
+                        {
+                            backTex = TextureHelper.GetImageAsTexture("default_card_rewardback_blank.png");
+                            if (iconTex != null)
+                            {
+                                Color32[] iconPixels = iconTex.GetPixels32();
+                                for (int i = 0; i < iconPixels.Length; i++)
+                                {
+                                    if (iconPixels[i].a >= 1)
+                                        backTex.SetPixel((i % iconTex.width) + 12, (i / iconTex.width) + 12,
+                                            iconPixels[i]);
+                                }
+
+                                backTex.Apply(false);
+                            }
+                        }
+
+                        TribeManager.Add(tribedata.guid, tribedata.name, iconTex, tribedata.appearInTribeChoices,
+                            backTex);
+                    }
+                    catch (Exception e)
+                    {
+                        Plugin.Log.LogError($"Error loading {tribedata.name} from {file}: {e}");
+                    }
                 }
 
                 Plugin.VerboseLog(

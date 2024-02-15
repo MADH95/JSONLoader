@@ -77,7 +77,14 @@ namespace JLPlugin
                 Utils.JLUtils.LoadCardsFromFiles(files);
             }
 
-            LoadAll(files);
+            try
+            {
+                LoadAll(files);
+            }
+            catch (Exception)
+            {
+                // ignored
+            }
 
             Logger.LogInfo($"Loaded {PluginName}!");
         }
