@@ -340,6 +340,67 @@ public static class ImportExportUtils
                 });
                 return;
             }
+            else if (fromType == typeof(string) && toType == typeof(Color))
+            {
+                string value = (string)(object)from;
+                Color color = Color.white;
+                if (value.StartsWith("#"))
+                {
+                    if (!ColorUtility.TryParseHtmlString(value, out color))
+                    {
+                        Error($"Could not convert {value} to color!");
+                    }
+                }
+                else
+                {
+                    int[] split = value.Split(',').Select((a)=>int.Parse(a.Trim())).ToArray();
+                    if (split.Length > 0)
+                    {
+                        color.r = split[0] / 255f;
+                    }
+                    if (split.Length > 1)
+                    {
+                        color.g = split[1] / 255f;
+                    }
+                    if (split.Length > 2)
+                    {
+                        color.b = split[2] / 255f;
+                    }
+                    if (split.Length > 3)
+                    {
+                        color.a = split[3] / 255f;
+                    }
+                }
+                
+                to = (ToType)(object)color;
+                return;
+            }
+            else if (fromType == typeof(Color) && toType == typeof(string))
+            {
+                Color color = (Color)(object)from;
+                to = (ToType)(object)$"{color.r * 255:F0},{color.g * 255:F0},{color.b * 255:F0},{color.a * 255:F0}";
+                return;
+            }
+            else if (fromType == typeof(string) && toType == typeof(Vector2))
+            {
+                string value = (string)(object)from;
+                string[] split = value.Split(',');
+                if (split.Length == 2)
+                {
+                    to = (ToType)(object)new Vector2(float.Parse(split[0]), float.Parse(split[1]));
+                }
+                else
+                {
+                    Error($"Could not convert {value} to Vector2!");
+                }
+                return;
+            }
+            else if (fromType == typeof(Vector2) && toType == typeof(string))
+            {
+                Vector2 vector = (Vector2)(object)from;
+                to = (ToType)(object)$"{vector.x},{vector.y}";
+                return;
+            }
             else if (fromType == typeof(JSONParser.LocalizableField) && toType == typeof(string))
             {
                 Error("Use ApplyLocaleField when converted from LocalizableField to string!");
