@@ -34,8 +34,6 @@ public class RegionSerializeInfo
 
 	public static void LoadAllRegions(List<string> files)
 	{
-		RegionSerializeInfo serializeInfo = new RegionSerializeInfo();
-		Plugin.Log.LogInfo(JSONParser.ToJSON(serializeInfo));
 		for (int i = files.Count - 1; i >= 0; i--)
 		{
 			string path = files[i];
@@ -48,92 +46,126 @@ public class RegionSerializeInfo
 			files.RemoveAt(i--);
 
 			Plugin.VerboseLog("Loading JLDR2 (region) " + fileName);
-			ImportExportUtils.SetDebugPath(path);
-			RegionSerializeInfo data = path.FromFilePath<RegionSerializeInfo>();
+			try
+			{
+				ImportExportUtils.SetDebugPath(path);
+				RegionSerializeInfo data = path.FromFilePath<RegionSerializeInfo>();
 
-			ImportExportUtils.SetID(data.name);
-			RegionData region = RegionManager.New(data.name, data.tier, data.addToPool);
-			Process(region, data, true);
+				RegionData region = RegionManager.New(data.name, data.tier, data.addToPool);
+				Process(region, data, true);
 
-			Plugin.VerboseLog("Loaded JSON region from " + fileName + "!");
+				Plugin.VerboseLog("Loaded JSON region from " + fileName + "!");
+			}
+			catch (Exception e)
+			{
+				Plugin.Log.LogError("Failed to load JSON region from " + fileName + "!");
+				Plugin.Log.LogError(e);
+			}
 		}
 	}
 
 	private static void Process(RegionData region, RegionSerializeInfo data, bool toRegion)
 	{
-		ImportExportUtils.SetID(data.name);
-		if (toRegion)
-		{
-			region.mapParticlesPrefabs = new List<GameObject>();
-		}
-		else
-		{
-			//data.mapParticlesPrefabs = new List<GameObject>();
-		}
+		string regionName = toRegion ? data.name : region.name;
+		ImportExportUtils.SetID(regionName);
 		
 		GetFillerScenery(ref region.fillerScenery, ref data.fillerScenery, toRegion);
 		GetScarceScenery(ref region.scarceScenery, ref data.scarceScenery, toRegion);
 		
 		List<SceneryElementData> predefinedSceneryScenery = region.predefinedScenery?.scenery;
 		GetPredefinedScenery(ref predefinedSceneryScenery, ref data.predefinedScenery, toRegion);
-		if (toRegion)
-		{
-			if (region.predefinedScenery == null)
-			{
-				region.predefinedScenery = ScriptableObject.CreateInstance<PredefinedScenery>();
-			}
-			region.predefinedScenery.scenery = predefinedSceneryScenery;
-		}
 		
 		ImportExportUtils.ApplyValue(ref region.ambientLoopId, ref data.ambientLoopId, toRegion, "Regions", "ambientLoopId");
 		ImportExportUtils.ApplyValue(ref region.terrainCards, ref data.terrainCards, toRegion, "Regions", "terrainCards");
-		ImportExportUtils.ApplyValue(ref region.encounters, ref data.encounters, toRegion, "Regions", "encounters");
 		ImportExportUtils.ApplyValue(ref region.dominantTribes, ref data.dominantTribes, toRegion, "Regions", "dominantTribes");
 		ImportExportUtils.ApplyValue(ref region.boardLightColor, ref data.boardLightColor, toRegion, "Regions", "boardLightColor");
 		ImportExportUtils.ApplyValue(ref region.cardsLightColor, ref data.cardsLightColor, toRegion, "Regions", "cardsLightColor");
 		ImportExportUtils.ApplyValue(ref region.mapAlbedo, ref data.mapAlbedo, toRegion, "Regions", "mapAlbedo");
 		ImportExportUtils.ApplyValue(ref region.likelyCards, ref data.likelyCards, toRegion, "Regions", "likelyCards");
 		ImportExportUtils.ApplyValue(ref region.bosses, ref data.bosses, toRegion, "Regions", "bosses");
-		if (data.bossPrepEncounter != null)
+
+		if (toRegion)
 		{
-			EncounterBlueprintData val2 = EncounterManager.AllEncountersCopy.Find(a => a.name == data.bossPrepEncounter);
-			if (val2 != null)
+			region.mapParticlesPrefabs = new List<GameObject>();
+			region.name = data.name;
+			
+			if (region.predefinedScenery == null)
 			{
-				region.bossPrepEncounter = val2;
+				region.predefinedScenery = ScriptableObject.CreateInstance<PredefinedScenery>();
+			}
+			region.predefinedScenery.scenery = predefinedSceneryScenery;
+			
+			if (data.bossPrepEncounter != null)
+			{
+				EncounterBlueprintData val2 = EncounterManager.AllEncountersCopy.Find(a => a.name == data.bossPrepEncounter);
+				if (val2 != null)
+				{
+					region.bossPrepEncounter = val2;
+				}
+				else
+				{
+					Plugin.Log.LogError($"Could not find boss prep encounter {data.bossPrepEncounter} for region {data.name}!");
+				}
+			}
+
+			if (data.dialogueEvent != null)
+			{
+				DialogueManager.Add(Plugin.PluginGuid, CreateEvent(data.dialogueEvent));
 			}
 			else
 			{
-				Plugin.Log.LogError($"Could not find boss prep encounter {data.bossPrepEncounter} for region {data.name}!");
+				Plugin.Log.LogError($"No dialogue specified for region {data.name}!");
+			}
+
+			region.encounters = new List<EncounterBlueprintData>();
+			if (data.encounters != null)
+			{
+				foreach (string encounter in data.encounters)
+				{
+					EncounterBlueprintData val = EncounterManager.AllEncountersCopy.Find(a => a.name == encounter);
+					if (val != null)
+					{
+						region.encounters.Add(val);
+					}
+					else
+					{
+						Plugin.Log.LogError($"Could not find encounter {encounter} for region {data.name}!");
+					}
+				}
 			}
 		}
-
-		if (data.dialogueEvent != null)
+		else
 		{
-			DialogueManager.Add(Plugin.PluginGuid, data.dialogueEvent.CreateEvent(data.name));
-		}
+			data.name = region.name;
+			if (region.bossPrepEncounter != null)
+			{
+				data.bossPrepEncounter = region.bossPrepEncounter.name;
+			}
+			
+			DialogueEvent dialogueEvent = DialogueDataUtil.Data.GetEvent("Region" + region.name);
+			if (dialogueEvent != null)
+			{
+				string[] mainLines = dialogueEvent.mainLines.lines.Select((a)=>a.text).ToArray();
+				string[][] repeatLines = dialogueEvent.repeatLines.Select((a) => a.lines.Select((b) => b.text).ToArray()).ToArray();
+				data.dialogueEvent = new DialogueEventStrings(region.name, mainLines, repeatLines);
+			}
 
+			if (region.encounters != null)
+			{
+				data.encounters = new List<string>();
+				foreach (EncounterBlueprintData encounter in region.encounters)
+				{
+					data.encounters.Add(encounter.name);
+				}
+			}
+		}
 	}
-
-	private static List<FillerSceneryEntry> GetFillerScenery(RegionSerializeInfo data)
+	
+	private static DialogueEvent CreateEvent(DialogueEventStrings dialogueEvent)
 	{
-		List<FillerSceneryEntry> list = new List<FillerSceneryEntry>();
-		if (data.fillerScenery == null || data.fillerScenery.Count == 0)
-		{
-			return list;
-		}
-		
-		foreach (SceneryEntrySerializedInfo item in data.fillerScenery)
-		{
-			FillerSceneryEntry entry = new FillerSceneryEntry();
-			entry.data = ScriptableObject.CreateInstance<SceneryData>();
-			entry.data.minScale = item.minScale;
-			entry.data.maxScale = item.maxScale;
-			entry.data.prefabNames = ParsePrefabNames(item.prefabNames);
-			entry.data.radius = item.radius;
-			entry.data.perlinNoiseHeight = item.perlinNoiseHeight;
-			list.Add(entry);
-		}
-		return list;
+		List<CustomLine> mainLines = dialogueEvent.mainLines.Select(x => (CustomLine) x).ToList();
+		List<List<CustomLine>> repeatLines = dialogueEvent.repeatLines.Select(x => x.Select(y => (CustomLine) y).ToList()).ToList();
+		return DialogueManager.GenerateEvent(Plugin.PluginGuid, "Region" + dialogueEvent.eventName, mainLines, repeatLines);
 	}
 
 	private static void GetFillerScenery(ref List<FillerSceneryEntry> data, ref List<SceneryEntrySerializedInfo> info, bool toData)
@@ -171,7 +203,7 @@ public class RegionSerializeInfo
 				SceneryEntrySerializedInfo entry = new SceneryEntrySerializedInfo();
 				entry.minScale = item.data.minScale;
 				entry.maxScale = item.data.maxScale;
-				entry.prefabNames = ParsePrefabNames(item.data.prefabNames);
+				entry.prefabNames = item.data.prefabNames;
 				entry.radius = item.data.radius;
 				entry.perlinNoiseHeight = item.data.perlinNoiseHeight;
 				info.Add(entry);
@@ -217,7 +249,7 @@ public class RegionSerializeInfo
 				ScarceSceneryEntrySerializedInfo entry = new ScarceSceneryEntrySerializedInfo();
 				entry.minScale = item.data.minScale;
 				entry.maxScale = item.data.maxScale;
-				entry.prefabNames = ParsePrefabNames(item.data.prefabNames);
+				entry.prefabNames = item.data.prefabNames;
 				entry.radius = item.data.radius;
 				entry.perlinNoiseHeight = item.data.perlinNoiseHeight;
 				entry.minDensity = item.minDensity;
@@ -265,7 +297,7 @@ public class RegionSerializeInfo
 				PredefinedEntrySerializedInfo entry = new PredefinedEntrySerializedInfo();
 				entry.minScale = item.data.minScale;
 				entry.maxScale = item.data.maxScale;
-				entry.prefabNames = ParsePrefabNames(item.data.prefabNames);
+				entry.prefabNames = item.data.prefabNames;
 				entry.radius = item.data.radius;
 				entry.perlinNoiseHeight = item.data.perlinNoiseHeight;
 				entry.rotation = item.rotation;
@@ -278,27 +310,49 @@ public class RegionSerializeInfo
 	private static List<string> ParsePrefabNames(List<string> infoPrefabNames)
 	{
 		List<string> list = new List<string>();
-		foreach (string infoPrefabName in infoPrefabNames)
-		{
-			string path = "Prefabs/Map/MapScenery/" + infoPrefabName;
-			if (ResourceBank.instance.resources.Any(a => a.path == path))
-			{
-				list.Add(infoPrefabName);
-			}
-			else
-			{
-				Plugin.Log.LogError("Unknown prefab name " + infoPrefabName + " in region JSON!");
-			}
-		}
+		list.AddRange(infoPrefabNames);
+		// foreach (string infoPrefabName in infoPrefabNames)
+		// {
+		// 	string path = "Prefabs/Map/MapScenery/" + infoPrefabName;
+		// 	if (Resources.Load<GameObject>(path) != null)
+		// 	{
+		// 		list.Add(infoPrefabName);
+		// 	}
+		// 	else
+		// 	{
+		// 		Plugin.Log.LogError("Unknown prefab name " + infoPrefabName + " in region JSON!");
+		// 	}
+		// }
 		return list;
+	}
+
+	public static void ExportAllRegions()
+	{
+		Plugin.Log.LogInfo($"Exporting {RegionManager.AllRegionsCopy.Count} Regions");
+		foreach (RegionData region in RegionManager.AllRegionsCopy)
+		{
+			RegionSerializeInfo serializeDeck = new RegionSerializeInfo();
+			string path = Path.Combine(Plugin.ExportDirectory, "Regions", region.name + "_region.jldr2");
+			ImportExportUtils.SetDebugPath(path);
+			
+			Process(region, serializeDeck, false);
+                
+			string directory = Path.GetDirectoryName(path);
+			if (!Directory.Exists(directory))
+			{
+				Directory.CreateDirectory(directory);
+			}
+                
+			File.WriteAllText(path, JSONParser.ToJSON(serializeDeck));
+		}
 	}
 }
 
 [Serializable]
 public class SceneryEntrySerializedInfo
 {
-	public Vector2 minScale = new Vector2(0.05f, 0.05f);
-	public Vector2 maxScale = new Vector2(0.09f, 0.22f);
+	public Vector2SerializeInfo minScale = new Vector2SerializeInfo(0.05f, 0.05f);
+	public Vector2SerializeInfo maxScale = new Vector2SerializeInfo(0.09f, 0.22f);
 	public List<string> prefabNames = new List<string> { "Tree_3_Mossy" };
 	public float radius = 0.06f;
 	public bool perlinNoiseHeight = true;
@@ -315,6 +369,51 @@ public class ScarceSceneryEntrySerializedInfo : SceneryEntrySerializedInfo
 [Serializable]
 public class PredefinedEntrySerializedInfo : SceneryEntrySerializedInfo
 {
-	public Vector3 rotation;
-	public Vector3 scale;
+	public Vector3SerializeInfo rotation;
+	public Vector3SerializeInfo scale;
+}
+
+[Serializable]
+public class Vector2SerializeInfo
+{
+	public float x;
+	public float y;
+
+	public Vector2SerializeInfo(float x, float y)
+	{
+		this.x = x;
+		this.y = y;
+	}
+	
+	public static implicit operator Vector2(Vector2SerializeInfo info)
+	{
+		return new Vector2(info.x, info.y);
+	}
+	
+	public static implicit operator Vector2SerializeInfo(Vector2 info)
+	{
+		return new Vector2SerializeInfo(info.x, info.y);
+	}
+}
+
+[Serializable]
+public class Vector3SerializeInfo : Vector2SerializeInfo
+{
+	public float z;
+
+
+	public Vector3SerializeInfo(float x, float y, float z) : base(x, y)
+	{
+		this.z = z;
+	}
+	
+	public static implicit operator Vector3(Vector3SerializeInfo info)
+	{
+		return new Vector3(info.x, info.y, info.z);
+	}
+	
+	public static implicit operator Vector3SerializeInfo(Vector3 info)
+	{
+		return new Vector3SerializeInfo(info.x, info.y, info.z);
+	}
 }
