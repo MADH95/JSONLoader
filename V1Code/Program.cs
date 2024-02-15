@@ -65,6 +65,10 @@ namespace JLPlugin
 
             Configs.InitializeConfigs(Config);
 
+            hotkeyController = new HotkeyController();
+            hotkeyController.AddHotkey(Configs.ReloadHotkey, ReloadGame);
+            hotkeyController.AddHotkey(Configs.ExportHotkey, ExportAllToJLDR2);
+            
             Log.LogWarning("Note: JSONLoader now uses .jldr2 files, not .json files.");
             List<string> files = GetAllJLDRFiles();
             if (Configs.BetaCompatibility)
@@ -74,10 +78,6 @@ namespace JLPlugin
             }
 
             LoadAll(files);
-
-            hotkeyController = new HotkeyController();
-            hotkeyController.AddHotkey(Configs.ReloadHotkey, ReloadGame);
-            hotkeyController.AddHotkey(Configs.ExportHotkey, ExportAllToJLDR2);
 
             Logger.LogInfo($"Loaded {PluginName}!");
         }
