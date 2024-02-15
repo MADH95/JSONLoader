@@ -29,7 +29,7 @@ namespace JLPlugin
 
         public static string JSONLoaderDirectory = "";
         public static string BepInExDirectory = "";
-        public static string ExportDirectory => Path.Combine(JSONLoaderDirectory, "Exported");
+        public static string ExportDirectory => Path.Combine(JSONLoaderDirectory, "Examples", "Exported");
 
         internal static ManualLogSource Log;
         private HotkeyController hotkeyController;
