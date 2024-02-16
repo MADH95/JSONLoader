@@ -184,7 +184,7 @@ public class RegionSerializeInfo
 				entry.data = ScriptableObject.CreateInstance<SceneryData>();
 				entry.data.minScale = item.minScale;
 				entry.data.maxScale = item.maxScale;
-				entry.data.prefabNames = ParsePrefabNames(item.prefabNames);
+				entry.data.prefabNames = item.prefabNames;
 				entry.data.radius = item.radius;
 				entry.data.perlinNoiseHeight = item.perlinNoiseHeight;
 				data.Add(entry);
@@ -227,7 +227,7 @@ public class RegionSerializeInfo
 				entry.data = ScriptableObject.CreateInstance<SceneryData>();
 				entry.data.minScale = item.minScale;
 				entry.data.maxScale = item.maxScale;
-				entry.data.prefabNames = ParsePrefabNames(item.prefabNames);
+				entry.data.prefabNames = item.prefabNames;
 				entry.data.radius = item.radius;
 				entry.data.perlinNoiseHeight = item.perlinNoiseHeight;
 				entry.minDensity = item.minDensity;
@@ -276,7 +276,7 @@ public class RegionSerializeInfo
 				entry.data = ScriptableObject.CreateInstance<SceneryData>();
 				entry.data.minScale = item.minScale;
 				entry.data.maxScale = item.maxScale;
-				entry.data.prefabNames = ParsePrefabNames(item.prefabNames);
+				entry.data.prefabNames = item.prefabNames;
 				entry.data.radius = item.radius;
 				entry.data.perlinNoiseHeight = item.perlinNoiseHeight;
 				entry.rotation = item.rotation;
@@ -305,25 +305,6 @@ public class RegionSerializeInfo
 				info.Add(entry);
 			}
 		}
-	}
-
-	private static List<string> ParsePrefabNames(List<string> infoPrefabNames)
-	{
-		List<string> list = new List<string>();
-		list.AddRange(infoPrefabNames);
-		// foreach (string infoPrefabName in infoPrefabNames)
-		// {
-		// 	string path = "Prefabs/Map/MapScenery/" + infoPrefabName;
-		// 	if (Resources.Load<GameObject>(path) != null)
-		// 	{
-		// 		list.Add(infoPrefabName);
-		// 	}
-		// 	else
-		// 	{
-		// 		Plugin.Log.LogError("Unknown prefab name " + infoPrefabName + " in region JSON!");
-		// 	}
-		// }
-		return list;
 	}
 
 	public static void ExportAllRegions()
