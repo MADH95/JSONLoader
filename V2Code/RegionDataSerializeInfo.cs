@@ -44,14 +44,18 @@ public class RegionSerializeInfo
 			}
 
 			files.RemoveAt(i--);
-
 			Plugin.VerboseLog("Loading JLDR2 (region) " + fileName);
+			
 			try
 			{
 				ImportExportUtils.SetDebugPath(path);
 				RegionSerializeInfo data = path.FromFilePath<RegionSerializeInfo>();
-
-				RegionData region = RegionManager.New(data.name, data.tier, data.addToPool);
+				
+				RegionData region = RegionManager.AllRegionsCopy.Find(a=>a.name == data.name);
+				if (region == null)
+				{
+					region = RegionManager.New(data.name, data.tier, data.addToPool);
+				}
 				Process(region, data, true);
 
 				Plugin.VerboseLog("Loaded JSON region from " + fileName + "!");

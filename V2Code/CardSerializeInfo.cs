@@ -454,19 +454,19 @@ namespace JLPlugin.V2.Data
                 }
 
                 files.RemoveAt(index--);
-
-                Plugin.VerboseLog($"Loading JLDR2 Card {filename}");
                 ImportExportUtils.SetDebugPath(file);
+                
                 try
                 {
+                    Plugin.VerboseLog($"Loading JLDR2 Card {filename}");
                     CardSerializeInfo cardInfo = JSONParser.FromFilePath<CardSerializeInfo>(file);
                     cardInfo.filePath = file;
                     cardInfo.Apply();
-                    Plugin.VerboseLog($"Loaded JSON card {cardInfo.name}");
+                    Plugin.VerboseLog($"Loaded JSON card from {file}");
                 }
                 catch (Exception ex)
                 {
-                    Plugin.Log.LogError($"Failed to load {filename}: {ex.Message}");
+                    Plugin.Log.LogError($"Failed to load card {filename}");
                     Plugin.Log.LogError(ex);
                 }
             }

@@ -30,7 +30,7 @@ public static class ImportExportUtils
         LoggingSuffix = "";
     }
 
-    public static T ParseEnum<T>(string value) where T : unmanaged, System.Enum
+    public static T ParseEnum<T>(string value) where T : unmanaged, Enum
     {
         T result;
         if (Enum.TryParse<T>(value, out result))

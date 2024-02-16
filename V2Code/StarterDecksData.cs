@@ -30,16 +30,26 @@ namespace JLPlugin.Data
                     continue;
                 
                 files.RemoveAt(index--);
-                
-                Plugin.VerboseLog($"Loading JLDR2 (starter decks) {filename}");
-                StarterDeckList starterDeckInfo = JSONParser.FromFilePath<StarterDeckList>(file);
+                ImportExportUtils.SetDebugPath(file);
 
-                foreach (var deckdata in starterDeckInfo.decks)
-                    StarterDeckManager.New(Plugin.PluginGuid, deckdata.name, deckdata.iconTexture, deckdata.cards,
-                        deckdata.unlockLevel);
+                try
+                {
+                    Plugin.VerboseLog($"Loading JLDR2 (starter decks) {filename}");
+                    StarterDeckList starterDeckInfo = JSONParser.FromFilePath<StarterDeckList>(file);
 
-                Plugin.VerboseLog(
-                    $"Loaded JSON starter decks {string.Join(",", starterDeckInfo.decks.Select(s => s.name).ToList())}");
+                    foreach (StarterDeckInfo deckData in starterDeckInfo.decks)
+                    {
+                        StarterDeckManager.New(Plugin.PluginGuid, deckData.name, deckData.iconTexture, deckData.cards, deckData.unlockLevel);
+                    }
+
+                    Plugin.VerboseLog(
+                        $"Loaded JSON starter decks {string.Join(",", starterDeckInfo.decks.Select(s => s.name).ToList())}");
+                }
+                catch (System.Exception e)
+                {
+                    Plugin.Log.LogError($"Error loading JLDR2 (starter decks) {filename}");
+                    Plugin.Log.LogError(e);
+                }
             }
         }
         

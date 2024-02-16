@@ -36,17 +36,16 @@ namespace JLPlugin.Data
 
                 ImportExportUtils.SetDebugPath(file);
                 files.RemoveAt(index--);
-
-                Plugin.VerboseLog($"Loading JLDR2 (tribes) {filename}");
-                TribeList tribeInfo = JSONParser.FromFilePath<TribeList>(file);
-
-                foreach (TribeInfo tribedata in tribeInfo.tribes)
+                
+                try
                 {
-                    Texture2D backTex = null;
-                    Texture2D iconTex = null;
-
-                    try
+                    Plugin.VerboseLog($"Loading JLDR2 (tribes) {filename}");
+                    TribeList tribeInfo = JSONParser.FromFilePath<TribeList>(file);
+                    foreach (TribeInfo tribedata in tribeInfo.tribes)
                     {
+                        Texture2D backTex = null;
+                        Texture2D iconTex = null;
+
                         ImportExportUtils.SetID(tribedata.name);
                         ImportExportUtils.ApplyValue(ref iconTex, ref tribedata.tribeIcon, true, "Tribes", "tribeIcon");
 
@@ -78,14 +77,12 @@ namespace JLPlugin.Data
                         TribeManager.Add(tribedata.guid, tribedata.name, iconTex, tribedata.appearInTribeChoices,
                             backTex);
                     }
-                    catch (Exception e)
-                    {
-                        Plugin.Log.LogError($"Error loading {tribedata.name} from {file}: {e}");
-                    }
                 }
-
-                Plugin.VerboseLog(
-                    $"Loaded JSON tribes {string.Join(",", tribeInfo.tribes.Select(s => s.name).ToList())}");
+                catch (Exception e)
+                {
+                    Plugin.Log.LogError($"Error loading tribe from {file}");
+                    Plugin.Log.LogError(e);
+                }
             }
         }
 
