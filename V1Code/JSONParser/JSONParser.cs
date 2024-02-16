@@ -7,6 +7,7 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.Serialization;
 using System.Text;
+using System.Text.RegularExpressions;
 using BepInEx;
 using Sirenix.Utilities;
 using UnityEngine;
@@ -130,14 +131,19 @@ namespace TinyJson
         }
 
         //Splits { <value>:<value>, <value>:<value> } and [ <value>, <value> ] into a list of <value> strings
-        static List<string> Split(string json)
+        static List<string> Split(string json, out int lastIndex)
         {
             List<string> splitArray = splitArrayPool.Count > 0 ? splitArrayPool.Pop() : new List<string>();
             splitArray.Clear();
             if (json.Length == 2)
+            {
+                lastIndex = -1;
                 return splitArray;
+            }
+
             int parseDepth = 0;
             stringBuilder.Length = 0;
+            lastIndex = 1;
             for (int i = 1; i < json.Length - 1; i++)
             {
                 switch (json[i])
@@ -155,6 +161,7 @@ namespace TinyJson
                         continue;
                     case ',':
                     case ':':
+                        lastIndex = i;
                         if (parseDepth == 0)
                         {
                             splitArray.Add(stringBuilder.ToString());
@@ -240,8 +247,9 @@ namespace TinyJson
                 {
                     return Enum.Parse(type, json, false);
                 }
-                catch
+                catch(Exception ex)
                 {
+                    LogError(ex);
                     return 0;
                 }
             }
@@ -251,7 +259,7 @@ namespace TinyJson
                 if (json[0] != '[' || json[json.Length - 1] != ']')
                     return null;
 
-                List<string> elems = Split(json);
+                List<string> elems = Split(json, out _);
                 Array newArray = Array.CreateInstance(elementType, elems.Count);
                 for (int i = 0; i < elems.Count; i++)
                     newArray.SetValue(ParseValue(elementType, elems[i]), i);
@@ -264,7 +272,7 @@ namespace TinyJson
                 if (json[0] != '[' || json[json.Length - 1] != ']')
                     return null;
 
-                List<string> elems = Split(json);
+                List<string> elems = Split(json, out _);
                 var list = (IList)type.GetConstructor(new Type[] { typeof(int) }).Invoke(new object[] { elems.Count });
                 for (int i = 0; i < elems.Count; i++)
                     list.Add(ParseValue(listType, elems[i]));
@@ -287,7 +295,7 @@ namespace TinyJson
                 if (json[0] != '{' || json[json.Length - 1] != '}')
                     return null;
                 //The list is split into key/value pairs only, this means the split must be divisible by 2 to be valid JSON
-                List<string> elems = Split(json);
+                List<string> elems = Split(json, out _);
                 if (elems.Count % 2 != 0)
                     return null;
 
@@ -320,7 +328,7 @@ namespace TinyJson
                 return null;
             if (json[0] == '{' && json[json.Length - 1] == '}')
             {
-                List<string> elems = Split(json);
+                List<string> elems = Split(json, out _);
                 if (elems.Count % 2 != 0)
                     return null;
                 var dict = new Dictionary<string, object>(elems.Count / 2);
@@ -330,7 +338,7 @@ namespace TinyJson
             }
             if (json[0] == '[' && json[json.Length - 1] == ']')
             {
-                List<string> items = Split(json);
+                List<string> items = Split(json, out _);
                 var finalList = new List<object>(items.Count);
                 for (int i = 0; i < items.Count; i++)
                     finalList.Add(ParseAnonymousValue(items[i]));
@@ -404,9 +412,36 @@ namespace TinyJson
             }
 
             //The list is split into key/value pairs only, this means the split must be divisible by 2 to be valid JSON
-            List<string> elems = Split(json);
+            List<string> elems = Split(json, out int lastIndex);
             if (elems.Count % 2 != 0)
+            {
+                // Get a substring of json that is left and right of lastIndex within 20 characters
+                char[] splitCharacters = new char[] { '{', '}', '[', ']', ',' };
+                
+                int lastSplitIndex = lastIndex - 1;
+                while (lastSplitIndex >= 0 && !splitCharacters.Contains(json[lastSplitIndex]))
+                {
+                    lastSplitIndex--;
+                }
+                
+                string exampleString = "";
+                if (lastSplitIndex < 0)
+                {
+                    int startIndex = Math.Max(0, lastIndex - 20);
+                    int length = Math.Min(json.Length - startIndex, 40);
+                    exampleString = json.Substring(startIndex, length);
+                }
+                else
+                {
+                    int startIndex = lastSplitIndex + 1;
+                    int length = Math.Min(json.Length - startIndex, lastIndex);
+                    exampleString = json.Substring(startIndex, length);
+                }
+
+                
+                LogError($"Invalid JSON. Unexpected extra character found {json[lastIndex]} => {exampleString}");
                 return instance;
+            }
 
             Dictionary<string, FieldInfo> nameToField;
             Dictionary<string, PropertyInfo> nameToProperty;
@@ -425,6 +460,7 @@ namespace TinyJson
             {
                 if (elems[i].Length <= 2)
                     continue;
+                
                 string key = elems[i].Substring(1, elems[i].Length - 2).ToLower();
                 string value = elems[i + 1];
 
