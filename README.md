@@ -314,6 +314,139 @@ If you want to keep the original model but replace the texture you can add a fie
   "modelType": "Angler"
 ```
 
+## Regions
+
+All custom regions need their files to be named ending with `_region.jldr2`.
+
+JLDR2
+```json
+{
+  "name": "TestRegion",
+  "tier": 0,
+  "addToPool": true,
+  "terrainCards": ["BaitBucket"],
+  "encounters": ["Skinks"],
+  "likelyCards": ["Bullfrog"],
+  "dominantTribes": ["Insect"],
+  "bossPrepEncounter": "Submerge",
+  "boardLightColor": "0,193,122,255",
+  "cardsLightColor": "0,129,255,255",
+  "mapAlbedo": "customRegion_mapAlbedo.png",
+  "bosses": ["ProspectorBoss"],
+  "fillerScenery": [
+    {
+      "minScale": {"x": 0.06, "y": 0.05},
+      "maxScale": {"x": 0.09, "y": 0.22},
+      "prefabNames": ["Tree_3_Mossy"],
+      "radius": 0.06,
+      "perlinNoiseHeight": true
+    }
+  ],
+  "scarceScenery": [
+    {
+      "minDensity": 0.10,
+      "minInstances": 40,
+      "maxInstances": 50,
+      "minScale": {"x": 40.00, "y": 40.00},
+      "maxScale": {"x": 50.00, "y": 50.00},
+      "prefabNames": ["Fern_1"],
+      "radius": 0.05,
+      "perlinNoiseHeight": true
+    }
+  ],
+  "predefinedScenery": [{
+    "minScale": {"x": 0.06, "y": 0.05},
+    "maxScale": {"x": 0.09, "y": 0.22},
+    "prefabNames": ["Tree_3_Mossy"],
+    "radius": 0.06,
+    "perlinNoiseHeight": true,
+    "rotation": {"x": 0, "y": 0, "z": 0},
+    "scale": {"x": 1, "y": 1, "z": 1}
+  }],
+  "dialogueEvent": {
+    "eventName": "TestRegion",
+    "mainLines": ["The rank smell of rot and mold permeated the humid air.", "Every step forward was answered by some nearby slip or slither."],
+    "repeatLines": [["The air grew thick with moisture...", "The buzzing and chirping of insects drowned out the sound of your footfalls..."],
+      ["As the air grew humid your boots became harder to pull from the mud.", "The dank smell of tepid water invaded your nostrils."]]
+  }
+}
+```
+
+### tier
+Which position in the run the region will appear in.
+(Broken as of API 2.19.3)
+0. Any order
+1. First region in the run
+2. Second region in the run
+3. Third region in the run
+
+
+### addToPool
+If set to true then the region will be added to the pool of regions available to be randomly chosen in ascension runs.
+
+### terrainCards
+List of terrain cards that can be placed on the board when starting fights.
+
+NOTE: cards listed here need ot have the Terrain trait. 
+
+### encounters
+Encounters that that can appear during fights.
+
+### likelyCards
+Extra Cards that can appear during ThreeChoice event nodes to be added to your deck.
+
+### dominantTribes
+Tribes that decide what card will appear in the Oil painting and in ThreeChoice event nodes.
+
+### bossPrepEncounter (Optional)
+The encounter that will be used to for the boss fight.
+If not specified then a random encounter will be chosen according to the node and games difficulty
+
+### boardLightColor
+Color that the map will show when moving between nodes
+
+### cardsLightColor
+Color tint cards will have.
+
+### mapAlbedo
+Name of an image that will be used on the map.
+
+### bosses
+Name of bosses/opponents that can appear when in this region.
+
+### fillerScenery
+List of Props that are scattered around the region.
+- **minScale** and **maxScale** are the minimum and maximum scale of the prop.
+- **prefabNames** are the names of the props that can appear on the map. see MapScenery.png for list of props.
+- **radius** is the radius of the area the prop that no other props can appear in.
+- **perlinNoiseHeight** is a boolean that determines if the prop position is randomized or not
+
+### scarceScenery
+Main props that are put on the map.
+- **minDensity** Not used
+- **minInstances** Minimum amount of instances that can spawn per map
+- **maxInstances** Maximum amount of instances that can spawn per map
+- **minScale** and **maxScale** are the minimum and maximum scale of the prop. Various per prop
+- **prefabNames** are the names of the props that can appear on the map. see MapScenery.png for list of props.
+- **radius** is the radius of the area the prop that no other props can appear in.
+- **perlinNoiseHeight** is a boolean that determines if the prop position is randomized or not
+
+
+### predefinedScenery
+Props that will always appear in the map.
+- **minScale** and **maxScale** are the minimum and maximum scale of the prop. Various per prop
+- **prefabNames** are the names of the props that can appear on the map. see MapScenery.png for list of props.
+- **radius** is the radius of the area the prop that no other props can appear in.
+- **perlinNoiseHeight** is a boolean that determines if the prop position is randomized or not
+- **rotation** Set rotation for all the props 
+- **scale** Set scale for all the props
+
+
+### dialogueEvent
+- **eventName** Name of the dialogue event that plays when entering the region. Use the same name as the region.
+- **mainLines** The dialogue that plays when first entering the region
+- **repeatLines** Dialogue that plays every other time you enter the region or start a new map in the same region.
+
 ## Installation
 
 ### Automatic
