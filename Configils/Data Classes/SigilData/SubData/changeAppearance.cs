@@ -66,7 +66,8 @@ namespace JLPlugin.Data
                     {
                         try
                         {
-                            Texture2D PortraitTexture = TextureHelper.GetImageAsTexture(changeAppearanceInfo.changePortrait, FilterMode.Point);
+                            Texture2D PortraitTexture = null;
+                            ImportExportUtils.ApplyValue(ref PortraitTexture, ref changeAppearanceInfo.changePortrait, true, "Configils", "changePortrait");
                             UnityEngine.Sprite PortraitSprite = TextureHelper.ConvertTexture(PortraitTexture, TextureHelper.SpriteType.CardPortrait, FilterMode.Point);
                             CardToModify.SwitchToPortrait(PortraitSprite);
                         }
@@ -95,10 +96,14 @@ namespace JLPlugin.Data
 
                     if (changeAppearanceInfo.addDecals != null)
                     {
-                        foreach (string addDecal in changeAppearanceInfo.addDecals)
+                        for (var i = 0; i < changeAppearanceInfo.addDecals.Count; i++)
                         {
-                            Texture2D texture = TextureHelper.GetImageAsTexture(addDecal, FilterMode.Point);
-                            object obj = (abilitydata.ability == null) ? abilitydata.specialAbility : abilitydata.ability;
+                            var addDecal = changeAppearanceInfo.addDecals[i];
+                            Texture2D texture = null;
+                            ImportExportUtils.ApplyValue(ref texture, ref addDecal, true, "Configils", "addDecals");
+                            object obj = (abilitydata.ability == null)
+                                ? abilitydata.specialAbility
+                                : abilitydata.ability;
                             texture.name = $"{obj}_{addDecal}";
                             CardToModify.Info.temporaryDecals.Add(texture);
                         }

@@ -273,7 +273,7 @@ public static class ImportExportUtils
                 {
                     try
                     {
-                        to = (ToType)(object)TextureHelper.GetImageAsTexture(path);
+                        to = (ToType)(object)GetTextureFromString(path);
                     }
                     catch (FileNotFoundException)
                     {
@@ -299,7 +299,7 @@ public static class ImportExportUtils
                 string path = (string)(object)from;
                 if (!string.IsNullOrEmpty(path))
                 {
-                    Texture2D imageAsTexture = TextureHelper.GetImageAsTexture(path);
+                    Texture2D imageAsTexture = GetTextureFromString(path);
                     if (imageAsTexture != null)
                     {
                         to = (ToType)(object)imageAsTexture.ConvertTexture();
@@ -418,6 +418,30 @@ public static class ImportExportUtils
         }
 
         Error($"Unsupported conversion type: {fromType} to {toType}\n{Environment.StackTrace}");
+    }
+
+    private static Texture2D GetTextureFromString(string path)
+    {
+        if (path.StartsWith("base64:"))
+        {
+            try
+            {
+                string contents = path.Substring("base64:".Length);
+                byte[] bytes = Convert.FromBase64String(contents);
+                Texture2D texture = new Texture2D(2, 2, TextureFormat.RGBA32, false);
+                texture.filterMode = FilterMode.Point;
+                texture.LoadImage(bytes);
+                
+                return texture;
+            }
+            catch (Exception e)
+            {
+                Error($"Failed to convert base64 to texture: {path}");
+                throw e;
+            }
+        }
+
+        return TextureHelper.GetImageAsTexture(path);
     }
 
     /// <summary>
