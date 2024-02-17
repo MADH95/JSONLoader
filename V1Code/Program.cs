@@ -131,6 +131,7 @@ namespace JLPlugin
         public void LoadAll(List<string> files)
         {
             TribeList.LoadAllTribes(files);
+            TraitList.LoadAllTraits(files);
             SigilData.LoadAllSigils(files);
 
             // NOTE: I really don't want to do this, but I can't figure out how to get the game to load the cards from
