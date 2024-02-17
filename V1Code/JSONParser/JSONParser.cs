@@ -800,8 +800,20 @@ namespace TinyJson
         [Serializable]
         public class LocalizableField : IFlexibleField
         {
-            public string EnglishValue => rows[englishFieldName];
-            
+            public string EnglishValue
+            {
+                get
+                {
+                    if (rows.TryGetValue(englishFieldName, out var englishValue))
+                    {
+                        return englishValue;
+                    }
+                    
+                    Plugin.Log.LogError($"Field has not been initialized {englishFieldName}!");
+                    return englishFieldName;
+                }
+            }
+
             public Dictionary<string, string> rows;
 
             public string englishFieldName;
