@@ -1,12 +1,18 @@
-## 2.5.5
-- incorrectly named fields will now log to console and suggest the correct name
-- errors resulting from loading a .jldr2 file will show the file path now
-- configils can now support localization
-- fixed jsonloader not loading everything else if 1 configil errors
-- fixed a bug where configils will break if abilityBehaviour is not specified
-- fixed localization not working
-- fixed OnLoad and OnHealthLevel not working
-- fixed Behaviours not running when a card is attacked and killed
+## 2.6.0
+- Added JLDR2 support for regions
+- Added JLDR2 support for power stats
+- Moved Exported JLDR2 content to Example folder
+- Configils can now supports localization (Abilities, Special Abilities and Stat Icons)
+- Added more json support
+  - float, color, vector2, all Array types, private serialized fields and public properties
+  - Incorrectly named fields will now log to console and suggest the correct name
+  - Errors resulting from loading a .jldr2 file will show while file cause it now
+  - Fixed JSONLoader not loading everything else if 1 configil errors
+- Fixed localization not working on cards/sigils... etc
+- Fixed configil bugs
+  - A bug where configils will break if abilityBehaviour is not specified
+  - OnLoad and OnHealthLevel not working
+  - Behaviours not running when a card is attacked and killed
 
 
 ## 2.5.3
