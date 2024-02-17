@@ -50,17 +50,6 @@ namespace JLPlugin.Data
             }
             else if (this.isPowerStat == true)
             {
-                Plugin.Log.LogInfo("Loading PowerStat... " + name.EnglishValue);
-                var behaviourData = abilityBehaviour.Find((a) => a.getStatValues != null);
-                if (behaviourData == null)
-                {
-                    Plugin.Log.LogError("No getStatValues found for " + name);
-                    return;
-                }
-                
-
-                Plugin.Log.LogInfo("Health: " + behaviourData.getStatValues.health);
-                Plugin.Log.LogInfo("Attack: " + behaviourData.getStatValues.attack);
                 SigilType = typeof(ConfigurablePowerStat);
 
                 StatIconInfo val = ScriptableObject.CreateInstance<StatIconInfo>();

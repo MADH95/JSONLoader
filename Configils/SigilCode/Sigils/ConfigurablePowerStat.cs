@@ -13,21 +13,16 @@ namespace JLPlugin.SigilCode
         
         public virtual void Initialize(SigilData abilityData, SpecialStatIcon icon)
         {
-            Plugin.Log.LogInfo($"ConfigurablePowerStat.Initialize() called for {abilityData.name}");
             _logic = new ConfigPowerStateBehaviour(this, abilityData, icon);
-        }
-
-        public override void OnEnable()
-        {
-            Plugin.Log.LogInfo($"ConfigurablePowerStat.OnEnable");
-            Plugin.Log.LogInfo(Environment.StackTrace);
-            base.OnEnable();
         }
 
         public new void Start()
         {
             base.Start();
-            StartCoroutine(_logic?.Start());
+            if (_logic != null)
+            {
+                StartCoroutine(_logic.Start());
+            }
         }
 
         public override int[] GetStatValues()
