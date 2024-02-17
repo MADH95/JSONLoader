@@ -36,9 +36,11 @@ namespace JLPlugin.Data
             {
                 SigilType = typeof(ConfigurableSpecial);
 
+                string abilityName = "";
+                ImportExportUtils.ApplyLocaleField("name", ref name, ref abilityName, true);
                 FullSpecialTriggeredAbility specialAbility = SpecialTriggeredAbilityManager.Add(
                     this.GUID ?? Plugin.PluginGuid,
-                    this.name.EnglishValue ?? "",
+                    abilityName,
                     SigilType
                     );
 
