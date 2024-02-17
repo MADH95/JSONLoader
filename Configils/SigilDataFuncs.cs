@@ -20,6 +20,7 @@ namespace JLPlugin.Data
     using System.Reflection.Emit;
     using static InscryptionAPI.Card.SpecialTriggeredAbilityManager;
     using SigilTuple = Tuple<Type, SigilData>;
+    using StatTuple = Tuple<Type, SigilData, SpecialStatIcon>;
 
     public partial class SigilData
     {
@@ -42,6 +43,35 @@ namespace JLPlugin.Data
                     );
 
                 SigilDicts.SpecialArgumentList[specialAbility.Id] = new SigilTuple(SigilType, this);
+
+                return;
+            }
+            else if (this.isPowerStat == true)
+            {
+                Plugin.Log.LogInfo("Loading PowerStat... " + name.EnglishValue);
+                var behaviourData = abilityBehaviour.Find((a) => a.getStatValues != null);
+                if (behaviourData == null)
+                {
+                    Plugin.Log.LogError("No getStatValues found for " + name);
+                    return;
+                }
+                
+
+                Plugin.Log.LogInfo("Health: " + behaviourData.getStatValues.health);
+                Plugin.Log.LogInfo("Attack: " + behaviourData.getStatValues.attack);
+                SigilType = typeof(ConfigurablePowerStat);
+
+                StatIconInfo val = ScriptableObject.CreateInstance<StatIconInfo>();
+                ImportExportUtils.ApplyValue(ref val.metaCategories, ref metaCategories, true, "PowerStat", "metaCategories");
+                ImportExportUtils.ApplyValue(ref val.appliesToAttack, ref appliesToAttack, true, "appliesToAttack", "appliesToAttack");
+                ImportExportUtils.ApplyValue(ref val.appliesToHealth, ref appliesToHealth, true, "appliesToHealth", "appliesToHealth");
+                ImportExportUtils.ApplyLocaleField("name", ref name, ref val.rulebookName, true);
+                ImportExportUtils.ApplyLocaleField("description", ref description, ref val.rulebookDescription, true);
+                ImportExportUtils.ApplyValue(ref val.iconGraphic, ref texture, true, "PowerStat", "texture");
+
+                var FullStatIcon = StatIconManager.Add(this.GUID ?? Plugin.PluginGuid, val, typeof(ConfigurablePowerStat));
+
+                SigilDicts.PowerStatArgumentList[FullStatIcon.AbilityId] = new StatTuple(SigilType, this, FullStatIcon.Id);
 
                 return;
             }
@@ -236,9 +266,13 @@ namespace JLPlugin.Data
             {
                 abilitydata.ability = (Ability)ability;
             }
-            else
+            else if(ability is SpecialTriggeredAbility)
             {
                 abilitydata.specialAbility = (SpecialTriggeredAbility)ability;
+            }
+            else
+            {
+                abilitydata.specialStatIcon = (SpecialStatIcon?)ability;
             }
 
             List<string> CompleteActionOrder = DefaultActionOrder;

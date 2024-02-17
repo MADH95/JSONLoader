@@ -7,6 +7,7 @@ namespace JLPlugin.Data
 {
     //type alias to reduce repetition of long tuple type
     using SigilTuple = Tuple<Type, SigilData>;
+    using StatTuple = Tuple<Type, SigilData, SpecialStatIcon>;
 
     public static class SigilDicts
     {
@@ -35,6 +36,9 @@ namespace JLPlugin.Data
 
         public static IDictionary<SpecialTriggeredAbility, SigilTuple> SpecialArgumentList
             = new Dictionary<SpecialTriggeredAbility, SigilTuple>();
+
+        public static IDictionary<SpecialTriggeredAbility, StatTuple> PowerStatArgumentList
+            = new Dictionary<SpecialTriggeredAbility, StatTuple>();
 
     }
 }

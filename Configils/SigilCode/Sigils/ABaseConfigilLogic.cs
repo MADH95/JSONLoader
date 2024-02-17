@@ -28,7 +28,7 @@ public abstract class ABaseConfigilLogic
         abilityBehaviours = new Dictionary<string, List<AbilityBehaviourData>>();
         for (var i = 0; i < abilityData.abilityBehaviour.Count; i++)
         {
-            var behaviourData = abilityData.abilityBehaviour[i];
+            AbilityBehaviourData behaviourData = abilityData.abilityBehaviour[i];
             string triggerType = behaviourData.trigger?.triggerType;
             if (string.IsNullOrEmpty(triggerType))
             {
@@ -444,5 +444,53 @@ public abstract class ABaseConfigilLogic
         AbilityBehaviourData behaviourData = onActivateBehaviours[0];
         SigilData.UpdateVariables(behaviourData, PlayableCard);
         return (SigilData.ConvertArgument(behaviourData.trigger?.activatesForCardsWithCondition, behaviourData) ?? "true") == "true";
+    }
+
+    public int[] GetStatValues()
+    {
+        int[] result = new int[]{0, 0};
+        if (!abilityBehaviours.TryGetValue("GetStatValues", out List<AbilityBehaviourData> getStatValues))
+        {
+            return result;
+        }
+
+        foreach (AbilityBehaviourData value in getStatValues)
+        {
+            SigilData.UpdateVariables(value, PlayableCard);
+            if (value.trigger?.activatesForCardsWithCondition != null)
+            {
+                string condition = SigilData.ConvertArgument(value.trigger?.activatesForCardsWithCondition, value);
+                if (condition != "true")
+                {
+                    continue;
+                }
+            }
+
+            if (!string.IsNullOrEmpty(value.getStatValues?.health))
+            {
+                string healthResult = SigilData.ConvertArgument(value.getStatValues.health, value);
+                Plugin.Log.LogInfo($"Health result: {healthResult} from {value.getStatValues.health}");
+                if (int.TryParse(healthResult, out int h))
+                {
+                    result[1] += h;
+                }
+            }
+
+            if (!string.IsNullOrEmpty(value.getStatValues?.attack))
+            {
+                string attackResult = SigilData.ConvertArgument(value.getStatValues.attack, value);
+                Plugin.Log.LogInfo($"Attack result: {attackResult} from {value.getStatValues.attack}");
+                if (int.TryParse(attackResult, out int a))
+                {
+                    result[0] += a;
+                }
+            }
+            else
+            {
+                Plugin.Log.LogInfo($"Attack is empty: {value.getStatValues?.attack}");
+            }
+        }
+
+        return result;
     }
 }

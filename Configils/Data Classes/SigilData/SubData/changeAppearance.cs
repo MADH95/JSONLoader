@@ -88,7 +88,12 @@ namespace JLPlugin.Data
                     {
                         foreach (string removeDecal in changeAppearanceInfo.removeDecals)
                         {
-                            object obj = (abilitydata.ability == null) ? abilitydata.specialAbility : abilitydata.ability;
+                            object obj;
+                            if (abilitydata.ability == null)
+                                obj = abilitydata.specialAbility == null ? abilitydata.specialStatIcon : abilitydata.specialAbility;
+                            else
+                                obj = abilitydata.ability;
+                            
                             string name = $"{obj}_{removeDecal}";
                             CardToModify.Info.temporaryDecals.RemoveAll(x => x.name == name);
                         }
@@ -101,9 +106,11 @@ namespace JLPlugin.Data
                             var addDecal = changeAppearanceInfo.addDecals[i];
                             Texture2D texture = null;
                             ImportExportUtils.ApplyValue(ref texture, ref addDecal, true, "Configils", "addDecals");
-                            object obj = (abilitydata.ability == null)
-                                ? abilitydata.specialAbility
-                                : abilitydata.ability;
+                            object obj;
+                            if (abilitydata.ability == null)
+                                obj = abilitydata.specialAbility == null ? abilitydata.specialStatIcon : abilitydata.specialAbility;
+                            else
+                                obj = abilitydata.ability;
                             texture.name = $"{obj}_{addDecal}";
                             CardToModify.Info.temporaryDecals.Add(texture);
                         }

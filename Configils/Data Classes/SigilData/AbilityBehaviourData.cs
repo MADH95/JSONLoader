@@ -15,6 +15,7 @@ namespace JLPlugin.Data
         public List<changeAppearance> changeAppearance;
         public gainCurrency gainCurrency;
         public dealScaleDamage dealScaleDamage;
+        public getStatValues getStatValues;
         public List<drawCards> drawCards;
         public List<chooseSlot> chooseSlots;
         public List<moveCards> moveCards;
@@ -30,5 +31,6 @@ namespace JLPlugin.Data
         public int? TurnsInPlay;
         public Ability? ability;
         public SpecialTriggeredAbility? specialAbility;
+        public SpecialStatIcon? specialStatIcon;
     }
 }

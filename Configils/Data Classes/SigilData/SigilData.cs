@@ -19,6 +19,10 @@ namespace JLPlugin.Data
         public bool? opponentUsable;
         public bool? canStack;
         public bool? isSpecialAbility;
+        
+        public bool? isPowerStat;
+        public bool? appliesToAttack;
+        public bool? appliesToHealth;
 
         public activationCost activationCost;
 
