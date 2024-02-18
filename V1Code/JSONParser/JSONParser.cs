@@ -7,7 +7,6 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.Serialization;
 using System.Text;
-using System.Text.RegularExpressions;
 using BepInEx;
 using Sirenix.Utilities;
 using UnityEngine;
@@ -395,13 +394,6 @@ namespace TinyJson
             return nameToMember;
         }
 
-        public interface IFlexibleField
-        {
-            bool ContainsKey(string key);
-            void SetValue(string key, string value);
-            string ToJSON();
-        }
-
         static object ParseObject(Type type, string json)
         {
             object instance = FormatterServices.GetUninitializedObject(type);
@@ -674,17 +666,6 @@ namespace TinyJson
                         return "[]";
                     }
                 }
-                else if (type.IsAssignableFrom(typeof(IFlexibleField)))
-                {
-                    object value = t;
-                    if (value != null)
-                    {
-                        return ((IFlexibleField)value).ToJSON();
-                    }
-
-                    Dictionary<string, string> fieldVal = ((LocalizableField)t).rows;
-                    return ToJSONInternal(fieldVal.GetType(), fieldVal, prefix);
-                }
                 else if (!type.IsValueType)
                 {
                     if (t == null)
@@ -710,18 +691,29 @@ namespace TinyJson
                     {
                         if (fieldInfo.IsPrivate && fieldInfo.GetAttribute<SerializeField>() == null)
                             continue;
-                        
-                        Plugin.Log.LogInfo($"{fieldInfo.Name} => {fieldInfo.FieldType} => {fieldInfo.GetValue(t)}");
-                        string value = ToJSONInternal(fieldInfo.FieldType, fieldInfo.GetValue(t), subPrefix);
-                        if (index++ > 0)
+
+                        if (fieldInfo.FieldType.GetInterfaces().Contains(typeof(IFlexibleField)))
                         {
-                            s += ",";
+                            if (index > 0)
+                            {
+                                s += ",";
+                            }
+                            s += ((IFlexibleField)fieldInfo.GetValue(t)).ToJSON(subPrefix);
+                            index++;
                         }
-                        s += $"\n{subPrefix}\"{fieldInfo.Name}\": {value}";
+                        else
+                        {
+                            string value = ToJSONInternal(fieldInfo.FieldType, fieldInfo.GetValue(t), subPrefix);
+                            if (index++ > 0)
+                            {
+                                s += ",";
+                            }
+
+                            s += $"\n{subPrefix}\"{fieldInfo.Name}\": {value}";
+                        }
                     }
                     foreach (PropertyInfo property in PUBLIC_PROPERTY_INFOS)
                     {
-                        Plugin.Log.LogInfo($"{property.Name} => {property.PropertyType} => {property.GetValue(t)}");
                         string value = ToJSONInternal(property.PropertyType, property.GetValue(t), subPrefix);
                         if (index++ > 0)
                         {
@@ -770,91 +762,6 @@ namespace TinyJson
             else
             {
                 return "[]";
-            }
-        }
-
-        private static int Dimensions(Type type)
-        {
-            int dimensions = 0;
-            int index = 0;
-            while (index < type.Name.Length)
-            {
-                int i = type.Name.IndexOf("[]", index, StringComparison.Ordinal);
-                if(i < 0)
-                {
-                    break;
-                }
-            
-                dimensions++;
-                index = i + 1;
-            }
-
-            return dimensions;
-        }
-
-        public interface IInitializable
-        {
-            public void Initialize();
-        }
-
-        [Serializable]
-        public class LocalizableField : IFlexibleField
-        {
-            public string EnglishValue
-            {
-                get
-                {
-                    if (rows.TryGetValue(englishFieldName, out var englishValue))
-                    {
-                        return englishValue;
-                    }
-                    
-                    Plugin.Log.LogError($"Field has not been initialized {englishFieldName}!");
-                    return englishFieldName;
-                }
-            }
-
-            public Dictionary<string, string> rows;
-
-            public string englishFieldName;
-            public string englishFieldNameLower;
-
-            public LocalizableField(string EnglishFieldName)
-            {
-                rows = new Dictionary<string, string>();
-                englishFieldName = EnglishFieldName;
-                englishFieldNameLower = EnglishFieldName.ToLower();
-            }
-
-            public void Initialize(string englishValue)
-            {
-                rows[englishFieldName] = englishValue;
-            }
-
-            public bool ContainsKey(string key)
-            {
-                return key.StartsWith(englishFieldNameLower);
-            }
-
-            public void SetValue(string key, string value)
-            {
-                rows[key] = value;
-            }
-
-            public string ToJSON()
-            {
-                string json = "";
-                foreach (KeyValuePair<string, string> pair in rows)
-                {
-                    json += $"\t\"{pair.Key}\": \"{pair.Value}\",\n";
-                }
-
-                return json;
-            }
-
-            public override string ToString()
-            {
-                return rows.ToString();
             }
         }
     }

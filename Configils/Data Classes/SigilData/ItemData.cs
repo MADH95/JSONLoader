@@ -10,9 +10,9 @@ namespace JLPlugin.Data
         public override string Name => rulebookName.EnglishValue;
         
         public string GUID;
-        public JSONParser.LocalizableField rulebookName;
-        public JSONParser.LocalizableField rulebookDescription;
-        public JSONParser.LocalizableField description;
+        public LocalizableField rulebookName;
+        public LocalizableField rulebookDescription;
+        public LocalizableField description;
         public string icon;
         public bool? isBottledCard = false;
         public string bottledCardName = "";

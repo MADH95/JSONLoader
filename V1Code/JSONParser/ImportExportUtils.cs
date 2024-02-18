@@ -401,11 +401,11 @@ public static class ImportExportUtils
                 to = (ToType)(object)$"{vector.x},{vector.y}";
                 return;
             }
-            else if (fromType == typeof(JSONParser.LocalizableField) && toType == typeof(string))
+            else if (fromType == typeof(LocalizableField) && toType == typeof(string))
             {
                 Error("Use ApplyLocaleField when converted from LocalizableField to string!");
             }
-            else if (fromType == typeof(string) && toType == typeof(JSONParser.LocalizableField))
+            else if (fromType == typeof(string) && toType == typeof(LocalizableField))
             {
                 Error("Use ApplyLocaleField when converted from string to LocalizableField!");
             }
@@ -661,7 +661,7 @@ public static class ImportExportUtils
         return paths.ToArray();
     }
 
-    public static void ApplyLocaleField(string field, ref JSONParser.LocalizableField rows, ref string cardInfoEnglishField, bool toCardInfo)
+    public static void ApplyLocaleField(string field, ref LocalizableField rows, ref string cardInfoEnglishField, bool toCardInfo)
     {
         if (toCardInfo)
         {
@@ -675,7 +675,7 @@ public static class ImportExportUtils
         }
     }
 
-    private static void ImportLocaleField(JSONParser.LocalizableField rows, string cardInfoEnglishField)
+    private static void ImportLocaleField(LocalizableField rows, string cardInfoEnglishField)
     {
         // From game to LocalizableField
         rows.rows.Clear();
@@ -703,7 +703,7 @@ public static class ImportExportUtils
     /// <param name="field"></param>
     /// <param name="rows"></param>
     /// <param name="cardInfoEnglishField"></param>
-    private static void ApplyLocaleField(string field, JSONParser.LocalizableField rows, ref string cardInfoEnglishField)
+    private static void ApplyLocaleField(string field, LocalizableField rows, ref string cardInfoEnglishField)
     {
         if (rows.rows.TryGetValue(rows.englishFieldName, out string english))
         {

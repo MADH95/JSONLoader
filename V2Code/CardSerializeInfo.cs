@@ -12,7 +12,7 @@ using UnityEngine;
 
 namespace JLPlugin.V2.Data
 {
-    public class CardSerializeInfo : JSONParser.IInitializable
+    public class CardSerializeInfo : IInitializable
     {
         public const string DEFAULT_MOD_PREFIX = "JSON";
         private static FieldInfo[] PUBLIC_FIELD_INFOS = typeof(CardSerializeInfo).GetFields(BindingFlags.Instance | BindingFlags.Public);
@@ -23,9 +23,9 @@ namespace JLPlugin.V2.Data
 
         public string[] decals;
 
-        public JSONParser.LocalizableField displayedName;
+        public LocalizableField displayedName;
 
-        public JSONParser.LocalizableField description;
+        public LocalizableField description;
 
         public int? baseAttack;
 
@@ -245,7 +245,7 @@ namespace JLPlugin.V2.Data
             }
         }
 
-        private void ApplyLocaleField(string field, JSONParser.LocalizableField rows, out string cardInfoEnglishField)
+        private void ApplyLocaleField(string field, LocalizableField rows, out string cardInfoEnglishField)
         {
             if (rows.rows.TryGetValue(rows.englishFieldName, out string english))
             {

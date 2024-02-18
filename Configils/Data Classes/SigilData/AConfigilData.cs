@@ -7,7 +7,7 @@ using JSONLoader.API;
 using TinyJson;
 using JLPlugin;
 
-public abstract class AConfigilData : JSONParser.IInitializable
+public abstract class AConfigilData : IInitializable
 {
     public abstract string Name { get; }
 

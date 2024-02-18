@@ -9,8 +9,8 @@ namespace JLPlugin.Data
         public override string Name => name.EnglishValue;
         
         public string GUID;
-        public JSONParser.LocalizableField name;
-        public JSONParser.LocalizableField description;
+        public LocalizableField name;
+        public LocalizableField description;
         public List<string> metaCategories;
         public string texture;
         public string pixelTexture;
