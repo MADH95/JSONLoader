@@ -671,7 +671,10 @@ public static class ImportExportUtils
         {
             string s = cardInfoEnglishField;
             cardInfoEnglishField = s;
-            ImportLocaleField(rows, cardInfoEnglishField);
+            if (!string.IsNullOrEmpty(s))
+            {
+                ImportLocaleField(rows, cardInfoEnglishField);
+            }
         }
     }
 
@@ -681,7 +684,7 @@ public static class ImportExportUtils
         rows.rows.Clear();
         rows.Initialize(cardInfoEnglishField);
 
-        var translation = Localization.Translations.Find((a) => a.englishStringFormatted == cardInfoEnglishField);
+        var translation = Localization.Translations.Find((a) => a.englishString == cardInfoEnglishField);
         if (translation != null)
         {
             foreach (KeyValuePair<Language, string> pair in translation.values)

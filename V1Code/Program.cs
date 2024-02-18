@@ -14,6 +14,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using InscryptionAPI.Localizing;
 using ItemData = JLPlugin.Data.ItemData;
 
 namespace JLPlugin
@@ -173,6 +174,16 @@ namespace JLPlugin
 
         public void ExportAllToJLDR2()
         {
+            if (Configs.ExportAllLanguages)
+            {
+                foreach (LocalizationManager.CustomLanguage language in LocalizationManager.AllLanguages)
+                {
+                    VerboseLog($"Loading Language {language.LanguageName} {language.Language}");
+                    Localization.TryLoadLanguage(language.Language);
+                }
+            }
+
+
             TribeList.ExportAllTribes();
             // SigilData.LoadAllSigils(files);
             ItemData.ExportAllItems();
