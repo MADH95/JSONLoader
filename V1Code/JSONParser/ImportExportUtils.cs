@@ -191,6 +191,12 @@ public static class ImportExportUtils
                 string oType = from.ToString();
                 if (int.TryParse(oType, out int value))
                 {
+                    if (Enum.GetValues(fromType).Cast<int>().Contains(value))
+                    {
+                        to = (ToType)(object)oType;
+                        return;
+                    }
+                    
                     // Custom type
                     object[] parameters = { value, "guid", "name" };
                     var m = typeof(GuidManager).GetMethod(nameof(GuidManager.TryGetGuidAndKeyEnumValue), BindingFlags.Public | BindingFlags.Static)
@@ -205,7 +211,7 @@ public static class ImportExportUtils
                     }
                     else
                     {
-                        Error($"Failed to convert enum to string! '{from}'");
+                        Error($"Failed to convert enum to string! '{from}' int '{value}'");
                         to = (ToType)(object)oType;
                     }
                 }

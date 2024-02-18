@@ -39,7 +39,7 @@ namespace JLPlugin.Data
                     string guid = item.GUID ?? Plugin.PluginGuid;
                     Texture2D texture = null;
                     ImportExportUtils.ApplyValue(ref texture, ref item.icon, true, "Items", "icon");
-                    if (item.isBottledCard == true)
+                    if (!string.IsNullOrEmpty(item.bottledCardName))
                     {
                         data = ConsumableItemManager.NewCardInABottle(guid, item.bottledCardName, texture);
                     }
@@ -73,16 +73,18 @@ namespace JLPlugin.Data
             ImportExportUtils.ApplyValue(ref info.regionSpecific, ref data.regionSpecific, toInfo, "Items", "regionSpecific");
             ImportExportUtils.ApplyValue(ref info.notRandomlyGiven, ref data.notRandomlyGiven, toInfo, "Items", "notRandomlyGiven");
             ImportExportUtils.ApplyLocaleField("description", ref data.description, ref info.description, toInfo);
-            ImportExportUtils.ApplyValue(ref info.rulebookSprite, ref data.icon, toInfo, "Items", "icon");
-            ImportExportUtils.ApplyValue(ref info.notRandomlyGiven, ref data.notRandomlyGiven, toInfo, "Items", "notRandomlyGiven");
             ImportExportUtils.ApplyValue(ref info.pickupSoundId, ref data.pickupSoundId, toInfo, "Items", "pickupSoundId");
             ImportExportUtils.ApplyValue(ref info.placedSoundId, ref data.placedSoundId, toInfo, "Items", "placedSoundId");
             ImportExportUtils.ApplyValue(ref info.examineSoundId, ref data.examineSoundId, toInfo, "Items", "examineSoundId");
             ImportExportUtils.ApplyValue(ref info.powerLevel, ref data.powerLevel, toInfo, "Items", "powerLevel");
+            ImportExportUtils.ApplyValue(ref info.rulebookCategory, ref data.rulebookCategory, toInfo, "Items", "rulebookCategory");
 
             if (!toInfo)
             {
                 ImportExportUtils.ApplyValue(ref info.rulebookSprite, ref data.icon, false, "Items", "icon");
+                
+                string cardWithinBottle = info.GetCardWithinBottle();
+                ImportExportUtils.ApplyValue(ref cardWithinBottle, ref data.bottledCardName, false, "Items", "bottledCardName");
                 ImportExportUtils.ApplyProperty(info.GetPrefabModelType, (a)=>{}, ref data.modelType, false, "Items", "modelType");
                 ImportExportUtils.ApplyProperty(info.GetModPrefix, (a)=>{}, ref data.GUID, false, "Items", "GUID");
                 ImportExportUtils.ApplyLocaleField("rulebookName", ref data.rulebookName, ref info.rulebookName, false);

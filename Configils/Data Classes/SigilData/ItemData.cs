@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using DiskCardGame;
 using InscryptionAPI.Items;
 using TinyJson;
 
@@ -14,10 +15,10 @@ namespace JLPlugin.Data
         public LocalizableField rulebookDescription;
         public LocalizableField description;
         public string icon;
-        public bool? isBottledCard = false;
         public string bottledCardName = "";
         public bool regionSpecific = false;
         public bool notRandomlyGiven = true;
+        public string rulebookCategory = AbilityMetaCategory.Part1Rulebook.ToString();
         public string modelType = ConsumableItemManager.ModelType.BasicRuneWithVeins.ToString();
         public string pickupSoundId = "stone_object_up";
         public string placedSoundId = "stone_object_hit";
