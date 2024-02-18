@@ -16,13 +16,13 @@ namespace JLPlugin.Data
         public string icon;
         public bool? isBottledCard = false;
         public string bottledCardName = "";
-        private bool regionSpecific = false;
-        private bool notRandomlyGiven = true;
-        private string modelType = ConsumableItemManager.ModelType.BasicRuneWithVeins.ToString();
-        private string pickupSoundId = "stone_object_up";
-        private string placedSoundId = "stone_object_hit";
-        private string examineSoundId = "stone_object_hit";
-        private int powerLevel = 1;
+        public bool regionSpecific = false;
+        public bool notRandomlyGiven = true;
+        public string modelType = ConsumableItemManager.ModelType.BasicRuneWithVeins.ToString();
+        public string pickupSoundId = "stone_object_up";
+        public string placedSoundId = "stone_object_hit";
+        public string examineSoundId = "stone_object_hit";
+        public int powerLevel = 1;
 
         public sealed override void Initialize()
         {

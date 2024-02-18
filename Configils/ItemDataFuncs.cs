@@ -1,28 +1,15 @@
-﻿
-using BepInEx;
-using DiskCardGame;
+﻿using DiskCardGame;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Reflection;
 using InscryptionAPI.Items;
 using InscryptionAPI.Items.Extensions;
 using TinyJson;
 using UnityEngine;
-using static JLPlugin.V2.Data.CardSerializeInfo;
 
 namespace JLPlugin.Data
 {
-    using InscryptionAPI.Card;
-    using InscryptionAPI.Helpers;
-    using JSONLoader.API;
     using SigilCode;
-    using System.Reflection.Emit;
-    using static InscryptionAPI.Card.SpecialTriggeredAbilityManager;
-    using SigilTuple = Tuple<Type, SigilData>;
-    using StatTuple = Tuple<Type, SigilData, SpecialStatIcon>;
 
     public partial class ItemData
     {
@@ -96,12 +83,10 @@ namespace JLPlugin.Data
             if (!toInfo)
             {
                 ImportExportUtils.ApplyValue(ref info.rulebookSprite, ref data.icon, false, "Items", "icon");
-                ImportExportUtils.ApplyValue(ref info.rulebookSprite, ref data.icon, false, "Items", "icon");
                 ImportExportUtils.ApplyProperty(info.GetPrefabModelType, (a)=>{}, ref data.modelType, false, "Items", "modelType");
                 ImportExportUtils.ApplyProperty(info.GetModPrefix, (a)=>{}, ref data.GUID, false, "Items", "GUID");
                 ImportExportUtils.ApplyLocaleField("rulebookName", ref data.rulebookName, ref info.rulebookName, false);
                 ImportExportUtils.ApplyLocaleField("rulebookDescription", ref data.rulebookDescription, ref info.rulebookDescription, false);
-                ImportExportUtils.ApplyLocaleField("rulebookDescription", ref data.rulebookDescription, ref info.prefabId, false);
                 
                 // TODO: Export model somehow maybe maybe?
             }
