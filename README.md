@@ -447,6 +447,74 @@ Props that will always appear in the map.
 - **mainLines** The dialogue that plays when first entering the region
 - **repeatLines** Dialogue that plays every other time you enter the region or start a new map in the same region.
 
+## Consumable Items
+
+Items are powerful tools that can be awarded.
+Similar to configils this is how to create an item to appear in the game.
+
+Create a file with `_item.jldr2` at the end of the file name.
+
+```json
+{
+  "GUID": "TestMod",
+  "rulebookName": "Geck Army",
+  "rulebookDescription": "Puts 4 Gecks in your hand",
+  "description": "The Geck Army is a powerful force to be reckoned with. It's a good thing you're the one in control of it.",
+  "icon": "base64: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",
+  "abilityBehaviour": [
+    {
+      "trigger": {
+        "triggerType": "OnActivate"
+      },
+      "drawCards": [
+        {
+          "card": {
+            "name": "Geck",
+            "retainMods": "false"
+          }
+        },
+        {
+          "card": {
+            "name": "Geck",
+            "retainMods": "false"
+          }
+        },
+        {
+          "card": {
+            "name": "Geck",
+            "retainMods": "false"
+          }
+        },
+        {
+          "card": {
+            "name": "Geck",
+            "retainMods": "false"
+          }
+        }
+      ]
+    }
+  ]
+}
+```
+
+
+## Bottled Cards
+
+Vanilla inscyrption has items that are just a card in a bottle. When you activate it duriong a battle it gives you that card.
+This is what you need to do to add a new bottled card to the game.
+
+
+Make a file with `_item.jldr2` at the end of the file name
+```json
+{
+  "GUID": "TestMod",
+  "bottledCardName": "Urayuli",
+  "icon": "base64:iVBORw0KGgoAAAANSUhEUgAAAGQAAACWAgMAAABV1sXVAAAAAXNSR0IB2cksfwAAAAlwSFlzAAALEwAACxMBAJqcGAAAAAlQTFRFAAAAAAAAAQEB7L2CIAAAAAN0Uk5TAP//RFDWIQAAAflJREFUeJzt10tyhCAQBmC0io3r4Q4pT8ERWMh9rFnmFNasLE6ZBnx0w08yr81UhUrMyKd00zJGlXqpae8tBJ8asC7L9JikLZLcB0S1xTfFtKVr5KZMK+tNfA15pto7JCpWtZbcp00txiXRSKaW2CimLd1jcqHtBUr685jkioEaUEFdLBGqTjwJybZCwFWgPsrBIjHKKW3hNbVxWUNxlB5cO5rENSRukaS6oBWfOz9OdFNMEnh9nPZTB24i1NdRReE6OKOBMMcBMsw2aDncEbr6dh+jmHI4sx9a5X0OXwTS55FGBmKjF3mzjGQgsSfyFiOIHRFVlEFm2gz6S6LtyXGRBTGnyAS68z9K52XSXEQJpEwMnOZy3DvSByZ2pzyQOUXJ9pJUNygh/dyH+HFcKllCuAVqtYS93S/DIQurgZRViFWjEJ7/++Ua1gHK0lMvkpVmO1P2SAaaJZaRZEw14EJ1o5+VfudatibFMRGj0Y1/uENWvmKKc9jN9G+5tiRWDcuyuZQxrxoFRWUJWGLt+J2ZJE8+BVLsWUS7Pi+AFG6uJEBJE51zIYCsoSV74Z6Q9QkBo8XJ3IrcJpUP/x6L6lBxx1ydr7jqpfD2+eJbou4V84zYf2mKfMCwHPie4c8K4h3IHHvle9P2vuTr1ybNwXLhJ0lgVva/qf0AKeWOroyqESEAAAAASUVORK5CYII="
+}
+```
+
+
+
 ## Installation
 
 ### Automatic

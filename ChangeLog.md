@@ -1,20 +1,28 @@
 ## 2.6.0
 - Added JLDR2 support for regions
 - Added JLDR2 support for power stats
+- Added JLDR2 support for traits
+- Added JLDR2 support for items
+- Added JLDR2 support for bottled cards
 - Moved Exported JLDR2 content to Example folder
 - Configils can now supports localization (Abilities, Special Abilities and Stat Icons)
 - Added more json support
+  - Can now embed textures in json using `base64:` prefix
   - float, color, vector2, all Array types, private serialized fields and public properties
   - Incorrectly named fields will now log to console and suggest the correct name
   - Errors resulting from loading a .jldr2 file will show while file cause it now
   - Fixed JSONLoader not loading everything else if 1 configil errors
 - Fixed localization not working on cards/sigils... etc
+- Fixed exporting cards not exporting all details (including localization)
 - Fixed configil bugs
   - A bug where configils will break if abilityBehaviour is not specified
   - OnLoad and OnHealthLevel not working
   - Behaviours not running when a card is attacked and killed
 
-
+## 2.5.4
+- made it so JSONLoader now loads files that end in "_example.jldr2"
+- made it so JSONLoader now ignores the "Examples" folder instead of the whole JSONLoader folder
+- 
 ## 2.5.3
 - fixed abilityLearnedDialogue
 - rewrote buffCards (again) to make it cleaner and work faster
