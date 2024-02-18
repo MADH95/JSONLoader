@@ -756,6 +756,10 @@ namespace TinyJson
                         s += ",\n" + prefix + "\t";
                 }
 
+                if (array.Length > 1)
+                {
+                    s += "\n" + prefix;
+                }
                 s += "]";
                 return s;
             }
