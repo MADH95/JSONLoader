@@ -15,7 +15,7 @@ namespace JLPlugin.Data
         {
             foreach (drawCards drawcardsinfo in abilitydata.drawCards)
             {
-                if (SigilData.ConvertArgument(drawcardsinfo.runOnCondition, abilitydata) == "false")
+                if (drawcardsinfo.runOnCondition != null && AConfigilData.ConvertArgument(drawcardsinfo.runOnCondition, abilitydata) == "false")
                 {
                     continue;
                 }

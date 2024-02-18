@@ -16,7 +16,7 @@ namespace JLPlugin.Data
         {
             foreach (placeCards placecardinfo in abilitydata.placeCards)
             {
-                if (SigilData.ConvertArgument(placecardinfo.runOnCondition, abilitydata) == "false")
+                if (AConfigilData.ConvertArgument(placecardinfo.runOnCondition, abilitydata) == "false")
                 {
                     continue;
                 }
@@ -24,7 +24,7 @@ namespace JLPlugin.Data
                 // yield return new WaitForSeconds(0.3f);
                 Singleton<ViewManager>.Instance.SwitchToView(View.Board, false, false);
 
-                bool replace = SigilData.ConvertArgument(placecardinfo.replace, abilitydata) == "true";
+                bool replace = AConfigilData.ConvertArgument(placecardinfo.replace, abilitydata) == "true";
                 CardSlot slot = slotData.GetSlot(placecardinfo.slot, abilitydata);
                 if (slot != null)
                 {

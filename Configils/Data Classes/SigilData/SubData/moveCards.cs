@@ -19,7 +19,7 @@ namespace JLPlugin.Data
         {
             foreach (moveCards movecardinfo in abilitydata.moveCards)
             {
-                if (SigilData.ConvertArgument(movecardinfo.runOnCondition, abilitydata) == "false")
+                if (AConfigilData.ConvertArgument(movecardinfo.runOnCondition, abilitydata) == "false")
                 {
                     continue;
                 }
@@ -38,7 +38,7 @@ namespace JLPlugin.Data
                 {
                     if (slotTo != null)
                     {
-                        if (slotTo.Card != null && (SigilData.ConvertArgument(movecardinfo.replace, abilitydata) ?? "true") == "true")
+                        if (slotTo.Card != null && (AConfigilData.ConvertArgument(movecardinfo.replace, abilitydata) ?? "true") == "true")
                         {
                             slotTo.Card.ExitBoard(0, new Vector3(0, 0, 0));
                         }

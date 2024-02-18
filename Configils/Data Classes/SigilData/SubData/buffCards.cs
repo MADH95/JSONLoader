@@ -28,7 +28,7 @@ namespace JLPlugin.Data
         {
             foreach (buffCards buffcardsinfo in abilitydata.buffCards)
             {
-                if (SigilData.ConvertArgument(buffcardsinfo.runOnCondition, abilitydata) == "false")
+                if (AConfigilData.ConvertArgument(buffcardsinfo.runOnCondition, abilitydata) == "false")
                 {
                     continue;
                 }
@@ -40,7 +40,7 @@ namespace JLPlugin.Data
                 bool CardIsInHand = Singleton<PlayerHand>.Instance.CardsInHand.Contains(card);
                 Singleton<ViewManager>.Instance.SwitchToView(CardIsInHand ? View.Hand : View.Board, false, false);
 
-                bool isPermanent = SigilData.ConvertArgument(buffcardsinfo.isPermanent, abilitydata) == "true";
+                bool isPermanent = AConfigilData.ConvertArgument(buffcardsinfo.isPermanent, abilitydata) == "true";
                 CardModificationInfo mod = ConfigilUtils.GetModById(card, "ConfigilMod", isPermanent);
 
                 Heal(abilitydata, buffcardsinfo, card);
@@ -77,11 +77,11 @@ namespace JLPlugin.Data
                 List<Ability> sigils = new List<Ability>();
                 if (!string.IsNullOrWhiteSpace(sigilData.name))
                 {
-                    sigils.Add(ImportExportUtils.ParseEnum<Ability>(SigilData.ConvertArgument(sigilData.name, abilitydata)));
+                    sigils.Add(ImportExportUtils.ParseEnum<Ability>(AConfigilData.ConvertArgument(sigilData.name, abilitydata)));
                 }
                 if (!string.IsNullOrWhiteSpace(sigilData.list))
                 {
-                    sigils.AddRange((List<Ability>)SigilData.ConvertArgumentToType(sigilData.list, abilitydata, typeof(List<Ability>)));
+                    sigils.AddRange((List<Ability>)AConfigilData.ConvertArgumentToType(sigilData.list, abilitydata, typeof(List<Ability>)));
                 }
 
                 foreach (Ability sigil in sigils)
@@ -93,7 +93,7 @@ namespace JLPlugin.Data
                     }
                     else
                     {
-                        if (SigilData.ConvertArgument(sigilData.infused, abilitydata) == "true")
+                        if (AConfigilData.ConvertArgument(sigilData.infused, abilitydata) == "true")
                         {
                             addMergedSigils.Add(sigil);
                         }
@@ -130,14 +130,14 @@ namespace JLPlugin.Data
                 List<Ability> sigils = new List<Ability>();
                 if (!string.IsNullOrWhiteSpace(sigilData.name))
                 {
-                    sigils.Add(ImportExportUtils.ParseEnum<Ability>(SigilData.ConvertArgument(sigilData.name, abilitydata)));
+                    sigils.Add(ImportExportUtils.ParseEnum<Ability>(AConfigilData.ConvertArgument(sigilData.name, abilitydata)));
                 }
                 if (!string.IsNullOrWhiteSpace(sigilData.list))
                 {
-                    sigils.AddRange((List<Ability>)SigilData.ConvertArgumentToType(sigilData.list, abilitydata, typeof(List<Ability>)));
+                    sigils.AddRange((List<Ability>)AConfigilData.ConvertArgumentToType(sigilData.list, abilitydata, typeof(List<Ability>)));
                 }
 
-                if (SigilData.ConvertArgument(sigilData.all, abilitydata) == "true")
+                if (AConfigilData.ConvertArgument(sigilData.all, abilitydata) == "true")
                 {
                     //CardMods.ForEach(x => x.abilities = x.abilities.Except(sigils).ToList());
                     mod.abilities.RemoveAll(x => sigils.Contains(x));
@@ -175,13 +175,13 @@ namespace JLPlugin.Data
             if (buffcardsinfo.setStats == null)
                 return;
 
-            string attackAdjustment = SigilData.ConvertArgument(buffcardsinfo.setStats.Split('/')[0], abilitydata);
+            string attackAdjustment = AConfigilData.ConvertArgument(buffcardsinfo.setStats.Split('/')[0], abilitydata);
             if (attackAdjustment != "?" && attackAdjustment != null)
             {
                 mod.attackAdjustment += int.Parse(attackAdjustment) - card.Info.Attack;
             }
 
-            string healthAdjustment = SigilData.ConvertArgument(buffcardsinfo.setStats.Split('/')[1], abilitydata);
+            string healthAdjustment = AConfigilData.ConvertArgument(buffcardsinfo.setStats.Split('/')[1], abilitydata);
             if (healthAdjustment != "?" && healthAdjustment != null)
             {
                 mod.healthAdjustment += int.Parse(healthAdjustment) - card.Info.Health;
@@ -193,13 +193,13 @@ namespace JLPlugin.Data
             if (buffcardsinfo.addStats == null)
                 return;
 
-            string attackAdjustment = SigilData.ConvertArgument(buffcardsinfo.addStats.Split('/')[0], abilitydata);
+            string attackAdjustment = AConfigilData.ConvertArgument(buffcardsinfo.addStats.Split('/')[0], abilitydata);
             if (attackAdjustment != "?" && attackAdjustment != null)
             {
                 mod.attackAdjustment += int.Parse(attackAdjustment);
             }
 
-            string healthAdjustment = SigilData.ConvertArgument(buffcardsinfo.addStats.Split('/')[1], abilitydata);
+            string healthAdjustment = AConfigilData.ConvertArgument(buffcardsinfo.addStats.Split('/')[1], abilitydata);
             if (healthAdjustment != "?" && healthAdjustment != null)
             {
                 mod.healthAdjustment += int.Parse(healthAdjustment);
@@ -212,7 +212,7 @@ namespace JLPlugin.Data
             if (card.Status.damageTaken <= 0) return;
 
             card.HealDamage(Math.Min(card.Status.damageTaken,
-                int.Parse(SigilData.ConvertArgument(buffcardsinfo.heal, abilitydata))));
+                int.Parse(AConfigilData.ConvertArgument(buffcardsinfo.heal, abilitydata))));
         }
 
         public static PlayableCard GetCard(AbilityBehaviourData abilitydata, buffCards buffcardsinfo)
@@ -233,7 +233,7 @@ namespace JLPlugin.Data
             {
                 if (!string.IsNullOrWhiteSpace(buffcardsinfo.targetCard))
                 {
-                    card = (PlayableCard)SigilData.ConvertArgumentToType(buffcardsinfo.targetCard, abilitydata, typeof(PlayableCard));
+                    card = (PlayableCard)AConfigilData.ConvertArgumentToType(buffcardsinfo.targetCard, abilitydata, typeof(PlayableCard));
                 }
                 else
                 {

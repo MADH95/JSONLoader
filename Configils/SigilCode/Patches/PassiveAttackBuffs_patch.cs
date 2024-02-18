@@ -61,7 +61,7 @@ namespace JLPlugin.SigilCode
                 {
                     SigilData.UpdateVariables(abilityBehaviour, slot.Card);
 
-                    if (SigilData.ConvertArgument(buffCards.runOnCondition, abilityBehaviour, false) == "false")
+                    if (AConfigilData.ConvertArgument(buffCards.runOnCondition, abilityBehaviour, false) == "false")
                     {
                         continue;
                     }
@@ -75,7 +75,7 @@ namespace JLPlugin.SigilCode
                     {
                         if (!string.IsNullOrEmpty(buffCards.addStats))
                         {
-                            string attackAdjustment = SigilData.ConvertArgument(buffCards.addStats.Split('/')[0], abilityBehaviour, false);
+                            string attackAdjustment = AConfigilData.ConvertArgument(buffCards.addStats.Split('/')[0], abilityBehaviour, false);
                             if (attackAdjustment != "?")
                             {
                                 __result += int.Parse(attackAdjustment);
@@ -83,7 +83,7 @@ namespace JLPlugin.SigilCode
                         }
                         if (!string.IsNullOrEmpty(buffCards.setStats))
                         {
-                            string attackAdjustment = SigilData.ConvertArgument(buffCards.setStats.Split('/')[0], abilityBehaviour, false);
+                            string attackAdjustment = AConfigilData.ConvertArgument(buffCards.setStats.Split('/')[0], abilityBehaviour, false);
                             if (attackAdjustment != "?")
                             {
                                 __result = int.Parse(attackAdjustment) - slot.Card.Info.Attack;

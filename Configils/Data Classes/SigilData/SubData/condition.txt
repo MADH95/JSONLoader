@@ -44,7 +44,7 @@ namespace JLPlugin.Data
 
             if (conditionInfo.isOpponentSlot != null)
             {
-                if (SigilData.ConvertArgument(conditionInfo.isOpponentSlot, abilitydata) == "true" && slot.IsPlayerSlot == true)
+                if (AConfigilData.ConvertArgument(conditionInfo.isOpponentSlot, abilitydata) == "true" && slot.IsPlayerSlot == true)
                 {
                     return false;
                 }
@@ -52,7 +52,7 @@ namespace JLPlugin.Data
 
             if (conditionInfo.isPlayerSlot != null)
             {
-                if (SigilData.ConvertArgument(conditionInfo.isPlayerSlot, abilitydata) == "true" && slot.IsPlayerSlot == false)
+                if (AConfigilData.ConvertArgument(conditionInfo.isPlayerSlot, abilitydata) == "true" && slot.IsPlayerSlot == false)
                 {
                     return false;
                 }
@@ -60,14 +60,14 @@ namespace JLPlugin.Data
 
             if (conditionInfo.slotIsEmpty != null)
             {
-                if (SigilData.ConvertArgument(conditionInfo.slotIsEmpty, abilitydata) == "true" && slot.Card != null)
+                if (AConfigilData.ConvertArgument(conditionInfo.slotIsEmpty, abilitydata) == "true" && slot.Card != null)
                 {
                     return false;
                 }
             }
             if (conditionInfo.slotIsOccupied != null)
             {
-                if (SigilData.ConvertArgument(conditionInfo.slotIsOccupied, abilitydata) == "true" && slot.Card == null)
+                if (AConfigilData.ConvertArgument(conditionInfo.slotIsOccupied, abilitydata) == "true" && slot.Card == null)
                 {
                     return false;
                 }
@@ -77,7 +77,7 @@ namespace JLPlugin.Data
             {
                 if (conditionInfo.cardNameContains.Count > 0)
                 {
-                    foreach (string cardname in SigilData.ConvertArgument(conditionInfo.cardNameContains, abilitydata))
+                    foreach (string cardname in AConfigilData.ConvertArgument(conditionInfo.cardNameContains, abilitydata))
                     {
                         if (!cardinfo.displayedName.Contains(cardname))
                         {
@@ -91,7 +91,7 @@ namespace JLPlugin.Data
             {
                 if (conditionInfo.cardAbilities.Count > 0)
                 {
-                    foreach (Ability ability in SigilData.ConvertArgument(conditionInfo.cardAbilities, abilitydata).Select(s => CardSerializeInfo.ParseEnum<Ability>(s)).ToList())
+                    foreach (Ability ability in AConfigilData.ConvertArgument(conditionInfo.cardAbilities, abilitydata).Select(s => CardSerializeInfo.ParseEnum<Ability>(s)).ToList())
                     {
                         if (!cardinfo.Abilities.Contains(abilitydata.ability))
                         {

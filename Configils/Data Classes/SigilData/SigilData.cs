@@ -4,8 +4,10 @@ using TinyJson;
 namespace JLPlugin.Data
 {
     [System.Serializable]
-    public partial class SigilData : JSONParser.IInitializable
+    public partial class SigilData : AConfigilData
     {
+        public override string Name => name.EnglishValue;
+        
         public string GUID;
         public JSONParser.LocalizableField name;
         public JSONParser.LocalizableField description;
@@ -23,18 +25,10 @@ namespace JLPlugin.Data
         public bool? isPowerStat;
         public bool? appliesToAttack;
         public bool? appliesToHealth;
+        private AConfigilData _aConfigilDataImplementation;
 
-        public activationCost activationCost;
 
-        public List<AbilityBehaviourData> abilityBehaviour;
-    
-        public SigilData()
-        {
-            // Required for JSONParser to work properly with Localisation
-            Initialize();
-        }
-
-        public void Initialize()
+        public sealed override void Initialize()
         {
             name = new("name"); // name, name_es... etc
             description = new("description"); // description, description_ko... etc

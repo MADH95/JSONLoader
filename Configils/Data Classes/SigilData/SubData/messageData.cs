@@ -17,14 +17,14 @@ namespace JLPlugin.Data
         {
             messageData data = abilitydata.showMessage;
 
-            if (SigilData.ConvertArgument(data.runOnCondition, abilitydata) == "false")
+            if (AConfigilData.ConvertArgument(data.runOnCondition, abilitydata) == "false")
             {
                 yield break;
             }
 
             yield return Singleton<TextDisplayer>.Instance.ShowThenClear(
-                SigilData.ConvertArgument(data.message, abilitydata) ?? "",
-                float.Parse(SigilData.ConvertArgument(data.length, abilitydata) ?? "2"),
+                AConfigilData.ConvertArgument(data.message, abilitydata) ?? "",
+                float.Parse(AConfigilData.ConvertArgument(data.length, abilitydata) ?? "2"),
                 0,
                 SigilDicts.Emotion[data.emotion ?? "Neutral"],
                 SigilDicts.LetterAnimation[data.letterAnimation ?? "Jitter"],

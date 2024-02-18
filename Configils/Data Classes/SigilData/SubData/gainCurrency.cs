@@ -15,14 +15,14 @@ namespace JLPlugin.Data
 
         public static IEnumerator GainCurrency(AbilityBehaviourData abilitydata)
         {
-            if (SigilData.ConvertArgument(abilitydata.gainCurrency.runOnCondition, abilitydata) == "false")
+            if (AConfigilData.ConvertArgument(abilitydata.gainCurrency.runOnCondition, abilitydata) == "false")
             {
                 yield break;
             }
 
             if (!string.IsNullOrWhiteSpace(abilitydata.gainCurrency.bones))
             {
-                int boneamount = int.Parse(SigilData.ConvertArgument(abilitydata.gainCurrency.bones, abilitydata));
+                int boneamount = int.Parse(AConfigilData.ConvertArgument(abilitydata.gainCurrency.bones, abilitydata));
                 if (boneamount > 0)
                 {
                     yield return Singleton<ResourcesManager>.Instance.AddBones(boneamount);
@@ -35,7 +35,7 @@ namespace JLPlugin.Data
 
             if (!string.IsNullOrWhiteSpace(abilitydata.gainCurrency.energy))
             {
-                int energyamount = int.Parse(SigilData.ConvertArgument(abilitydata.gainCurrency.energy, abilitydata));
+                int energyamount = int.Parse(AConfigilData.ConvertArgument(abilitydata.gainCurrency.energy, abilitydata));
                 if (energyamount > 0)
                 {
                     yield return Singleton<ResourcesManager>.Instance.AddEnergy(energyamount);
@@ -48,7 +48,7 @@ namespace JLPlugin.Data
 
             if (!string.IsNullOrWhiteSpace(abilitydata.gainCurrency.maxEnergy))
             {
-                int maxEnergyamount = int.Parse(SigilData.ConvertArgument(abilitydata.gainCurrency.maxEnergy, abilitydata));
+                int maxEnergyamount = int.Parse(AConfigilData.ConvertArgument(abilitydata.gainCurrency.maxEnergy, abilitydata));
 
                 if (maxEnergyamount > 0)
                 {
@@ -62,7 +62,7 @@ namespace JLPlugin.Data
 
             if (!string.IsNullOrWhiteSpace(abilitydata.gainCurrency.foils))
             {
-                int foilamount = int.Parse(SigilData.ConvertArgument(abilitydata.gainCurrency.foils, abilitydata));
+                int foilamount = int.Parse(AConfigilData.ConvertArgument(abilitydata.gainCurrency.foils, abilitydata));
                 if (foilamount > 0)
                 {
                     RunState.Run.currency += foilamount;

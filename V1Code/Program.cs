@@ -14,6 +14,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using ItemData = JLPlugin.Data.ItemData;
 
 namespace JLPlugin
 {
@@ -133,6 +134,7 @@ namespace JLPlugin
             TribeList.LoadAllTribes(files);
             TraitList.LoadAllTraits(files);
             SigilData.LoadAllSigils(files);
+            ItemData.LoadAllConsumableItems(files);
 
             // NOTE: I really don't want to do this, but I can't figure out how to get the game to load the cards from
             // the JSON files without listing all the damn extension files....
@@ -173,6 +175,7 @@ namespace JLPlugin
         {
             TribeList.ExportAllTribes();
             // SigilData.LoadAllSigils(files);
+            ItemData.ExportAllItems();
             Data.EncounterData.ExportAllEncounters();
             StarterDeckList.ExportAllStarterDecks();
             // GramophoneData.LoadAllGramophone(files);

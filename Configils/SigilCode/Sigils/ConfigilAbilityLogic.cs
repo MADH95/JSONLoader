@@ -5,6 +5,7 @@ using JLPlugin.Data;
 public class ConfigilAbilityLogic : ABaseConfigilLogic
 {
     public override object ability => activatedAbilityBehaviour.Ability;
+    public override object Instance => activatedAbilityBehaviour;
     public override PlayableCard PlayableCard => activatedAbilityBehaviour.GetComponent<PlayableCard>();
     public override Card Card => activatedAbilityBehaviour.Card;
 

@@ -16,7 +16,7 @@ namespace JLPlugin.Data
         {
             foreach (damageSlots damageslotinfo in abilitydata.damageSlots)
             {
-                if (SigilData.ConvertArgument(damageslotinfo.runOnCondition, abilitydata) == "false")
+                if (AConfigilData.ConvertArgument(damageslotinfo.runOnCondition, abilitydata) == "false")
                 {
                     continue;
                 }
@@ -31,19 +31,19 @@ namespace JLPlugin.Data
                 }
                 if (slot != null && !string.IsNullOrWhiteSpace(damageslotinfo.damage))
                 {
-                    int damage = int.Parse(SigilData.ConvertArgument(damageslotinfo.damage, abilitydata));
+                    int damage = int.Parse(AConfigilData.ConvertArgument(damageslotinfo.damage, abilitydata));
                     if (slot.Card != null)
                     {
                         PlayableCard damageSourceCard = abilitydata.self;
                         if (!string.IsNullOrWhiteSpace(damageslotinfo.damageSource))
                         {
-                            if (SigilData.ConvertArgument(damageslotinfo.damageSource, abilitydata) == "null")
+                            if (AConfigilData.ConvertArgument(damageslotinfo.damageSource, abilitydata) == "null")
                             {
                                 damageSourceCard = null;
                             }
                             else
                             {
-                                damageSourceCard = ((PlayableCard)SigilData.ConvertArgumentToType(damageslotinfo.damageSource, abilitydata, typeof(PlayableCard)));
+                                damageSourceCard = ((PlayableCard)AConfigilData.ConvertArgumentToType(damageslotinfo.damageSource, abilitydata, typeof(PlayableCard)));
                             }
                         }
                         yield return slot.Card.TakeDamage(damage, damageSourceCard);

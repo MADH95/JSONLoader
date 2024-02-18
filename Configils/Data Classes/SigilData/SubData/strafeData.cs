@@ -28,7 +28,7 @@ namespace JLPlugin.Data
             }
             else
             {
-                strafeType = ImportExportUtils.ParseEnum<StrafeType>(SigilData.ConvertArgument(movecardinfo.strafe.direction, abilityData));
+                strafeType = ImportExportUtils.ParseEnum<StrafeType>(AConfigilData.ConvertArgument(movecardinfo.strafe.direction, abilityData));
             }
 
             switch (strafeType)
@@ -66,7 +66,7 @@ namespace JLPlugin.Data
         // Token: 0x0600159E RID: 5534 RVA: 0x00049972 File Offset: 0x00047B72
         public IEnumerator MoveToSlot(AbilityBehaviourData abilityData, moveCards movecardinfo, CardSlot destination, bool destinationValid, CardSlot SlotToMove)
         {
-            if ((SigilData.ConvertArgument(movecardinfo.strafe.flipSigil, abilityData) ?? "true") == "true" && abilityData.ability != null)
+            if ((AConfigilData.ConvertArgument(movecardinfo.strafe.flipSigil, abilityData) ?? "true") == "true" && abilityData.ability != null)
             {
                 SlotToMove.Card.RenderInfo.SetAbilityFlipped((Ability)abilityData.ability, this.movingLeft);
             }

@@ -27,7 +27,7 @@ namespace JLPlugin.Data
         {
             foreach (changeAppearance changeAppearanceInfo in abilitydata.changeAppearance)
             {
-                if (SigilData.ConvertArgument(changeAppearanceInfo.runOnCondition, abilitydata) == "false")
+                if (AConfigilData.ConvertArgument(changeAppearanceInfo.runOnCondition, abilitydata) == "false")
                 {
                     continue;
                 }
@@ -51,7 +51,7 @@ namespace JLPlugin.Data
                 {
                     if (string.IsNullOrWhiteSpace(changeAppearanceInfo.targetCard))
                     {
-                        CardToModify = (PlayableCard)SigilData.ConvertArgumentToType(changeAppearanceInfo.targetCard, abilitydata, typeof(PlayableCard));
+                        CardToModify = (PlayableCard)AConfigilData.ConvertArgumentToType(changeAppearanceInfo.targetCard, abilitydata, typeof(PlayableCard));
                     }
                     else
                     {
@@ -61,7 +61,7 @@ namespace JLPlugin.Data
 
                 if (CardToModify != null)
                 {
-                    //SigilData.ConvertArgument(buffcardsinfo.addStats.Split('/')[0], abilitydata);
+                    //AConfigilData.ConvertArgument(buffcardsinfo.addStats.Split('/')[0], abilitydata);
                     if (!string.IsNullOrWhiteSpace(changeAppearanceInfo.changePortrait))
                     {
                         try

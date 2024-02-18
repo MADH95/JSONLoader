@@ -40,5 +40,7 @@ namespace JLPlugin.Data
         public static IDictionary<SpecialTriggeredAbility, StatTuple> PowerStatArgumentList
             = new Dictionary<SpecialTriggeredAbility, StatTuple>();
 
+        public static IDictionary<string, ItemData> ConsumableItemList = new Dictionary<string, ItemData>();
+
     }
 }

@@ -42,7 +42,7 @@ namespace JLPlugin.SigilCode
                             SigilData.UpdateVariables(abilityBehaviour, slot.Card);
                             abilityBehaviour.generatedVariables["TriggerCard"] = __instance;
 
-                            if (SigilData.ConvertArgument(extraAttackData.runOnCondition, abilityBehaviour) == "false")
+                            if (AConfigilData.ConvertArgument(extraAttackData.runOnCondition, abilityBehaviour) == "false")
                             {
                                 continue;
                             }

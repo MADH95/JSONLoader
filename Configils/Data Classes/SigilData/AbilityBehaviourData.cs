@@ -32,5 +32,6 @@ namespace JLPlugin.Data
         public Ability? ability;
         public SpecialTriggeredAbility? specialAbility;
         public SpecialStatIcon? specialStatIcon;
+        public string consumableItem;
     }
 }

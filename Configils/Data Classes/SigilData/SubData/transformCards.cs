@@ -20,7 +20,7 @@ namespace JLPlugin.Data
         {
             foreach (transformCards transformCardsInfo in abilitydata.transformCards)
             {
-                if (SigilData.ConvertArgument(transformCardsInfo.runOnCondition, abilitydata) == "false")
+                if (AConfigilData.ConvertArgument(transformCardsInfo.runOnCondition, abilitydata) == "false")
                 {
                     continue;
                 }
@@ -41,7 +41,7 @@ namespace JLPlugin.Data
                 {
                     if (!string.IsNullOrWhiteSpace(transformCardsInfo.targetCard))
                     {
-                        CardToReplace = (PlayableCard)SigilData.ConvertArgumentToType(transformCardsInfo.targetCard, abilitydata, typeof(PlayableCard));
+                        CardToReplace = (PlayableCard)AConfigilData.ConvertArgumentToType(transformCardsInfo.targetCard, abilitydata, typeof(PlayableCard));
                     }
                     else
                     {
@@ -57,7 +57,7 @@ namespace JLPlugin.Data
                     CardInfo cardinfo = Data.card.getCard(transformCardsInfo.card, abilitydata);
 
                     yield return CardToReplace.TransformIntoCard(cardinfo);
-                    if (SigilData.ConvertArgument(transformCardsInfo.noRetainDamage, abilitydata) == "true")
+                    if (AConfigilData.ConvertArgument(transformCardsInfo.noRetainDamage, abilitydata) == "true")
                     {
                         CardToReplace.HealDamage(CardToReplace.Status.damageTaken);
                     }

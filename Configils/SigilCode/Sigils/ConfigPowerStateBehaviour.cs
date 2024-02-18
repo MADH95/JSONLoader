@@ -5,6 +5,7 @@ using JLPlugin.Data;
 public class ConfigPowerStateBehaviour : ABaseConfigilLogic
 {
     public override object ability => id;
+    public override object Instance => specialCardBehaviour;
     public override PlayableCard PlayableCard => specialCardBehaviour.GetComponent<PlayableCard>();
     public override Card Card => specialCardBehaviour.Card;
 

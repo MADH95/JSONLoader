@@ -15,7 +15,7 @@ namespace JLPlugin.Data
         {
             foreach (attackSlots attackslotinfo in abilitydata.attackSlots)
             {
-                if (SigilData.ConvertArgument(attackslotinfo.runOnCondition, abilitydata) == "false")
+                if (AConfigilData.ConvertArgument(attackslotinfo.runOnCondition, abilitydata) == "false")
                 {
                     continue;
                 }

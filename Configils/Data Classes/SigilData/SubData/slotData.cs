@@ -24,7 +24,7 @@ namespace JLPlugin.Data
                 foreach (CardSlot slot in Singleton<BoardManager>.Instance.AllSlots)
                 {
                     abilitydata.generatedVariables["RandomSlot"] = slot;
-                    if (SigilData.ConvertArgument(slotdata.randomSlotOnCondition, abilitydata, sendDebug) == "true")
+                    if (AConfigilData.ConvertArgument(slotdata.randomSlotOnCondition, abilitydata, sendDebug) == "true")
                     {
                         SlotsWithCondition.Add(slot);
                     }
@@ -36,7 +36,7 @@ namespace JLPlugin.Data
                 return SlotsWithCondition[random.Next(SlotsWithCondition.Count)];
             }
 
-            return ConvertIntToSlot(slotdata, abilitydata, int.Parse(SigilData.ConvertArgument(slotdata.index, abilitydata, sendDebug)), sendDebug);
+            return ConvertIntToSlot(slotdata, abilitydata, int.Parse(AConfigilData.ConvertArgument(slotdata.index, abilitydata, sendDebug)), sendDebug);
         }
 
         public static CardSlot ConvertIntToSlot(slotData slotdata, AbilityBehaviourData abilitydata, int index, bool sendDebug = true)
@@ -49,7 +49,7 @@ namespace JLPlugin.Data
             CardSlot slot = Singleton<BoardManager>.Instance.playerSlots[index];
             if (!string.IsNullOrWhiteSpace(slotdata.isOpponentSlot))
             {
-                if (SigilData.ConvertArgument(slotdata.isOpponentSlot, abilitydata, sendDebug) == "true")
+                if (AConfigilData.ConvertArgument(slotdata.isOpponentSlot, abilitydata, sendDebug) == "true")
                 {
                     slot = Singleton<BoardManager>.Instance.opponentSlots[index];
                 }
