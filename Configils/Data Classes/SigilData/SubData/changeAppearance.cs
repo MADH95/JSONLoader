@@ -49,7 +49,7 @@ namespace JLPlugin.Data
                 }
                 else
                 {
-                    if (string.IsNullOrWhiteSpace(changeAppearanceInfo.targetCard))
+                    if (!string.IsNullOrWhiteSpace(changeAppearanceInfo.targetCard))
                     {
                         CardToModify = (PlayableCard)SigilData.ConvertArgumentToType(changeAppearanceInfo.targetCard, abilitydata, typeof(PlayableCard));
                     }
