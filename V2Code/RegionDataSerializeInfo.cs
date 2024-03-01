@@ -5,6 +5,7 @@ using System.Linq;
 using DiskCardGame;
 using InscryptionAPI.Dialogue;
 using InscryptionAPI.Encounters;
+using InscryptionAPI.Items;
 using InscryptionAPI.Regions;
 using InscryptionAPI.TalkingCards.Create;
 using JLPlugin;
@@ -31,6 +32,7 @@ public class RegionSerializeInfo
 	public List<PredefinedEntrySerializedInfo> predefinedScenery;
 	public DialogueEventStrings dialogueEvent;
 	private string ambientLoopId;
+	private List<string> consumableItems;
 
 	public static void LoadAllRegions(List<string> files)
 	{
@@ -137,6 +139,24 @@ public class RegionSerializeInfo
 					}
 				}
 			}
+			
+			region.consumableItems = new List<ConsumableItemData>();
+			if (data.consumableItems != null)
+			{
+				List<ConsumableItemData> itemDatas = ItemsUtil.AllConsumables;
+				foreach (string consumableItem in data.consumableItems)
+				{
+					ConsumableItemData val = itemDatas.Find(a => a.name == consumableItem);
+					if (val != null)
+					{
+						region.consumableItems.Add(val);
+					}
+					else
+					{
+						Plugin.Log.LogError($"Could not find consumable item {consumableItem} for region {data.name}!");
+					}
+				}
+			}
 		}
 		else
 		{
@@ -160,6 +180,15 @@ public class RegionSerializeInfo
 				foreach (EncounterBlueprintData encounter in region.encounters)
 				{
 					data.encounters.Add(encounter.name);
+				}
+			}
+
+			if (region.consumableItems != null)
+			{
+				data.consumableItems = new List<string>();
+				foreach (ConsumableItemData consumableItem in region.consumableItems)
+				{
+					data.consumableItems.Add(consumableItem.name);
 				}
 			}
 		}
