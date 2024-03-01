@@ -462,7 +462,7 @@ public abstract class ABaseConfigilLogic
             AConfigilData.UpdateVariables(value, PlayableCard);
             if (value.trigger?.activatesForCardsWithCondition != null)
             {
-                string condition = AConfigilData.ConvertArgument(value.trigger?.activatesForCardsWithCondition, value);
+                string condition = AConfigilData.ConvertArgument(value.trigger?.activatesForCardsWithCondition, value, false);
                 if (condition != "true")
                 {
                     continue;
@@ -471,8 +471,7 @@ public abstract class ABaseConfigilLogic
 
             if (!string.IsNullOrEmpty(value.getStatValues?.health))
             {
-                string healthResult = AConfigilData.ConvertArgument(value.getStatValues.health, value);
-                Plugin.Log.LogInfo($"Health result: {healthResult} from {value.getStatValues.health}");
+                string healthResult = AConfigilData.ConvertArgument(value.getStatValues.health, value, false);
                 if (int.TryParse(healthResult, out int h))
                 {
                     result[1] += h;
@@ -481,16 +480,11 @@ public abstract class ABaseConfigilLogic
 
             if (!string.IsNullOrEmpty(value.getStatValues?.attack))
             {
-                string attackResult = AConfigilData.ConvertArgument(value.getStatValues.attack, value);
-                Plugin.Log.LogInfo($"Attack result: {attackResult} from {value.getStatValues.attack}");
+                string attackResult = AConfigilData.ConvertArgument(value.getStatValues.attack, value, false);
                 if (int.TryParse(attackResult, out int a))
                 {
                     result[0] += a;
                 }
-            }
-            else
-            {
-                Plugin.Log.LogInfo($"Attack is empty: {value.getStatValues?.attack}");
             }
         }
 
