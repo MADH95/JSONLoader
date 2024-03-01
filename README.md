@@ -588,6 +588,9 @@ Props that will always appear in the map.
 - **mainLines** The dialogue that plays when first entering the region
 - **repeatLines** Dialogue that plays every other time you enter the region or start a new map in the same region.
 
+### consumableItems
+Items that can be randomly give nto the player when in this region.
+
 ## Consumable Items
 
 Items are powerful tools that can be awarded.
@@ -637,6 +640,23 @@ Create a file with `_item.jldr2` at the end of the file name.
   ]
 }
 ```
+
+| Key                 | Description                                                                   | Default              |
+|---------------------|-------------------------------------------------------------------------------|----------------------|
+| GUID                | GUID of the mod                                                               | ""                   |
+| rulebookName        | Name appears in rulebook                                                      | ""                   |
+| rulebookDescription | Description that appears in rulebook                                          | ""                   |
+| description         | LearnText that Leshy says first time seen                                     | ""                   |
+| icon                | Icon that appears in the rulebook and model if specific modelType requires it | null                 |
+| bottledCardName     | (Optional) Assign this if you want the item to be a card in a bottle          | ""                   |
+| regionSpecific      | Is this item only accessible in specific regions? (Assigned in regions)_      | false                |
+| notRandomlyGiven    | If True then the item will not appear as a choice to be collected             | false                |
+| rulebookCategory    | Which act should this item appear in?                                         | "Part1Rulebook"      |
+| modelType           | What is the appearance of this item?                                          | "BasicRuneWithVeins" |
+| pickupSoundId       | The sound this item makes when the player chooses/activates it                | "stone_object_up"    |
+| placedSoundId       | The sound this item makes when it lands during a battle                       | "stone_object_hit"   |
+| examineSoundId      | The sound this item makes when the player hovers their mouse over it          | "stone_object_hit"   |
+| powerLevel          | Likelihood of this item being chosen to be randomly given to the player       | 1                    |
 
 
 ## Bottled Cards
