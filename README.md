@@ -216,6 +216,147 @@ JSONLoader also allows you to create encounters. To do this, your file needs to 
 These are all the vanilla regions that you can use for your encounters:
 Alpine, Forest, Midnight, Midnight_Ascension, Pirateville, Wetlands
 
+## How do they work? this guide is aimed to help!
+
+Things you need to know:
+
+* When saving an encounter file it must end in "_encounter.jldr2"
+* Remember to check if the json is valid (jsonlint is a good website to check)
+* When making encounters with custom cards, the internal name is used (including prefixes, ex: IGCC_Boar)
+
+### How every piece works individually:
+<details> <summary> Show/hide </summary>
+
+| part  | description | example|
+| ------------- |:-------------:| :-------------:| 
+| name | Internal name, utilized by debugmenu to test your encounter| name: "Example.JungleTheme"|
+| minDifficulty    | How far into a level you should be in for the encounter to show up, determined by map nodes and KCM challenge skulls. (REDUNDANT: currently broken, use 1)  |minDifficulty: 6|
+| maxDifficulty   | How far into a level you should be for the encounter to stop appearing. (REDUNDANT: currently broken, use 99)    | maxDifficulty: 32 |
+| regions     | What maps should the encounter appear in, multiple can be selected    | regions: [ "Wetlands", "Alpine", "Forest"]|
+| dominantTribes | What tribe should be selected when the encounter is a totem battle |"dominantTribes":["Feline"] |
+| randomReplacementCards |What cards should be chosen from a pool, when randomReplacementChance is defined in a slot | "randomReplacementCards": [ "Stoat", "Sparrow", "Snapper" ]|
+|redundantAbilities | What abilities shouldn't appear when the encounter is a totem battle | "redundantAbilities": ["TouchOfDeath"] |
+|turns|The entire blueprint of the encounter| "turns": [{ }]|
+|cardInfo|the individual row blueprint, card placements are randomized | "cardInfo":[{card:"Wolf"},{card:"Opposum"}]|
+|card | What the card should be. | "card": RatKing|
+|randomReplaceChance|How much, in percentage, of a chance should a random card replace "card" from the randomReplaceCards pool.| "randomReplaceChance":50
+|difficultyReq|What level should the "difficultyReplacement" card replace the originally defined card (works on node level and challenge skulls).| "difficultyReq": 16|
+|difficultyReplacement| What card should replace the originally defined card, when the player reaches the specified "difficultyReq" level. 
+
+</details>
+
+### map enums:
+ <details> <summary> Show/hide </summary>
+
+| Internal  | In-game | Boss' map|
+| ------------- |:-------------:| :-------------:| 
+| Alpine     | Snow line    |Trapper/Trader|
+| Wetlands   | Wetlands     | Angler |
+| Forest     | Woodlands    | Prospector |
+| Midnight | Leshy | Final Boss |
+| Midnight_Ascension |Leshy (KCM) | Final Boss in KCM|
+|Pirateville | Royal | alt. Final Boss |
+
+Unless you have mods that allow battles before the final boss, Midnight, Midnight_Ascension and Pirateville are redundant.
+
+
+</details> 
+
+### Example:
+<details> <summary> Show/hide </summary>
+
+```json
+{
+  "name": "Example.BirdEncounter",
+  //internal name
+  
+  "minDifficulty":  1,
+  //how far into the map you need to go before you stumble into this. (unused, best to leave it at 1)
+  
+  "maxDifficulty":  32,
+  //how far until this encounter stops appearing (unused, best leave it at a high level)
+  
+  "regions": [
+    "Alpine",
+    "Forest"
+  ],
+  //what maps should this encounter appear in (alpine and forest is specified, will only show up in prospector and trapper/trader's map [Woodlands and Snow line respectively])
+  
+  "dominantTribes": 
+   [
+    "Bird"
+   ],
+   //the tribes that will be used as heads in totem battles
+  
+  "randomReplacementCards":
+  [
+    "Sparrow",
+    "RavenEgg",
+    "Porcupine",
+    "AntFlying",
+    "Cuckoo",
+    "Adder",
+    "Bee"
+    ],
+    //pool of cards that will be drawn at random when a random chance card is specified
+  
+  "redundantAbilities": 
+  [
+    "Flying"
+  ],
+  //what abilities won't appear during totem battles
+  
+  
+  "turns": [
+    {
+      "cardInfo": [
+      //wave 1
+        {
+        // 1st card
+          "card": "Sparrow",
+          //"sparrow is specified"
+          
+          "randomReplaceChance": 50,
+          //"50% chance of a random card from the randomReplacementCards pool"
+          
+          "difficultyReq": 15,
+          //"what level of difficulty (how many nodes you've passed + challenge tweaks in KCM) should be passed until the sparrow/random card is replaced by the difficultyReplacement"
+          
+          "difficultyReplacement": "Vulture"
+          //"the card that replaces the original card in the battle when a level requirement is met 
+        },
+        {
+          //"2nd card"
+          "card": "RavenEgg",
+          "randomReplaceChance": 25,
+          "difficultyReq": 10,
+          "difficultyReplacement": "Raven"
+        }
+		]
+    },
+    {
+    //wave 2
+      "cardInfo": [
+        {
+          "card": "Sparrow",
+          "randomReplaceChance": 50,
+          "difficultyReq": 15,
+          "difficultyReplacement": "Vulture"
+        },
+        {
+          "card": " ",
+          //card is blank, no card shall be placed, useful for hiding cards until a specific level requirement or random chance cards (Not required for purposefully empty slots)
+          "randomReplaceChance": 25,
+          "difficultyReq": 10,
+          "difficultyReplacement": "Raven"
+        }
+      ]
+    }
+  ]
+}
+```
+</details>
+
 ## Gramophone
 
 JSONLoader also allows you to add music tracks to the Gramophone in Leshy's cabin.
