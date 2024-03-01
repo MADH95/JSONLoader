@@ -135,7 +135,6 @@ namespace JLPlugin
             TribeList.LoadAllTribes(files);
             TraitList.LoadAllTraits(files);
             SigilData.LoadAllSigils(files);
-            ItemData.LoadAllConsumableItems(files);
 
             // NOTE: I really don't want to do this, but I can't figure out how to get the game to load the cards from
             // the JSON files without listing all the damn extension files....
@@ -147,6 +146,7 @@ namespace JLPlugin
             LanguageData.LoadAllLanguages(files);
             MaskData.LoadAllMasks(files);
             RegionSerializeInfo.LoadAllRegions(files);
+            ItemData.LoadAllConsumableItems(files);
             JSONLoader.Data.TalkingCards.LoadTalkingCards.InitAndLoad(files);
             // ^ Ambiguity between JSONLoader.Data and JLPlugin.Data is annoying. = u= -Kelly
         }
