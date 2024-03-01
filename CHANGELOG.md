@@ -18,6 +18,7 @@
     - A bug where configils will break if abilityBehaviour is not specified
     - OnLoad and OnHealthLevel not working
     - Behaviours not running when a card is attacked and killed
+    - Change Appearance not working
 
 ## 2.5.4
 - made it so JSONLoader now loads files that end in "_example.jldr2"
