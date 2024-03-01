@@ -30,6 +30,9 @@
     "Insect",
     "Reptile"
   ],
+  "consumableItems": [
+    "FishHook"
+  ],
   "bossPrepEncounter": "Submerge",
   "boardLightColor": "0,193,122,255",
   "cardsLightColor": "0,129,255,255",
