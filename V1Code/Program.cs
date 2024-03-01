@@ -91,45 +91,6 @@ namespace JLPlugin
             Logger.LogInfo($"Loaded {PluginName}!");
         }
 
-        public static void LogFields()
-        {
-            string output = "\n";
-            List<Type> types = new List<Type>() { typeof(PlayableCard), typeof(CardInfo), typeof(CardSlot) };
-
-            foreach (Type obj in types)
-            {
-                FieldInfo[] fields = obj.GetFields();
-                if (fields.Length > 0)
-                {
-                    string fieldheader = $"{obj.Name} fields:\n";
-                    output += fieldheader;
-                    output += new String('-', fieldheader.Length - 1) + "\n";
-
-                    foreach (FieldInfo fieldinfo in fields)
-                    {
-                        output += $"{fieldinfo.Name} ({fieldinfo.FieldType.Name})\n";
-                    }
-                    output += new String('-', fieldheader.Length - 1) + "\n\n";
-                }
-
-                PropertyInfo[] properties = obj.GetProperties();
-                if (properties.Length > 0)
-                {
-                    string propertyheader = $"{obj.Name} properties:\n";
-                    output += propertyheader;
-                    output += new String('-', propertyheader.Length - 1) + "\n";
-
-                    foreach (PropertyInfo propertyinfo in properties)
-                    {
-                        output += $"{propertyinfo.Name} ({propertyinfo.PropertyType.Name})\n";
-                    }
-                    output += new String('-', propertyheader.Length - 1) + "\n\n";
-                }
-            }
-
-            Plugin.Log.LogInfo(output);
-        }
-
         public void LoadAll(List<string> files)
         {
             TribeList.LoadAllTribes(files);
@@ -231,6 +192,45 @@ namespace JLPlugin
         {
             if (Configs.VerboseLogging)
                 Log.LogError(s);
+        }
+
+        public static void LogFields()
+        {
+            string output = "\n";
+            List<Type> types = new List<Type>() { typeof(PlayableCard), typeof(CardInfo), typeof(CardSlot) };
+
+            foreach (Type obj in types)
+            {
+                FieldInfo[] fields = obj.GetFields();
+                if (fields.Length > 0)
+                {
+                    string fieldheader = $"{obj.Name} fields:\n";
+                    output += fieldheader;
+                    output += new String('-', fieldheader.Length - 1) + "\n";
+
+                    foreach (FieldInfo fieldinfo in fields)
+                    {
+                        output += $"{fieldinfo.Name} ({fieldinfo.FieldType.Name})\n";
+                    }
+                    output += new String('-', fieldheader.Length - 1) + "\n\n";
+                }
+
+                PropertyInfo[] properties = obj.GetProperties();
+                if (properties.Length > 0)
+                {
+                    string propertyheader = $"{obj.Name} properties:\n";
+                    output += propertyheader;
+                    output += new String('-', propertyheader.Length - 1) + "\n";
+
+                    foreach (PropertyInfo propertyinfo in properties)
+                    {
+                        output += $"{propertyinfo.Name} ({propertyinfo.PropertyType.Name})\n";
+                    }
+                    output += new String('-', propertyheader.Length - 1) + "\n\n";
+                }
+            }
+
+            Plugin.Log.LogInfo(output);
         }
     }
 }
