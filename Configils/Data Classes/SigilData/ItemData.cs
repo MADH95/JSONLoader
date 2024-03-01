@@ -17,7 +17,7 @@ namespace JLPlugin.Data
         public string icon;
         public string bottledCardName = "";
         public bool regionSpecific = false;
-        public bool notRandomlyGiven = true;
+        public bool notRandomlyGiven = false;
         public string rulebookCategory = AbilityMetaCategory.Part1Rulebook.ToString();
         public string modelType = ConsumableItemManager.ModelType.BasicRuneWithVeins.ToString();
         public string pickupSoundId = "stone_object_up";
