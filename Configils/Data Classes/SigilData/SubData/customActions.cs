@@ -27,7 +27,7 @@ namespace JLPlugin.Data
                     {
                         if (!action.fields.Contains("runOnCondition") &&
                             abfields.Keys.Contains("runOnCondition") &&
-                            SigilData.ConvertArgument(abfields["runOnCondition"], abilitydata) == "false")
+                            AConfigilData.ConvertArgument(abfields["runOnCondition"], abilitydata) == "false")
                         {
                             continue;
                         }
@@ -37,7 +37,7 @@ namespace JLPlugin.Data
                         {
                             if (abfields.Keys.Contains(field))
                             {
-                                SetFields[field] = SigilData.ConvertArgument(abfields[field], abilitydata);
+                                SetFields[field] = AConfigilData.ConvertArgument(abfields[field], abilitydata);
                             }
                             else
                             {

@@ -12,10 +12,9 @@ using UnityEngine;
 
 namespace JLPlugin.V2.Data
 {
-    public class CardSerializeInfo : JSONParser.IInitializable
+    public class CardSerializeInfo : IInitializable
     {
         public const string DEFAULT_MOD_PREFIX = "JSON";
-        private static FieldInfo[] PUBLIC_FIELD_INFOS = typeof(CardSerializeInfo).GetFields(BindingFlags.Instance | BindingFlags.Public);
 
         public string name;
 
@@ -23,9 +22,9 @@ namespace JLPlugin.V2.Data
 
         public string[] decals;
 
-        public JSONParser.LocalizableField displayedName;
+        public LocalizableField displayedName;
 
-        public JSONParser.LocalizableField description;
+        public LocalizableField description;
 
         public int? baseAttack;
 
@@ -245,7 +244,7 @@ namespace JLPlugin.V2.Data
             }
         }
 
-        private void ApplyLocaleField(string field, JSONParser.LocalizableField rows, out string cardInfoEnglishField)
+        private void ApplyLocaleField(string field, LocalizableField rows, out string cardInfoEnglishField)
         {
             if (rows.rows.TryGetValue(rows.englishFieldName, out string english))
             {
@@ -294,12 +293,12 @@ namespace JLPlugin.V2.Data
             CardInfo existingCard = UpdateCard ? ScriptableObjectLoader<CardInfo>.AllData.Find((CardInfo x) => x.name == this.name) : CardManager.BaseGameCards.CardByName(this.name);
             if (existingCard != null)
             {
-                Plugin.VerboseLog($"Modifying {this.name} using {this.ToJSON()}");
+                Plugin.VerboseLog($"Modifying {this.name}");
                 Apply(existingCard, this, true, existingCard.name);
             }
             else
             {
-                Plugin.VerboseLog($"New Card {this.name} using {this.ToJSON()}");
+                Plugin.VerboseLog($"New Card {this.name}");
                 string localModPrefix = this.modPrefix ?? DEFAULT_MOD_PREFIX;
                 CardInfo newCard = ScriptableObject.CreateInstance<CardInfo>();
                 newCard.name = this.name.StartsWith($"{localModPrefix}_") ? this.name : $"{localModPrefix}_{this.name}";
@@ -343,7 +342,7 @@ namespace JLPlugin.V2.Data
             CardInfo baseGameCard = (CardInfo)CardManager.BaseGameCards.CardByName(this.name).Clone();
             if (baseGameCard != null)
             {
-                Plugin.Log.LogDebug($"Modifying {this.name} using {this.ToJSON()}");
+                Plugin.Log.LogDebug($"Modifying {this.name}");
                 Apply(baseGameCard, this, true, name);
                 return baseGameCard;
             }
@@ -364,69 +363,9 @@ namespace JLPlugin.V2.Data
                 filename = filename + "2";
 
             if (overwrite || !File.Exists(filename))
-                File.WriteAllText(filename, this.ToJSON());
+                File.WriteAllText(filename, JSONParser.ToJSON(this));
 
             return filename;
-        }
-
-        private string ToJSON()
-        {
-            string retval = "{\n";
-
-            foreach (FieldInfo field in PUBLIC_FIELD_INFOS)
-            {
-                if (field.FieldType == typeof(string))
-                {
-                    string fieldVal = (string)field.GetValue(this);
-                    if (!string.IsNullOrEmpty(fieldVal))
-                        retval += $"\t\"{field.Name}\": \"{fieldVal}\",\n";
-                }
-                else if (field.FieldType == typeof(string[]))
-                {
-                    string[] fieldVal = (string[])field.GetValue(this);
-                    if (fieldVal != null && fieldVal.Length > 0)
-                        retval += $"\t\"{field.Name}\": [{string.Join(",", fieldVal.Select(v => $"\"{v}\""))}],\n";
-                }
-                else if (field.FieldType == typeof(int?))
-                {
-                    int? fieldVal = (int?)field.GetValue(this);
-                    if (fieldVal.HasValue)
-                        retval += $"\t\"{field.Name}\": {fieldVal.Value},\n";
-                }
-                else if (field.FieldType == typeof(bool?))
-                {
-                    bool? fieldVal = (bool?)field.GetValue(this);
-                    if (fieldVal.HasValue)
-                        retval += $"\t\"{field.Name}\": {(fieldVal.Value ? "true" : "false")},\n";
-                }
-                else if (field.FieldType == typeof(Dictionary<string, string>))
-                {
-                    Dictionary<string, string> fieldVal = (Dictionary<string, string>)field.GetValue(this);
-                    if (fieldVal != null && fieldVal.Count > 0)
-                    {
-                        retval += $"\t\"{field.Name}\": {{\n";
-                        foreach (var val in fieldVal.Where(kvp => !string.IsNullOrEmpty(kvp.Key) && !string.IsNullOrEmpty(kvp.Value)))
-                            retval += $"\t\t\"{val.Key}\": \"{val.Value}\",\n";
-                        retval += $"\t}},\n";
-                    }
-                }
-                else if (field.FieldType.IsAssignableFrom(typeof(JSONParser.IFlexibleField)))
-                {
-                    object value = field.GetValue(this);
-                    if (value != null)
-                    {
-                        retval += ((JSONParser.IFlexibleField)value).ToJSON();
-                    }
-
-                    Dictionary<string, string> fieldVal = ((JSONParser.LocalizableField)field.GetValue(this)).rows;
-                    foreach (KeyValuePair<string, string> pair in fieldVal)
-                    {
-                        retval += $"\t\"{pair.Key}\": {pair.Value},\n";
-                    }
-                }
-            }
-            retval = retval.TrimEnd('\n', ',') + "\n}";
-            return retval;
         }
 
         /// <summary>
@@ -447,25 +386,28 @@ namespace JLPlugin.V2.Data
                     filename.EndsWith("_gram.jldr2") ||
                     filename.EndsWith("_language.jldr2") ||
                     filename.EndsWith("_mask.jldr2") ||
+                    filename.EndsWith("_region.jldr2") ||
+                    filename.EndsWith("_trait.jldr2") ||
+                    filename.EndsWith("_item.jldr2") ||
                     filename.EndsWith("_talk.jldr2"))
                 {
                     continue;
                 }
 
                 files.RemoveAt(index--);
-
-                Plugin.VerboseLog($"Loading JLDR2 Card {filename}");
                 ImportExportUtils.SetDebugPath(file);
+                
                 try
                 {
+                    Plugin.VerboseLog($"Loading JLDR2 Card {filename}");
                     CardSerializeInfo cardInfo = JSONParser.FromFilePath<CardSerializeInfo>(file);
                     cardInfo.filePath = file;
                     cardInfo.Apply();
-                    Plugin.VerboseLog($"Loaded JSON card {cardInfo.name}");
+                    Plugin.VerboseLog($"Loaded JSON card from {file}");
                 }
                 catch (Exception ex)
                 {
-                    Plugin.Log.LogError($"Failed to load {filename}: {ex.Message}");
+                    Plugin.Log.LogError($"Failed to load card {filename}");
                     Plugin.Log.LogError(ex);
                 }
             }
@@ -480,6 +422,7 @@ namespace JLPlugin.V2.Data
                 ImportExportUtils.SetDebugPath(path);
 
                 CardSerializeInfo info = new CardSerializeInfo();
+                info.Initialize();
                 Apply(card, info, false, card.name);
 
                 string directory = Path.GetDirectoryName(path);

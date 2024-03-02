@@ -31,6 +31,7 @@ namespace JSONLoader.API
 
         public static Dictionary<string, string> GetModifiedVariableList(Dictionary<string, string> variables)
         {
+            if (ModifyVariableList == null) return variables;
             return ModifyVariableList(variables);
         }
 

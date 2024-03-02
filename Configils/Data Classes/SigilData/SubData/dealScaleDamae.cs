@@ -11,7 +11,7 @@ namespace JLPlugin.Data
 
         public static IEnumerator DealScaleDamage(AbilityBehaviourData abilitydata)
         {
-            if (SigilData.ConvertArgument(abilitydata.dealScaleDamage.runOnCondition, abilitydata) == "false")
+            if (AConfigilData.ConvertArgument(abilitydata.dealScaleDamage.runOnCondition, abilitydata) == "false")
             {
                 yield break;
             }
@@ -19,7 +19,7 @@ namespace JLPlugin.Data
             if (string.IsNullOrWhiteSpace(abilitydata.dealScaleDamage.damage))
                 yield break;
 
-            int damage = int.Parse(SigilData.ConvertArgument(abilitydata.dealScaleDamage.damage, abilitydata));
+            int damage = int.Parse(AConfigilData.ConvertArgument(abilitydata.dealScaleDamage.damage, abilitydata));
             if (damage > 0)
             {
                 yield return Singleton<LifeManager>.Instance.ShowDamageSequence(damage, damage, false, 0.125f, null, 0f, true);

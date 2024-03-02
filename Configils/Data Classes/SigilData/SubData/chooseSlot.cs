@@ -17,7 +17,7 @@ namespace JLPlugin.Data
             foreach (CardSlot slot in Singleton<BoardManager>.Instance.AllSlotsCopy)
             {
                 abilitydata.generatedVariables["ChooseableSlot"] = slot;
-                if (SigilData.ConvertArgument(chooseslot.slotChooseableOnCondition, abilitydata, false) == "false")
+                if (AConfigilData.ConvertArgument(chooseslot.slotChooseableOnCondition, abilitydata, false) == "false")
                 {
                     validtargets.Remove(slot);
                 }

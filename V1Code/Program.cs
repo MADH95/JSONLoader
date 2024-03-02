@@ -14,6 +14,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using InscryptionAPI.Localizing;
+using ItemData = JLPlugin.Data.ItemData;
 
 namespace JLPlugin
 {
@@ -25,11 +27,11 @@ namespace JLPlugin
 
         public const string PluginGuid = "MADH.inscryption.JSONLoader";
         public const string PluginName = "JSONLoader";
-        public const string PluginVersion = "2.5.3";
+        public const string PluginVersion = "2.6.0";
 
         public static string JSONLoaderDirectory = "";
         public static string BepInExDirectory = "";
-        public static string ExportDirectory => Path.Combine(JSONLoaderDirectory, "Exported");
+        public static string ExportDirectory => Path.Combine(JSONLoaderDirectory, "Examples", "Exported");
 
         internal static ManualLogSource Log;
         private HotkeyController hotkeyController;
@@ -65,6 +67,10 @@ namespace JLPlugin
 
             Configs.InitializeConfigs(Config);
 
+            hotkeyController = new HotkeyController();
+            hotkeyController.AddHotkey(Configs.ReloadHotkey, ReloadGame);
+            hotkeyController.AddHotkey(Configs.ExportHotkey, ExportAllToJLDR2);
+            
             Log.LogWarning("Note: JSONLoader now uses .jldr2 files, not .json files.");
             List<string> files = GetAllJLDRFiles();
             if (Configs.BetaCompatibility)
@@ -73,57 +79,22 @@ namespace JLPlugin
                 Utils.JLUtils.LoadCardsFromFiles(files);
             }
 
-            LoadAll(files);
-
-            hotkeyController = new HotkeyController();
-            hotkeyController.AddHotkey(Configs.ReloadHotkey, ReloadGame);
-            hotkeyController.AddHotkey(Configs.ExportHotkey, ExportAllToJLDR2);
-
-            Logger.LogInfo($"Loaded {PluginName}!");
-        }
-
-        public static void LogFields()
-        {
-            string output = "\n";
-            List<Type> types = new List<Type>() { typeof(PlayableCard), typeof(CardInfo), typeof(CardSlot) };
-
-            foreach (Type obj in types)
+            try
             {
-                FieldInfo[] fields = obj.GetFields();
-                if (fields.Length > 0)
-                {
-                    string fieldheader = $"{obj.Name} fields:\n";
-                    output += fieldheader;
-                    output += new String('-', fieldheader.Length - 1) + "\n";
-
-                    foreach (FieldInfo fieldinfo in fields)
-                    {
-                        output += $"{fieldinfo.Name} ({fieldinfo.FieldType.Name})\n";
-                    }
-                    output += new String('-', fieldheader.Length - 1) + "\n\n";
-                }
-
-                PropertyInfo[] properties = obj.GetProperties();
-                if (properties.Length > 0)
-                {
-                    string propertyheader = $"{obj.Name} properties:\n";
-                    output += propertyheader;
-                    output += new String('-', propertyheader.Length - 1) + "\n";
-
-                    foreach (PropertyInfo propertyinfo in properties)
-                    {
-                        output += $"{propertyinfo.Name} ({propertyinfo.PropertyType.Name})\n";
-                    }
-                    output += new String('-', propertyheader.Length - 1) + "\n\n";
-                }
+                LoadAll(files);
+            }
+            catch (Exception)
+            {
+                // ignored
             }
 
-            Plugin.Log.LogInfo(output);
+            Logger.LogInfo($"Loaded {PluginName}!");
         }
 
         public void LoadAll(List<string> files)
         {
             TribeList.LoadAllTribes(files);
+            TraitList.LoadAllTraits(files);
             SigilData.LoadAllSigils(files);
 
             // NOTE: I really don't want to do this, but I can't figure out how to get the game to load the cards from
@@ -135,6 +106,8 @@ namespace JLPlugin
             GramophoneData.LoadAllGramophone(files);
             LanguageData.LoadAllLanguages(files);
             MaskData.LoadAllMasks(files);
+            ItemData.LoadAllConsumableItems(files);
+            RegionSerializeInfo.LoadAllRegions(files);
             JSONLoader.Data.TalkingCards.LoadTalkingCards.InitAndLoad(files);
             // ^ Ambiguity between JSONLoader.Data and JLPlugin.Data is annoying. = u= -Kelly
         }
@@ -162,12 +135,24 @@ namespace JLPlugin
 
         public void ExportAllToJLDR2()
         {
+            if (Configs.ExportAllLanguages)
+            {
+                foreach (LocalizationManager.CustomLanguage language in LocalizationManager.AllLanguages)
+                {
+                    VerboseLog($"Loading Language {language.LanguageName} {language.Language}");
+                    Localization.TryLoadLanguage(language.Language);
+                }
+            }
+
+
             TribeList.ExportAllTribes();
             // SigilData.LoadAllSigils(files);
+            ItemData.ExportAllItems();
             Data.EncounterData.ExportAllEncounters();
             StarterDeckList.ExportAllStarterDecks();
             // GramophoneData.LoadAllGramophone(files);
             LanguageData.ExportAllLanguages();
+            RegionSerializeInfo.ExportAllRegions();
             // MaskData.LoadAllMasks(files);
             // JSONLoader.Data.TalkingCards.LoadTalkingCards.InitAndLoad(files);
             // ^ Ambiguity between JSONLoader.Data and JLPlugin.Data is annoying. = u= -Kelly
@@ -207,6 +192,45 @@ namespace JLPlugin
         {
             if (Configs.VerboseLogging)
                 Log.LogError(s);
+        }
+
+        public static void LogFields()
+        {
+            string output = "\n";
+            List<Type> types = new List<Type>() { typeof(PlayableCard), typeof(CardInfo), typeof(CardSlot) };
+
+            foreach (Type obj in types)
+            {
+                FieldInfo[] fields = obj.GetFields();
+                if (fields.Length > 0)
+                {
+                    string fieldheader = $"{obj.Name} fields:\n";
+                    output += fieldheader;
+                    output += new String('-', fieldheader.Length - 1) + "\n";
+
+                    foreach (FieldInfo fieldinfo in fields)
+                    {
+                        output += $"{fieldinfo.Name} ({fieldinfo.FieldType.Name})\n";
+                    }
+                    output += new String('-', fieldheader.Length - 1) + "\n\n";
+                }
+
+                PropertyInfo[] properties = obj.GetProperties();
+                if (properties.Length > 0)
+                {
+                    string propertyheader = $"{obj.Name} properties:\n";
+                    output += propertyheader;
+                    output += new String('-', propertyheader.Length - 1) + "\n";
+
+                    foreach (PropertyInfo propertyinfo in properties)
+                    {
+                        output += $"{propertyinfo.Name} ({propertyinfo.PropertyType.Name})\n";
+                    }
+                    output += new String('-', propertyheader.Length - 1) + "\n\n";
+                }
+            }
+
+            Plugin.Log.LogInfo(output);
         }
     }
 }

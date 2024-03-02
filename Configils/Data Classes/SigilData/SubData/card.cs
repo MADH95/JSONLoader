@@ -24,14 +24,14 @@ namespace JLPlugin.Data
                 return null;
             }
 
-            if (SigilData.ConvertArgument(cardInfo.name, abilitydata) == "None")
+            if (AConfigilData.ConvertArgument(cardInfo.name, abilitydata) == "None")
             {
                 return null;
             }
 
             if (!string.IsNullOrWhiteSpace(cardInfo.name))
             {
-                card = CardLoader.GetCardByName(SigilData.ConvertArgument(cardInfo.name, abilitydata));
+                card = CardLoader.GetCardByName(AConfigilData.ConvertArgument(cardInfo.name, abilitydata));
             }
             else if (cardInfo.randomCardOnCondition != null)
             {
@@ -42,21 +42,21 @@ namespace JLPlugin.Data
                     abilitydata.generatedVariables["RandomCardInfo"] = randomCard;
                     if (SaveManager.SaveFile.IsPart1)
                     {
-                        if (SigilData.ConvertArgument(cardInfo.randomCardOnCondition, abilitydata) == "true" && randomCard.metaCategories.Contains(CardMetaCategory.TraderOffer))
+                        if (AConfigilData.ConvertArgument(cardInfo.randomCardOnCondition, abilitydata) == "true" && randomCard.metaCategories.Contains(CardMetaCategory.TraderOffer))
                         {
                             cardsWithCondition.Add(randomCard);
                         }
                     }
                     else if (SaveManager.SaveFile.IsPart2)
                     {
-                        if (SigilData.ConvertArgument(cardInfo.randomCardOnCondition, abilitydata) == "true" && randomCard.metaCategories.Contains(CardMetaCategory.GBCPlayable))
+                        if (AConfigilData.ConvertArgument(cardInfo.randomCardOnCondition, abilitydata) == "true" && randomCard.metaCategories.Contains(CardMetaCategory.GBCPlayable))
                         {
                             cardsWithCondition.Add(randomCard);
                         }
                     }
                     else if (SaveManager.SaveFile.IsPart3)
                     {
-                        if (SigilData.ConvertArgument(cardInfo.randomCardOnCondition, abilitydata) == "true" && randomCard.metaCategories.Contains(CardMetaCategory.Part3Random))
+                        if (AConfigilData.ConvertArgument(cardInfo.randomCardOnCondition, abilitydata) == "true" && randomCard.metaCategories.Contains(CardMetaCategory.Part3Random))
                         {
                             cardsWithCondition.Add(randomCard);
                         }
@@ -71,9 +71,9 @@ namespace JLPlugin.Data
             }
             else if (!string.IsNullOrEmpty(cardInfo.targetCard))
             {
-                card = ((Card)SigilData.ConvertArgumentToType(cardInfo.targetCard, abilitydata, typeof(Card))).Info;
+                card = ((Card)AConfigilData.ConvertArgumentToType(cardInfo.targetCard, abilitydata, typeof(Card))).Info;
             }
-            if (SigilData.ConvertArgument(cardInfo.retainMods, abilitydata) == "true")
+            if (AConfigilData.ConvertArgument(cardInfo.retainMods, abilitydata) == "true")
             {
                 ModifyCard(card, abilitydata);
             }

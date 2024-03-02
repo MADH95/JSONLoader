@@ -1,3 +1,25 @@
+﻿## 2.6.0
+- Added JLDR2 support for regions
+- Added JLDR2 support for power stats
+- Added JLDR2 support for traits
+- Added JLDR2 support for items
+- Added JLDR2 support for bottled cards
+- Moved Exported JLDR2 content to Example folder
+- Configils can now supports localization (Abilities, Special Abilities and Stat Icons)
+- Added more json support
+    - Can now embed textures in json using `base64:` prefix
+    - float, color, vector2, all Array types, private serialized fields and public properties
+    - Incorrectly named fields will now log to console and suggest the correct name
+    - Errors resulting from loading a .jldr2 file will show while file cause it now
+    - Fixed JSONLoader not loading everything else if 1 configil errors
+- Fixed localization not working on cards/sigils... etc
+- Fixed exporting cards not exporting all details (including localization)
+- Fixed configil bugs
+    - A bug where configils will break if abilityBehaviour is not specified
+    - OnLoad and OnHealthLevel not working
+    - Behaviours not running when a card is attacked and killed
+    - Change Appearance not working
+
 ## 2.5.4
 - made it so JSONLoader now loads files that end in "_example.jldr2"
 - made it so JSONLoader now ignores the "Examples" folder instead of the whole JSONLoader folder
@@ -8,10 +30,10 @@
 - added the changeAppearance field which has this format:
 
 "changeAppearance": [{
-    "changePortrait": "portrait.png",
-    "changeName": "Elder ([BaseCard.Info.displayedName])",
-    "addDecals": [ "decal1.png", "decal2.png" ],
-    "removeDecals": [ "decal3.png", "decal4.png" ]
+"changePortrait": "portrait.png",
+"changeName": "Elder ([BaseCard.Info.displayedName])",
+"addDecals": [ "decal1.png", "decal2.png" ],
+"removeDecals": [ "decal3.png", "decal4.png" ]
 }]
 
 - added the OnDamageDirectly trigger which triggers when a card deals direct damage to the opponent, it has two variables [HitSlot] and [DamageAmount]
@@ -23,9 +45,9 @@
 
 //This changes the appearance of a card
 "changeAppearance": [{
-    "changePortrait": "portrait.png", //This changes the portrait of the card
-    "changeName": "Elder ([BaseCard.Info.displayedName])", //This is just like evolve!
-    "addDecals": [ "decal.png" ] //And last but not least i add a decal to the card here
+"changePortrait": "portrait.png", //This changes the portrait of the card
+"changeName": "Elder ([BaseCard.Info.displayedName])", //This is just like evolve!
+"addDecals": [ "decal.png" ] //And last but not least i add a decal to the card here
 }]
 
 - fixed generated variables causing an error if one of their variables were null
@@ -115,14 +137,14 @@
 
 ## 2.3.0
 - Added talking card support!
-	
+
 ## 2.2.4
 - Added gramophone support
 
 ## 2.2.3
 - Added encounter support
 - Removed the [PlayerSlot()] and [OpponentSlot()] variable and replaced it with the GetSlot() function with this format:
-  GetSlot(index, isOpponentSlot, fields) 
+  GetSlot(index, isOpponentSlot, fields)
   (fields is everything that you would have after the first dot of the original variable in single quotation marks)
 - Fixed a ton more configil bugs
 
@@ -178,12 +200,12 @@
 ## v1.5.0
 - Compatability patch for InscryptionAPI v1.11
 - Refactored Code:
-	+ Error checking no longer uses exception handling to funciton
-	+ Game will load default deck if the names in the config for testdeck don't exist
-	+ baseHealth and metaCategories are handled before the call to NewCard.Add to avoid bloat in the function call
-	+ Removed Evolve/Tail/IceCubeParams handling to utilise API's handling of those aspects instead
-	+ Added ErrorUtil to better help with error logging
-	+ Made use of new json parser to read in Evolve/Tail/IceCubeData from json objects
+    + Error checking no longer uses exception handling to funciton
+    + Game will load default deck if the names in the config for testdeck don't exist
+    + baseHealth and metaCategories are handled before the call to NewCard.Add to avoid bloat in the function call
+    + Removed Evolve/Tail/IceCubeParams handling to utilise API's handling of those aspects instead
+    + Added ErrorUtil to better help with error logging
+    + Made use of new json parser to read in Evolve/Tail/IceCubeData from json objects
 
 ## v1.4.0
 - Changed json parser from Unity's JSONUtility to TinyJson
@@ -202,18 +224,18 @@
 
 ## v1.3.6
 - Fixed linking error from update v1.3.5
-Refactored Code:
-	+ Seperated EvolveData, TailData, and IceCubeData into their own files and gave them functions to handle their own generation and conversion to Param varients
-	+ Added class CDUtils to seperate the data from card adding/editing funcitons
-	+ seperated ExtensionUtils into it's own file
+  Refactored Code:
+    + Seperated EvolveData, TailData, and IceCubeData into their own files and gave them functions to handle their own generation and conversion to Param varients
+    + Added class CDUtils to seperate the data from card adding/editing funcitons
+    + seperated ExtensionUtils into it's own file
 
 ## v1.3.5
 - Compatablity patch for InscryptionAPI v1.10
 - Refactored code:
-	+ CardData has it's own file
-	+ Dicts has it's own file
-	+ EvolveData, TailData, and IceCubeData are now in their own file together
-	+ JLUtils was created to host utility functions like assignment helpers and validity checks
+    + CardData has it's own file
+    + Dicts has it's own file
+    + EvolveData, TailData, and IceCubeData are now in their own file together
+    + JLUtils was created to host utility functions like assignment helpers and validity checks
 
 ## v1.3.3
 - updated error logging for user
@@ -228,9 +250,9 @@ Refactored Code:
 ## v1.2.0
 - Added validity check for TestDeck cards
 - Added functionality for:
-	+ EvolveParams via "evolve_evolutionName" & "evolve_turnsToEvolve"
-	+ TailParams via "tail_cardName" & "tail_tailLostPortrait"
-	+ IceCubeParams via "iceCube_creatureWithin"
+    + EvolveParams via "evolve_evolutionName" & "evolve_turnsToEvolve"
+    + TailParams via "tail_cardName" & "tail_tailLostPortrait"
+    + IceCubeParams via "iceCube_creatureWithin"
 - Patched LoadScreenManager.LoadGameData and ChapterSelectMenu_OnChapterConfirmed to facilitate above implementation
 - Minor refactor of NewCard call
 
@@ -243,6 +265,6 @@ Refactored Code:
 
 ## v1.0.0
 - Handles cards that don't use:
-	+ EvolveParams
-	+ TailParams
-	+ IceCubeParams
+    + EvolveParams
+    + TailParams
+    + IceCubeParams

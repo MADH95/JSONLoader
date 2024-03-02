@@ -27,7 +27,7 @@ namespace JLPlugin.Data
         {
             foreach (changeAppearance changeAppearanceInfo in abilitydata.changeAppearance)
             {
-                if (SigilData.ConvertArgument(changeAppearanceInfo.runOnCondition, abilitydata) == "false")
+                if (AConfigilData.ConvertArgument(changeAppearanceInfo.runOnCondition, abilitydata) == "false")
                 {
                     continue;
                 }
@@ -51,7 +51,7 @@ namespace JLPlugin.Data
                 {
                     if (!string.IsNullOrWhiteSpace(changeAppearanceInfo.targetCard))
                     {
-                        CardToModify = (PlayableCard)SigilData.ConvertArgumentToType(changeAppearanceInfo.targetCard, abilitydata, typeof(PlayableCard));
+                        CardToModify = (PlayableCard)AConfigilData.ConvertArgumentToType(changeAppearanceInfo.targetCard, abilitydata, typeof(PlayableCard));
                     }
                     else
                     {
@@ -61,12 +61,13 @@ namespace JLPlugin.Data
 
                 if (CardToModify != null)
                 {
-                    //SigilData.ConvertArgument(buffcardsinfo.addStats.Split('/')[0], abilitydata);
+                    //AConfigilData.ConvertArgument(buffcardsinfo.addStats.Split('/')[0], abilitydata);
                     if (!string.IsNullOrWhiteSpace(changeAppearanceInfo.changePortrait))
                     {
                         try
                         {
-                            Texture2D PortraitTexture = TextureHelper.GetImageAsTexture(changeAppearanceInfo.changePortrait, FilterMode.Point);
+                            Texture2D PortraitTexture = null;
+                            ImportExportUtils.ApplyValue(ref PortraitTexture, ref changeAppearanceInfo.changePortrait, true, "Configils", "changePortrait");
                             UnityEngine.Sprite PortraitSprite = TextureHelper.ConvertTexture(PortraitTexture, TextureHelper.SpriteType.CardPortrait, FilterMode.Point);
                             CardToModify.SwitchToPortrait(PortraitSprite);
                         }
@@ -87,7 +88,12 @@ namespace JLPlugin.Data
                     {
                         foreach (string removeDecal in changeAppearanceInfo.removeDecals)
                         {
-                            object obj = (abilitydata.ability == null) ? abilitydata.specialAbility : abilitydata.ability;
+                            object obj;
+                            if (abilitydata.ability == null)
+                                obj = abilitydata.specialAbility == null ? abilitydata.specialStatIcon : abilitydata.specialAbility;
+                            else
+                                obj = abilitydata.ability;
+                            
                             string name = $"{obj}_{removeDecal}";
                             CardToModify.Info.temporaryDecals.RemoveAll(x => x.name == name);
                         }
@@ -95,10 +101,16 @@ namespace JLPlugin.Data
 
                     if (changeAppearanceInfo.addDecals != null)
                     {
-                        foreach (string addDecal in changeAppearanceInfo.addDecals)
+                        for (var i = 0; i < changeAppearanceInfo.addDecals.Count; i++)
                         {
-                            Texture2D texture = TextureHelper.GetImageAsTexture(addDecal, FilterMode.Point);
-                            object obj = (abilitydata.ability == null) ? abilitydata.specialAbility : abilitydata.ability;
+                            var addDecal = changeAppearanceInfo.addDecals[i];
+                            Texture2D texture = null;
+                            ImportExportUtils.ApplyValue(ref texture, ref addDecal, true, "Configils", "addDecals");
+                            object obj;
+                            if (abilitydata.ability == null)
+                                obj = abilitydata.specialAbility == null ? abilitydata.specialStatIcon : abilitydata.specialAbility;
+                            else
+                                obj = abilitydata.ability;
                             texture.name = $"{obj}_{addDecal}";
                             CardToModify.Info.temporaryDecals.Add(texture);
                         }

@@ -30,7 +30,7 @@ public static class ImportExportUtils
         LoggingSuffix = "";
     }
 
-    public static T ParseEnum<T>(string value) where T : unmanaged, System.Enum
+    public static T ParseEnum<T>(string value) where T : unmanaged, Enum
     {
         T result;
         if (Enum.TryParse<T>(value, out result))
@@ -191,6 +191,12 @@ public static class ImportExportUtils
                 string oType = from.ToString();
                 if (int.TryParse(oType, out int value))
                 {
+                    if (Enum.GetValues(fromType).Cast<int>().Contains(value))
+                    {
+                        to = (ToType)(object)oType;
+                        return;
+                    }
+                    
                     // Custom type
                     object[] parameters = { value, "guid", "name" };
                     var m = typeof(GuidManager).GetMethod(nameof(GuidManager.TryGetGuidAndKeyEnumValue), BindingFlags.Public | BindingFlags.Static)
@@ -205,7 +211,7 @@ public static class ImportExportUtils
                     }
                     else
                     {
-                        Error($"Failed to convert enum to string! '{from}'");
+                        Error($"Failed to convert enum to string! '{from}' int '{value}'");
                         to = (ToType)(object)oType;
                     }
                 }
@@ -273,7 +279,7 @@ public static class ImportExportUtils
                 {
                     try
                     {
-                        to = (ToType)(object)TextureHelper.GetImageAsTexture(path);
+                        to = (ToType)(object)GetTextureFromString(path);
                     }
                     catch (FileNotFoundException)
                     {
@@ -299,7 +305,7 @@ public static class ImportExportUtils
                 string path = (string)(object)from;
                 if (!string.IsNullOrEmpty(path))
                 {
-                    Texture2D imageAsTexture = TextureHelper.GetImageAsTexture(path);
+                    Texture2D imageAsTexture = GetTextureFromString(path);
                     if (imageAsTexture != null)
                     {
                         to = (ToType)(object)imageAsTexture.ConvertTexture();
@@ -340,11 +346,72 @@ public static class ImportExportUtils
                 });
                 return;
             }
-            else if (fromType == typeof(JSONParser.LocalizableField) && toType == typeof(string))
+            else if (fromType == typeof(string) && toType == typeof(Color))
+            {
+                string value = (string)(object)from;
+                Color color = Color.white;
+                if (value.StartsWith("#"))
+                {
+                    if (!ColorUtility.TryParseHtmlString(value, out color))
+                    {
+                        Error($"Could not convert {value} to color!");
+                    }
+                }
+                else
+                {
+                    int[] split = value.Split(',').Select((a)=>int.Parse(a.Trim())).ToArray();
+                    if (split.Length > 0)
+                    {
+                        color.r = split[0] / 255f;
+                    }
+                    if (split.Length > 1)
+                    {
+                        color.g = split[1] / 255f;
+                    }
+                    if (split.Length > 2)
+                    {
+                        color.b = split[2] / 255f;
+                    }
+                    if (split.Length > 3)
+                    {
+                        color.a = split[3] / 255f;
+                    }
+                }
+                
+                to = (ToType)(object)color;
+                return;
+            }
+            else if (fromType == typeof(Color) && toType == typeof(string))
+            {
+                Color color = (Color)(object)from;
+                to = (ToType)(object)$"{color.r * 255:F0},{color.g * 255:F0},{color.b * 255:F0},{color.a * 255:F0}";
+                return;
+            }
+            else if (fromType == typeof(string) && toType == typeof(Vector2))
+            {
+                string value = (string)(object)from;
+                string[] split = value.Split(',');
+                if (split.Length == 2)
+                {
+                    to = (ToType)(object)new Vector2(float.Parse(split[0]), float.Parse(split[1]));
+                }
+                else
+                {
+                    Error($"Could not convert {value} to Vector2!");
+                }
+                return;
+            }
+            else if (fromType == typeof(Vector2) && toType == typeof(string))
+            {
+                Vector2 vector = (Vector2)(object)from;
+                to = (ToType)(object)$"{vector.x},{vector.y}";
+                return;
+            }
+            else if (fromType == typeof(LocalizableField) && toType == typeof(string))
             {
                 Error("Use ApplyLocaleField when converted from LocalizableField to string!");
             }
-            else if (fromType == typeof(string) && toType == typeof(JSONParser.LocalizableField))
+            else if (fromType == typeof(string) && toType == typeof(LocalizableField))
             {
                 Error("Use ApplyLocaleField when converted from string to LocalizableField!");
             }
@@ -357,6 +424,30 @@ public static class ImportExportUtils
         }
 
         Error($"Unsupported conversion type: {fromType} to {toType}\n{Environment.StackTrace}");
+    }
+
+    private static Texture2D GetTextureFromString(string path)
+    {
+        if (path.StartsWith("base64:"))
+        {
+            try
+            {
+                string contents = path.Substring("base64:".Length);
+                byte[] bytes = Convert.FromBase64String(contents);
+                Texture2D texture = new Texture2D(2, 2, TextureFormat.RGBA32, false);
+                texture.filterMode = FilterMode.Point;
+                texture.LoadImage(bytes);
+                
+                return texture;
+            }
+            catch (Exception e)
+            {
+                Error($"Failed to convert base64 to texture: {path}");
+                throw e;
+            }
+        }
+
+        return TextureHelper.GetImageAsTexture(path);
     }
 
     /// <summary>
@@ -576,7 +667,7 @@ public static class ImportExportUtils
         return paths.ToArray();
     }
 
-    public static void ApplyLocaleField(string field, ref JSONParser.LocalizableField rows, ref string cardInfoEnglishField, bool toCardInfo)
+    public static void ApplyLocaleField(string field, ref LocalizableField rows, ref string cardInfoEnglishField, bool toCardInfo)
     {
         if (toCardInfo)
         {
@@ -586,17 +677,20 @@ public static class ImportExportUtils
         {
             string s = cardInfoEnglishField;
             cardInfoEnglishField = s;
-            ImportLocaleField(rows, cardInfoEnglishField);
+            if (!string.IsNullOrEmpty(s))
+            {
+                ImportLocaleField(rows, cardInfoEnglishField);
+            }
         }
     }
 
-    private static void ImportLocaleField(JSONParser.LocalizableField rows, string cardInfoEnglishField)
+    private static void ImportLocaleField(LocalizableField rows, string cardInfoEnglishField)
     {
         // From game to LocalizableField
         rows.rows.Clear();
         rows.Initialize(cardInfoEnglishField);
 
-        var translation = Localization.Translations.Find((a) => a.englishStringFormatted == cardInfoEnglishField);
+        var translation = Localization.Translations.Find((a) => a.englishString == cardInfoEnglishField);
         if (translation != null)
         {
             foreach (KeyValuePair<Language, string> pair in translation.values)
@@ -618,7 +712,7 @@ public static class ImportExportUtils
     /// <param name="field"></param>
     /// <param name="rows"></param>
     /// <param name="cardInfoEnglishField"></param>
-    private static void ApplyLocaleField(string field, JSONParser.LocalizableField rows, ref string cardInfoEnglishField)
+    private static void ApplyLocaleField(string field, LocalizableField rows, ref string cardInfoEnglishField)
     {
         if (rows.rows.TryGetValue(rows.englishFieldName, out string english))
         {

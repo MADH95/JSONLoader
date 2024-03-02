@@ -148,20 +148,30 @@ namespace JLPlugin.Data
                     continue;
                 
                 files.RemoveAt(index--);
-                
-                EncounterInfo encounterInfo = JSONParser.FromFilePath<EncounterInfo>(file);
-                EncounterBlueprintData encounter = GetBluePrint(encounterInfo.name);
-                if (encounter == null)
-                {
-                    encounter = EncounterManager.New(encounterInfo.name);
-                    Plugin.VerboseLog($"Loading new JLDR2 (encounters) {filename}");
-                }
-                else
-                {
-                    Plugin.VerboseLog($"Loading replacement JLDR2 (encounters) {filename}");
-                }
+                ImportExportUtils.SetDebugPath(file);
 
-                Process(encounter, encounterInfo, true, file);
+                try
+                {
+                    EncounterInfo encounterInfo = JSONParser.FromFilePath<EncounterInfo>(file);
+                    EncounterBlueprintData encounter = GetBluePrint(encounterInfo.name);
+                    if (encounter == null)
+                    {
+                        encounter = EncounterManager.New(encounterInfo.name);
+                        Plugin.VerboseLog($"Loading new JLDR2 (encounters) {filename}");
+                    }
+                    else
+                    {
+                        Plugin.VerboseLog($"Loading replacement JLDR2 (encounters) {filename}");
+                    }
+
+                    Process(encounter, encounterInfo, true, file);
+                    Plugin.VerboseLog($"Loaded JSON encounters from {filename}!");
+                }
+                catch (System.Exception ex)
+                {
+                    Plugin.Log.LogError($"Error loading JLDR2 (encounters) {filename}");
+                    Plugin.Log.LogError(ex);
+                }
             }
             EncounterManager.SyncEncounterList();
         }

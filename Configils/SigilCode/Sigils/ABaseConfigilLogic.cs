@@ -14,25 +14,25 @@ using UnityEngine;
 public abstract class ABaseConfigilLogic
 {
     public abstract object ability { get; }
+    public abstract object Instance { get; }
     public abstract PlayableCard PlayableCard { get; }
     public abstract Card Card { get; }
-    public abstract IEnumerator LearnAbility(float startDelay = 0.0f);
     
-    private readonly SigilData abilityData;
+    private readonly AConfigilData data;
     private readonly Dictionary<string, List<AbilityBehaviourData>> abilityBehaviours;
 
-    public ABaseConfigilLogic(SigilData abilityData)
+    public ABaseConfigilLogic(AConfigilData data)
     {
-        this.abilityData = abilityData;
+        this.data = data;
 
         abilityBehaviours = new Dictionary<string, List<AbilityBehaviourData>>();
-        for (var i = 0; i < abilityData.abilityBehaviour.Count; i++)
+        for (var i = 0; i < data.abilityBehaviour.Count; i++)
         {
-            var behaviourData = abilityData.abilityBehaviour[i];
+            AbilityBehaviourData behaviourData = data.abilityBehaviour[i];
             string triggerType = behaviourData.trigger?.triggerType;
             if (string.IsNullOrEmpty(triggerType))
             {
-                Plugin.Log.LogError($"AbilityBehaviourData {i} has no triggerType {abilityData.name.EnglishValue}!");
+                Plugin.Log.LogError($"AbilityBehaviourData {i} has no triggerType {data.Name}!");
                 continue;
             }
 
@@ -54,7 +54,7 @@ public abstract class ABaseConfigilLogic
 
     public IEnumerator Activate()
     {
-        int BloodCost = abilityData.activationCost?.bloodCost ?? 0;
+        int BloodCost = data.activationCost?.bloodCost ?? 0;
         if (BloodCost > 0)
         {
             List<CardSlot> occupiedSlots = Singleton<BoardManager>.Instance.PlayerSlotsCopy.FindAll(x => x.Card != null && x.Card != PlayableCard);
@@ -79,7 +79,7 @@ public abstract class ABaseConfigilLogic
             }
         }
 
-        var GemCost = abilityData.activationCost?.gemsCost?.Select(ImportExportUtils.ParseEnum<GemType>).ToList() ?? new List<GemType>();
+        var GemCost = data.activationCost?.gemsCost?.Select(ImportExportUtils.ParseEnum<GemType>).ToList() ?? new List<GemType>();
         foreach (GemType Gem in GemCost)
         {
             if (!Singleton<ResourcesManager>.Instance.HasGem(Gem))
@@ -99,43 +99,46 @@ public abstract class ABaseConfigilLogic
     {
         /* Adding this check since this seems to be the root of the null exceptions in Start()!!
          * According to Debug.Assert(). >< */
-        if (abilityData?.abilityBehaviour == null) yield break;
+        if (data?.abilityBehaviour == null) yield break;
 
-        foreach (AbilityBehaviourData behaviourData in abilityData.abilityBehaviour)
+        foreach (AbilityBehaviourData behaviourData in data.abilityBehaviour)
         {
             behaviourData.TurnsInPlay = 0;
 
-            string filepath = PlayableCard.Info.GetExtendedProperty("JSONFilePath");
-            if (filepath != null)
+            if (PlayableCard != null)
             {
-                /* Load from cache first. avoid reading a file and parsing JSON every single
-                 * time this method is called (which will be MULTIPLE TIMES throughout the
-                 * game). >< */
-                /* if it doesn't exist in cache, *THEN* you can read from the file. */
-                if (!CachedCardData.Contains(filepath))
+                string filepath = PlayableCard.Info.GetExtendedProperty("JSONFilePath");
+                if (filepath != null)
                 {
-                    CachedCardData.Add(
-                        filePath: filepath,
-                        data: JSONParser.FromFilePath<CardSerializeInfo>(filepath)
-                    );
-                }
-
-                CardSerializeInfo cardinfo = CachedCardData.Get(filepath);
-
-                if (cardinfo.extensionProperties != null)
-                {
-                    foreach (KeyValuePair<string, string> property in cardinfo.extensionProperties)
+                    /* Load from cache first. avoid reading a file and parsing JSON every single
+                     * time this method is called (which will be MULTIPLE TIMES throughout the
+                     * game). >< */
+                    /* if it doesn't exist in cache, *THEN* you can read from the file. */
+                    if (!CachedCardData.Contains(filepath))
                     {
-                        if (Regex.Matches(property.Key, $"variable: {Interpreter.RegexStrings.Variable}") is var
-                                variables && variables.Cast<Match>().Any(v => v.Success))
+                        CachedCardData.Add(
+                            filePath: filepath,
+                            data: JSONParser.FromFilePath<CardSerializeInfo>(filepath)
+                        );
+                    }
+
+                    CardSerializeInfo cardinfo = CachedCardData.Get(filepath);
+
+                    if (cardinfo.extensionProperties != null)
+                    {
+                        foreach (KeyValuePair<string, string> property in cardinfo.extensionProperties)
                         {
-                            behaviourData.variables[variables[0].Groups[1].Value] = property.Value;
+                            if (Regex.Matches(property.Key, $"variable: {Interpreter.RegexStrings.Variable}") is var
+                                    variables && variables.Cast<Match>().Any(v => v.Success))
+                            {
+                                behaviourData.variables[variables[0].Groups[1].Value] = property.Value;
+                            }
                         }
                     }
                 }
             }
 
-            SigilData.UpdateVariables(behaviourData, PlayableCard);
+            AConfigilData.UpdateVariables(behaviourData, PlayableCard);
         }
 
         yield return TriggerSigil("OnLoad");
@@ -190,9 +193,9 @@ public abstract class ABaseConfigilLogic
 
         if (PlayableCard.OpponentCard != playerTurnEnd)
         {
-            for (int i = 0; i < abilityData.abilityBehaviour.Count; i++)
+            for (int i = 0; i < data.abilityBehaviour.Count; i++)
             {
-                abilityData.abilityBehaviour[i].TurnsInPlay++;
+                data.abilityBehaviour[i].TurnsInPlay++;
             }
             yield return TriggerSigil("OnEndOfTurn");
         }
@@ -389,12 +392,12 @@ public abstract class ABaseConfigilLogic
     {
         //this is to prevent errors relating to the sigil trying to access
         //the card that it's on after it has been removed from said card
-        if (PlayableCard == null)
+        if (Instance == null)
         {
             yield break;
         }
 
-        SigilData.UpdateVariables(behaviourData, PlayableCard);
+        AConfigilData.UpdateVariables(behaviourData, PlayableCard);
 
         if (behaviourData.trigger.activatesForCardsWithCondition != null)
         {
@@ -424,13 +427,13 @@ public abstract class ABaseConfigilLogic
         }
 
         yield return LearnAbility(0f);
-        yield return SigilData.RunActions(behaviourData, PlayableCard, ability);
+        yield return AConfigilData.RunActions(behaviourData, PlayableCard, ability);
     }
 
     private bool CheckCard(ref AbilityBehaviourData behaviourData, PlayableCard card)
     {
         behaviourData.generatedVariables["TriggerCard"] = card;
-        string condition = SigilData.ConvertArgument(behaviourData.trigger?.activatesForCardsWithCondition, behaviourData);
+        string condition = AConfigilData.ConvertArgument(behaviourData.trigger?.activatesForCardsWithCondition, behaviourData);
         return condition == "true";
     }
 
@@ -442,7 +445,54 @@ public abstract class ABaseConfigilLogic
         }
         
         AbilityBehaviourData behaviourData = onActivateBehaviours[0];
-        SigilData.UpdateVariables(behaviourData, PlayableCard);
-        return (SigilData.ConvertArgument(behaviourData.trigger?.activatesForCardsWithCondition, behaviourData) ?? "true") == "true";
+        AConfigilData.UpdateVariables(behaviourData, PlayableCard);
+        return (AConfigilData.ConvertArgument(behaviourData.trigger?.activatesForCardsWithCondition, behaviourData) ?? "true") == "true";
+    }
+
+    public int[] GetStatValues()
+    {
+        int[] result = new int[]{0, 0};
+        if (!abilityBehaviours.TryGetValue("GetStatValues", out List<AbilityBehaviourData> getStatValues))
+        {
+            return result;
+        }
+
+        foreach (AbilityBehaviourData value in getStatValues)
+        {
+            AConfigilData.UpdateVariables(value, PlayableCard);
+            if (value.trigger?.activatesForCardsWithCondition != null)
+            {
+                string condition = AConfigilData.ConvertArgument(value.trigger?.activatesForCardsWithCondition, value, false);
+                if (condition != "true")
+                {
+                    continue;
+                }
+            }
+
+            if (!string.IsNullOrEmpty(value.getStatValues?.health))
+            {
+                string healthResult = AConfigilData.ConvertArgument(value.getStatValues.health, value, false);
+                if (int.TryParse(healthResult, out int h))
+                {
+                    result[1] += h;
+                }
+            }
+
+            if (!string.IsNullOrEmpty(value.getStatValues?.attack))
+            {
+                string attackResult = AConfigilData.ConvertArgument(value.getStatValues.attack, value, false);
+                if (int.TryParse(attackResult, out int a))
+                {
+                    result[0] += a;
+                }
+            }
+        }
+
+        return result;
+    }
+    
+    public virtual IEnumerator LearnAbility(float startDelay = 0)
+    {
+        yield break;
     }
 }

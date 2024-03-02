@@ -2,21 +2,21 @@
 using DiskCardGame;
 using JLPlugin.Data;
 
-public class ConfigilSpecialAbilityLogic : ABaseConfigilLogic
+public class ConfigPowerStateBehaviour : ABaseConfigilLogic
 {
-    public override object ability => specialTriggeredAbility;
+    public override object ability => id;
     public override object Instance => specialCardBehaviour;
     public override PlayableCard PlayableCard => specialCardBehaviour.GetComponent<PlayableCard>();
     public override Card Card => specialCardBehaviour.Card;
 
     private SpecialCardBehaviour specialCardBehaviour;
-    private SpecialTriggeredAbility specialTriggeredAbility;
+    private SpecialStatIcon id;
     
-    public ConfigilSpecialAbilityLogic(SpecialCardBehaviour triggerReceiver, SigilData sigilData,
-        SpecialTriggeredAbility ability) : base(sigilData)
+    public ConfigPowerStateBehaviour(SpecialCardBehaviour triggerReceiver, SigilData sigilData,
+        SpecialStatIcon ability) : base(sigilData)
     {
         specialCardBehaviour = triggerReceiver;
-        specialTriggeredAbility = ability;
+        id = ability;
     }
 
     public override IEnumerator LearnAbility(float startDelay = 0.0f)

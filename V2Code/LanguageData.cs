@@ -56,65 +56,73 @@ namespace JSONLoader.V2Code
                     continue;
                 
                 files.RemoveAt(index--);
+                ImportExportUtils.SetDebugPath(file);
                 
-                Plugin.VerboseLog($"Loading JLDR2 (language) {filename}");
-                LanguageData languageInfo = JSONParser.FromFilePath<LanguageData>(file);
-
-                string stringTablePath = languageInfo.stringTablePath;
-                if (!TryGetFullPath(stringTablePath, out stringTablePath))
+                try
                 {
-                    Plugin.Log.LogError(
-                        $"Could not load language. Could not find string table with name {languageInfo.stringTablePath}!");
-                    return;
-                }
-
-
-                List<FontReplacement> fontReplacements = null;
-                if (languageInfo.fontReplacementPaths != null)
-                {
-                    fontReplacements = new List<FontReplacement>();
-                    foreach (Fonts replacement in languageInfo.fontReplacementPaths)
+                    Plugin.VerboseLog($"Loading JLDR2 (language) {filename}");
+                    LanguageData languageInfo = JSONParser.FromFilePath<LanguageData>(file);
+                    
+                    string stringTablePath = languageInfo.stringTablePath;
+                    if (!TryGetFullPath(stringTablePath, out stringTablePath))
                     {
-                        if (!TryGetFullPath(replacement.AssetBundlePath, out string abPath))
-                        {
-                            Plugin.Log.LogWarning(
-                                $"Could not load font replacement. Could not find file with name {replacement.AssetBundlePath}!");
-                            continue;
-                        }
-
-                        AssetBundle bundle = LoadAssetBundle(abPath);
-                        if (bundle == null)
-                        {
-                            Plugin.Log.LogWarning(
-                                $"Could not load asset bundle at path '{abPath}'. Skipping font replacement!");
-                            continue;
-                        }
-
-                        Font font = bundle.LoadAsset<Font>(replacement.FontAssetName);
-                        if (font == null)
-                        {
-                            Plugin.Log.LogWarning(
-                                $"Could not load FontAssetName asset from bundle with name '{replacement.FontAssetName}'. Skipping font replacement!");
-                            continue;
-                        }
-
-                        TMP_FontAsset asset = bundle.LoadAsset<TMP_FontAsset>(replacement.TMPFontAssetName);
-                        if (asset == null)
-                        {
-                            Plugin.Log.LogWarning(
-                                $"Could not load TMPFontAssetName asset from bundle with name '{replacement.TMPFontAssetName}'. Skipping font replacement!");
-                            continue;
-                        }
-
-                        fontReplacements.Add(
-                            LocalizationManager.GetFontReplacementForFont(replacement.Type, font, asset));
+                        Plugin.Log.LogError(
+                            $"Could not load language. Could not find string table with name {languageInfo.stringTablePath}!");
+                        return;
                     }
+
+
+                    List<FontReplacement> fontReplacements = null;
+                    if (languageInfo.fontReplacementPaths != null)
+                    {
+                        fontReplacements = new List<FontReplacement>();
+                        foreach (Fonts replacement in languageInfo.fontReplacementPaths)
+                        {
+                            if (!TryGetFullPath(replacement.AssetBundlePath, out string abPath))
+                            {
+                                Plugin.Log.LogWarning(
+                                    $"Could not load font replacement. Could not find file with name {replacement.AssetBundlePath}!");
+                                continue;
+                            }
+
+                            AssetBundle bundle = LoadAssetBundle(abPath);
+                            if (bundle == null)
+                            {
+                                Plugin.Log.LogWarning(
+                                    $"Could not load asset bundle at path '{abPath}'. Skipping font replacement!");
+                                continue;
+                            }
+
+                            Font font = bundle.LoadAsset<Font>(replacement.FontAssetName);
+                            if (font == null)
+                            {
+                                Plugin.Log.LogWarning(
+                                    $"Could not load FontAssetName asset from bundle with name '{replacement.FontAssetName}'. Skipping font replacement!");
+                                continue;
+                            }
+
+                            TMP_FontAsset asset = bundle.LoadAsset<TMP_FontAsset>(replacement.TMPFontAssetName);
+                            if (asset == null)
+                            {
+                                Plugin.Log.LogWarning(
+                                    $"Could not load TMPFontAssetName asset from bundle with name '{replacement.TMPFontAssetName}'. Skipping font replacement!");
+                                continue;
+                            }
+
+                            fontReplacements.Add(
+                                LocalizationManager.GetFontReplacementForFont(replacement.Type, font, asset));
+                        }
+                    }
+
+                    LocalizationManager.NewLanguage(Plugin.PluginGuid, languageInfo.languageName,
+                        languageInfo.languageCode, languageInfo.resetButtonText, stringTablePath, fontReplacements);
+
+                    Plugin.VerboseLog($"Loaded JSON language {languageInfo.languageName} from {filename}!");
+                }catch (Exception e)
+                {
+                    Plugin.Log.LogError($"Error loading language {filename}");
+                    Plugin.Log.LogError(e);
                 }
-
-                LocalizationManager.NewLanguage(Plugin.PluginGuid, languageInfo.languageName,
-                    languageInfo.languageCode, languageInfo.resetButtonText, stringTablePath, fontReplacements);
-
-                Plugin.VerboseLog($"Loaded JSON gramophone tracks from {filename}!");
             }
         }
 

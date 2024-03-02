@@ -32,19 +32,28 @@ namespace JSONLoader.Data
                     continue;
                 
                 files.RemoveAt(index--);
+                ImportExportUtils.SetDebugPath(file);
                 
-                Plugin.VerboseLog($"Loading JLDR2 (gramophone) {filename}");
-                GramophoneInfo gramInfo = JSONParser.FromFilePath<GramophoneInfo>(file);
-
-                string guidAndPrefix = $"{Plugin.PluginGuid}_{gramInfo.Prefix ?? string.Empty}";
-
-                foreach (TrackData track in gramInfo.Tracks)
+                try
                 {
-                    if (track == null) continue;
-                    GramophoneManager.AddTrack(guidAndPrefix, track.Track, track.Volume ?? 1f);
-                }
+                    Plugin.VerboseLog($"Loading JLDR2 (gramophone) {filename}");
+                    GramophoneInfo gramInfo = JSONParser.FromFilePath<GramophoneInfo>(file);
 
-                Plugin.VerboseLog($"Loaded JSON gramophone tracks from {filename}!");
+                    string guidAndPrefix = $"{Plugin.PluginGuid}_{gramInfo.Prefix ?? string.Empty}";
+
+                    foreach (TrackData track in gramInfo.Tracks)
+                    {
+                        if (track == null) continue;
+                        GramophoneManager.AddTrack(guidAndPrefix, track.Track, track.Volume ?? 1f);
+                    }
+
+                    Plugin.VerboseLog($"Loaded JSON gramophone tracks from {filename}!");
+                }   
+                catch (System.Exception ex)
+                {
+                    Plugin.Log.LogError($"Error loading JLDR2 (graphaphone) {filename}");
+                    Plugin.Log.LogError(ex);
+                }
             }
         }
     }

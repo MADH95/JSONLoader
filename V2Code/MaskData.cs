@@ -35,33 +35,44 @@ namespace JSONLoader.V2Code
                     continue;
                 
                 files.RemoveAt(index--);
+                ImportExportUtils.SetDebugPath(file);
                 
-                Plugin.VerboseLog($"Loading JLDR2 (mask) {filename}");
-                MaskData mask = JSONParser.FromFilePath<MaskData>(file);
-
-                LeshyAnimationController.Mask? bossType = GetMask(mask.maskType);
-                if (!bossType.HasValue)
-                    continue;
-                
-                if (!Enum.TryParse(mask.type, out AdditionType additionType))
+                try
                 {
-                    Plugin.Log.LogError($"Could not parse mask {mask.maskName} type '{additionType}'!");
-                    continue;
+                    Plugin.VerboseLog($"Loading JLDR2 (mask) {filename}");
+                    MaskData mask = JSONParser.FromFilePath<MaskData>(file);
+
+                    LeshyAnimationController.Mask? bossType = GetMask(mask.maskType);
+                    if (!bossType.HasValue)
+                        continue;
+
+                    if (!Enum.TryParse(mask.type, out AdditionType additionType))
+                    {
+                        Plugin.Log.LogError($"Could not parse mask {mask.maskName} type '{additionType}'!");
+                        continue;
+                    }
+
+                    CustomMask customMask = null;
+                    if (additionType == AdditionType.Override)
+                        customMask = MaskManager.Override(Plugin.PluginGuid, mask.maskName, bossType.Value,
+                            mask.texturePath);
+                    else if (additionType == AdditionType.Random)
+                        customMask = MaskManager.AddRandom(Plugin.PluginGuid, mask.maskName, bossType.Value,
+                            mask.texturePath);
+                    else
+                        customMask = MaskManager.Add(Plugin.PluginGuid, mask.maskName, mask.texturePath);
+
+                    MaskManager.ModelType? modelType = GetModelType(mask.modelType);
+                    if (modelType.HasValue)
+                        customMask.SetModelType(modelType.Value);
+
+                    Plugin.VerboseLog($"Loaded JSON mask from {filename}!");
                 }
-
-                CustomMask customMask = null;
-                if (additionType == AdditionType.Override)
-                    customMask = MaskManager.Override(Plugin.PluginGuid, mask.maskName, bossType.Value, mask.texturePath);
-                else if (additionType == AdditionType.Random)
-                    customMask = MaskManager.AddRandom(Plugin.PluginGuid, mask.maskName, bossType.Value, mask.texturePath);
-                else
-                    customMask = MaskManager.Add(Plugin.PluginGuid, mask.maskName, mask.texturePath);
-                
-                MaskManager.ModelType? modelType = GetModelType(mask.modelType);
-                if (modelType.HasValue)
-                    customMask.SetModelType(modelType.Value);
-
-                Plugin.VerboseLog($"Loaded JSON mask from {filename}!");
+                catch (Exception e)
+                {
+                    Plugin.Log.LogError($"Error loading JSON mask from {filename}!");
+                    Plugin.Log.LogError(e);
+                }
             }
         }
 

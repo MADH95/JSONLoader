@@ -1,3 +1,4 @@
+using System;
 using DiskCardGame;
 using InscryptionAPI.Triggers;
 using JLPlugin.Data;
@@ -5,19 +6,30 @@ using System.Collections;
 
 namespace JLPlugin.SigilCode
 {
-    public class ConfigurableSpecial : SpecialCardBehaviour, IOnBellRung, IOnOtherCardAddedToHand, IOnCardAssignedToSlotContext, IOnCardDealtDamageDirectly
+    public class ConfigurablePowerStat : VariableStatBehaviour, IOnBellRung, IOnOtherCardAddedToHand, IOnCardAssignedToSlotContext, IOnCardDealtDamageDirectly
     {
-        private ABaseConfigilLogic _logic = null;
+        public override SpecialStatIcon IconType => (SpecialStatIcon)_logic.ability;
+        private ConfigPowerStateBehaviour _logic = null;
         
-        public virtual void Initialize(SigilData abilityData, SpecialTriggeredAbility ability)
+        public virtual void Initialize(SigilData abilityData, SpecialStatIcon icon)
         {
-            _logic = new ConfigilSpecialAbilityLogic(this, abilityData, ability);
+            _logic = new ConfigPowerStateBehaviour(this, abilityData, icon);
         }
 
-        public IEnumerator Start()
+        public new void Start()
         {
-            yield return _logic.Start();
+            base.Start();
+            if (_logic != null)
+            {
+                StartCoroutine(_logic.Start());
+            }
         }
+
+        public override int[] GetStatValues()
+        {
+            return _logic.GetStatValues();
+        }
+
 
         public override bool RespondsToOtherCardResolve(PlayableCard otherCard)
         {

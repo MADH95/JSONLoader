@@ -36,46 +36,53 @@ namespace JLPlugin.Data
 
                 ImportExportUtils.SetDebugPath(file);
                 files.RemoveAt(index--);
-
-                Plugin.VerboseLog($"Loading JLDR2 (tribes) {filename}");
-                TribeList tribeInfo = JSONParser.FromFilePath<TribeList>(file);
-
-                foreach (TribeInfo tribedata in tribeInfo.tribes)
+                
+                try
                 {
-                    Texture2D backTex = null;
-                    Texture2D iconTex = null;
-
-                    ImportExportUtils.SetID(tribedata.name);
-                    ImportExportUtils.ApplyValue(ref iconTex, ref tribedata.tribeIcon, true, "Tribes", "tribeIcon");
-
-                    if (!string.IsNullOrEmpty(tribedata.choiceCardBackTexture))
+                    Plugin.VerboseLog($"Loading JLDR2 (tribes) {filename}");
+                    TribeList tribeInfo = JSONParser.FromFilePath<TribeList>(file);
+                    foreach (TribeInfo tribedata in tribeInfo.tribes)
                     {
-                        Plugin.VerboseLog($"Loading {tribedata.name} back " + tribedata.choiceCardBackTexture);
-                        ImportExportUtils.ApplyValue(ref backTex, ref tribedata.choiceCardBackTexture, true, "Tribes",
-                            "choiceCardBackTexture");
-                    }
+                        Texture2D backTex = null;
+                        Texture2D iconTex = null;
 
-                    if (backTex == null)
-                    {
-                        backTex = TextureHelper.GetImageAsTexture("default_card_rewardback_blank.png");
-                        if (iconTex != null)
+                        ImportExportUtils.SetID(tribedata.name);
+                        ImportExportUtils.ApplyValue(ref iconTex, ref tribedata.tribeIcon, true, "Tribes", "tribeIcon");
+
+                        if (!string.IsNullOrEmpty(tribedata.choiceCardBackTexture))
                         {
-                            Color32[] iconPixels = iconTex.GetPixels32();
-                            for (int i = 0; i < iconPixels.Length; i++)
-                            {
-                                if (iconPixels[i].a >= 1)
-                                    backTex.SetPixel((i % iconTex.width) + 12, (i / iconTex.width) + 12, iconPixels[i]);
-                            }
-
-                            backTex.Apply(false);
+                            Plugin.VerboseLog($"Loading {tribedata.name} back " + tribedata.choiceCardBackTexture);
+                            ImportExportUtils.ApplyValue(ref backTex, ref tribedata.choiceCardBackTexture, true,
+                                "Tribes",
+                                "choiceCardBackTexture");
                         }
+
+                        if (backTex == null)
+                        {
+                            backTex = TextureHelper.GetImageAsTexture("default_card_rewardback_blank.png");
+                            if (iconTex != null)
+                            {
+                                Color32[] iconPixels = iconTex.GetPixels32();
+                                for (int i = 0; i < iconPixels.Length; i++)
+                                {
+                                    if (iconPixels[i].a >= 1)
+                                        backTex.SetPixel((i % iconTex.width) + 12, (i / iconTex.width) + 12,
+                                            iconPixels[i]);
+                                }
+
+                                backTex.Apply(false);
+                            }
+                        }
+
+                        TribeManager.Add(tribedata.guid, tribedata.name, iconTex, tribedata.appearInTribeChoices,
+                            backTex);
                     }
-
-                    TribeManager.Add(tribedata.guid, tribedata.name, iconTex, tribedata.appearInTribeChoices, backTex);
                 }
-
-                Plugin.VerboseLog(
-                    $"Loaded JSON tribes {string.Join(",", tribeInfo.tribes.Select(s => s.name).ToList())}");
+                catch (Exception e)
+                {
+                    Plugin.Log.LogError($"Error loading tribe from {file}");
+                    Plugin.Log.LogError(e);
+                }
             }
         }
 

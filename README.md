@@ -216,6 +216,147 @@ JSONLoader also allows you to create encounters. To do this, your file needs to 
 These are all the vanilla regions that you can use for your encounters:
 Alpine, Forest, Midnight, Midnight_Ascension, Pirateville, Wetlands
 
+## How do they work? this guide is aimed to help!
+
+Things you need to know:
+
+* When saving an encounter file it must end in "_encounter.jldr2"
+* Remember to check if the json is valid (jsonlint is a good website to check)
+* When making encounters with custom cards, the internal name is used (including prefixes, ex: IGCC_Boar)
+
+### How every piece works individually:
+<details> <summary> Show/hide </summary>
+
+| part  | description | example|
+| ------------- |:-------------:| :-------------:| 
+| name | Internal name, utilized by debugmenu to test your encounter| name: "Example.JungleTheme"|
+| minDifficulty    | How far into a level you should be in for the encounter to show up, determined by map nodes and KCM challenge skulls. (REDUNDANT: currently broken, use 1)  |minDifficulty: 6|
+| maxDifficulty   | How far into a level you should be for the encounter to stop appearing. (REDUNDANT: currently broken, use 99)    | maxDifficulty: 32 |
+| regions     | What maps should the encounter appear in, multiple can be selected    | regions: [ "Wetlands", "Alpine", "Forest"]|
+| dominantTribes | What tribe should be selected when the encounter is a totem battle |"dominantTribes":["Feline"] |
+| randomReplacementCards |What cards should be chosen from a pool, when randomReplacementChance is defined in a slot | "randomReplacementCards": [ "Stoat", "Sparrow", "Snapper" ]|
+|redundantAbilities | What abilities shouldn't appear when the encounter is a totem battle | "redundantAbilities": ["TouchOfDeath"] |
+|turns|The entire blueprint of the encounter| "turns": [{ }]|
+|cardInfo|the individual row blueprint, card placements are randomized | "cardInfo":[{card:"Wolf"},{card:"Opposum"}]|
+|card | What the card should be. | "card": RatKing|
+|randomReplaceChance|How much, in percentage, of a chance should a random card replace "card" from the randomReplaceCards pool.| "randomReplaceChance":50
+|difficultyReq|What level should the "difficultyReplacement" card replace the originally defined card (works on node level and challenge skulls).| "difficultyReq": 16|
+|difficultyReplacement| What card should replace the originally defined card, when the player reaches the specified "difficultyReq" level. 
+
+</details>
+
+### map enums:
+ <details> <summary> Show/hide </summary>
+
+| Internal  | In-game | Boss' map|
+| ------------- |:-------------:| :-------------:| 
+| Alpine     | Snow line    |Trapper/Trader|
+| Wetlands   | Wetlands     | Angler |
+| Forest     | Woodlands    | Prospector |
+| Midnight | Leshy | Final Boss |
+| Midnight_Ascension |Leshy (KCM) | Final Boss in KCM|
+|Pirateville | Royal | alt. Final Boss |
+
+Unless you have mods that allow battles before the final boss, Midnight, Midnight_Ascension and Pirateville are redundant.
+
+
+</details> 
+
+### Example:
+<details> <summary> Show/hide </summary>
+
+```json
+{
+  "name": "Example.BirdEncounter",
+  //internal name
+  
+  "minDifficulty":  1,
+  //how far into the map you need to go before you stumble into this. (unused, best to leave it at 1)
+  
+  "maxDifficulty":  32,
+  //how far until this encounter stops appearing (unused, best leave it at a high level)
+  
+  "regions": [
+    "Alpine",
+    "Forest"
+  ],
+  //what maps should this encounter appear in (alpine and forest is specified, will only show up in prospector and trapper/trader's map [Woodlands and Snow line respectively])
+  
+  "dominantTribes": 
+   [
+    "Bird"
+   ],
+   //the tribes that will be used as heads in totem battles
+  
+  "randomReplacementCards":
+  [
+    "Sparrow",
+    "RavenEgg",
+    "Porcupine",
+    "AntFlying",
+    "Cuckoo",
+    "Adder",
+    "Bee"
+    ],
+    //pool of cards that will be drawn at random when a random chance card is specified
+  
+  "redundantAbilities": 
+  [
+    "Flying"
+  ],
+  //what abilities won't appear during totem battles
+  
+  
+  "turns": [
+    {
+      "cardInfo": [
+      //wave 1
+        {
+        // 1st card
+          "card": "Sparrow",
+          //"sparrow is specified"
+          
+          "randomReplaceChance": 50,
+          //"50% chance of a random card from the randomReplacementCards pool"
+          
+          "difficultyReq": 15,
+          //"what level of difficulty (how many nodes you've passed + challenge tweaks in KCM) should be passed until the sparrow/random card is replaced by the difficultyReplacement"
+          
+          "difficultyReplacement": "Vulture"
+          //"the card that replaces the original card in the battle when a level requirement is met 
+        },
+        {
+          //"2nd card"
+          "card": "RavenEgg",
+          "randomReplaceChance": 25,
+          "difficultyReq": 10,
+          "difficultyReplacement": "Raven"
+        }
+		]
+    },
+    {
+    //wave 2
+      "cardInfo": [
+        {
+          "card": "Sparrow",
+          "randomReplaceChance": 50,
+          "difficultyReq": 15,
+          "difficultyReplacement": "Vulture"
+        },
+        {
+          "card": " ",
+          //card is blank, no card shall be placed, useful for hiding cards until a specific level requirement or random chance cards (Not required for purposefully empty slots)
+          "randomReplaceChance": 25,
+          "difficultyReq": 10,
+          "difficultyReplacement": "Raven"
+        }
+      ]
+    }
+  ]
+}
+```
+</details>
+
 ## Gramophone
 
 JSONLoader also allows you to add music tracks to the Gramophone in Leshy's cabin.
@@ -313,6 +454,227 @@ If you want to keep the original model but replace the texture you can add a fie
 ```json
   "modelType": "Angler"
 ```
+
+## Regions
+
+All custom regions need their files to be named ending with `_region.jldr2`.
+
+JLDR2
+```json
+{
+  "name": "TestRegion",
+  "tier": 0,
+  "addToPool": true,
+  "terrainCards": ["BaitBucket"],
+  "encounters": ["Skinks"],
+  "likelyCards": ["Bullfrog"],
+  "dominantTribes": ["Insect"],
+  "bossPrepEncounter": "Submerge",
+  "boardLightColor": "0,193,122,255",
+  "cardsLightColor": "0,129,255,255",
+  "mapAlbedo": "customRegion_mapAlbedo.png",
+  "bosses": ["ProspectorBoss"],
+  "fillerScenery": [
+    {
+      "minScale": {"x": 0.06, "y": 0.05},
+      "maxScale": {"x": 0.09, "y": 0.22},
+      "prefabNames": ["Tree_3_Mossy"],
+      "radius": 0.06,
+      "perlinNoiseHeight": true
+    }
+  ],
+  "scarceScenery": [
+    {
+      "minDensity": 0.10,
+      "minInstances": 40,
+      "maxInstances": 50,
+      "minScale": {"x": 40.00, "y": 40.00},
+      "maxScale": {"x": 50.00, "y": 50.00},
+      "prefabNames": ["Fern_1"],
+      "radius": 0.05,
+      "perlinNoiseHeight": true
+    }
+  ],
+  "predefinedScenery": [{
+    "minScale": {"x": 0.06, "y": 0.05},
+    "maxScale": {"x": 0.09, "y": 0.22},
+    "prefabNames": ["Tree_3_Mossy"],
+    "radius": 0.06,
+    "perlinNoiseHeight": true,
+    "rotation": {"x": 0, "y": 0, "z": 0},
+    "scale": {"x": 1, "y": 1, "z": 1}
+  }],
+  "dialogueEvent": {
+    "eventName": "TestRegion",
+    "mainLines": ["The rank smell of rot and mold permeated the humid air.", "Every step forward was answered by some nearby slip or slither."],
+    "repeatLines": [["The air grew thick with moisture...", "The buzzing and chirping of insects drowned out the sound of your footfalls..."],
+      ["As the air grew humid your boots became harder to pull from the mud.", "The dank smell of tepid water invaded your nostrils."]]
+  }
+}
+```
+
+### tier
+Which position in the run the region will appear in.
+(Broken as of API 2.19.3)
+0. Any order
+1. First region in the run
+2. Second region in the run
+3. Third region in the run
+
+
+### addToPool
+If set to true then the region will be added to the pool of regions available to be randomly chosen in ascension runs.
+
+### terrainCards
+List of terrain cards that can be placed on the board when starting fights.
+
+NOTE: cards listed here need ot have the Terrain trait. 
+
+### encounters
+Encounters that that can appear during fights.
+
+### likelyCards
+Extra Cards that can appear during ThreeChoice event nodes to be added to your deck.
+
+### dominantTribes
+Tribes that decide what card will appear in the Oil painting and in ThreeChoice event nodes.
+
+### bossPrepEncounter (Optional)
+The encounter that will be used to for the boss fight.
+If not specified then a random encounter will be chosen according to the node and games difficulty
+
+### boardLightColor
+Color that the map will show when moving between nodes
+
+### cardsLightColor
+Color tint cards will have.
+
+### mapAlbedo
+Name of an image that will be used on the map.
+
+### bosses
+Name of bosses/opponents that can appear when in this region.
+
+### fillerScenery
+List of Props that are scattered around the region.
+- **minScale** and **maxScale** are the minimum and maximum scale of the prop.
+- **prefabNames** are the names of the props that can appear on the map. see MapScenery.png for list of props.
+- **radius** is the radius of the area the prop that no other props can appear in.
+- **perlinNoiseHeight** is a boolean that determines if the prop position is randomized or not
+
+### scarceScenery
+Main props that are put on the map.
+- **minDensity** Not used
+- **minInstances** Minimum amount of instances that can spawn per map
+- **maxInstances** Maximum amount of instances that can spawn per map
+- **minScale** and **maxScale** are the minimum and maximum scale of the prop. Various per prop
+- **prefabNames** are the names of the props that can appear on the map. see MapScenery.png for list of props.
+- **radius** is the radius of the area the prop that no other props can appear in.
+- **perlinNoiseHeight** is a boolean that determines if the prop position is randomized or not
+
+
+### predefinedScenery
+Props that will always appear in the map.
+- **minScale** and **maxScale** are the minimum and maximum scale of the prop. Various per prop
+- **prefabNames** are the names of the props that can appear on the map. see MapScenery.png for list of props.
+- **radius** is the radius of the area the prop that no other props can appear in.
+- **perlinNoiseHeight** is a boolean that determines if the prop position is randomized or not
+- **rotation** Set rotation for all the props 
+- **scale** Set scale for all the props
+
+
+### dialogueEvent
+- **eventName** Name of the dialogue event that plays when entering the region. Use the same name as the region.
+- **mainLines** The dialogue that plays when first entering the region
+- **repeatLines** Dialogue that plays every other time you enter the region or start a new map in the same region.
+
+### consumableItems
+Items that can be randomly give nto the player when in this region.
+
+## Consumable Items
+
+Items are powerful tools that can be awarded.
+Similar to configils this is how to create an item to appear in the game.
+
+Create a file with `_item.jldr2` at the end of the file name.
+
+```json
+{
+  "GUID": "TestMod",
+  "rulebookName": "Geck Army",
+  "rulebookDescription": "Puts 4 Gecks in your hand",
+  "description": "The Geck Army is a powerful force to be reckoned with. It's a good thing you're the one in control of it.",
+  "icon": "base64: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",
+  "abilityBehaviour": [
+    {
+      "trigger": {
+        "triggerType": "OnActivate"
+      },
+      "drawCards": [
+        {
+          "card": {
+            "name": "Geck",
+            "retainMods": "false"
+          }
+        },
+        {
+          "card": {
+            "name": "Geck",
+            "retainMods": "false"
+          }
+        },
+        {
+          "card": {
+            "name": "Geck",
+            "retainMods": "false"
+          }
+        },
+        {
+          "card": {
+            "name": "Geck",
+            "retainMods": "false"
+          }
+        }
+      ]
+    }
+  ]
+}
+```
+
+| Key                 | Description                                                                   | Default              |
+|---------------------|-------------------------------------------------------------------------------|----------------------|
+| GUID                | GUID of the mod                                                               | ""                   |
+| rulebookName        | Name appears in rulebook                                                      | ""                   |
+| rulebookDescription | Description that appears in rulebook                                          | ""                   |
+| description         | LearnText that Leshy says first time seen                                     | ""                   |
+| icon                | Icon that appears in the rulebook and model if specific modelType requires it | null                 |
+| bottledCardName     | (Optional) Assign this if you want the item to be a card in a bottle          | ""                   |
+| regionSpecific      | Is this item only accessible in specific regions? (Assigned in regions)_      | false                |
+| notRandomlyGiven    | If True then the item will not appear as a choice to be collected             | false                |
+| rulebookCategory    | Which act should this item appear in?                                         | "Part1Rulebook"      |
+| modelType           | What is the appearance of this item?                                          | "BasicRuneWithVeins" |
+| pickupSoundId       | The sound this item makes when the player chooses/activates it                | "stone_object_up"    |
+| placedSoundId       | The sound this item makes when it lands during a battle                       | "stone_object_hit"   |
+| examineSoundId      | The sound this item makes when the player hovers their mouse over it          | "stone_object_hit"   |
+| powerLevel          | Likelihood of this item being chosen to be randomly given to the player       | 1                    |
+
+
+## Bottled Cards
+
+Vanilla inscyrption has items that are just a card in a bottle. When you activate it duriong a battle it gives you that card.
+This is what you need to do to add a new bottled card to the game.
+
+
+Make a file with `_item.jldr2` at the end of the file name
+```json
+{
+  "GUID": "TestMod",
+  "bottledCardName": "Urayuli",
+  "icon": "base64:iVBORw0KGgoAAAANSUhEUgAAAGQAAACWAgMAAABV1sXVAAAAAXNSR0IB2cksfwAAAAlwSFlzAAALEwAACxMBAJqcGAAAAAlQTFRFAAAAAAAAAQEB7L2CIAAAAAN0Uk5TAP//RFDWIQAAAflJREFUeJzt10tyhCAQBmC0io3r4Q4pT8ERWMh9rFnmFNasLE6ZBnx0w08yr81UhUrMyKd00zJGlXqpae8tBJ8asC7L9JikLZLcB0S1xTfFtKVr5KZMK+tNfA15pto7JCpWtZbcp00txiXRSKaW2CimLd1jcqHtBUr685jkioEaUEFdLBGqTjwJybZCwFWgPsrBIjHKKW3hNbVxWUNxlB5cO5rENSRukaS6oBWfOz9OdFNMEnh9nPZTB24i1NdRReE6OKOBMMcBMsw2aDncEbr6dh+jmHI4sx9a5X0OXwTS55FGBmKjF3mzjGQgsSfyFiOIHRFVlEFm2gz6S6LtyXGRBTGnyAS68z9K52XSXEQJpEwMnOZy3DvSByZ2pzyQOUXJ9pJUNygh/dyH+HFcKllCuAVqtYS93S/DIQurgZRViFWjEJ7/++Ua1gHK0lMvkpVmO1P2SAaaJZaRZEw14EJ1o5+VfudatibFMRGj0Y1/uENWvmKKc9jN9G+5tiRWDcuyuZQxrxoFRWUJWGLt+J2ZJE8+BVLsWUS7Pi+AFG6uJEBJE51zIYCsoSV74Z6Q9QkBo8XJ3IrcJpUP/x6L6lBxx1ydr7jqpfD2+eJbou4V84zYf2mKfMCwHPie4c8K4h3IHHvle9P2vuTr1ybNwXLhJ0lgVva/qf0AKeWOroyqESEAAAAASUVORK5CYII="
+}
+```
+
+
 
 ## Installation
 
