@@ -15,10 +15,6 @@ namespace JLPlugin.Data
     {
         public static void LoadAllConsumableItems(List<string> files)
         {
-            ItemData test = new ItemData();
-            test.Initialize();
-            Plugin.Log.LogInfo(JSONParser.ToJSON(test));
-            
             for (int index = 0; index < files.Count; index++)
             {
                 string file = files[index];
