@@ -1,6 +1,7 @@
 using DiskCardGame;
 using InscryptionAPI.Card;
 using InscryptionAPI.Localizing;
+using JSONLoader.API;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -368,6 +369,22 @@ namespace JLPlugin.V2.Data
             return filename;
         }
 
+        public static List<string> fileExtensionExceptions = new List<string>()
+        {
+            "_encounter",
+            "_tribe",
+            "_tribes",
+            "_sigil",
+            "_deck",
+            "_gram",
+            "_language",
+            "_mask",
+            "_region",
+            "_trait",
+            "_item",
+            "_talk"
+        };
+
         /// <summary>
         /// Assumes files is only cards
         /// </summary>
@@ -378,25 +395,27 @@ namespace JLPlugin.V2.Data
             {
                 string file = files[index];
                 string filename = file.Substring(file.LastIndexOf(Path.DirectorySeparatorChar) + 1);
-                if (filename.EndsWith("_encounter.jldr2") ||
-                    filename.EndsWith("_tribe.jldr2") ||
-                    filename.EndsWith("_tribes.jldr2") ||
-                    filename.EndsWith("_sigil.jldr2") ||
-                    filename.EndsWith("_deck.jldr2") ||
-                    filename.EndsWith("_gram.jldr2") ||
-                    filename.EndsWith("_language.jldr2") ||
-                    filename.EndsWith("_mask.jldr2") ||
-                    filename.EndsWith("_region.jldr2") ||
-                    filename.EndsWith("_trait.jldr2") ||
-                    filename.EndsWith("_item.jldr2") ||
-                    filename.EndsWith("_talk.jldr2"))
+
+                bool shouldLoad = true;
+                List<string> allFileExtensionExceptions = fileExtensionExceptions;
+                allFileExtensionExceptions.AddRange(JSONLoaderAPI.customFileExtensionExceptions);
+                foreach (string extension in fileExtensionExceptions)
+                {
+                    if (filename.EndsWith($"{extension}.jldr2"))
+                    {
+                        shouldLoad = false;
+                        break;
+                    }
+                }
+
+                if (!shouldLoad)
                 {
                     continue;
                 }
 
                 files.RemoveAt(index--);
                 ImportExportUtils.SetDebugPath(file);
-                
+
                 try
                 {
                     Plugin.VerboseLog($"Loading JLDR2 Card {filename}");

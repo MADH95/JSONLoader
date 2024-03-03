@@ -11,7 +11,7 @@ namespace JLPlugin.SigilCode
 
         private ABaseConfigilLogic _logic = null;
         private Ability ability;
-        
+
         public void Initialize(SigilData abilityData, Ability ability)
         {
             this.ability = ability;

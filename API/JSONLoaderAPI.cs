@@ -9,6 +9,8 @@ namespace JSONLoader.API
 {
     public static class JSONLoaderAPI
     {
+        public static List<string> customFileExtensionExceptions = new List<string>();
+
         public class ConfigilAction
         {
             public string actionName { get; set; }

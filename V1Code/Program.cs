@@ -4,9 +4,11 @@ using BepInEx.Configuration;
 using BepInEx.Logging;
 using DiskCardGame;
 using HarmonyLib;
+using InscryptionAPI.Localizing;
 using JLPlugin.Data;
 using JLPlugin.Hotkeys;
 using JLPlugin.V2.Data;
+using JSONLoader.API;
 using JSONLoader.Data;
 using JSONLoader.V2Code;
 using System;
@@ -14,7 +16,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using InscryptionAPI.Localizing;
 using ItemData = JLPlugin.Data.ItemData;
 
 namespace JLPlugin
@@ -38,7 +39,7 @@ namespace JLPlugin
 
         private static List<string> GetAllJLDRFiles()
         {
-            return System.IO.Directory.GetFiles(Paths.PluginPath, "*.jldr*", SearchOption.AllDirectories)
+            return Directory.GetFiles(Paths.PluginPath, "*.jldr*", SearchOption.AllDirectories)
                 .Where((a) => (a.EndsWith(".jldr") || a.EndsWith(".jldr2")) && !a.Contains(Path.Combine(JSONLoaderDirectory, "Examples")))
                 .ToList();
         }
@@ -70,7 +71,7 @@ namespace JLPlugin
             hotkeyController = new HotkeyController();
             hotkeyController.AddHotkey(Configs.ReloadHotkey, ReloadGame);
             hotkeyController.AddHotkey(Configs.ExportHotkey, ExportAllToJLDR2);
-            
+
             Log.LogWarning("Note: JSONLoader now uses .jldr2 files, not .json files.");
             List<string> files = GetAllJLDRFiles();
             if (Configs.BetaCompatibility)
