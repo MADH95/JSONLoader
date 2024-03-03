@@ -78,6 +78,11 @@ namespace TinyJson
                 // }
             }
 
+            if (index == 0)
+            {
+                json += $"\n{prefix}\"{englishFieldName}\": \"\"";
+            }
+
             return json;
         }
 

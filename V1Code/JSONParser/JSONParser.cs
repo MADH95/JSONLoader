@@ -447,21 +447,23 @@ namespace TinyJson
                 nameToProperty = CreateMemberNameDictionary(type.GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.FlattenHierarchy));
                 propertyInfoCache.Add(type, nameToProperty);
             }
+            List<MemberInfo> allMembers = null;
 
             for (int i = 0; i < elems.Count; i += 2)
             {
                 if (elems[i].Length <= 2)
                     continue;
-                
-                string key = elems[i].Substring(1, elems[i].Length - 2).ToLower();
+
+                string key = elems[i].Substring(1, elems[i].Length - 2);
+                string lowerKey = key.ToLower();
                 string value = elems[i + 1];
 
-                if (nameToField.TryGetValue(key, out FieldInfo fieldInfo) && (!fieldInfo.IsPrivate || fieldInfo.GetAttribute<SerializeField>() != null))
+                if (nameToField.TryGetValue(lowerKey, out FieldInfo fieldInfo) && (!fieldInfo.IsPrivate || fieldInfo.GetAttribute<SerializeField>() != null))
                 {
                     // Public fields or private ones with [SerializeField] set
                     SetField(fieldInfo, instance, value);
                 }
-                else if (nameToProperty.TryGetValue(key, out PropertyInfo propertyInfo))
+                else if (nameToProperty.TryGetValue(lowerKey, out PropertyInfo propertyInfo))
                 {
                     SetProperty(propertyInfo, instance, value);
                 }
@@ -476,9 +478,9 @@ namespace TinyJson
                             object o = info.GetValue(instance);
                             if (o is IFlexibleField field)
                             {
-                                if (field.ContainsKey(key))
+                                if (field.ContainsKey(lowerKey))
                                 {
-                                    field.SetValue(key, (string)ParseValue(typeof(String), value));
+                                    field.SetValue(lowerKey, (string)ParseValue(typeof(String), value));
                                     assigned = true;
                                     break;
                                 }
@@ -488,10 +490,18 @@ namespace TinyJson
 
                     if (!assigned)
                     {
-                        string[] similarFields = FindSimilarFields(key, nameToField, nameToProperty);
+                        string[] similarFields = FindSimilarFields(lowerKey, nameToField, nameToProperty);
                         if (similarFields != null && similarFields.Length > 0)
                         {
-                            string fields = string.Join(" or ", similarFields.Select((a) => "'" + a + "'"));
+                            if (allMembers == null)
+                            {
+                                allMembers = new List<MemberInfo>();
+                                allMembers.AddRange(nameToField.Values);
+                                allMembers.AddRange(nameToProperty.Values);
+                            }
+                            
+                            string[] unscaleNames = similarFields.Select((a) => allMembers.Find((b)=>b.Name.ToLower() == a).Name).ToArray();
+                            string fields = string.Join(" or ", unscaleNames.Select((a) => "'" + a + "'"));
                             LogError($"{key} field not found for {type}. Did you mean {fields}?");
                         }
                         else
