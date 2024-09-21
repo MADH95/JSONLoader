@@ -589,7 +589,7 @@ Props that will always appear in the map.
 - **repeatLines** Dialogue that plays every other time you enter the region or start a new map in the same region.
 
 ### consumableItems
-Items that can be randomly give nto the player when in this region.
+Items that can be randomly given to the player when in this region.
 
 ## Consumable Items
 

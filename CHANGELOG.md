@@ -11,14 +11,18 @@
     - Can now embed textures in json using `base64:` prefix
     - float, color, vector2, all Array types, private serialized fields and public properties
     - Incorrectly named fields will now log to console and suggest the correct name
-    - Errors resulting from loading a .jldr2 file will show while file cause it now
-    - Fixed JSONLoader not loading everything else if 1 configil errors
+    - Errors resulting from loading a .jldr2 file will show which file caused it now
+    - Fixed JSONLoader not loading anything else if 1 configil errors
 - Configils
   - Now supports localization (Abilities, Special Abilities and Stat Icons)
   - Fixed a bug where configils will break if abilityBehaviour is not specified
   - Fixed OnLoad and OnHealthLevel not working
   - Fixed Behaviours not running when a card is attacked and killed
   - Fixed Change Appearance not working
+- New features added to the API
+    - Mods can now add custom variables to configils
+    - Mods can now add custom actions to configils
+    - Mods can now add file name extension exceptions (for example a mod can make jsonloader not load any files ending with "_theme.jldr2")
 
 ## 2.5.4
 - made it so JSONLoader now loads files that end in "_example.jldr2"
