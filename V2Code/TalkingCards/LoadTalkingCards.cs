@@ -26,7 +26,7 @@ namespace JSONLoader.Data.TalkingCards
             for (var index = 0; index < files.Count; index++)
             {
                 string file = files[index];
-                if (!file.EndsWith("_talk.jldr2"))
+                if (!file.ToLower().EndsWith("_talk.jldr2"))
                     continue;
 
                 files.RemoveAt(index--);

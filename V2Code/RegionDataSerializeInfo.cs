@@ -40,7 +40,7 @@ public class RegionSerializeInfo
 		{
 			string path = files[i];
 			string fileName = path.Substring(path.LastIndexOf(Path.DirectorySeparatorChar) + 1);
-			if (!fileName.EndsWith("_region.jldr2"))
+			if (!fileName.ToLower().EndsWith("_region.jldr2"))
 			{
 				continue;
 			}

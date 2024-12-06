@@ -29,11 +29,11 @@ namespace JLPlugin
             currentVersion = new Version(Plugin.PluginVersion);
             oldConfigVersion = GetOldConfigVersion();
 
-            betaCompatibility = config.Bind("JSONLoader", "JDLR Backwards Compatibility", true, "Set to true to enable old-style JSON files (JLDR) to be read and converted to new-style files (JLDR2)");
-            verboseLogging = config.Bind("JSONLoader", "Verbose Logging", false, "Set to true to see more logs on what JSONLoader is doing and what isn't working.");
-            exportAllLanguages = config.Bind("JSONLoader Exporting", "Export All Languages", false, "Set to true to export all languages for all cards, items, sigils... etc.");
-            reloadHotkey = config.Bind("Hotkeys", "Reload JLDR2 and game", "LeftShift+R", "Restarts the game and reloads all JLDR2 files.");
-            exportHotkey = config.Bind("Hotkeys", "Export all to JLDR2", "LeftControl+RightControl+X", "Exports all data in the game back to .JLDR2 files.");
+            betaCompatibility = config.Bind("JSONLoader", "JDLR Backwards Compatibility", true, "Set this to true if your using a mod that utilizes the old `.jldr` system. If the mod your using uses `.json` use JSON Rename Utility by MadH95Mods on Thunderstore to convert them to `.jldr`.");
+            verboseLogging = config.Bind("JSONLoader", "Verbose Logging", false, "Set this to true if you wish to enable debug logging that tells you exactly what JSONLoader is reading and a bit more in depth info on when its erroring, or just to fill your log while you wait.");
+            exportAllLanguages = config.Bind("JSONLoader Exporting", "Export All Languages", false, "Set this to true if you wish to export all of the base games languages for everything you can do within JSONLoader.");
+            reloadHotkey = config.Bind("Hotkeys", "Reload JLDR2 and game", "LeftShift+R", "Reloads the game whenever the keybind this is set to is pressed to re register all `.jldr2` files.");
+            exportHotkey = config.Bind("Hotkeys", "Export all to JLDR2", "LeftControl+RightControl+X", "Exports everything from the base game that you can do with JSONLoader when the keybind is pressed.");
 
             MigrateConfigs();
             ModdedSaveManager.SaveData.SetValue(Plugin.PluginGuid, "LastLoadedVersion", currentVersion.ToString());

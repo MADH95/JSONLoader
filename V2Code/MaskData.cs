@@ -31,7 +31,7 @@ namespace JSONLoader.V2Code
             {
                 string file = files[index];
                 string filename = file.Substring(file.LastIndexOf(Path.DirectorySeparatorChar) + 1);
-                if (!filename.EndsWith("_mask.jldr2")) 
+                if (!filename.ToLower().EndsWith("_mask.jldr2")) 
                     continue;
                 
                 files.RemoveAt(index--);

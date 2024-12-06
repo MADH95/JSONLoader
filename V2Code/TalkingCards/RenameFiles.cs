@@ -32,7 +32,7 @@ namespace JSONLoader.Data.TalkingCards
 
         internal static string Rename(string filePath)
         {
-            if (!filePath.EndsWith("_talk.json")) 
+            if (!filePath.ToLower().EndsWith("_talk.json")) 
                 return null;
             
             string noExtension = filePath.Substring(0, filePath.Length - ".json".Length);

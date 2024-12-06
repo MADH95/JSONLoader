@@ -401,7 +401,7 @@ namespace JLPlugin.V2.Data
                 allFileExtensionExceptions.AddRange(JSONLoaderAPI.customFileExtensionExceptions);
                 foreach (string extension in fileExtensionExceptions)
                 {
-                    if (filename.EndsWith($"{extension}.jldr2"))
+                    if (filename.ToLower().EndsWith($"{extension}.jldr2"))
                     {
                         shouldLoad = false;
                         break;
