@@ -382,7 +382,8 @@ namespace JLPlugin.V2.Data
             "_region",
             "_trait",
             "_item",
-            "_talk"
+            "_talk",
+            "_appearence"
         };
 
         /// <summary>
