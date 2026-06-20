@@ -43,5 +43,9 @@
       <HintPath>libs\InscryptionAPI.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="InscryptionCommunityPatch">
+      <HintPath>libs\InscryptionCommunityPatch.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
   </ItemGroup>
 </Project>
