@@ -1,20 +1,18 @@
-﻿
-using System;
+﻿using System;
+using DiskCardGame;
+using HarmonyLib;
+using InscryptionAPI.Saves;
+using MonoMod.Utils;
+using PanoramicData.NCalcExtensions;
+using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text.RegularExpressions;
+using JLPlugin.Data;
 
 namespace JLPlugin
 {
-    using Data;
-    using DiskCardGame;
-    using HarmonyLib;
-    using InscryptionAPI.Saves;
-    using MonoMod.Utils;
-    using PanoramicData.NCalcExtensions;
-    using System.Collections;
-    using System.Collections.Generic;
-    using System.Reflection;
-
     static class Interpreter
     {
         public static class RegexStrings

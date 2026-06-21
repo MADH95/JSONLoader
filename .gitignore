@@ -7,3 +7,5 @@ lib/
 /.vs
 JSONLoader.sln.DotSettings.user
 NuGet.Config
+/GITHUB RELEASE/
+/GITHUB PRERELEASE/
