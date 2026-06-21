@@ -1,0 +1,59 @@
+﻿using HarmonyLib;
+using InscryptionAPI.Saves;
+using NCalc;
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+
+namespace JLPlugin.ConfigilFunctions
+{
+    internal static class ListToNames
+    {
+        internal static void Evaluate(FunctionArgs functionArgs)
+        {
+            List<object> parameters = functionArgs.Parameters.Select(x => x.Evaluate()).ToList();
+            if (parameters.Count != 1)
+            {
+                throw new FormatException($"ListToNames() requires 1 parameter.");
+            }
+
+            object obj = parameters[0];
+
+            if (obj is IList)
+            {
+                //i have no clue why this specific way of casting works but i'l take it
+                obj = ((IList)obj).Cast<object>().ToList();
+
+                for (int i = 0; i < ((IList)obj).Count; i++)
+                {
+                    Dictionary<string, Dictionary<string, object>> SaveData = (Dictionary<string, Dictionary<string, object>>)AccessTools.Field(typeof(ModdedSaveData), "SaveData").GetValue(ModdedSaveManager.SaveData);
+                    object item = ((IList)obj)[i];
+
+                    foreach (KeyValuePair<string, object> keyValuePair in SaveData["cyantist.inscryption.api"])
+                    {
+                        if (keyValuePair.Key.StartsWith($"{item.GetType().Name}_"))
+                        {
+                            int AbilityID;
+                            if (!int.TryParse(item.ToString(), out AbilityID))
+                            {
+                                continue;
+                            }
+                            int ValueID = int.Parse((string)keyValuePair.Value);
+
+                            if (ValueID == AbilityID)
+                            {
+                                List<string> SubstringList = keyValuePair.Key.Split('_').ToList();
+                                ((IList)obj)[i] = $"{SubstringList[1]}_{SubstringList[2]}";
+                                break;
+                            }
+                        }
+                    }
+                }
+                obj = ((IList)obj).Cast<object>().ToList();
+            }
+
+            functionArgs.Result = obj;
+        }
+    }
+}

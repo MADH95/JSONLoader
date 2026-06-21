@@ -1,0 +1,11 @@
+*.zip
+
+bin/
+obj/
+lib/
+.idea/
+/.vs
+JSONLoader.sln.DotSettings.user
+NuGet.Config
+/GITHUB RELEASE/
+/GITHUB PRERELEASE/

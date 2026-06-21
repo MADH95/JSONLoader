@@ -1,0 +1,90 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <!--Core DLL Properties-->
+    <PropertyGroup>
+        <TargetFrameworks>netframework4.7.2</TargetFrameworks>
+        <RuntimeIdentifiers>win-x64;win-x86;win-arm64;linux-x64;linux-arm;linux-arm64;linux-musl-x64;linux-musl-arm64;osx-x64;osx-arm64</RuntimeIdentifiers>
+        <AssemblyName>JSON Loader v3</AssemblyName>
+        <Description>This is the new Modulated and API Based system in which JSONLoader will run off of (and maybe a CSV loader too)</Description>
+        <Version>3.0.0</Version>
+        <Authors>Chaosyr</Authors>
+        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+        <LangVersion>Latest</LangVersion>
+        <RootNamespace>JSONLoader3</RootNamespace>
+        <NoWarn>$(NoWarn);AD0001;CS0612;CS0618;Publicizer001</NoWarn>
+        <SelfContained>true</SelfContained>
+        <CopyLocalLockFileAssemblies>false</CopyLocalLockFileAssemblies>
+        <IncludeBuildOutput>false</IncludeBuildOutput>
+    </PropertyGroup>
+
+    <!--NUGET Dependencies-->
+    <ItemGroup>
+        <PackageReference Include="BepInEx.Analyzers" Version="1.0.8" PrivateAssets="all" />
+        <PackageReference Include="BepInEx.Core" Version="5.4.21" />
+        <PackageReference Include="BepInEx.PluginInfoProps" Version="2.1.0" />
+        <PackageReference Include="UnityEngine.Modules" Version="2019.4.24" IncludeAssets="compile" />
+        <PackageReference Include="Inscryption.GameLibs" Version="1.9.0-r.0" />
+    </ItemGroup>
+
+    <!--Net Framework References-->
+    <ItemGroup Condition="'$(TargetFramework.TrimEnd(`0123456789`))' == 'net'">
+        <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.2" PrivateAssets="all" />
+    </ItemGroup>
+
+    <!--Local DLL Dependencies-->
+    <ItemGroup>
+        <PackageReference Include="BepInEx.AssemblyPublicizer.MSBuild" Version="0.4.3">
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+            <PrivateAssets>all</PrivateAssets>
+        </PackageReference>
+        <Reference Include="Antlr3.Runtime">
+            <HintPath>Dependencies\BepInEx-Required-Dependencies\Antlr3.Runtime.dll</HintPath>
+            <Publicize>true</Publicize>
+            <Private>true</Private>
+        </Reference>
+        <Reference Include="NCalc">
+            <HintPath>Dependencies\BepInEx-Required-Dependencies\NCalc.dll</HintPath>
+            <Publicize>true</Publicize>
+            <Private>true</Private>
+        </Reference>
+        <Reference Include="PanoramicData.NCalcExtensions">
+            <HintPath>Dependencies\BepInEx-Required-Dependencies\PanoramicData.NCalcExtensions.dll</HintPath>
+            <Publicize>true</Publicize>
+            <Private>true</Private>
+        </Reference>
+        <!-- PREFER LOCAL OR NUGET DEPENDENCIES OVER JSONLOADER REPOSITORY LIBS -->
+        <Reference Include="InscryptionAPI">
+            <HintPath>Dependencies\Non-BepInEx-Required-Dependencies\InscryptionAPI.dll</HintPath>
+            <Publicize>true</Publicize>
+            <Private>false</Private>
+        </Reference>
+        <Reference Include="InscryptionCommunityPatch">
+            <HintPath>Dependencies\Non-BepInEx-Required-Dependencies\InscryptionCommunityPatch.dll</HintPath>
+            <Publicize>true</Publicize>
+            <Private>false</Private>
+        </Reference>
+    </ItemGroup>
+
+    <!--Cleanup Publish for our Build System-->
+    <Target Name="StripAllNuGetFromPublish" AfterTargets="ComputeFilesToPublish">
+        <ItemGroup>
+            <ResolvedFileToPublish Remove="@(ResolvedFileToPublish)" Condition="'%(ResolvedFileToPublish.Extension)' == '.dll' and '%(ResolvedFileToPublish.RelativePath)' != 'JSONLoader.dll'" />
+        </ItemGroup>
+    </Target>
+
+    <!--Build System Properties-->
+    <PropertyGroup>
+        <!--Copy Locations-->
+        <BuildCopyLocations>Thunderstore-Package-Elements</BuildCopyLocations>
+        <CHANGELOGCopyLocation>CHANGELOG.md</CHANGELOGCopyLocation>
+        <READMECopyLocation>README.md</READMECopyLocation>
+        <LICENSECopyLocation>LICENSE.md</LICENSECopyLocation>
+        <DependenciesCopyLocations>Dependencies/BepInEx-Required-Dependencies</DependenciesCopyLocations>
+        <ReleaseMode>Prerelease</ReleaseMode>
+        <!--Thunderstore Manifest Properties-->
+        <ThunderstorePackageName>JSONCardLoader</ThunderstorePackageName>
+        <ThunderstorePackageVersion>2.7.0</ThunderstorePackageVersion>
+        <ThunderstoreWebsiteURL>https://github.com/MADH95/JSONCardLoaderPlugin</ThunderstoreWebsiteURL>
+        <ThunderstorePackageDescription>A mod made for Incryption to create custom cards, sigils, starter decks, tribes, encounters and more using JSON files.</ThunderstorePackageDescription>
+        <ThunderstorePackageDependencyStrings>BepInEx-BepInExPack_Inscryption-5.4.1902;API_dev-API-2.18.7</ThunderstorePackageDependencyStrings>
+    </PropertyGroup>
+</Project>

@@ -1,0 +1,100 @@
+{
+  "name": "TestRegion",
+  "tier": 0,
+  "addToPool": true,
+  "terrainCards": [
+    "BaitBucket"
+  ],
+  "encounters": [
+    "Skinks",
+    "AntSwarm",
+    "Submerge",
+    "Bees",
+    "Reptiles",
+    "AntsAndTurtles"
+  ],
+  "likelyCards": [
+    "Bullfrog",
+    "Snapper",
+    "Cockroach",
+    "RatKing",
+    "Kingfisher",
+    "Otter",
+    "AntFlying",
+    "MealWorm",
+    "MudTurtle",
+    "Tadpole",
+    "Raccoon"
+  ],
+  "dominantTribes": [
+    "Insect",
+    "Reptile"
+  ],
+  "consumableItems": [
+    "FishHook"
+  ],
+  "bossPrepEncounter": "Submerge",
+  "boardLightColor": "0,193,122,255",
+  "cardsLightColor": "0,129,255,255",
+  "mapAlbedo": "customRegion_mapAlbedo.png",
+  "bosses": [
+    "AnglerBoss",
+    "ProspectorBoss"
+  ],
+  "fillerScenery": [
+    {
+      "minScale": {
+        "x": 0.06,
+        "y": 0.05
+      },
+      "maxScale": {
+        "x": 0.09,
+        "y": 0.22
+      },
+      "prefabNames": [
+        "Tree_3_Mossy"
+      ],
+      "radius": 0.06,
+      "perlinNoiseHeight": true
+    }
+  ],
+  "scarceScenery": [
+    {
+      "minDensity": 0.10,
+      "minInstances": 40,
+      "maxInstances": 50,
+      "minScale": {
+        "x": 40.00,
+        "y": 40.00
+      },
+      "maxScale": {
+        "x": 50.00,
+        "y": 50.00
+      },
+      "prefabNames": [
+        "Fern_1"
+      ],
+      "radius": 0.05,
+      "perlinNoiseHeight": true
+    }
+  ],
+  "predefinedScenery": [],
+  "dialogueEvent": {
+    "eventName": "TestRegion",
+    "mainLines": ["The rank smell of rot and mold permeated the humid air.",
+      "Every step forward was answered by some nearby slip or slither.",
+      "You tread cautiously into... [c:bR]The Wetlands.[c:]"],
+    "repeatLines": [["The air grew thick with moisture...",
+      "The buzzing and chirping of insects drowned out the sound of your footfalls...",
+      "You beheld... [c:bR]The Wetlands.[c:]"],
+      ["As the air grew humid your boots became harder to pull from the mud.",
+        "The dank smell of tepid water invaded your nostrils.",
+        "You had reached... [c:bR]The Wetlands.[c:]"],
+      ["Tepid water flooded your boots.",
+        "Flies swarmed around you.",
+        "You had entered... [c:bR]The Wetlands.[c:]"],
+      ["A hideous swarm of insects gathered around you.",
+        "Reptiles slipped and slithered around your feet.",
+        "You were now engulfed by... [c:bR]The Wetlands.[c:]"]]
+  }
+}

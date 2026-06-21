@@ -1,0 +1,299 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "properties": {
+    "name": {
+      "title": "Name",
+      "description": "Name of the Region",
+      "type": "string"
+    },
+    "tier": {
+      "title": "Tier",
+      "description": "Which position in the run the region will appear in.\n(Broken as of API 2.19.3)\n0. Any order\n1. First region in the run\n2. Second region in the run\n3. Third region in the run",
+      "type": "integer"
+    },
+    "addToPool": {
+      "title": "AddToPool",
+      "description": "If set to true then the region will be added to the pool of regions available to be randomly chosen in ascension runs.",
+      "type": "boolean"
+    },
+    "terrainCards": {
+      "title": "TerrainCards",
+      "description": "List of terrain cards that can be placed on the board when starting fights.\n\nNOTE: cards listed here need ot have the Terrain trait. ",
+      "type": "array",
+      "items": [
+        {
+          "type": "string"
+        }
+      ]
+    },
+    "encounters": {
+      "title": "Encounters",
+      "description": "Encounters that that can appear during fights.",
+      "type": "array",
+      "items": [
+        {
+          "type": "string"
+        }
+      ]
+    },
+    "likelyCards": {
+      "title": "LikelyCards",
+      "description": "Extra Cards that can appear during ThreeChoice event nodes to be added to your deck.",
+      "type": "array",
+      "items": [
+        {
+          "type": "string"
+        }
+      ]
+    },
+    "dominantTribes": {
+      "title": "DominantTribes",
+      "description": "Tribes that decide what card will appear in the Oil painting and in ThreeChoice event nodes.",
+      "type": "array",
+      "items": [
+        {
+          "type": "string"
+        }
+      ]
+    },
+    "consumableItems": {
+      "title": "ConsumableItems",
+      "description": "Items that can be randomly give nto the player when in this region.",
+      "type": "array",
+      "items": [
+        {
+          "type": "string"
+        }
+      ]
+    },
+    "bossPrepEncounter": {
+      "title": "BossPrepEncounter",
+      "description": "The encounter that will be used to for the boss fight.\nIf not specified then a random encounter will be chosen according to the node and games difficulty",
+      "type": "string"
+    },
+    "boardLightColor": {
+      "title": "BoardLightColor",
+      "description": "Color that the map will show when moving between nodes (eg: 255,255,255)",
+      "type": "string"
+    },
+    "cardsLightColor": {
+      "title": "CardsLightColor",
+      "description": "Color tint cards will have. (eg: 255,255,255)",
+      "type": "string"
+    },
+    "mapAlbedo": {
+      "title": "MapAlbedo",
+      "description": "Name of an image that will be used on the map.",
+      "type": "string"
+    },
+    "bosses": {
+      "title": "Bosses",
+      "description": "Name of bosses/opponents that can appear when in this region.",
+      "type": "array",
+      "items": [
+        {
+          "type": "string"
+        }
+      ]
+    },
+    "fillerScenery": {
+      "title": "FillerScenery",
+      "description": "List of Props that are scattered around the region.\n- **minScale** and **maxScale** are the minimum and maximum scale of the prop.\n- **prefabNames** are the names of the props that can appear on the map. see MapScenery.png for list of props.\n- **radius** is the radius of the area the prop that no other props can appear in.\n- **perlinNoiseHeight** is a boolean that determines if the prop position is randomized or not",
+      "type": "array",
+      "items": [
+        {
+          "type": "object",
+          "properties": {
+            "minScale": {
+              "type": "object",
+              "properties": {
+                "x": {
+                  "type": "number"
+                },
+                "y": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "x",
+                "y"
+              ]
+            },
+            "maxScale": {
+              "type": "object",
+              "properties": {
+                "x": {
+                  "type": "number"
+                },
+                "y": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "x",
+                "y"
+              ]
+            },
+            "prefabNames": {
+              "type": "array",
+              "items": [
+                {
+                  "type": "string"
+                }
+              ]
+            },
+            "radius": {
+              "type": "number"
+            },
+            "perlinNoiseHeight": {
+              "type": "boolean"
+            }
+          },
+          "required": [
+            "minScale",
+            "maxScale",
+            "prefabNames",
+            "radius",
+            "perlinNoiseHeight"
+          ]
+        }
+      ]
+    },
+    "scarceScenery": {
+      "title": "ScarceScenery",
+      "description": "Main props that are put on the map.\n- **minDensity** Not used\n- **minInstances** Minimum amount of instances that can spawn per map\n- **maxInstances** Maximum amount of instances that can spawn per map\n- **minScale** and **maxScale** are the minimum and maximum scale of the prop. Various per prop\n- **prefabNames** are the names of the props that can appear on the map. see MapScenery.png for list of props.\n- **radius** is the radius of the area the prop that no other props can appear in.\n- **perlinNoiseHeight** is a boolean that determines if the prop position is randomized or not",
+      "type": "array",
+      "items": [
+        {
+          "type": "object",
+          "properties": {
+            "minDensity": {
+              "type": "number"
+            },
+            "minInstances": {
+              "type": "integer"
+            },
+            "maxInstances": {
+              "type": "integer"
+            },
+            "minScale": {
+              "type": "object",
+              "properties": {
+                "x": {
+                  "type": "number"
+                },
+                "y": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "x",
+                "y"
+              ]
+            },
+            "maxScale": {
+              "type": "object",
+              "properties": {
+                "x": {
+                  "type": "number"
+                },
+                "y": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "x",
+                "y"
+              ]
+            },
+            "prefabNames": {
+              "type": "array",
+              "items": [
+                {
+                  "type": "string"
+                }
+              ]
+            },
+            "radius": {
+              "type": "number"
+            },
+            "perlinNoiseHeight": {
+              "type": "boolean"
+            }
+          },
+          "required": [
+            "minDensity",
+            "minInstances",
+            "maxInstances",
+            "minScale",
+            "maxScale",
+            "prefabNames",
+            "radius",
+            "perlinNoiseHeight"
+          ]
+        }
+      ]
+    },
+    "predefinedScenery": {
+      "title": "PredefinedScenery",
+      "description": "Props that will always appear in the map.\n- **minScale** and **maxScale** are the minimum and maximum scale of the prop. Various per prop\n- **prefabNames** are the names of the props that can appear on the map. see MapScenery.png for list of props.\n- **radius** is the radius of the area the prop that no other props can appear in.\n- **perlinNoiseHeight** is a boolean that determines if the prop position is randomized or not\n- **rotation** Set rotation for all the props \n- **scale** Set scale for all the props",
+      "type": "array",
+      "items": {}
+    },
+    "dialogueEvent": {
+      "title": "DialogueEvent",
+      "description": "Dialogue that plays when entering the region.\n- **eventName** Name of the dialogue event that plays when entering the region. Use the same name as the region.\n- **mainLines** The dialogue that plays when first entering the region\n- **repeatLines** Dialogue that plays every other time you enter the region or start a new map in the same region.",
+      "type": "object",
+      "properties": {
+        "eventName": {
+          "type": "string"
+        },
+        "mainLines": {
+          "type": "array",
+          "items": [
+            {
+              "type": "string"
+            }
+          ]
+        },
+        "repeatLines": {
+          "type": "array",
+          "items": [
+            {
+              "type": "array",
+              "items": [
+                {
+                  "type": "string"
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "required": [
+        "eventName",
+        "mainLines",
+        "repeatLines"
+      ]
+    }
+  },
+  "required": [
+    "name",
+    "tier",
+    "addToPool",
+    "terrainCards",
+    "encounters",
+    "likelyCards",
+    "dominantTribes",
+    "consumableItems",
+    "boardLightColor",
+    "cardsLightColor",
+    "mapAlbedo",
+    "bosses",
+    "fillerScenery",
+    "scarceScenery",
+    "predefinedScenery",
+    "dialogueEvent"
+  ]
+}

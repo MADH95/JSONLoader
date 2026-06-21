@@ -1,0 +1,11 @@
+{
+	"tribes": [
+		{
+			"name": "Bear",
+			"guid": "sample",
+			"tribeIcon": "Grizzly_tribe.png",
+			"appearInTribeChoices": true,
+			"choiceCardBackTexture": "Grizzly_tribe_back.png"
+		}
+	]
+}

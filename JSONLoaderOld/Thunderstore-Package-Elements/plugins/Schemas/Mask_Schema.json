@@ -1,0 +1,59 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "properties": {
+    "maskName": {
+      "title": "Mask Name",
+      "description": "What you want to name your mask (eg: ClownFace)",
+      "type": "string"
+    },
+    "type": {
+      "title": "Type",
+      "description": "How do you want to add the mask? (eg: Override an existing mask, Add as a new mask to use elsewhere in the game, Randomly assign it to a oppenent.)",
+      "type": "string",
+      "enum": [
+        "Override",
+        "Add",
+        "Random"
+      ]
+    },
+    "texturePath": {
+      "title": "Texture",
+      "description": "What texture you want to use for the mask",
+      "type": "string"
+    },
+    "maskType": {
+      "type": "string",
+      "title": "Mask Type",
+      "description": "An existing mask to replace",
+      "enum": [
+        "Prospector",
+        "Woodcarver",
+        "Angler",
+        "Trapper",
+        "Trader",
+        "Doctor"
+      ]
+    },
+    "modelType": {
+      "type": "string",
+      "title": "Model Type",
+      "description": "(Optional) The model to use for the mask. Leave as FlatMask if you don't have a model!",
+      "enum": [
+        "FlatMask",
+        "Prospector",
+        "Woodcarver",
+        "Angler",
+        "Trapper",
+        "Trader",
+        "Doctor"
+      ]
+    }
+  },
+  "required": [
+    "maskName",
+    "type",
+    "texturePath",
+    "maskType"
+  ]
+}

@@ -1,0 +1,101 @@
+﻿using DiskCardGame;
+using HarmonyLib;
+using Pixelplacement;
+using System.Collections;
+using UnityEngine;
+
+namespace JLPlugin.SigilCode
+{
+    [HarmonyPatch(typeof(CombatPhaseManager), "SlotAttackSlot")]
+    public class AttackSlotBugFix_patch
+    {
+        [HarmonyPostfix]
+        public static IEnumerator Postfix(IEnumerator enumerator, CombatPhaseManager __instance, CardSlot attackingSlot, CardSlot opposingSlot, float waitAfter = 0f)
+        {
+            //while (enumerator.MoveNext()) { enumerator.MoveNext() };
+
+            yield return Singleton<GlobalTriggerHandler>.Instance.TriggerCardsOnBoard(Trigger.SlotTargetedForAttack, false, new object[]
+            {
+                opposingSlot,
+                attackingSlot.Card
+            });
+            yield return new WaitForSeconds(0.025f);
+            if (attackingSlot.Card != null)
+            {
+                if (attackingSlot.Card.Anim.DoingAttackAnimation)
+                {
+                    yield return new WaitUntil(() => !attackingSlot.Card.Anim.DoingAttackAnimation);
+                    yield return new WaitForSeconds(0.25f);
+                }
+                if (opposingSlot.Card != null && attackingSlot.Card.AttackIsBlocked(opposingSlot))
+                {
+                    ProgressionData.SetAbilityLearned(Ability.PreventAttack);
+                    yield return __instance.ShowCardBlocked(attackingSlot.Card);
+                }
+                else if (attackingSlot.Card.CanAttackDirectly(opposingSlot))
+                {
+                    if (attackingSlot.IsPlayerSlot == opposingSlot.IsPlayerSlot)
+                    {
+                        __instance.DamageDealtThisPhase -= attackingSlot.Card.Attack;
+                    }
+                    else
+                    {
+                        __instance.DamageDealtThisPhase += attackingSlot.Card.Attack;
+                    }
+                    yield return __instance.VisualizeCardAttackingDirectly(attackingSlot, opposingSlot, attackingSlot.Card.Attack);
+                    if (attackingSlot.Card.TriggerHandler.RespondsToTrigger(Trigger.DealDamageDirectly, new object[]
+                    {
+                        attackingSlot.Card.Attack
+                    }))
+                    {
+                        yield return attackingSlot.Card.TriggerHandler.OnTrigger(Trigger.DealDamageDirectly, new object[]
+                        {
+                            attackingSlot.Card.Attack
+                        });
+                    }
+                }
+                else
+                {
+                    float heightOffset = (opposingSlot.Card == null) ? 0f : opposingSlot.Card.SlotHeightOffset;
+                    if (heightOffset > 0f)
+                    {
+                        Tween.Position(attackingSlot.Card.transform, attackingSlot.Card.transform.position + Vector3.up * heightOffset, 0.05f, 0f, Tween.EaseInOut, Tween.LoopType.None, null, null, true);
+                    }
+                    attackingSlot.Card.Anim.PlayAttackAnimation(attackingSlot.Card.IsFlyingAttackingReach(), opposingSlot, null);
+                    yield return new WaitForSeconds(0.07f);
+                    attackingSlot.Card.Anim.SetAnimationPaused(true);
+                    PlayableCard attackingCard = attackingSlot.Card;
+                    yield return Singleton<GlobalTriggerHandler>.Instance.TriggerCardsOnBoard(Trigger.CardGettingAttacked, false, new object[]
+                    {
+                        opposingSlot.Card
+                    });
+                    if (attackingCard != null && attackingCard.Slot != null)
+                    {
+                        attackingSlot = attackingCard.Slot;
+                        if (attackingSlot.Card.IsFlyingAttackingReach())
+                        {
+                            opposingSlot.Card.Anim.PlayJumpAnimation();
+                            yield return new WaitForSeconds(0.3f);
+                            attackingSlot.Card.Anim.PlayAttackInAirAnimation();
+                        }
+                        attackingSlot.Card.Anim.SetAnimationPaused(false);
+                        yield return new WaitForSeconds(0.05f);
+                        int overkillDamage = attackingSlot.Card.Attack - opposingSlot.Card.Health;
+                        yield return opposingSlot.Card.TakeDamage(attackingSlot.Card.Attack, attackingSlot.Card);
+                        if (__instance.DamageDealtThisPhase > 0)
+                        {
+                            yield return __instance.DealOverkillDamage(overkillDamage, attackingSlot, opposingSlot);
+                        }
+                        if (attackingSlot.Card != null && heightOffset > 0f)
+                        {
+                            yield return Singleton<BoardManager>.Instance.AssignCardToSlot(attackingSlot.Card, attackingSlot.Card.Slot, 0.1f, null, false);
+                        }
+                    }
+                    attackingCard = null;
+                }
+                yield return new WaitForSeconds(waitAfter);
+            }
+            yield break;
+        }
+    }
+}
