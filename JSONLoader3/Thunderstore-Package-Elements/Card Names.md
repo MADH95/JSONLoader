@@ -1,269 +1,270 @@
 ## Cards
 
-| In Game Name        | Internal Name             |
-| ------------------- | ------------------------- |
-| Flying Ant          | AntFlying                 |
-| Aquasquirrel        | AquaSquirrel              |
-| Wild Bull           | Bull                      |
-| Cuckoo              | Cuckoo                    |
-| Dire Wolf           | DireWolf                  |
-| Dire Wolf Pup       | DireWolfCub               |
-| Hodag               | Hodag                     |
-| Ijiraq              | Ijiraq                    |
-| Mole Man?           | Ijiraq_UnlockScreen       |
-| Lammergeier         | Lammergeier               |
-| Pelt Lice           | Lice                      |
-| Mealworm            | MealWorm                  |
-| Mud Turtle          | MudTurtle                 |
-| Raccoon             | Raccoon                   |
-| Red Hart            | RedHart                   |
-| Tadpole             | Tadpole                   |
-| Wolverine           | Wolverine                 |
-| Adder               | Adder                     |
-| Alpha               | Alpha                     |
-| Amalgam             | Amalgam                   |
-| Amoeba              | Amoeba                    |
-| Worker Ant          | Ant                       |
-| Ant Queen           | AntQueen                  |
-| Bat                 | Bat                       |
-| Beaver              | Beaver                    |
-| Bee                 | Bee                       |
-| Beehive             | Beehive                   |
-| Bloodhound          | Bloodhound                |
-| Bullfrog            | Bullfrog                  |
-| Burrowing Trap      | BurrowingTrap             |
-| Caged Wolf          | CagedWolf                 |
-| Cat                 | Cat                       |
-| Undead Cat          | CatUndead                 |
-| Cockroach           | Cockroach                 |
-| Coyote              | Coyote                    |
-| The Daus            | Daus                      |
-| Tail                | DefaultTail               |
-| Elk                 | Elk                       |
-| Elk Fawn            | ElkCub                    |
-| Field Mice          | FieldMouse                |
-| Spore Mice          | FieldMouse_Fused          |
-| Geck                | Geck                      |
-| Black Goat          | Goat                      |
-| Grizzly             | Grizzly                   |
-| Hawk                | Hawk                      |
-| Hrokkall            | Hrokkall                  |
-| Child 13            | JerseyDevil               |
-| Kingfisher          | Kingfisher                |
-| Great Kraken        | Kraken                    |
-| Corpse Maggots      | Maggots                   |
-| Magpie              | Magpie                    |
-| Mantis              | Mantis                    |
-| Mantis God          | MantisGod                 |
-| Mole                | Mole                      |
-| Mole Man            | MoleMan                   |
-| Mole Seaman         | MoleSeaman                |
-| Skeleton Crew       | SkeletonPirate            |
-| Skeleton Parrot     | SkeletonParrot            |
-| Moose Buck          | Moose                     |
-| Strange Larva       | Mothman_Stage1            |
-| Strange Pupa        | Mothman_Stage2            |
-| Mothman             | Mothman_Stage3            |
-| Pack Mule           | Mule                      |
-| Opossum             | Opossum                   |
-| River Otter         | Otter                     |
-| Ouroboros           | Ouroboros                 |
-| Pack Rat            | PackRat                   |
-| Porcupine           | Porcupine                 |
-| Pronghorn           | Pronghorn                 |
-| Rabbit              | Rabbit                    |
-| Rat King            | RatKing                   |
-| Rattler             | Rattler                   |
-| Raven               | Raven                     |
-| Raven Egg           | RavenEgg                  |
-| Salmon              | Salmon                    |
-| Great White         | Shark                     |
-| Skink               | Skink                     |
-| Wriggling Tail      | SkinkTail                 |
-| Skunk               | Skunk                     |
-| River Snapper       | Snapper                   |
-| Long Elk            | Snelk                     |
-| Sparrow             | Sparrow                   |
-| Bell Tentacle       | SquidBell                 |
-| Hand Tentacle       | SquidCards                |
-| Mirror Tentacle     | SquidMirror               |
-| Squirrel            | Squirrel                  |
-| Squirrel Ball       | SquirrelBall              |
-| Stoat               | Stoat                     |
-| Tail Feathers       | Tail_Bird                 |
-| Furry Tail          | Tail_Furry                |
-| Wriggling Leg       | Tail_Insect               |
-| Urayuli             | Urayuli                   |
-| Turkey Vulture      | Vulture                   |
-| Warren              | Warren                    |
-| Wolf                | Wolf                      |
-| Wolf Cub            | WolfCub                   |
-|                     | !DEATHCARD_BASE           |
-|                     | !DEATHCARD_LESHY          |
-|                     | !DEATHCARD_VICTORY        |
-| The Moon            | !GIANTCARD_MOON           |
-|                     | !STATIC!GLITCH            |
-| Bait Bucket         | BaitBucket                |
-| The Stones          | CardMergeStones           |
-| Dam                 | Dam                       |
-| Chime               | DausBell                  |
-| Gold Nugget         | GoldNugget                |
-| Golden Pelt         | PeltGolden                |
-| Rabbit Pelt         | PeltHare                  |
-| Wolf Pelt           | PeltWolf                  |
-| Ring Worm           | RingWorm                  |
-| The Smoke           | Smoke                     |
-| Greater Smoke       | Smoke_Improved            |
-| The Smoke           | Smoke_NoBones             |
-| Starvation          | Starvation                |
-| Stinkbug            | Stinkbug_Talking          |
-| Stoat               | Stoat_Talking             |
-| Leaping Trap        | Trap                      |
-| Strange Frog        | TrapFrog                  |
-| Stunted Wolf        | Wolf_Talking              |
-| !CORRUPTED          | !CORRUPTED                |
-| Amalgam             | !DEATHCARD_PIXEL_BASE     |
-| Inspector           | !INSPECTOR                |
-| Melter              | !MELTER                   |
-|                     | !BOUNTYHUNTER_BASE        |
-|                     | !BUILDACARD_BASE          |
-|                     | !FRIENDCARD_BASE          |
-| 9182344890109280129 | !MYCO_OLD_DATA            |
-| Mycobot             | !MYCOCARD_BASE            |
-| Bad Fish            | Angler_Fish_Bad           |
-| Good Fish           | Angler_Fish_Good          |
-| More Fish           | Angler_Fish_More          |
-| Fishbot             | Angler_Talking            |
-| Lonely Wizbot       | BlueMage_Talking          |
-|                     | DUMMY_5-5                 |
-| Mole                | Mole_Telegrapher          |
-| Mummy Lord          | Mummy_Telegrapher         |
-| Ourobot             | Ouroboros_Part3           |
-| Curve Hopper        | AboveCurve                |
-| Alarm Bot           | AlarmBot                  |
-| Amoebot             | Amoebot                   |
-| Buff Conduit        | AttackConduit             |
-| Automaton           | Automaton                 |
-| Energy Bot          | BatteryBot                |
-| Bolthound           | BoltHound                 |
-| Explode Bot         | Bombbot                   |
-| Mrs. Bomb           | BombMaiden                |
-| Busted 3D Printer   | BustedPrinter             |
-| Captive File        | CaptiveFile               |
-| Tough Cell          | CellBuff                  |
-| Kind Cell           | CellGift                  |
-| Splinter Cell       | CellTri                   |
-| Double Gunner       | CloserBot                 |
-| ADD3R               | CXformerAdder             |
-| 3LK                 | CXformerElk               |
-| RAV3N               | CXformerRaven             |
-| W07F                | CXformerWolf              |
-| Empty Vessel        | EmptyVessel               |
-| Sapphire Vessel     | EmptyVessel_BlueGem       |
-| Emerald Vessel      | EmptyVessel_GreenGem      |
-| Ruby Vessel         | EmptyVessel_OrangeGem     |
-| Energy Conduit      | EnergyConduit             |
-| Gamblobot           | EnergyRoller              |
-| Factory Conduit     | FactoryConduit            |
-| Gem Detonator       | GemExploder               |
-| Gembound Ripper     | GemRipper                 |
-| Gems Conduit        | GemsConduit               |
-| Gem Guardian        | GemShielder               |
-| Gift Bot            | GiftBot                   |
-| Heal Conduit        | HealerConduit             |
-| Insectodrone        | Insectodrone              |
-| Bomb Latcher        | LatcherBomb               |
-| Skel-e-latcher      | LatcherBrittle            |
-| Shield Latcher      | LatcherShield             |
-| L33pB0t             | LeapBot                   |
-| Librarian           | Librarian                 |
-| M3atB0t             | MeatBot                   |
-| 49er                | MineCart                  |
-| Null Conduit        | NullConduit               |
-| Plasma Jimmy        | PlasmaGunner              |
-| Steel Mice          | RoboMice                  |
-| ExeSkeleton         | RoboSkeleton              |
-| Goranj's Vessel     | SentinelBlue              |
-| Orlu's Vessel       | SentinelGreen             |
-| Bleene's Vessel     | SentinelOrange            |
-| Sentry Drone        | SentryBot                 |
-| Sentry Spore        | SentryBot_Fused           |
-| Shieldbot           | Shieldbot                 |
-| Shutterbug          | Shutterbug                |
-| Sniper Bot          | Sniper                    |
-| Steambot            | Steambot                  |
-| Swapbot             | SwapBot                   |
-| Mox Module          | TechMoxTriple             |
-| Thick Droid         | Thickbot                  |
-| S0N1A               | XformerBatBeast           |
-| S0N1A               | XformerBatBot             |
-| GR1ZZ               | XformerGrizzlyBeast       |
-| GR1ZZ               | XformerGrizzlyBot         |
-| QU177               | XformerPorcupineBeast     |
-| QU177               | XformerPorcupineBot       |
-| Annoy FM            | AnnoyTower                |
-| Boulder             | Boulder                   |
-| Bridge Rails        | BridgeRailing             |
-| Broken Bot          | BrokenBot                 |
-| Broken Egg          | BrokenEgg                 |
-| Conduit Tower       | ConduitTower              |
-| Dead Tree           | DeadTree                  |
-| Frozen Opossum      | FrozenOpossum             |
-| Stump               | Stump                     |
-| Tombstone           | TombStone                 |
-| Grand Fir           | Tree                      |
-| Ancient Fir         | Tree_Hologram             |
-| Snowy Fir           | Tree_Hologram_SnowCovered |
-| Snowy Fir           | Tree_SnowCovered          |
-| Banshee             | Banshee                   |
-| Bonehound           | Bonehound                 |
-| Bone Lord's Horn    | BonelordHorn              |
-| Bone Heap           | Bonepile                  |
-| Broken Obol         | CoinLeft                  |
-| Broken Obol         | CoinRight                 |
-| Dead Hand           | DeadHand                  |
-| Pharaoh's Pets      | DeadPets                  |
-| Draugr              | Draugr                    |
-| Drowned Soul        | DrownedSoul               |
-| The Walkers         | Family                    |
-| Frank & Stein       | FrankNStein               |
-| Ghost Ship          | GhostShip                 |
-| Gravedigger         | Gravedigger               |
-| Sporedigger         | Gravedigger_Fused         |
-| Headless Horseman   | HeadlessHorseman          |
-| Mummy Lord          | Mummy                     |
-| Necromancer         | Necromancer               |
-| Revenant            | Revenant                  |
-| Sarcophagus         | Sarcophagus               |
-| Skeleton            | Skeleton                  |
-| Skelemagus          | SkeletonMage              |
-| Tomb Robber         | TombRobber                |
-| Zombie              | Zombie                    |
-| Blue Mage           | BlueMage                  |
-| Blue Sporemage      | BlueMage_Fused            |
-| Hover Mage          | FlyingMage                |
-| Force Mage          | ForceMage                 |
-| Gem Fiend           | GemFiend                  |
-| Green Mage          | GreenMage                 |
-| Junior Sage         | JuniorSage                |
-| Mage Knight         | MageKnight                |
-| Gourmage            | MarrowMage                |
-| Master Bleene       | MasterBleene              |
-| Master Goranj       | MasterGoranj              |
-| Master Orlu         | MasterOrlu                |
-| Bleene's Mox        | MoxDualBG                 |
-| Goranj's Mox        | MoxDualGO                 |
-| Orlu's Mox          | MoxDualOB                 |
-| Emerald Mox         | MoxEmerald                |
-| Ruby Mox            | MoxRuby                   |
-| Sapphire Mox        | MoxSapphire               |
-| Magnus Mox          | MoxTriple                 |
-| Muscle Mage         | MuscleMage                |
-| Orange Mage         | OrangeMage                |
-| Practice Wizard     | PracticeMage              |
-| Practice Mage       | PracticeMageSmall         |
-| Mage Pupil          | Pupil                     |
-| Ruby Golem          | RubyGolem                 |
-| Stim Mage           | StimMage                  |
-| Limoncello          | !GIANTCARD_SHIP           |
-| Vertebrae           | Snek_Neck                 |
+| In Code Name              | In Game Name        |
+|---------------------------|---------------------|
+| !BOUNTYHUNTER_BASE        |                     |
+| !BUILDACARD_BASE          |                     |
+| !CORRUPTED                | !CORRUPTED          |
+| !DEATHCARD_BASE           |                     |
+| !DEATHCARD_LESHY          |                     |
+| !DEATHCARD_PIXEL_BASE     |                     |
+| !DEATHCARD_VICTORY        |                     |
+| !FRIENDCARD_BASE          |                     |
+| !GIANTCARD_MOON           | The Moon            |
+| !GIANTCARD_SHIP           | Limoncello          |
+| !INSPECTOR                | Inspector           |
+| !MELTER                   | Melter              |
+| !MYCO_OLD_DATA            | 9182344890109280129 |
+| !MYCOCARD_BASE            | Mycobot             |
+| !STATIC!GLITCH            |                     |
+| AboveCurve                | Curve Hopper        |
+| Adder                     | Adder               |
+| AlarmBot                  | Alarm Bot           |
+| Alpha                     | Alpha               |
+| Amalgam                   | Amalgam             |
+| Amoeba                    | Amoeba              |
+| Amoebot                   | Amoebot             |
+| Angler_Fish_Bad           | Bad Fish            |
+| Angler_Fish_Good          | Good Fish           |
+| Angler_Fish_More          | More Fish           |
+| Angler_Talking            | Fishbot             |
+| AnnoyTower                | Annoy FM            |
+| Ant                       | Worker Ant          |
+| AntFlying                 | Flying Ant          |
+| AntQueen                  | Ant Queen           |
+| AquaSquirrel              | Aquasquirrel        |
+| AttackConduit             | Buff Conduit        |
+| Automaton                 | Automaton           |
+| BaitBucket                | Bait Bucket         |
+| Banshee                   | Banshee             |
+| Bat                       | Bat                 |
+| BatteryBot                | Energy Bot          |
+| Beaver                    | Beaver              |
+| Bee                       | Bee                 |
+| Beehive                   | Beehive             |
+| Bloodhound                | Bloodhound          |
+| BlueMage                  | Blue Mage           |
+| BlueMage_Fused            | Blue Sporemage      |
+| BlueMage_Talking          | Lonely Wizbot       |
+| BoltHound                 | Bolthound           |
+| Bombbot                   | Explode Bot         |
+| BombMaiden                | Mrs. Bomb           |
+| Bonehound                 | Bonehound           |
+| BonelordHorn              | Bone Lord's Horn    |
+| Bonepile                  | Bone Heap           |
+| Boulder                   | Boulder             |
+| BridgeRailing             | Bridge Rails        |
+| BrokenBot                 | Broken Bot          |
+| BrokenEgg                 | Broken Egg          |
+| Bull                      | Wild Bull           |
+| Bullfrog                  | Bullfrog            |
+| BurrowingTrap             | Burrowing Trap      |
+| BustedPrinter             | Busted 3D Printer   |
+| CagedWolf                 | Caged Wolf          |
+| CaptiveFile               | Captive File        |
+| CardMergeStones           | The Stones          |
+| Cat                       | Cat                 |
+| CatUndead                 | Undead Cat          |
+| CellBuff                  | Tough Cell          |
+| CellGift                  | Kind Cell           |
+| CellTri                   | Splinter Cell       |
+| CloserBot                 | Double Gunner       |
+| Cockroach                 | Cockroach           |
+| CoinLeft                  | Broken Obol         |
+| CoinRight                 | Broken Obol         |
+| ConduitTower              | Conduit Tower       |
+| Coyote                    | Coyote              |
+| Cuckoo                    | Cuckoo              |
+| CXformerAdder             | ADD3R               |
+| CXformerElk               | 3LK                 |
+| CXformerRaven             | RAV3N               |
+| CXformerWolf              | W07F                |
+| Dam                       | Dam                 |
+| Daus                      | The Daus            |
+| DausBell                  | Chime               |
+| DeadHand                  | Dead Hand           |
+| DeadPets                  | Pharaoh's Pets      |
+| DeadTree                  | Dead Tree           |
+| DefaultTail               | Tail                |
+| DireWolf                  | Dire Wolf           |
+| DireWolfCub               | Dire Wolf Pup       |
+| Draugr                    | Draugr              |
+| DrownedSoul               | Drowned Soul        |
+| DUMMY_5-5                 |                     |
+| Elk                       | Elk                 |
+| ElkCub                    | Elk Fawn            |
+| EmptyVessel               | Empty Vessel        |
+| EmptyVessel_BlueGem       | Sapphire Vessel     |
+| EmptyVessel_GreenGem      | Emerald Vessel      |
+| EmptyVessel_OrangeGem     | Ruby Vessel         |
+| EnergyConduit             | Energy Conduit      |
+| EnergyRoller              | Gamblobot           |
+| FactoryConduit            | Factory Conduit     |
+| Family                    | The Walkers         |
+| FieldMouse                | Field Mice          |
+| FieldMouse_Fused          | Spore Mice          |
+| FlyingMage                | Hover Mage          |
+| ForceMage                 | Force Mage          |
+| FrankNStein               | Frank & Stein       |
+| FrozenOpossum             | Frozen Opossum      |
+| Geck                      | Geck                |
+| GemExploder               | Gem Detonator       |
+| GemFiend                  | Gem Fiend           |
+| GemRipper                 | Gembound Ripper     |
+| GemsConduit               | Gems Conduit        |
+| GemShielder               | Gem Guardian        |
+| GhostShip                 | Ghost Ship          |
+| GiftBot                   | Gift Bot            |
+| Goat                      | Black Goat          |
+| GoldNugget                | Gold Nugget         |
+| Gravedigger               | Gravedigger         |
+| Gravedigger_Fused         | Sporedigger         |
+| GreenMage                 | Green Mage          |
+| Grizzly                   | Grizzly             |
+| Hawk                      | Hawk                |
+| HeadlessHorseman          | Headless Horseman   |
+| HealerConduit             | Heal Conduit        |
+| Hodag                     | Hodag               |
+| Hrokkall                  | Hrokkall            |
+| Hydra                     | Hydra               |
+| Ijiraq                    | Ijiraq              |
+| Ijiraq_UnlockScreen       | Mole Man?           |
+| Insectodrone              | Insectodrone        |
+| JerseyDevil               | Child 13            |
+| JuniorSage                | Junior Sage         |
+| Kingfisher                | Kingfisher          |
+| Kraken                    | Great Kraken        |
+| Lammergeier               | Lammergeier         |
+| LatcherBomb               | Bomb Latcher        |
+| LatcherBrittle            | Skel-e-latcher      |
+| LatcherShield             | Shield Latcher      |
+| LeapBot                   | L33pB0t             |
+| Librarian                 | Librarian           |
+| Lice                      | Pelt Lice           |
+| MageKnight                | Mage Knight         |
+| Maggots                   | Corpse Maggots      |
+| Magpie                    | Magpie              |
+| Mantis                    | Mantis              |
+| MantisGod                 | Mantis God          |
+| MarrowMage                | Gourmage            |
+| MasterBleene              | Master Bleene       |
+| MasterGoranj              | Master Goranj       |
+| MasterOrlu                | Master Orlu         |
+| MealWorm                  | Mealworm            |
+| MeatBot                   | M3atB0t             |
+| MineCart                  | 49er                |
+| Mole                      | Mole                |
+| Mole_Telegrapher          | Mole                |
+| MoleMan                   | Mole Man            |
+| MoleSeaman                | Mole Seaman         |
+| Moose                     | Moose Buck          |
+| Mothman_Stage1            | Strange Larva       |
+| Mothman_Stage2            | Strange Pupa        |
+| Mothman_Stage3            | Mothman             |
+| MoxDualBG                 | Bleene's Mox        |
+| MoxDualGO                 | Goranj's Mox        |
+| MoxDualOB                 | Orlu's Mox          |
+| MoxEmerald                | Emerald Mox         |
+| MoxRuby                   | Ruby Mox            |
+| MoxSapphire               | Sapphire Mox        |
+| MoxTriple                 | Magnus Mox          |
+| MudTurtle                 | Mud Turtle          |
+| Mule                      | Pack Mule           |
+| Mummy                     | Mummy Lord          |
+| Mummy_Telegrapher         | Mummy Lord          |
+| MuscleMage                | Muscle Mage         |
+| Necromancer               | Necromancer         |
+| NullConduit               | Null Conduit        |
+| Opossum                   | Opossum             |
+| OrangeMage                | Orange Mage         |
+| Otter                     | River Otter         |
+| Ouroboros                 | Ouroboros           |
+| Ouroboros_Part3           | Ourobot             |
+| PackRat                   | Pack Rat            |
+| PeltGolden                | Golden Pelt         |
+| PeltHare                  | Rabbit Pelt         |
+| PeltWolf                  | Wolf Pelt           |
+| PlasmaGunner              | Plasma Jimmy        |
+| Porcupine                 | Porcupine           |
+| PracticeMage              | Practice Wizard     |
+| PracticeMageSmall         | Practice Mage       |
+| Pronghorn                 | Pronghorn           |
+| Pupil                     | Mage Pupil          |
+| Rabbit                    | Rabbit              |
+| Raccoon                   | Raccoon             |
+| RatKing                   | Rat King            |
+| Rattler                   | Rattler             |
+| Raven                     | Raven               |
+| RavenEgg                  | Raven Egg           |
+| RedHart                   | Red Hart            |
+| Revenant                  | Revenant            |
+| RingWorm                  | Ring Worm           |
+| RoboMice                  | Steel Mice          |
+| RoboSkeleton              | ExeSkeleton         |
+| RubyGolem                 | Ruby Golem          |
+| Salmon                    | Salmon              |
+| Sarcophagus               | Sarcophagus         |
+| SentinelBlue              | Goranj's Vessel     |
+| SentinelGreen             | Orlu's Vessel       |
+| SentinelOrange            | Bleene's Vessel     |
+| SentryBot                 | Sentry Drone        |
+| SentryBot_Fused           | Sentry Spore        |
+| Shark                     | Great White         |
+| Shieldbot                 | Shieldbot           |
+| Shutterbug                | Shutterbug          |
+| Skeleton                  | Skeleton            |
+| SkeletonMage              | Skelemagus          |
+| SkeletonParrot            | Skeleton Parrot     |
+| SkeletonPirate            | Skeleton Crew       |
+| Skink                     | Skink               |
+| SkinkTail                 | Wriggling Tail      |
+| Skunk                     | Skunk               |
+| Smoke                     | The Smoke           |
+| Smoke_Improved            | Greater Smoke       |
+| Smoke_NoBones             | The Smoke           |
+| Snapper                   | River Snapper       |
+| Snek_Neck                 | Vertebrae           |
+| Snelk                     | Long Elk            |
+| Sniper                    | Sniper Bot          |
+| Sparrow                   | Sparrow             |
+| SquidBell                 | Bell Tentacle       |
+| SquidCards                | Hand Tentacle       |
+| SquidMirror               | Mirror Tentacle     |
+| Squirrel                  | Squirrel            |
+| SquirrelBall              | Squirrel Ball       |
+| Starvation                | Starvation          |
+| Steambot                  | Steambot            |
+| StimMage                  | Stim Mage           |
+| Stinkbug_Talking          | Stinkbug            |
+| Stoat                     | Stoat               |
+| Stoat_Talking             | Stoat               |
+| Stump                     | Stump               |
+| SwapBot                   | Swapbot             |
+| Tadpole                   | Tadpole             |
+| Tail_Bird                 | Tail Feathers       |
+| Tail_Furry                | Furry Tail          |
+| Tail_Insect               | Wriggling Leg       |
+| TechMoxTriple             | Mox Module          |
+| Thickbot                  | Thick Droid         |
+| TombRobber                | Tomb Robber         |
+| TombStone                 | Tombstone           |
+| Trap                      | Leaping Trap        |
+| TrapFrog                  | Strange Frog        |
+| Tree                      | Grand Fir           |
+| Tree_Hologram             | Ancient Fir         |
+| Tree_Hologram_SnowCovered | Snowy Fir           |
+| Tree_SnowCovered          | Snowy Fir           |
+| Urayuli                   | Urayuli             |
+| Vulture                   | Turkey Vulture      |
+| Warren                    | Warren              |
+| Wolf                      | Wolf                |
+| Wolf_Talking              | Stunted Wolf        |
+| WolfCub                   | Wolf Cub            |
+| Wolverine                 | Wolverine           |
+| XformerBatBeast           | S0N1A               |
+| XformerBatBot             | S0N1A               |
+| XformerGrizzlyBeast       | GR1ZZ               |
+| XformerGrizzlyBot         | GR1ZZ               |
+| XformerPorcupineBeast     | QU177               |
+| XformerPorcupineBot       | QU177               |
+| Zombie                    | Zombie              |

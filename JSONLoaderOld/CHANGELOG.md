@@ -1,4 +1,37 @@
-﻿## 2.6.0
+﻿# CHANGELOG
+
+<details open>
+<summary>JSONLoader 2.0.0 Changelog</summary>
+
+## 2.7.0
+* Integrate a new TS-Build.bat system to automate package creation for Thunderstore (Supporting runtimes for Windows, Linux, and Mac)
+* Refactor Repository to be much nicer for someone wanting to work on it.
+* Fix the usings in `Interpreter.cs` under Configils to be all above the namespace.
+* Rework the Repositories Dependency System for purposes of Building and making sure we can depend without it going to the Thunderstore Package.
+* Add a runner associated with the bat which automatically runs with the correct terminal system. (If your a MAC/LINUX user feel free to make a version of TS-Build.bat and I can hook it in!)
+* Move Examples, Schemas, and anything package related to `Thunderstore-Package-Elements`.
+* Rename class `Program.cs` to `Plugin.cs`.
+* Upgraded BepInEx related Dependencies, and adopted `BepInEx.AssemblyPublicizer.MSBuild 0.4.3` for publicizing dependency dlls.
+* Added a Authors section to the `.csproj` listing all contributors to the JSONLoader GitHub.
+* Fixed the `NoWarn` XML Property, and made it universal.
+* Prevent NuGet packages from being outputted on Publish/Build, and prevent all dlls except from jsonloader from coming into the Publish Folder (Our TS-Build automatically handles dlls that need to be copied over).
+* Change Frameworks to 4.7.2, adopt a proper RootNamespace.
+* If `Private` is set to True on a dll it will copy into the build folder when doing a regular net build.
+* Believe that covers everything, apologies if anything got missed!
+
+Overall this commit pretty much acts as a refactor of the base repository for a future refactor of the codebase (I'll toss a new branch up for it, plan to rebuild from semi-scratch)
+
+For Thunderstore Packages for this game I'd advise using `netframework4.7.2-win-x64-Release.zip` or `netframework4.7.2-win-x64-Debug.zip` when Uploading.
+
+Debug is basically a Prerelease and Release is a Release. With the setup if `ReleaseMode` is set to anything asides from `Release` it will be treated as `Prerelease`/`Debug`
+
+When doing GitHub releases I'd advising taking all zips of the Prerelease or Release Net folder into the downloads section ^^
+
+If you have any questions contact `@thincreator3483` on discord.
+
+Also this was tested fully locally to ensure everything worked, the only thing that doesn't is @JamesVeug's Export Utilities I'm not sure why its broken.
+
+## 2.6.0
 - Added JLDR2 support for regions
 - Added JLDR2 support for power stats
 - Added JLDR2 support for traits
@@ -8,11 +41,11 @@
 - Fixed exporting cards not exporting all details (including localization)
 - Fixed localization not working on cards/sigils... etc
 - Added more json support
-    - Can now embed textures in json using `base64:` prefix
-    - float, color, vector2, all Array types, private serialized fields and public properties
-    - Incorrectly named fields will now log to console and suggest the correct name
-    - Errors resulting from loading a .jldr2 file will show which file caused it now
-    - Fixed JSONLoader not loading anything else if 1 configil errors
+  - Can now embed textures in json using `base64:` prefix
+  - float, color, vector2, all Array types, private serialized fields and public properties
+  - Incorrectly named fields will now log to console and suggest the correct name
+  - Errors resulting from loading a .jldr2 file will show which file caused it now
+  - Fixed JSONLoader not loading anything else if 1 configil errors
 - Configils
   - Now supports localization (Abilities, Special Abilities and Stat Icons)
   - Fixed a bug where configils will break if abilityBehaviour is not specified
@@ -20,9 +53,9 @@
   - Fixed Behaviours not running when a card is attacked and killed
   - Fixed Change Appearance not working
 - New features added to the API
-    - Mods can now add custom variables to configils
-    - Mods can now add custom actions to configils
-    - Mods can now add file name extension exceptions (for example a mod can make jsonloader not load any files ending with "_theme.jldr2")
+  - Mods can now add custom variables to configils
+  - Mods can now add custom actions to configils
+  - Mods can now add file name extension exceptions (for example a mod can make jsonloader not load any files ending with "_theme.jldr2")
 
 ## 2.5.4
 - made it so JSONLoader now loads files that end in "_example.jldr2"
@@ -32,28 +65,28 @@
 - fixed abilityLearnedDialogue
 - rewrote buffCards (again) to make it cleaner and work faster
 - added the changeAppearance field which has this format:
-
-"changeAppearance": [{
-"changePortrait": "portrait.png",
-"changeName": "Elder ([BaseCard.Info.displayedName])",
-"addDecals": [ "decal1.png", "decal2.png" ],
-"removeDecals": [ "decal3.png", "decal4.png" ]
-}]
-
+    ```
+    "changeAppearance": [{
+    "changePortrait": "portrait.png",
+    "changeName": "Elder ([BaseCard.Info.displayedName])",
+    "addDecals": [ "decal1.png", "decal2.png" ],
+    "removeDecals": [ "decal3.png", "decal4.png" ]
+    }]
+    ```
 - added the OnDamageDirectly trigger which triggers when a card deals direct damage to the opponent, it has two variables [HitSlot] and [DamageAmount]
 - added the [DeathSlot] variable to the OnPreKill and OnPreDeath triggers
 - added a field called isPermanent to buffCards
 - made buffCards and transformCards point the camera at the hand instead of the board if the card that they're modifying is in the hand
 - added a function called SetVar which has this format: SetVar('function_name', 5) (currently gets resets after all actions caused by the current trigger have happened, but i will try to fix that later though)
 - added support for comments in any jldr2 file, comments are to be used in this format:
-
-//This changes the appearance of a card
-"changeAppearance": [{
-"changePortrait": "portrait.png", //This changes the portrait of the card
-"changeName": "Elder ([BaseCard.Info.displayedName])", //This is just like evolve!
-"addDecals": [ "decal.png" ] //And last but not least i add a decal to the card here
-}]
-
+    ```
+    //This changes the appearance of a card
+    "changeAppearance": [{
+    "changePortrait": "portrait.png", //This changes the portrait of the card
+    "changeName": "Elder ([BaseCard.Info.displayedName])", //This is just like evolve!
+    "addDecals": [ "decal.png" ] //And last but not least i add a decal to the card here
+    }]
+    ```
 - fixed generated variables causing an error if one of their variables were null
 - updated NCalcExtensions to the latest version
 - made it so all fields in configils can be empty or only whitespace without it causing an error
@@ -61,7 +94,7 @@
 - rewrote the readme and some file names for better consistency
 - updated the card names file, changelog and the configils documentation
 
---changes made by James <3--
+### Changes made by James in this Release <3
 - fields in JSONLoader are no longer case sensitive and can be upper or lower case to avoid errors.
 - Tribe file extensions now support tribe.jldr2 and tribes.jldr2 to avoid errors.
 - Fixed reload and export hotkeys inverted.
@@ -102,11 +135,13 @@
 - fixed targetCard only working with singular variables and not with things like functions, this does mean that targetCard will now require variables to be encased in parentheses to enable NCalc
 - fixed a bug where if you set one sigil to be infused in addAbilities that it would make all infused
 - changed removeAbilities to now be a list in this format:
-  "removeAbilities": [{
-  "list": "",
-  "name": "",
-  "all": ""
-  }]
+    ```
+    "removeAbilities": [{
+    "list": "",
+    "name": "",
+    "all": ""
+    }]
+    ```
 - added a new field to removeAbilities called "all", when this field is set to true all instances of a sigil will be removed from a card instead of just one (this also means that the default for removing sigils isn't removing all instances of that sigil anymore, but now just one)
 - added a new field called "list" to both addAbilities and removeAbilities, this field can be set to any list and will add/remove any sigils from that list from the targeted card
 - added a "damageSource" field to damageCards which functions like targetCard but changes what card the game will think the damage came from, this field can be set to "null" to have there be no damage source
@@ -174,6 +209,11 @@
 ## 2.0.0
 - Rewritten to be compatible with API 2.0
 
+</details>
+
+<details>
+<summary>JSONLoader 1.0.0 Changelog</summary>
+
 ## 1.7.2
 - Added check for "_example" on the end of file name to remove example files from loading
 
@@ -204,12 +244,12 @@
 ## v1.5.0
 - Compatability patch for InscryptionAPI v1.11
 - Refactored Code:
-    + Error checking no longer uses exception handling to funciton
-    + Game will load default deck if the names in the config for testdeck don't exist
-    + baseHealth and metaCategories are handled before the call to NewCard.Add to avoid bloat in the function call
-    + Removed Evolve/Tail/IceCubeParams handling to utilise API's handling of those aspects instead
-    + Added ErrorUtil to better help with error logging
-    + Made use of new json parser to read in Evolve/Tail/IceCubeData from json objects
+  + Error checking no longer uses exception handling to funciton
+  + Game will load default deck if the names in the config for testdeck don't exist
+  + baseHealth and metaCategories are handled before the call to NewCard.Add to avoid bloat in the function call
+  + Removed Evolve/Tail/IceCubeParams handling to utilise API's handling of those aspects instead
+  + Added ErrorUtil to better help with error logging
+  + Made use of new json parser to read in Evolve/Tail/IceCubeData from json objects
 
 ## v1.4.0
 - Changed json parser from Unity's JSONUtility to TinyJson
@@ -229,17 +269,17 @@
 ## v1.3.6
 - Fixed linking error from update v1.3.5
   Refactored Code:
-    + Seperated EvolveData, TailData, and IceCubeData into their own files and gave them functions to handle their own generation and conversion to Param varients
-    + Added class CDUtils to seperate the data from card adding/editing funcitons
-    + seperated ExtensionUtils into it's own file
+  + Seperated EvolveData, TailData, and IceCubeData into their own files and gave them functions to handle their own generation and conversion to Param varients
+  + Added class CDUtils to seperate the data from card adding/editing funcitons
+  + seperated ExtensionUtils into it's own file
 
 ## v1.3.5
 - Compatablity patch for InscryptionAPI v1.10
 - Refactored code:
-    + CardData has it's own file
-    + Dicts has it's own file
-    + EvolveData, TailData, and IceCubeData are now in their own file together
-    + JLUtils was created to host utility functions like assignment helpers and validity checks
+  + CardData has it's own file
+  + Dicts has it's own file
+  + EvolveData, TailData, and IceCubeData are now in their own file together
+  + JLUtils was created to host utility functions like assignment helpers and validity checks
 
 ## v1.3.3
 - updated error logging for user
@@ -254,9 +294,9 @@
 ## v1.2.0
 - Added validity check for TestDeck cards
 - Added functionality for:
-    + EvolveParams via "evolve_evolutionName" & "evolve_turnsToEvolve"
-    + TailParams via "tail_cardName" & "tail_tailLostPortrait"
-    + IceCubeParams via "iceCube_creatureWithin"
+  + EvolveParams via "evolve_evolutionName" & "evolve_turnsToEvolve"
+  + TailParams via "tail_cardName" & "tail_tailLostPortrait"
+  + IceCubeParams via "iceCube_creatureWithin"
 - Patched LoadScreenManager.LoadGameData and ChapterSelectMenu_OnChapterConfirmed to facilitate above implementation
 - Minor refactor of NewCard call
 
@@ -269,6 +309,8 @@
 
 ## v1.0.0
 - Handles cards that don't use:
-    + EvolveParams
-    + TailParams
-    + IceCubeParams
+  + EvolveParams
+  + TailParams
+  + IceCubeParams
+
+</details>

@@ -5,33 +5,47 @@
 ## Meta Categories
 
 | Value              | Description                                                                    |
-| ------------------ | ------------------------------------------------------------------------------ |
+|--------------------|--------------------------------------------------------------------------------|
 | ChoiceNode         | Defines the card to be a choice option                                         |
 | GBCPack            | Can be acquired by buying a card pack in act 2                                 |
 | GBCPlayable        | Can show up in the card catalogue in act 2                                     |
 | Part3Random        | Can show up as card from the Loot sigil                                        |
 | Rare               | Defines the card to be rare                                                    |
 | TraderOffer        | Can show up at the trader in act 1                                             |
+| AscensionUnlock    | Not sure if this is used anywhere, but it exists within the Enums!             |
+|--------------------|--------------------------------------------------------------------------------|
 | Part1Rulebook      | Adds the sigil to the act 1 rulebook.                                          |
 | Part1Modular       | Allows the sigil to appear on totems, Wolf Pelt trades and Cave Trial rewards. |
 | Part3Rulebook      | Adds the sigil to the act 3 rulebook.                                          |
 | Part3Modular       | Allows the sigil to appear in the Upgrade node in act 3.                       |
-| Part3BuildACard    | Allows the sigil to be chosen in the Build-A-Bot node in act 3.                |
 | BountyHunter       | Allows the sigil to appear on act 3 Bounty Hunter cards.                       |
 | GrimoraRulebook    | Adds the sigil to the rulebook in Grimora’s part of Finale.                    |
 | MagnificusRulebook | Adds the sigil to the rulebook in Magnificus’ part of Finale.                  |
+| Part3BuildACard    | Allows the sigil to be chosen in the Build-A-Bot node in act 3.                |
+| AscensionUnlocked  | Not sure if this is used anywhere, but it exists within the Enums!             |
 
 ---
 
-## Power Levels
+## Sigil Power Level
 
-| Event      | Power Levels | Info                                                                                |
-| ---------- | ------------ | ----------------------------------------------------------------------------------- |
-| Cave Trial | 0-5          | If you want your sigil to appear on the Cave Trial rewards                          |
-| Totems     | 0-7          | If you want your sigil to appear on totems                                          |
-| Prospector | 0-5          | If you want your sigil to appear on Insect cards from the Prospector node           |
-| Trader     | 0-5          | If you want your sigil to appear on Wolf Pelt trades                                |
-| Amorphous  | 0-5          | If you want the Amorphous sigil to be able to pick your sigil as one of the options |
+| Event                    | Power Levels | Info                                                                                |
+| ------------------------ | ------------ | ----------------------------------------------------------------------------------- |
+| Cave Trial               | 0 to 5       | If you want your sigil to appear on the Cave Trial rewards                          |
+| Totems                   | 0 to 5       | If you want your sigil to appear on totems                                          |
+| Prospector               | 0 to 5       | If you want your sigil to appear on Insect cards from the Prospector node           |
+| Trader                   | 0 to 5       | If you want your sigil to appear on Wolf Pelt trades                                |
+| Amorphous                | 0 to 5       | If you want the Amorphous sigil to be able to pick your sigil as one of the options |
+| PositiveEffect           | 0 to 5       | Marks this as a Positive Sigil                                                      |
+| Default Button Color     | -3 to -1     | Gives this the Default Button Color in corralation with a event in Act 3            |
+| Default Icon Color       | 0 to 5       | Gives this the Default Icon Color in corralation with a event in Act 3              |
+| AddCardAbilitySequencer  | 1 to 4       | A Part3Modular system within Act 3, if the sigil is within the range it can be used |
+| Opponent Totems          | 0 to 5       | Allows the sigil to be used on Opponent Totems. (note its Difficulty divided by 5f) |
+| GetRandomCardAbilityMod  | 0 to 5       | Used for cases like Amalgam in the case you have max totem pieces already           |
+| Boulder                  | 0 to 5       | Allows the Ability to be used in the Boulder Sequence                               |
+| Oil Painting             | 0 to 5       | Allows the Ability to be used in the Oil Paintings                                  |
+| Goobert                  | 0 to 5       | Allows the Ability to be used in the Goobert Sequence                               |
+| FillWithRandomPart1Cards | 2 to 4       | If in this range, the Ability is included in the required Criteria                  |
+
 
 ---
 
@@ -67,16 +81,17 @@
 
 ---
 
-## SpecialIcon
+## SpecialStatIcon
 
-| Value       | Description                                                          |
-| ----------- | -------------------------------------------------------------------- |
-| Ants        | Displays the Ants icon for the cards attack                          |
-| Bell        | Displays the Bell icon for the cards attack                          |
-| Bones       | Displays the Lammergeier's Bone icon for the cards attack and health |
-| CardsInHand | Displays the Hand Counter icon for the cards attack                  |
-| GreenGems   | Displays the Green Mox icon for of cards attack                      |
-| Mirror      | Displays the Mirror icon for the cards attack                        |
+| Value              | Description                                                          |
+| ------------------ | -------------------------------------------------------------------- |
+| Ants               | Displays the Ants icon for the cards attack                          |
+| Bell               | Displays the Bell icon for the cards attack                          |
+| Bones              | Displays the Lammergeier's Bone icon for the cards attack and health |
+| CardsInHand        | Displays the Hand Counter icon for the cards attack                  |
+| GreenGems          | Displays the Green Mox icon for of cards attack                      |
+| Mirror             | Displays the Mirror icon for the cards attack                        |
+| SacrificesThisTurn | Displays the Dagger icon for the cards attack                        |
 
 ---
 
@@ -109,6 +124,7 @@
 | Goat                       | Will grant you the Boon of the Bone Lord, if sacrificed on the Bone Lord's Altar                                                |
 | Juvenile                   | Unused                                                                                                                          |
 | KillsSurvivors             | Kills Survivors if used on the campfire                                                                                         |
+| Lice                       | Acts like Pelt Lice                                                                                                             |
 | LikesHoney                 | Unused                                                                                                                          |
 | Pelt                       | Cannot be sacrificed, can be used to trade for cards during the Trapper/Trader fight & will give no reward at Bone Lord's Alter |
 | ProtectsCub                | Unused                                                                                                                          |
@@ -121,7 +137,7 @@
 
 ---
 
-## SpecialAbilities
+## SpecialTriggeredAbility
 
 | Value              | Description                                                                                       |
 | ------------------ | ------------------------------------------------------------------------------------------------- |
@@ -284,6 +300,7 @@
 | TerrainLayout         | Renders card with terrain card layout                    |
 | RedEmission           | Does the Ijiraq emission effect                          |
 | DefaultEmission       | Emissions are on cards by default.                       |
+| MoonParticleEffects   | Renders the Moon Particle Effects                        |
 
 ---
 
@@ -343,3 +360,554 @@
 | Doctor     | 6           |
 | FlatMask   | 101         |
 | Sphere     | 102         |
+
+---
+
+## AscensionChallenge
+
+| Value             | Description                                                                     |
+|-------------------|---------------------------------------------------------------------------------|
+| AllTotems         | The All Totem Battles Challenge                                                 |
+| BossTotems        | The Bosses have a Totem Challenge                                               |
+| BaseDifficulty    | The Increase Difficulty Challenge                                               |
+| LessConsumables   | The 2 Item Slots Only Challenge                                                 |
+| NoClover          | The No Clover Challenge                                                         |
+| LessLives         | The Single Candle Challenge                                                     |
+| ExpensivePelts    | The Pricy Pelts Challenge                                                       |
+| NoBossRares       | The Commons in Place of Boss Rares Challenge                                    |
+| WeakStarterDeck   | The Annoying Starters Challenge                                                 |
+| StartingDamage    | The Tipped Scales Challenge                                                     |
+| HarderDeckTrials  | Seems to be a Unused Challenge that would presumably make Trials more Difficult |
+| SubmergeSquirrels | The AquaSquirrels Challenge                                                     |
+| GrizzlyMode       | The 8 fucking bears Challenge                                                   |
+| NoHook            | The No Anglers Hool Challenge                                                   |
+| FinalBoss         | The Royal Final Boss Fight Challenge                                            |
+
+---
+
+## CardChoicesType
+
+| Value     | Description                       |
+|-----------|-----------------------------------|
+| Random    | The Random Card Choices Type      |
+| Cost      | The Cost Based Card Choices Type  |
+| Tribe     | The Tribe Based Card Choices Type |
+| Deathcard | The Random Deathcard Choices Type |
+
+---
+
+## CursorType
+
+| Value      |
+|------------|
+| Default    |
+| Sacrifice  |
+| Place      |
+| Fight      |
+| Pickup     |
+| Flip       |
+| Inspect    |
+| Zoom       |
+| Rotate     |
+| Scissors   |
+| Point      |
+| MoveDown   |
+| MoveUp     |
+| Slap       |
+| Info       |
+| Photo      |
+| Target     |
+| Hammer     |
+| Pickaxe    |
+| FishHook   |
+| CannotGrab |
+
+---
+
+## DiskCardWeapon
+
+| Value    |
+|----------|
+| Default  |
+| Sniper   |
+| Turret   |
+| Revolver |
+| SMG      |
+| Fish     |
+
+---
+
+## Emotion
+
+| Value    |
+|----------|
+| Laughter |
+| Anger    |
+| Quiet    |
+| Surprise |
+| Curious  |
+
+---
+
+## EyeBallState
+
+| Value   |
+|---------|
+| Default |
+| Missing |
+| Wizard  |
+| Goat    |
+
+---
+
+## FillerAbilities
+
+| Value       |
+|-------------|
+| None        |
+| Banding     |
+| Skulduggery |
+
+---
+
+## GameState
+
+| Value               |
+|---------------------|
+| CardBattle          |
+| Map                 |
+| FirstPerson3D       |
+| SpecialCardSequence |
+
+---
+
+## ItemType
+
+| Value      |
+|------------|
+| Consumable |
+| Upgrade    |
+| Survival   |
+| Totem      |
+| TotemPiece |
+
+---
+
+## MechanicsConcept
+
+| Value                       |
+|-----------------------------|
+| Bones                       |
+| BuildingTotems              |
+| TribeBasedCardChoice        |
+| CostBasedCardChoice         |
+| Rulebook                    |
+| LosingLife                  |
+| EndingTurn                  |
+| OpponentQueue               |
+| FirstPersonNavigation       |
+| OpponentTotems              |
+| ProspectorBoss              |
+| AltInput                    |
+| IntermediateCards           |
+| AdvancedCards               |
+| CardChoice                  |
+| UsingConsumables            |
+| OverkillDamage              |
+| BuyingPelts                 |
+| TradingPelts                |
+| BossMultipleLives           |
+| RareCards                   |
+| DeckTrial                   |
+| DeckReview                  |
+| GainCurrency                |
+| CardMerging                 |
+| CardRemoval                 |
+| DeathCardCreation           |
+| RulebookPageFlipping        |
+| BossSuddenDeath             |
+| GetUpFromTableAnyTime       |
+| DeathCardSelection          |
+| DuplicateMerge              |
+| FishHookGrab                |
+| GainConsumables             |
+| ChooseConsumables           |
+| ViewQueue                   |
+| ViewHand                    |
+| HoloMapCheckpoint           |
+| Part3Consumables            |
+| PhotographerTakeSnapshot    |
+| PhotographerRestoreSnapshot |
+| PliersItem                  |
+| CardStatBoost               |
+| Part3Respawn                |
+| Part3Bloodstain             |
+| Part3OverclockCard          |
+| Part3AttachGem              |
+| GBCModifyDeck               |
+| Part3ModifySideDeck         |
+| Part3Bounty                 |
+| Part3BountyTiers            |
+| Part3CreateTransformer      |
+| Part3RecycleCard            |
+| SacrificingNotPermanent     |
+| OilPaintingPuzzle           |
+| Part3BuildACard             |
+| OnlineFriendCards           |
+| DamageRaceBattle            |
+| Energy                      |
+| Gems                        |
+| DeathcardCardChoice         |
+| GBCActivatedAbilities       |
+| Part3TradeCards             |
+| HoloMapFastTravel           |
+
+---
+
+## MenuAction
+
+| Value             |
+|-------------------|
+| NewGame           |
+| Continue          |
+| Options           |
+| Library           |
+| ReturnToStartMenu |
+| EditDeck          |
+| Quit              |
+| Concede           |
+| Credits           |
+| EndRun            |
+| EnterAscension    |
+
+---
+
+## PageRangeType
+
+| Value     |
+|-----------|
+| Abilities |
+| Cards     |
+| Unique    |
+| StatIcons |
+| Boons     |
+| Items     |
+
+---
+
+## ResourceType
+
+| Value  |
+|--------|
+| Blood  |
+| Bone   |
+| Energy |
+| Gems   |
+
+---
+
+## SidePileFigurine
+
+| Value        |
+|--------------|
+| Squirrel     |
+| Bee          |
+| Aquasquirrel |
+
+---
+
+## StoryEvent
+
+| Value                            |
+|----------------------------------|
+| BasicTutorialCompleted           |
+| TutorialRunCompleted             |
+| SacrificedStoatInTutorial        |
+| StoatIntroduction                |
+| BonesTutorialCompleted           |
+| TutorialRun2Completed            |
+| SafeOpened                       |
+| WardrobePanelOpened              |
+| WardrobeDrawer1Opened            |
+| WardrobeDrawer2Opened            |
+| WardrobeDrawer3Opened            |
+| WardrobeDrawer4Opened            |
+| SkinkCardDiscovered              |
+| AntCardsDiscovered               |
+| SquirrelHeadDiscovered           |
+| SpecialDaggerDiscovered          |
+| WolfStatuePlaced                 |
+| WolfCageBroken                   |
+| CageCardDiscovered               |
+| StinkbugCardDiscovered           |
+| ProspectorDefeated               |
+| AnglerDefeated                   |
+| TrapperTraderDefeated            |
+| WoodcarverDefeated               |
+| StartScreenNewGameUnlocked       |
+| StartScreenLibraryUnlocked       |
+| LeshyDefeated                    |
+| FigurineFetched                  |
+| LeshyLostCamera                  |
+| StinkbugStoatReunited            |
+| ClockCompartmentOpened           |
+| TalkingWolfCardDiscovered        |
+| FilmRollDiscovered               |
+| GBCIntroCompleted                |
+| GBCGrimoraDefeated               |
+| GBCLeshyDefeated                 |
+| GBCPoeDefeated                   |
+| GBCMagnificusDefeated            |
+| TutorialRun3Completed            |
+| GBCUndeadAmbition                |
+| GBCNatureAmbition                |
+| GBCTechAmbition                  |
+| GBCWizardAmbition                |
+| GBCProspectorPhoto               |
+| GBCAnglerPhoto                   |
+| GBCTrapperPhoto                  |
+| GBCBaitPhoto                     |
+| StartScreenNewGameUsed           |
+| Part2Completed                   |
+| ArchivistDefeated                |
+| PhotographerDefeated             |
+| TelegrapherDefeated              |
+| CanvasDefeated                   |
+| FileAccessGiven                  |
+| GemsModuleFetched                |
+| ImprovedSmokeCardDiscovered      |
+| FactoryWardrobe1Opened           |
+| FactoryWardrobe2Opened           |
+| FailedWithFilmRoll               |
+| StoatIntroduction2               |
+| StinkbugIntroduction2            |
+| StoatSaysFindWolf                |
+| StoatWolfReunited                |
+| StinkbugMentionedWolf            |
+| WoodcarverMet                    |
+| GBCMonocleFound                  |
+| StoatIntroduction3               |
+| CaptchaPuzzle1Complete           |
+| CaptchaPuzzle2Complete           |
+| CaptchaPuzzle3Complete           |
+| CaptchaPuzzle4Complete           |
+| CaptchaPuzzle5Complete           |
+| CaptchaPuzzle6Complete           |
+| HoloMapOutOfPower                |
+| HoloMapBatteryFetched            |
+| GemsModuleRequested              |
+| GBCUndeadFinaleChosen            |
+| GBCNatureFinaleChosen            |
+| GBCTechFinaleChosen              |
+| GBCWizardFinaleChosen            |
+| GooBottleFound                   |
+| Part3Intro                       |
+| HandCuffReleased                 |
+| FMVClips1                        |
+| FMVClips2                        |
+| FMVClips3                        |
+| GBCCameraBatteryLow              |
+| FactoryShopRoomUnlocked          |
+| NatureHoloShortcut               |
+| UndeadHoloShortcut               |
+| WizardHoloShortcut               |
+| DredgingRoomUnlocked             |
+| Part3MetScrybes                  |
+| SpecialDaggerUsed                |
+| FactoryChestOpened1              |
+| FactoryChestOpened2              |
+| FactoryGooSpotted                |
+| GBCWorldMapVO                    |
+| GBCDogFoodFound                  |
+| GBCDogFoodPlaced                 |
+| BombRemoteDiscovered             |
+| CloverFound                      |
+| CandleArmFound                   |
+| BeeFigurineFound                 |
+| HoloTechTempleSatelliteActivated |
+| Part3Completed                   |
+| FullGameCompleted                |
+| GrimoraReachedTable              |
+| WolfMentionFilmRoll              |
+| PhotoDroneSeenInCabin            |
+| TalkingAnglerCardDiscovered      |
+| GBCCloverFound                   |
+| GBCObolFound                     |
+| GBCObolGiven                     |
+| GBCBoneFound                     |
+| BonelordHoloKeyFound             |
+| Part3PostScrybeMeeting           |
+| TalkingBlueMageCardDiscovered    |
+| Part3BonelordRoomUnlocked        |
+| LukeVOPart1Vision                |
+| LukeVOPart2Grimora               |
+| LukeVOPart2Bonelord              |
+| FishHookUnlocked                 |
+| HoloTechAreaUnlocked             |
+| StartScreenNewGameUsedAgain      |
+| Part3MycologistHutUnlocked       |
+| MycologistHutKeyFound            |
+| CabinTarotCardFound              |
+| MycologistsBossDefeated          |
+| LukeVOPart3File                  |
+| RingFound                        |
+| ClockSmallCompartmentOpened      |
+| InternetAccessGranted            |
+| FactoryGemPedestalAppeared       |
+| LukeVOPart3CloseWin              |
+| LukeVOPart3Yes                   |
+| LukeVOPart3Shit                  |
+| LukeVOPart3Wtf                   |
+| PlayerDeletedArchivistFile       |
+| FactoryConveyorBeltMoved         |
+| FactoryCuckooClockAppeared       |
+| Part3PurchasedHoloBrush          |
+| FactoryCuckooClockOpenedLarge    |
+| FactoryCuckooClockOpenedSmall    |
+| OurobotCardDiscovered            |
+| LukeVONewRunAfterVictory         |
+| LukeVOLeshyRematch               |
+| LukeVOSickOfBoss                 |
+| LukeVOMantisGod                  |
+| LukeVOOPCard                     |
+| MycologistsDefeated              |
+| Part3MetBonelord                 |
+| Part3PhotoDroneActive            |
+| GooPlaneGoobertRevealed          |
+| GooPlaneGoobertComplete          |
+| FactoryPrinterScreenMatched      |
+| FinaleCryptCompleted             |
+| FinaleCabinCompleted             |
+| FinaleMagnificusCompleted        |
+| FactoryWoodcarver1               |
+| FactoryWoodcarver2               |
+| FactoryWoodcarver3               |
+| ChapterSelectUnlocked            |
+| MycologistHutKeyShown            |
+| GBCBonelordRewardsGiven          |
+| LukeVOBeatLeshyAgain             |
+| LukeVODieAlready                 |
+| UhOhSpaghettiOh                  |
+| AscensionBleachPotFound          |
+| AscensionStopwatchFound          |
+| AscensionVinylFound              |
+| AscensionMagnifyingGlassFound    |
+| AscensionPirateBossDefeated      |
+
+---
+
+## TotemEffect
+
+| Value           |
+|-----------------|
+| CardGainAbility |
+
+---
+
+## TraderTarotType
+
+| Value      |
+|------------|
+| TheFool    |
+| TheTower   |
+| TheEmpress |
+| Death      |
+| TheDevil   |
+
+---
+
+## Trigger
+
+| Value                   |
+|-------------------------|
+| Upkeep                  |
+| Drawn                   |
+| PlayFromHand            |
+| ResolveOnBoard          |
+| OtherCardResolve        |
+| Sacrifice               |
+| SlotTargetedForAttack   |
+| CardGettingAttacked     |
+| TakeDamage              |
+| DealDamage              |
+| AttackEnded             |
+| OtherCardDie            |
+| Die                     |
+| TurnEnd                 |
+| OtherCardDrawn          |
+| PreDeathAnimation       |
+| OtherCardAssignedToSlot |
+| OtherCardPreDeath       |
+| ActivatedAbility        |
+| OtherCardDealtDamage    |
+| DealDamageDirectly      |
+
+---
+
+## View
+
+| Value                   |
+|-------------------------|
+| Hand                    |
+| Default                 |
+| DeckSelection           |
+| Choices                 |
+| Board                   |
+| CardPiles               |
+| OpponentQueue           |
+| Scales                  |
+| CardMergeSlots          |
+| CardMergeConfirm        |
+| MinigameCard            |
+| MapCloseIn              |
+| MapDefault              |
+| MapArial                |
+| FirstPerson             |
+| Candles                 |
+| TotemInventory          |
+| TradingTopDown          |
+| OpponentTotem           |
+| BossSkull               |
+| BoneTokens              |
+| BossCloseup             |
+| OpponentQueueCentered   |
+| MapDeckReview           |
+| GiantHandTable          |
+| SanctumFloorDown        |
+| SanctumFloorUp          |
+| OnFloorLookingUp        |
+| DefaultUpwards          |
+| MaskDialogue            |
+| DefaultHandDown         |
+| TableStraightDown       |
+| Consumables             |
+| P03Face                 |
+| BoardCentered           |
+| PhotographerDroneView   |
+| ScalesOnly              |
+| ConsumablesOnly         |
+| StatBoostSlot           |
+| P03FaceClose            |
+| HandCuff                |
+| EmptyVessel             |
+| RecycleMachine          |
+| BuildACardScreen        |
+| FactoryScanner          |
+| ChoicesCloser           |
+| PeekUnderTable          |
+| WizardBattleUnits       |
+| WizardBattleSlots       |
+| WizardBattleHand        |
+| WizardBattlePiles       |
+| WizardBattleRotating    |
+| HoloMapArial            |
+| OpponentQueueTradePhase |
+
+---
+
+## ViewLockState
+
+| Value    |
+|----------|
+| Locked   |
+| Unlocked |
