@@ -1,0 +1,3 @@
+[submodule "JSONCardLoaderWiki"]
+	path = JSONCardLoaderWiki
+	url = https://github.com/Chaosyr/JSONCardLoaderWiki.git

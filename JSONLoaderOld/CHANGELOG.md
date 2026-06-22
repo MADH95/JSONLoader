@@ -1,4 +1,4 @@
-﻿# CHANGELOG
+# CHANGELOG
 
 <details open>
 <summary>JSONLoader 2.0.0 Changelog</summary>

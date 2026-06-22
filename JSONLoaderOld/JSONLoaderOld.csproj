@@ -85,6 +85,6 @@
         <ThunderstorePackageVersion>2.7.0</ThunderstorePackageVersion>
         <ThunderstoreWebsiteURL>https://github.com/MADH95/JSONCardLoaderPlugin</ThunderstoreWebsiteURL>
         <ThunderstorePackageDescription>A mod made for Incryption to create custom cards, sigils, starter decks, tribes, encounters and more using JSON files.</ThunderstorePackageDescription>
-        <ThunderstorePackageDependencyStrings>BepInEx-BepInExPack_Inscryption-5.4.1902;API_dev-API-2.18.7</ThunderstorePackageDependencyStrings>
+        <ThunderstorePackageDependencyStrings>BepInEx-BepInExPack_Inscryption-5.4.1902;API_dev-API-2.23.7</ThunderstorePackageDependencyStrings>
     </PropertyGroup>
 </Project>
