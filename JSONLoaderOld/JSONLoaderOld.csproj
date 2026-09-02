@@ -18,9 +18,11 @@
 
     <!--NUGET Dependencies-->
     <ItemGroup>
+        <PackageReference Include="API_dev-API" Version="2.24.0" />
         <PackageReference Include="BepInEx.Analyzers" Version="1.0.8" PrivateAssets="all" />
         <PackageReference Include="BepInEx.Core" Version="5.4.21" />
         <PackageReference Include="BepInEx.PluginInfoProps" Version="2.1.0" />
+        <PackageReference Include="Cecil.ANSI_Utils" Version="2.0.0" />
         <PackageReference Include="UnityEngine.Modules" Version="2019.4.24" IncludeAssets="compile" />
         <PackageReference Include="Inscryption.GameLibs" Version="1.9.0-r.0" />
     </ItemGroup>

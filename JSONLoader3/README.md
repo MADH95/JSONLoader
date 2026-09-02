@@ -1,6 +1,35 @@
-# JSON Loader V3
+# JSON Loader V2
 
-This is a mod made for Incryption to create custom cards, sigils, starter decks, tribes, encounters and more using JSON files.
+The below documentation is likely outdated, the most up to date documentation will be provided via GitHub and Thunderstore WIKI Systems.
+
+This package is now maintained by Chaosyr as of V2.7.0.
+
+If you wish to contribute to the project the GitHub is [MADH95/JSONLoader](https://github.com/MADH95/JSONCardLoaderPlugin)
+
+Thank you to the following folks for their amazing Contributations to this Project:
+
+* [MADH95](https://github.com/MADH95)
+* [JamesVeug](https://github.com/JamesVeug)
+* [LilySylvee](https://github.com/LilySylvee)
+* [kbmackenzie](https://github.com/kbmackenzie)
+* [Chaosyr](https://github.com/Chaosyr)
+* [divisionbyz0rro](https://github.com/divisionbyz0rro)
+* [IngoHHacks](https://github.com/IngoHHacks)
+* [Khaomi](https://github.com/Khaomi)
+* [vladdeSV](https://github.com/vladdeSV)
+* [TVFLabs](https://github.com/TVFLabs)
+* [UwUMacaroniTime](https://github.com/UwUMacaroniTime)
+* [Windows10CE](https://github.com/Windows10CE)
+
+JSONLoader and API 3.0.0 are on the Horizon, JSONLoader's will be first as it's the simpler of the two to upgrade.
+
+### **HUGE NOTE: THE EXPORT SYSTEM IS CURRENTLY BROKEN DO NOT UTILIZE IT**
+
+If you run into any Issues or find features you want create an issue on the [GitHub](https://github.com/MADH95/JSONCardLoaderPlugin).
+
+___
+
+This is a mod made for Inscryption to create custom cards, sigils, starter decks, tribes, encounters and more using JSON files.
 
 Version 2.0 of this mod is designed to create full compatibility with Version 2.0+ of the API. JSON files compatible with this API will have an extension of .JLDR2
 
@@ -28,7 +57,7 @@ For the most part, JLDR2 and JLDR are the same. The key differences are outlined
 
 ### Abilities and Special Abilities
 
-Previously, base game abilities and mod-added abilities were handled differently; they were completely separate parts of the file. Now, base game abilities and mod-added abilities are kept in the same list. Base game abilities are referred to by their enumerated name, such as "Flying" or "Reach." Mod-added abilities are referred to by a combination of the Mod GUID and their name. For example, the "Deathburst" ability from Void's sigil pack (part of the popular "All the Sigils" mod) is referred by the string "ATS.Deathburst"; in this example, "Deathburst" is the name of the ability, and "ATS" is the GUID of the mod. 
+Previously, base game abilities and mod-added abilities were handled differently; they were completely separate parts of the file. Now, base game abilities and mod-added abilities are kept in the same list. Base game abilities are referred to by their enumerated name, such as "Flying" or "Reach." Mod-added abilities are referred to by a combination of the Mod GUID and their name. For example, the "Deathburst" ability from Void's sigil pack (part of the popular "All the Sigils" mod) is referred by the string "ATS.Deathburst"; in this example, "Deathburst" is the name of the ability, and "ATS" is the GUID of the mod.
 
 So to create a card with both Flying and Deathburst, you would do something like the following:
 
@@ -259,7 +288,6 @@ Things you need to know:
 
 Unless you have mods that allow battles before the final boss, Midnight, Midnight_Ascension and Pirateville are redundant.
 
-
 </details> 
 
 ### Example:
@@ -305,7 +333,6 @@ Unless you have mods that allow battles before the final boss, Midnight, Midnigh
     "Flying"
   ],
   //what abilities won't appear during totem battles
-  
   
   "turns": [
     {
@@ -383,12 +410,11 @@ You should put your mod's prefix in the "Prefix" field. You can add as many trac
 
 "Volume" should be the volume of your track, from 0 to 1, where 0 is silence and 1 is full volume. If you want your track to be at half volume, for example, you can put 0.5 in the Volume field.
 
-
 ## Localization
 
-If you want to translate your cards into other languages, add the language suffix to the end of the field name. 
+If you want to translate your cards into other languages, add the language suffix to the end of the field name.
 
-For example, if you want to translate the *displayedName* field into French, you would add a *displayedName_fr* field to your card. 
+For example, if you want to translate the *displayedName* field into French, you would add a *displayedName_fr* field to your card.
 
 ### Card localisation
 ```json
@@ -521,14 +547,13 @@ Which position in the run the region will appear in.
 2. Second region in the run
 3. Third region in the run
 
-
 ### addToPool
 If set to true then the region will be added to the pool of regions available to be randomly chosen in ascension runs.
 
 ### terrainCards
 List of terrain cards that can be placed on the board when starting fights.
 
-NOTE: cards listed here need ot have the Terrain trait. 
+NOTE: cards listed here need ot have the Terrain trait.
 
 ### encounters
 Encounters that that can appear during fights.
@@ -572,16 +597,14 @@ Main props that are put on the map.
 - **radius** is the radius of the area the prop that no other props can appear in.
 - **perlinNoiseHeight** is a boolean that determines if the prop position is randomized or not
 
-
 ### predefinedScenery
 Props that will always appear in the map.
 - **minScale** and **maxScale** are the minimum and maximum scale of the prop. Various per prop
 - **prefabNames** are the names of the props that can appear on the map. see MapScenery.png for list of props.
 - **radius** is the radius of the area the prop that no other props can appear in.
 - **perlinNoiseHeight** is a boolean that determines if the prop position is randomized or not
-- **rotation** Set rotation for all the props 
+- **rotation** Set rotation for all the props
 - **scale** Set scale for all the props
-
 
 ### dialogueEvent
 - **eventName** Name of the dialogue event that plays when entering the region. Use the same name as the region.
@@ -658,12 +681,10 @@ Create a file with `_item.jldr2` at the end of the file name.
 | examineSoundId      | The sound this item makes when the player hovers their mouse over it          | "stone_object_hit"   |
 | powerLevel          | Likelihood of this item being chosen to be randomly given to the player       | 1                    |
 
-
 ## Bottled Cards
 
 Vanilla inscyrption has items that are just a card in a bottle. When you activate it duriong a battle it gives you that card.
 This is what you need to do to add a new bottled card to the game.
-
 
 Make a file with `_item.jldr2` at the end of the file name
 ```json
@@ -674,19 +695,9 @@ Make a file with `_item.jldr2` at the end of the file name
 }
 ```
 
-
-
 ## Installation
 
-### Automatic
-Simply download with Thunderstore Mod Manager!
-
-### Manual
-To install this plugin you first need to install BepInEx as a mod loader for Inscryption. A guide to do this can be found [here](https://docs.bepinex.dev/articles/user_guide/installation/index.html#where-to-download-bepinex)
-
-You will also need the newest version of the [InscryptionAPI](https://github.com/ScottWilson0903/InscryptionAPI) plugin.
-
-Finally, you simply need to put the **JSONLoader.dll** folder in **BepInEx/plugins**.
+See the Thunderstore or GitHub Wiki's for Instructions!!
 
 ## Debugging
 The easiest way to check if the plugin is working properly or to debug an error is to enable the console. This can be done by changing
