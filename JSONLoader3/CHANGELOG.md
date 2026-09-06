@@ -3,6 +3,31 @@
 <details open>
 <summary>JSONLoader 3.0.0 Changelog</summary>
 
+## 3.0.0-push-2
+
+* Implemented Configuration for:
+  * JSON Loading Origination Path: 
+    * "These paths are case insensitive, and determine where JSON Scripts may be sourced from in order to load. If your a mod maker shipping mods, make a 'plugins' folder in your mods folder, and put a folder in there called 'scripts', this is where your JSON scripts should reside. If you need another path, you can override this value with your mod, we'll provide a system for you to do so."
+  * CSV Loading Origination Path
+    * "These paths are case insensitive, and determine where CSV Sheets may be sourced from in order to load. If your a mod maker shipping mods, make a 'plugins' folder in your mods folder, and put a folder in there called 'sheets', this is where your CSV Sheets should reside. If you need another path, you can override this value with your mod, we'll provide a system for you to do so."
+  * Schema Save Path
+    * "This determines where JSON Schemas will be saved to as we create them, this path will be localized to the DLL's folder. You can use '../' to mean go up a folder."
+  * Show Verbose Logging
+    * "While this value is set to true, this API will show what is happening when its happening."
+  * Show Additional Information
+    * "While this value is set to true, this API will show a more in depth lense as to what went wrong, and try to help explain why its wrong with links to references."
+* Implemented a File Finder based on the `JSON Loading Origination Path` and `CSV Loading Origination Path`. 
+* Implemented a Bare-Bones File Loader, this basically takes the Files which were found and passes them to the relevant sections of JSONLoader.
+* Implemented a Full-Fledged JSON Schema Writer which can be expanded upon. Related Components:
+  * XML Parser; ReadDocumentationFile
+  * JSON_Schema; WriteSchema
+  * Tooltip_Parser; TooltipDisector
+    * Note with this one, the Tooltip Attributes attached to JSON Objects have their own Programming Language in a sense, I'll add the documentation to this versions README under `JSONLoader Maintainer Documentation`.
+* Added some Empty Classes which will be apart of the JSON Loading Process including a class setup for the purposes of Linting JSONs and another for Parsing JSONs.
+* Added JSONLoaderV1 Support for the Card Object and the start of the handler for actually adding the Cards into the game.
+* Revamped the ENTIRE README.md
+* Possibly some other stuff I'm forgetting about.
+
 ## 3.0.0-push-1
 * Removed API Dlls from the Repository, migrate to TS-Nuget.
 * Created the Basic Configuration for the JSON AND CSV Loader API.

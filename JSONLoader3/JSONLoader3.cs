@@ -2,6 +2,8 @@ using System;
 using BepInEx;
 using Cecil_Libraries.ANSI_Utils.Lists;
 using Cecil_Libraries.ANSI_Utils.Objects;
+using JSONLoader3.Peripheral.FILE_Loader;
+using JSONLoader3.Peripheral.JSON_SCHEMA;
 using JSONLoader3.Subperipheral.JSONLoader_Configuration;
 
 namespace JSONLoader3
@@ -46,7 +48,7 @@ namespace JSONLoader3
         /// This color is associated with the ExtendedInformation Logging Level.
         /// </summary>
         private static Color256 ExtendedInformation = new Color256("Bold", 228);
-        
+
         /// <summary>
         /// This serves as the Starting Point for the entire API, whatever is put here will be done first and foremost in startup.
         /// </summary>
@@ -54,6 +56,8 @@ namespace JSONLoader3
         {
             DefineConfiguration.DefineConfigs(Config);
             FormatLogger("info", "Initialization for JSONLoader3 and CSVLoader","Finished Creating JSONLoader3 and CSVLoader Configuration");
+            FindFiles.FindFilesToLoad();
+            LoadFiles.LoadFoundFiles();
         }
 
         /// <summary>

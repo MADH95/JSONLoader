@@ -2,6 +2,9 @@ using BepInEx.Configuration;
 
 namespace JSONLoader3.Subperipheral.JSONLoader_Configuration;
 
+/// <summary>
+/// This class handles the defining of Configuration relevant to the JSONLoaders and CSVLoaders.
+/// </summary>
 public class DefineConfiguration
 {
     /// <summary>
@@ -13,6 +16,10 @@ public class DefineConfiguration
     /// </summary>
     public static ConfigEntry<string> CSVLoadingPaths;
     /// <summary>
+    /// This config determines where JSON Schemas will be saved to on boot.
+    /// </summary>
+    public static ConfigEntry<string> SchemaSavePath;
+    /// <summary>
     /// This config determines whether VerboseLogging is enabled by the user or not.
     /// </summary>
     public static ConfigEntry<bool> ShowVerboseLogging;
@@ -20,7 +27,6 @@ public class DefineConfiguration
     /// This config determines whether AdditionalInformation is enabled by the user or not.
     /// </summary>
     public static ConfigEntry<bool> ShowAdditionalInformation;
-    
     /// <summary>
     /// The ConfigFile Variable referenced throughout this class.
     /// </summary>
@@ -38,6 +44,7 @@ public class DefineConfiguration
             "These paths are case insensitive, and determine where JSON Scripts may be sourced from in order to load. If your a mod maker shipping mods, make a 'plugins' folder in your mods folder, and put a folder in there called 'scripts', this is where your JSON scripts should reside. If you need another path, you can override this value with your mod, we'll provide a system for you to do so.");
         CSVLoadingPaths = configFile.Bind("Configuration", "CSV Loading Origination Path", "Sheets, Plugins/Sheets",
             "These paths are case insensitive, and determine where CSV Sheets may be sourced from in order to load. If your a mod maker shipping mods, make a 'plugins' folder in your mods folder, and put a folder in there called 'sheets', this is where your CSV Sheets should reside. If you need another path, you can override this value with your mod, we'll provide a system for you to do so.");
+        SchemaSavePath = configFile.Bind("Configuration", "Schema Save Path", "/Schemas", "This determines where JSON Schemas will be saved to as we create them, this path will be localized to the DLL's folder. You can use '../' to mean go up a folder.");
         JSONLoader3.FormatLogger("info", "Configuration","Finished adding configuration for the Loading Paths associated with this mod.");
         ShowVerboseLogging = configFile.Bind("Logging", "Show Verbose Logging", true,
             "While this value is set to true, this API will show what is happening when its happening.");

@@ -1,10 +1,9 @@
-# JSON Loader V2
-
-The below documentation is likely outdated, the most up to date documentation will be provided via GitHub and Thunderstore WIKI Systems.
+# JSON Loader V3
+The below documentation is likely going to become outdated, the most up to date documentation will be provided via GitHub and Thunderstore WIKI Systems.
 
 This package is now maintained by Chaosyr as of V2.7.0.
 
-If you wish to contribute to the project the GitHub is [MADH95/JSONLoader](https://github.com/MADH95/JSONCardLoaderPlugin)
+If you wish to contribute to the project the GitHub is [MADH95/JSONLoader](https://github.com/MADH95/JSONCardLoaderPlugin). The Development Branch is: [MADH95/JSONLoader/Refactor-JSONLoader-3](https://github.com/MADH95/JSONLoader/tree/Refactor-JSONLoader-3).
 
 Thank you to the following folks for their amazing Contributations to this Project:
 
@@ -23,705 +22,285 @@ Thank you to the following folks for their amazing Contributations to this Proje
 
 JSONLoader and API 3.0.0 are on the Horizon, JSONLoader's will be first as it's the simpler of the two to upgrade.
 
-### **HUGE NOTE: THE EXPORT SYSTEM IS CURRENTLY BROKEN DO NOT UTILIZE IT**
+## Tools:
+For a Live Schema Based Editor for JSONLoader open up [JSON-Editor](https://json-editor.github.io/json-editor/?data=N4Ig9gDgLglmB2BnEAuUBXRBTA+vAhgLa75RQBOMARulFsigGb4A22ANCBOWIdDlSyMw5XABMsLLHVTM2WTpnFD86FlBwA3VunqoKuzoXwAPHBOgALVAAZONMghyIopXITATUARk4BjfGxnLCQYWE1cbkgscigAT2D8cj9rJlYOEERLMAB3HBiecgYQFPx4AHMsEE4ovg0IQLocYzMpCqhLHFF8FKwxWXSFEFEPCJw5IKiIGNg9NPlOEOFk3D8EFwGF8H4YeBwcmDFKqFQSyyw/AGsqMBNqkBg1+BZqU8RpvwoqzjAqACsLhoWPg4mBaKd4CJjCx7ohesZUMAAL6cDpYYhvD5fe6iACO6BgojEAgSEmYahO8wyYhg72BCTxBKJOAQLDimwyWVyLJ28H05EMIEhOHwYhpsAQrBwUxmMDmEyG+D+pn5gppiHwVCk+XFOD+iAQqqG6s12rWLGBEGwHONtNNkR401icoYBltGq1JHI5BBIrFNs4Js9Iu9vtEIgk5ADICD2qSPtJkmkVSpQxC9pDCZwawg7JQbs48d9TwoYDYOCgkCNgbtwaLiakTVYLC6uVdAvdGfr5iTTWBLlbOSNSKRQA=).
 
-If you run into any Issues or find features you want create an issue on the [GitHub](https://github.com/MADH95/JSONCardLoaderPlugin).
+### Instructions For JSON-Editor:
+* First navigate to where your JSONLoader Schemas are set to be created, be default it will be the `[JSONLoader3.dll Path]/Schemas` folder.
+* Find the Schema relevant to what you want to edit. It will follow the pattern of `LOADER_Type_Schema.json`, next open up the file.
+* Once open in a text editor press `CTRL+A`, or your OS Equivalent of Select All, followed by `CTRL+C` or your OS Equivalent of Copy.
+* Now, navigate to the JSON-Editor linked above.
+* What you'll do now, is scroll down to the bottom of the page where it says `Schema`, click where it shows `1 | {}` specifically the curly brace.
+* Press `CTRL+A` again but now follow it with `CTRL+V`, or your OS Equivalent of Paste.
+* Now that the Schemas in place press `Update Schema`, this will update the page above to have an Editor based on the Schema you inserted.
+
+### JSON-Editor Tips
+* Press in the Box to Edit a Property.
+* Press the Checkbox to enable editing for that property.
+* If there are multiple items to select for a given Property it has 2 way's of showing up.
+  * The first a scrolling pane with all the options.
+    * For this you will want to click to select a property. `CTRL-Click` to select another property. `SHIFT-Click` will allow you to select the property you clicked first, until the one you clicked while holding `SHIFT`.
+  * The other way is an Array of Tick Boxes.
+    * To apply an item you'll just Tick the Box next to it.
+* If you see `+ Item` by a Properties Name that means it is an Array of Objects, to add an Object to it just click the button.
+  * To delete an Item hit `[Insert Trashcan Here] item`.
+  * To copy the Item hit `[Insert 2 Overlapped Squares Here] item`.
+* You can press the upside down `^` to minimize the property. To unminimize press the sideways `^`.
+* Each property has an associated description, these are meant to help you understand what the field does, if you don't understand it you can always ask for help in the [Inscryption Modding](https://discord.gg/ZQPvfKEpwM) Discord.
+
+## JSON and CSV Loader API Documentation
+The below sections serve to document the support of each Version of JSONLoader, for more detail or to expand the detail between Updates refer to the [JSONLoader Wiki](https://thunderstore.io/c/inscryption/p/MADH95Mods/JSONCardLoader/wiki) or [JSONLoader GitHub Wiki](https://github.com/MADH95/JSONLoader/wiki). ***Notes for Contributing to the Wiki are Outlined on their respective Home Pages***.
+
+### JSON Inscrybing
+All JSONLoader versions require the same things so, heres a unified basics for making things with JSONLoader. First off make sure you have a Keyboard, Mouse, Monitor, File Explorer, and a Text Editor. These are more or less all you need to make JSON's for this mod. However there are some mandatory steps to get your environments prepared.
+
+#### File Explorer (Windows)
+In order for you to make the actual JLDR extension for your cards you'll need to follow the below steps in your File Explorer.
+1. Open File Explorer
+2. Find the `…` (or 3 dots in a row) button, and press it.
+3. Press `[Insert a Wrench Here] Options`.
+4. In the menu that just popped up you'll see 3 Tabs at the top, press the one labeled `View`.
+5. Under `Advanced Settings:` toggle off `Hide extensions for known file types`, another useful one to toggle would be `Show hidden files, folders, and drives`.
+6. After you've toggled these press `Apply to Folders`.
+7. Next, press `OK`.
+
+Now you should see File Extensions alongside all of your files. As stated before this will allow you to change the File Extension for the mod. 
+
+#### Getting the Path's
+Next up you'll likely want to grab a path, namely the one to your Plugins folder. This folder will lie wherever your BepInEx folder is. 
+
+If you use a Mod Manager, go to one of the following places:
+* R2ModMan: `Settings` -> `Directories` -> `Profile Folder` -> `Browse` -> Navigate via File Explorer to `BepInEx` -> Navigate via File Explorer to `plugins` -> Go to the File Explorer Address Bar -> Click It -> Hit `CTRL+C` or the OS Equivalent. 
+* GaleModManager: Click `File` in the Top Bar -> `Browse Profile Folder` -> Navigate via File Explorer to `BepInEx` -> Navigate via File Explorer to `plugins` -> Go to the File Explorer Address Bar -> Click It -> Hit `CTRL+C` or the OS Equivalent.
+* ThunderstoreModManager: `Settings` -> `Directories` -> `Profile Folder` -> `Browse` -> Navigate via File Explorer to `BepInEx` -> Navigate via File Explorer to `plugins` -> Go to the File Explorer Address Bar -> Click It -> Hit `CTRL+C` or the OS Equivalent.
+
+If your manual it should be something like:
+1. Navigate to the Games Local Install Folder
+  * XboxGames: `C:\XboxGames\Inscryption\Content`
+  * Steam: `\steamapps\common\Inscryption` after you get to the Steam Install Folder. 
+2. Next navigate to `BepInEx/plugins`
+3. Go to the File Explorer Address Bar -> Click It -> Hit `CTRL+C` or the OS Equivalent.
+
+Now store that path somewhere you'll remember it, you'll be coming back here a lot over the course of your mod.
+
+#### Text Editor
+The recommended File Editor for JSONLoader is [VisualStudioCode](https://code.visualstudio.com/) as it has built in handlers for both JSON Syntax and CSV Syntax, if your working with JSONLoader at any point this should be your go-to editor, but if you have a preficed editor nothings stopping you from using it.
+
+#### Adding the File Extensions to the Context Menu (Windows 11)
+I'm going to include this for those on Windows 11 for other OS's the next section should work fine.
+
+1. In A Text Editor Create a new File.
+2. Enter the following into the file:
+   ```ini
+   Windows Registry Editor Version 5.00
+
+   [HKEY_CLASSES_ROOT\.md]
+   @="markdownfile"
+   
+   [HKEY_CLASSES_ROOT\.md\ShellNew]
+   "NullFile"=""
+   
+   [HKEY_CLASSES_ROOT\markdownfile]
+   @="Markdown Document"
+   
+   [HKEY_CLASSES_ROOT\markdownfile\DefaultIcon]
+   @="\"C:\\Users\\Chaos\\AppData\\Local\\Programs\\Microsoft VS Code\\a44adf7f53\\resources\\app\\resources\\win32\\markdown.ico\""
+   
+   [HKEY_CLASSES_ROOT\.json]
+   @="jsonfile"
+   
+   [HKEY_CLASSES_ROOT\.json\ShellNew]
+   "NullFile"=""
+   
+   [HKEY_CLASSES_ROOT\jsonfile]
+   @="JSON File"
+   
+   [HKEY_CLASSES_ROOT\jsonfile\DefaultIcon]
+   @="\"C:\\Users\\Chaos\\AppData\\Local\\Programs\\Microsoft VS Code\\a44adf7f53\\resources\\app\\resources\\win32\\json.ico\""
+   
+   [HKEY_CLASSES_ROOT\.jldr]
+   @="jldrfile"
+   
+   [HKEY_CLASSES_ROOT\.jldr\ShellNew]
+   "NullFile"=""
+   
+   [HKEY_CLASSES_ROOT\jldrfile]
+   @="JSONLoader File"
+   
+   [HKEY_CLASSES_ROOT\jldrfile\DefaultIcon]
+   @="\"C:\\Users\\Chaos\\AppData\\Local\\Programs\\Microsoft VS Code\\a44adf7f53\\resources\\app\\resources\\win32\\json.ico\""
+   
+   [HKEY_CLASSES_ROOT\.jldr2]
+   @="jldr2file"
+   
+   [HKEY_CLASSES_ROOT\.jldr2\ShellNew]
+   "NullFile"=""
+   
+   [HKEY_CLASSES_ROOT\jldr2file]
+   @="JSONLoader2 File"
+   
+   [HKEY_CLASSES_ROOT\jldr2file\DefaultIcon]
+   @="\"C:\\Users\\Chaos\\AppData\\Local\\Programs\\Microsoft VS Code\\a44adf7f53\\resources\\app\\resources\\win32\\json.ico\""
+   
+   [HKEY_CLASSES_ROOT\.jldr3]
+   @="jldr3file"
+   
+   [HKEY_CLASSES_ROOT\.jldr3\ShellNew]
+   "NullFile"=""
+   
+   [HKEY_CLASSES_ROOT\jldr3file]
+   @="JSONLoader3 File"
+   
+   [HKEY_CLASSES_ROOT\jldr3file\DefaultIcon]
+   @="\"C:\\Users\\Chaos\\AppData\\Local\\Programs\\Microsoft VS Code\\a44adf7f53\\resources\\app\\resources\\win32\\json.ico\""
+   
+   [HKEY_CLASSES_ROOT\.csv]
+   @="csvfile"
+   
+   [HKEY_CLASSES_ROOT\.csv\ShellNew]
+   "NullFile"=""
+   
+   [HKEY_CLASSES_ROOT\csvfile]
+   @="CSV File"
+   
+   [HKEY_CLASSES_ROOT\csvfile\DefaultIcon]
+   @="\"C:\\Users\\Chaos\\AppData\\Local\\Programs\\Microsoft VS Code\\a44adf7f53\\resources\\app\\resources\\win32\\html.ico\""
+   ```
+3. Save the file as a `[SomeName].reg`, then run it.
+4. Next Restart your File Explorer via Task Manager
+
+What this did was add the following file types to your Right Click Context Menu: `.md`, `.json`, `.jldr`, `.jldr2`, `.jldr3`, and `.csv`. So that now when you want to make a new JSONLoader file you can press `New` -> `JSONLoader(X) File` in the Context Menu. Note for the Icons this is set to utilize those of [Visual Studio Code](https://code.visualstudio.com/)
+
+#### Creating the JSON File
+
+Now you'll need to make the actual file for your Item added by JSONLoader. Go to the Plugins folder, then you'll make a new directory or folder under it, this will be your Mod's folder. Make another directory under it called simply `plugins` this will make your life a little easier when uploading your mods, as the folders will be sticky. Now make a folder called `Scripts`, this will be where your JSON's are expected to live unless you explicitly define it in a file included in your mod, that's not relevant now though.
+
+Once that's done, Right-Click the window explorer pane in the folder, Select New `Text Document` or New `JSONLoader(X) File`, ensure the extension of the file matches the Item your trying to create. Now Open the file in a Text Editor, and insert `{}` into the file, this is so you have a valid JSON base. Each Support area of the Documentation will cover what to put into this file.
+
+Oh, before I leave you, give this a watch: [Web Dev Simplified: Learn JSON in 10 Minutes](https://www.youtube.com/watch?v=iiADhChRriM), this will give you a overview of what JSON is and how to work with it, and it will teach you the terminology.
+
+### JSONLoaderV1 Support:
+This version of JSONLoader supports Cards Exclusively and limited support for Modded Libraries. This is a Maintenance Version, outside of Bug Fixes it will NOT be updated.
+
+#### JSONLoaderV1 Cards:
+JSONLoaderV1 Cards support allows you to well make JSON Based Cards for the Game, note they aren't the most Complex things in this version of the mod.
+
+The following are all of the fields available for JSONLoaderV1 Cards and what they do:
+
+##### Card Fields
+
+|           Key            | Description                                                                                                                                                                                                                                                                                                                                                                                                                                         |                     Type |
+|:------------------------:|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-------------------------:|
+|      `fieldsToEdit`      | Any items applied within this field will be used for overwriting the In-Game card associated with the field 'name'.                                                                                                                                                                                                                                                                                                                                 |             String Array |
+|          `name`          | The In-Code name for the card, please append on a Prefix unique to your mod if you are NOT editing a base game card. For example; "JSONFanMod5_Gorilla".                                                                                                                                                                                                                                                                                            |                   String |
+|     `displayedName`      | The In-Game name for the card, it can be anything as long as this font can display it; https://font.download/font/heavyweight                                                                                                                                                                                                                                                                                                                       |                   String |
+|      `description`       | The In-Game flavor for the card, this will show when receiving the card for the first time, if you want to prevent it being seen from saving use; https://thunderstore.io/c/inscryption/p/creator/Fuck_Dialouge_Saving/                                                                                                                                                                                                                             |                   String |
+|     `metaCategories`     | These Meta-Categories control how your card will show up within the game, see the following page for what each of them do; https://thunderstore.io/c/inscryption/p/MADH95Mods/JSONCardLoader/wiki/5396-vanilla-enums                                                                                                                                                                                                                                |             String Array |
+|     `cardComplexity`     | This controls WHEN your card can show up in the game, see the following page for what each of them do; https://thunderstore.io/c/inscryption/p/MADH95Mods/JSONCardLoader/wiki/5396-vanilla-enums                                                                                                                                                                                                                                                    |                   String |
+|         `temple`         | This controls which temple in Act 2 the card is apart of, as well as meant to determine which Act outside Act 2 the card shows up in, whether mods follow the convention is up to question, but that's what these do. So, Nature is Act 1 and the Nature Temple, Tech is Act 3 and the Technology Temple, Undead is the Grimora Portion of the Finale and the Undead Temple, Wizard is the Magnificus Portion of the Finale and the Magicks Temple. |                   String |
+|       `baseAttack`       | This value determines the attack value of the card, it cannot be negative.                                                                                                                                                                                                                                                                                                                                                                          |                      Int |
+|       `baseHealth`       | This value determines the health value of the card, it cannot be negative or 0.                                                                                                                                                                                                                                                                                                                                                                     |                      Int |
+|  `hideAttackAndHealth`   | This boolean value determines whether the Attack and Health of the card should be hidden or not.                                                                                                                                                                                                                                                                                                                                                    |                  Boolean |
+|       `bloodCost`        | This value determines the amount of Blood this card will cost.                                                                                                                                                                                                                                                                                                                                                                                      |                      Int |
+|       `bonesCost`        | This value determines the amount of Bones this card will cost.                                                                                                                                                                                                                                                                                                                                                                                      |                      Int |
+|       `energyCost`       | This value determines the amount of Energy this card will cost.                                                                                                                                                                                                                                                                                                                                                                                     |                      Int | 
+|       `gemColors`        | The following 3 values are accepted here: Green for the Green Gem, Orange for the Orange Gem, and Blue for the Blue Gem. Each of these correlates to the Gem Cost of a card. This version of JSONLoader does not support multiple of the same color of gem.                                                                                                                                                                                         |             String Array |
+|    `specialStatIcon`     | This determines which Stat Icon to show on the card, this must be used alongside the associated Special Ability.                                                                                                                                                                                                                                                                                                                                    |                   String |
+|         `tribes`         | This List determines what Tribes are applied to the card, this works with Base Game tribes only. Use a newer version of JSONLoader for Modded Tribes. You can find the full list here; https://thunderstore.io/c/inscryption/p/MADH95Mods/JSONCardLoader/wiki/5396-vanilla-enums                                                                                                                                                                    |             String Array |
+|         `traits`         | This List determines what Traits are applied to this card, this works with Base Game traits only. Use a newer version of JSONLoader for Modded Traits. You can find the full list here; https://thunderstore.io/c/inscryption/p/MADH95Mods/JSONCardLoader/wiki/5396-vanilla-enums                                                                                                                                                                   |             String Array |
+|    `specialAbilities`    | This List determines what Special Abilities are applied to this card, this works specifically with Base Game Special Abilities. For Modded Special Abilities utilize the 'customSpecialAbilities' field. You can find the full list here; https://thunderstore.io/c/inscryption/p/MADH95Mods/JSONCardLoader/wiki/5396-vanilla-enums                                                                                                                 |             String Array |
+|       `abilities`        | This List determines what Abilities are applied to this card, this works specifically with Base Game Abilities. For Modded Abilities utilize the 'customAbilities' field. You can find the full list here; https://thunderstore.io/c/inscryption/p/MADH95Mods/JSONCardLoader/wiki/5396-vanilla-enums                                                                                                                                                |             String Array |
+|    `customAbilities`     | This List determines the Modded Abilities that will be applied to this card. You may find this to be a useful resource; https://github.com/Chaosyr/SaxbyModEnums/wiki                                                                                                                                                                                                                                                                               |        AbilityData Array |
+| `customSpecialAbilities` | This List determines the Modded Special Abilities that will be applied to this card. You may find this to be a useful resource; https://github.com/Chaosyr/SaxbyModEnums/wiki                                                                                                                                                                                                                                                                       | SpecialAbilityData Array |
+|       `evolution`        | This Object determines the Evolution related Parameters for this card, such as what it will turn into, and how long it will take to turn into it.                                                                                                                                                                                                                                                                                                   |               EvolveData |
+|  `defaultEvolutionName`  | This determines what the Default Evolution Name will be, note it will appear in the format of; '[defaultEvolutionName] [displayedName]', just replace the variables with your JSON's values.                                                                                                                                                                                                                                                        |                   String |
+|          `tail`          | This Object determines the LooseTail related Parameters for this card, such as this cards Texture after losing its tail, or the Card the Tail Will Be.                                                                                                                                                                                                                                                                                              |                 TailData |
+|        `iceCube`         | This Object determines the IceCube related Parameters for this card, namely what card it will be turned into, if left empty the default is an Opossum.                                                                                                                                                                                                                                                                                              |              IceCubeData |
+| `flipPortraitForStrafe`  | A bool determining whether this cards portrait will flip when the card moves. (like the sigil icon does)                                                                                                                                                                                                                                                                                                                                            |                  Boolean |
+|       `onePerDeck`       | A bool determining if there can only be one copy of this card within the Player's deck.                                                                                                                                                                                                                                                                                                                                                             |                  Boolean |
+|   `appearanceBehavior`   | This List determines the Appearance Behaviors in which will be applied to this card. Use a newer version of JSONLoader for Modded Appearance Behaviors. You can find the full list here; https://thunderstore.io/c/inscryption/p/MADH95Mods/JSONCardLoader/wiki/5396-vanilla-enums                                                                                                                                                                  |             String Array |
+|        `texture`         | The Path to your cards Portrait, this is localized to your Plugins Folder. It's your job to keep it organized, do it as you would these 'JLDR' files. This must be a PNG File and must be a '114x94' image.                                                                                                                                                                                                                                         |                   String |
+|       `altTexture`       | The Path to your cards Alternative Portrait, this is localized to your Plugins Folder. It's your job to keep it organized, do it as you would these 'JLDR' files. This must be a PNG File and must be a '114x94' image. This applies in the case you have a Goat's Eye or possibly some other cases.                                                                                                                                                |                   String |
+|    `emissionTexture`     | The Path to your cards Emissive Portrait, this is localized to your Plugins Folder. It's your job to keep it organized, do it as you would these 'JLDR' files. This must be a PNG File and must be a '114x94' image. This applies in the case you've transferred a sigil at the Sacrificial Stones onto this card.                                                                                                                                  |                   String |
+|      `titleGraphic`      | The Path to your cards Title Graphic, this is localized to your Plugins Folder. It's your job to keep it organized, do it as you would these 'JLDR' files. This must be a PNG File and must be a '113x28' image. This applies specifically over your card name as a way of obscuring it like the Tentacle Cards are.                                                                                                                                |                   String |
+|      `pixelTexture`      | The Path to your cards Pixel Portrait, this is localized to your Plugins Folder. It's your job to keep it organized, do it as you would these 'JLDR' files. This must be a PNG File and must be a '41x28' image. This applies specifically in Act 2, its just that act's version of the card portrait.                                                                                                                                              |                   String |
+|         `decals`         | This is a list of all the Decal Images in which will be stacked onto your card, this is localized to your Plugins Folder. It's your job to keep it organized, do it as you would these 'JLDR' files. This must be a PNG File and must be a '125x190' image.                                                                                                                                                                                         |             String Array |
+
+###### AbilityData Object
+
+|  Key   | Description                                                                       |   Type |
+|:------:|-----------------------------------------------------------------------------------|-------:|
+| `name` | This is the In-Code name of the Ability.                                          | String |
+| `GUID` | This is the Ability Libraries GUID, it's a similar concept to your card's prefix. | String |
+
+###### SpecialAbilityData Object
+
+|  Key   | Description                                                                               |   Type |
+|:------:|-------------------------------------------------------------------------------------------|-------:|
+| `name` | This is the In-Code name of the Special Ability.                                          | String |
+| `GUID` | This is the Special Ability Libraries GUID, it's a similar concept to your card's prefix. | String |
+
+###### EvolveData Object
+
+|       Key       | Description                                                                                                                                                           |   Type |
+|:---------------:|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------|-------:|
+|     `name`      | This represents the In-Code name of the card this card is meant to evolve into.                                                                                       | String |
+| `turnsToEvolve` | This value represents the amount of turns it takes for this card to evolve. This version's Turn Count must be between 1-3 for more use a newer version of JSONLoader. |    Int |
+
+###### TailData Object
+
+|        Key         | Description                                                                                                                                                                                                                                                                                 |   Tupe |
+|:------------------:|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-------:|
+|       `name`       | This represents the In-Code name of the card this card will leave in its old lane if Loose Tail triggers.                                                                                                                                                                                   | String |
+| `tailLostPortrait` | The Path to your cards Tail Lost Portrait, this is localized to your Plugins Folder. It's your job to keep it organized, do it as you would these 'JLDR' files. This must be a PNG File and must be a '114x94' image. This applies specifically when this card is struck and lost its tail. | String |
+
+###### IceCubeData Object
+
+|       Key        | Description                                                                                              |   Type |
+|:----------------:|----------------------------------------------------------------------------------------------------------|-------:|
+| `creatureWithin` | This represents the In-Code name of the card this card will leave behind in its place when it is to die. | String |
+
+### JSONLoaderV2 Support:
+
+### JSONLoaderV3 Support:
+
+### CSVLoader Support:
 
 ___
 
-This is a mod made for Inscryption to create custom cards, sigils, starter decks, tribes, encounters and more using JSON files.
+## JSONLoader Maintainer Documentation
+The below sections serve to document internal Information relevant for anyone maintaining JSONLoader, for more detail or to expand the detail between Updates refer to the [JSONLoader Wiki](https://thunderstore.io/c/inscryption/p/MADH95Mods/JSONCardLoader/wiki) or [JSONLoader GitHub Wiki](https://github.com/MADH95/JSONLoader/wiki). ***Notes for Contributing to the Wiki are Outlined on their respective Home Pages***.
 
-Version 2.0 of this mod is designed to create full compatibility with Version 2.0+ of the API. JSON files compatible with this API will have an extension of .JLDR2
+### JSON Object Tooltip Language
+This section goes over our Homemade `JSON Object Tooltip Language` used for creating our Schemas on the fly.
 
-## Reloading
+#### HARD-CODED VALUES
+* REQUIRED - Mark this field as a Required field in the Schema.
+* EXCLUDED - Mark this field as something to not include in the Schema.
 
-As a mod creator using JSONLoader you can press "shift + r" to apply the changes you've made to any jldr2 files without having to restart the game.
+#### VARIABLES
+All Variables will work as follows: VariableName(Definition), kinda like a KeyPairValue.
+The following is a list of all Variables:
+* MinimumLength - Int - Used in String and String Array - Mandates a Minimum Length.
+* Pattern - Raw Regex - Used in String and String Array - Mandates a Pattern the Value must follow.
+* Items - Boolean - Used in String Array and Object Array - Marks the fact the Array has items as true.
+* ItemType - Type - Used in String Array and Object Array - Used to define the type of Array in which the items belong. (e.g. string or object)
+* Enums - A List of Predefined Values - Used in String and String Array - This provides a Pre-Defined list of items users may use for defining the value.
+* UniqueItems - Boolean - Used in String Array and Object Array - This mandates uniqueness among the values.
+* Default - Value - Used in String, Int, and Boolean - This provides a default for Schema Validators.
+* Minimum - Int - Used in Int - This mandates a Minimum Number.
+* Maximum - Int - Used in Int - This mandates a Maximum Number.
+* AdditionalProperties - Boolean - Used in Object and Object Array - Determines whether additional properties are valid.
 
-## Validation and GUI editing
+If you inevitably need more as of present you'll need to code handling into the Schema and Linter.
 
-You can use this [online JSON Schema validator](https://www.jsonschemavalidator.net) to avoid syntax errors, and make sure the fields are correct in your jldr2 files. Just put the contents of the corresponding schema from the Schema folder located in the JSONLoader files or on the github page in the left hand panel, and the contents of the jldr2 file that you want to validate in the right hand panel. If the json appears to be invalid the website will tell you where the error is and what exactly is wrong.
+#### MULTI-VARIABLE
+To use more than one variable all you need to do is add a '|' between each Variable, this acts as a Delimiter.
 
-There is also a [GUI](https://json-editor.github.io/json-editor/) based version that is an option, just input a schema in the panel at the bottom of the page and copy the json from the right hand panel when done!
+An example of such would be: 
 
-## Where do my files go?
-
-Files go anywhere in the plugins folder, along with the artwork required for said file.
-
-## Converting Existing Cards to JLDR2
-
-In order to have compatability with mod manager, version 2.0.0 breaks backwards compatability by default. Don't worry though! This mod comes with a backwards compatibility mode that can optionally be turned on. When turned on, all existing .JLDR files will be read in, converted to .JLDR2 files, and dumped back into the folder where the original JLDR was found. However, I cannot guarantee that the version will be 100% correct, especially when it comes to assigning the appropriate prefix to the card (see the first heading below under 'Custom Cards').
-
-If you are a card creator, the best course of action is to set the config option to convert all JLDR files, manually inspect the JLDR2 files generated to ensure they are correct, then publish your mod with a brand new set of JLDR2 files.
-
-For the most part, JLDR2 and JLDR are the same. The key differences are outlined here:
-
-### Abilities and Special Abilities
-
-Previously, base game abilities and mod-added abilities were handled differently; they were completely separate parts of the file. Now, base game abilities and mod-added abilities are kept in the same list. Base game abilities are referred to by their enumerated name, such as "Flying" or "Reach." Mod-added abilities are referred to by a combination of the Mod GUID and their name. For example, the "Deathburst" ability from Void's sigil pack (part of the popular "All the Sigils" mod) is referred by the string "ATS.Deathburst"; in this example, "Deathburst" is the name of the ability, and "ATS" is the GUID of the mod.
-
-So to create a card with both Flying and Deathburst, you would do something like the following:
-
-```json
-"abilities": [ "Flying", "ATS.Deathburst" ]
+```
+[Tooltip("REQUIRED | MinimumLength(1) | Pattern(^[a-zA-Z\\d_]+$)")]
 ```
 
-This holds true for all custom enumerations on a card. In the case of Abilities and Special Abilities, this is very different behaviour from previous versions of JSONLoader. However, all enumerations are treated this way. For example, mod added Traits, Metacategories, special stat icons, etc can all be handled exactly the same way.
-
-### Evolve, Ice Cube, and Tail
-
-Previously, these parameters were set as individual objects on the card. In a JLDR2, they have been "flattened" into the main card definition. The best way to understand this is to see an example:
-
-**JLDR**
-```json
-{
-    "evolution": {
-        "name": "Bear",
-        "turnsToEvolve": 1
-    },
-    "tail": {
-        "name": "BearTail",
-        "tailLostPortrait": "taillessbear.png"
-    },
-    "iceCube": {
-        "creatureWithin": "FrozenBear"
-    }
-}
-```
-
-**JLDR2**
-```json
-{
-    "evolveIntoName": "Bear",
-    "evolveTurns": 1,
-    "tailName": "BearTail",
-    "tailLostPortrait": "taillessbear.png",
-    "iceCubeName": "FrozenBear"
-}
-```
-
-As you can see, the JLDR2 file has fewer child objects that have to be defined; the evolve, tail, and ice cube parameters are now on the card itself, reducing the overall size of the card file.
-
-## Custom Cards
-
-To create your own cards you just create a .jldr2 file (written in json) and fill in all the fields you want your card to have (fields you don't include will be defaulted). The *name* field is required, and the rest are optional with default values (though that would be a boring card). Those fields and their values are specified in the table below. For reference, an example custom card (8 more f\*cking bears_example.jldr2) is included in the **Cards** folder in this repo.
-
-### New Cards and Card Prefixes
-
-If you are creating a new card, you need to consider how to name your card so that it does not end up accidentally sharing a name with someone else's card in the future. The accepted way to prevent naming collisions in the community is to prefix the names of your cards with a simple name or code representing your card pack. For example, if you are adding a bunch of cards for Act 3 themed around the all-time classic action movie The Matrix, you might prefix all of your cards with "matrix_" - for example, "matrix_Neo" and "matrix_Trinity." Then, if someone comes along after you and creates a card pack based on mythology and religion, and they also want to create a card called Trinity, they will name their card "myth_Trinity," and we no longer have any issues with having two cards *named* "Trinity." Note that they can both still be called "Trinity" on the card, but the internal game name is different.
-
-Cards that are loaded via JSONLoader should indicate what their specific prefix is using the *modPrefix* field. This helps the card loading process recognize that you have properly prefixed your card and aren't simply using snake_case naming for multi-word cards. More specifically, we can't tell if a card named "Snow_Man" represents a snowman card, or if it's a card named "Man" with a mod prefix of "Snow."
-
-Note that if your card's name and prefix don't match, the game will force it to match. So if your card's name is "StrongBad" and your card prefix is "HSR", the internal name of your card will be "HSR_StrongBad".
-
-### Editing base game cards
-
-To edit a card from the base game, you similarly create a .jldr2 file and fill in the fields you want to edit on the card. You must include the *name* to be able to identify the card; the mod prefix is not necessary. Any fields you fill out will be changed, and everything else will stay the same. Note that you can only edit cards from the base game this way: you cannot edit cards from other mods.
-
-## The fields
-
-Cards have lots of fields that can be filled - this is a list of all field names and their purposes. The fields you wish to include in the .jldr2 file should be copied exactly from this table, and any fields that refer to *[Enums.md](https://github.com/MADH95/JSONLoader/blob/master/Enums.md)* or *[Card Names.md](https://github.com/MADH95/JSONLoader/blob/master/Card%20Names.md)* should have their strings be copied exactly from there.
-
-| Field | Description |
-|------|-------------|
-| name | **[Required]** A string for the name the game will use to identify the card - should contain no spaces. When editing, this field must match the card's name (See *[Card Names.md](https://github.com/MADH95/JSONLoader/blob/master/Card%20Names.md)* for a list of ingame card names) |
-| displayedName | **[Optional]** **[Default: ""]** A string for the name displayed on the card |
-| description | **[Optional]** **[Default: ""]** A string for the description Leshy gives when you find the card |
-| metaCategories | **[Optional]** A string array of meta catagories the card has. See *[Enums.md](https://github.com/MADH95/JSONLoader/blob/master/Enums.md)* for the list that the game ships with. These can also be fully qualified guid+ability strings if they were added by another mod. |
-| cardComplexity | **[Optional]** **[Default: Vanilla]** A string for the complexity of the card (See *[Enums.md](https://github.com/MADH95/JSONLoader/blob/master/Enums.md)* for a list of levels of complexity) |
-| temple | **[Optional]** **[Default: Nature]** A string for which Scrybe created the card |
-| baseAttack | **[Optional]** **[Default: 0]** An integer value for the attack of a card |
-| baseHealth | **[Optional]** **[Default: 1]** An integer value for the health of a card |
-| hideAttackAndHealth | **[Default: false]** A boolean value to toggle if the cards attack and health are visible |
-| bloodCost | **[Optional]** **[Default: 0]** An integer value for the blood cost of a card |
-| bonesCost | **[Optional]** An integer value for the bones cost of a card |
-| energyCost | **[Optional]** An integer value for the energy cost of a card |
-| gemsCost | **[Optional]** A string array for the gems cost of a card (See *[Enums.md](https://github.com/MADH95/JSONLoader/blob/master/Enums.md)* for a list of gems) |
-| specialStatIcon | **[Optional]** An string for which special stat icon the card has. See *[Enums.md](https://github.com/MADH95/JSONLoader/blob/master/Enums.md)* for the list that the game ships with. These can also be fully qualified guid+ability strings if they were added by another mod. |
-| tribes | **[Optional]** An string array for the tribes the card belongs to. See *[Enums.md](https://github.com/MADH95/JSONLoader/blob/master/Enums.md)* for the list that the game ships with. These can also be fully qualified guid+ability strings if they were added by another mod. |
-| traits | **[Optional]** An string array for the traits a card has. See *[Enums.md](https://github.com/MADH95/JSONLoader/blob/master/Enums.md)* for the list that the game ships with. These can also be fully qualified guid+ability strings if they were added by another mod. |
-| specialAbilities | **[Optional]** A string array for the special abilities a card has. See *[Enums.md](https://github.com/MADH95/JSONLoader/blob/master/Enums.md)* for the list that the game ships with. These can also be fully qualified guid+ability strings if they were added by another mod. |
-| abilities | **[Optional]** A string array for the sigils a card has. See *[Enums.md](https://github.com/MADH95/JSONLoader/blob/master/Enums.md)* for the list that the game ships with. These can also be fully qualified guid+ability strings if they were added by another mod. |
-| evolveIntoName | **[Optional]** The name of the card that this card will evolve into when it has the Evolve sigil |
-| evolveTurns | **[Optional]** The number of turns to evolve |
-| defaultEvolutionName | **[Optional]** The name the card will have when it evolves (when it doesn't have evolve_ fields set) |
-| tailName | **[Optional]** The name of the tail card produced when this card has TailOnHit |
-| tailLostPortrait | **[Optional]** The .png file to switch the card's art with when the tail is lost |
-| iceCubeName | **[Optional]** The name of the card generated when the card has the IceCube ability |
-| flipPortraitForStrafe | **[Optional]** A boolean to determine if the cards portrait should flip when it uses one of the strafe sigils |
-| onePerDeck | **[Optional]** A boolean value that toggles if there can be only one of the card per deck |
-| appearanceBehaviour | **[Optional]** A string array for the behaviours the cards appearance should have. See *[Enums.md](https://github.com/MADH95/JSONLoader/blob/master/Enums.md)* for the list that the game ships with. These can also be fully qualified guid+ability strings if they were added by another mod. |
-| texture | **[Optional]** A string for the name of the card's image (must be .png). If it is in a subfolder within *Artwork* the subfolder should preceed the file name seperated by a '/' (or your system equivelent) |
-| altTexture | **[Optional]** A string for the name of the card's alternate image (must be .png) |
-| emissionTexture | **[Optional]** A string for the name of the card's emission image (must be .png) |
-| titleGraphic | **[Optional]** A string for the name of the card's title image (must be .png) |
-| pixelTexture | **[Optional]** A string for the name of the card's act2 image (must be .png) |
-| animatedPortrait | **[Unavailable]** |
-| decals | **[Optional]** A string array for the texture names of a card decals (must be .png) |
-
-## Configils
-
-Besides cards JSONLoader also allows you to create sigils. To do this, your file needs to end in '_sigil.jldr2'.
-
-Here is the [documentation](https://docs.google.com/document/d/1QLAfomaTcatm-foU2P1ZoqGQFFvhCfmEnN4jIxAWceQ/edit?usp=sharing) for making sigils.
-
-## Talking Cards
-
-JSONLoader also allows you to create talking cards! To do this, your file needs to end in '\_talk.jldr2'.
-
-All of the documentation for that can be found [here](https://github.com/KBMackenzie/InscryptionJSONDump/blob/main/Documentation/Talking_Card_Guide.md)!
-
-## Starter Decks
-
-JSONLoader also allows you to create starter decks. To do this, your file needs to end in '_deck.jldr2' and should look like this:
-
-```json
-{
-    "decks": [
-        {
-            "name": "DeckName1",
-            "iconTexture": "icon.png",
-            "cards": [ "Card1", "Card2", "Card3" ]
-        },
-        {
-            "name": "DeckName2",
-            "iconTexture": "icon2.png",
-            "cards": [ "Card4", "Card5", "Card6" ]
-        }
-    ]
-}
-```
-
-Note that you can define any number of starter decks in a single '_deck.jldr2' file, and that the expected format of a '_deck.jldr2' file looks very different than that of other jldr2 files.
-
-## Tribes
-
-JSONLoader also allows you to create tribes. To do this, your file needs to end in '_tribe.jldr2' or '_tribes.jldr2' and should look like this:
-
-```json
-{
-    "tribes": [
-    {
-      "name": "TribeName1",
-	  "guid": "YourModGuid",
-	  "tribeIcon": "tribeicon_custom1.png",
-	  "appearInTribeChoices": true,
-	  "choiceCardBackTexture": "card_rewardback_custom1.png"
-    },
-	{
-      "name": "TribeName2",
-	  "guid": "YourModGuid",
-	  "appearInTribeChoices": false
-    }
-  ]
-}
-```
-
-Note that much like starter decks, any number of tribes can be defined in a single '_tribe.jldr2' file. Also note that if a tribe doesn't have a choiceCardBackTexture, one will be auto-generated based on the tribe's icon.
-
-## Encounters
-
-JSONLoader also allows you to create encounters. To do this, your file needs to end in '_encounter.jldr2' and should look like this:
-
-```json
-{
-	"name": "",
-	"minDifficulty": 0,
-	"maxDifficulty": 0,
-	"regions": [""],
-	"dominantTribes": [""],
-	"randomReplacementCards": [""],
-	"redundantAbilities": [""],
-	"turns": [{
-		"cardInfo": [{
-			"card": "",
-			"randomReplaceChance": 0,
-			"difficultyReq": 0,
-			"difficultyReplacement": ""
-		}]
-	}]
-}
-```
-
-These are all the vanilla regions that you can use for your encounters:
-Alpine, Forest, Midnight, Midnight_Ascension, Pirateville, Wetlands
-
-## How do they work? this guide is aimed to help!
-
-Things you need to know:
-
-* When saving an encounter file it must end in "_encounter.jldr2"
-* Remember to check if the json is valid (jsonlint is a good website to check)
-* When making encounters with custom cards, the internal name is used (including prefixes, ex: IGCC_Boar)
-
-### How every piece works individually:
-<details> <summary> Show/hide </summary>
-
-| part  | description | example|
-| ------------- |:-------------:| :-------------:| 
-| name | Internal name, utilized by debugmenu to test your encounter| name: "Example.JungleTheme"|
-| minDifficulty    | How far into a level you should be in for the encounter to show up, determined by map nodes and KCM challenge skulls. (REDUNDANT: currently broken, use 1)  |minDifficulty: 6|
-| maxDifficulty   | How far into a level you should be for the encounter to stop appearing. (REDUNDANT: currently broken, use 99)    | maxDifficulty: 32 |
-| regions     | What maps should the encounter appear in, multiple can be selected    | regions: [ "Wetlands", "Alpine", "Forest"]|
-| dominantTribes | What tribe should be selected when the encounter is a totem battle |"dominantTribes":["Feline"] |
-| randomReplacementCards |What cards should be chosen from a pool, when randomReplacementChance is defined in a slot | "randomReplacementCards": [ "Stoat", "Sparrow", "Snapper" ]|
-|redundantAbilities | What abilities shouldn't appear when the encounter is a totem battle | "redundantAbilities": ["TouchOfDeath"] |
-|turns|The entire blueprint of the encounter| "turns": [{ }]|
-|cardInfo|the individual row blueprint, card placements are randomized | "cardInfo":[{card:"Wolf"},{card:"Opposum"}]|
-|card | What the card should be. | "card": RatKing|
-|randomReplaceChance|How much, in percentage, of a chance should a random card replace "card" from the randomReplaceCards pool.| "randomReplaceChance":50
-|difficultyReq|What level should the "difficultyReplacement" card replace the originally defined card (works on node level and challenge skulls).| "difficultyReq": 16|
-|difficultyReplacement| What card should replace the originally defined card, when the player reaches the specified "difficultyReq" level. 
-
-</details>
-
-### map enums:
- <details> <summary> Show/hide </summary>
-
-| Internal  | In-game | Boss' map|
-| ------------- |:-------------:| :-------------:| 
-| Alpine     | Snow line    |Trapper/Trader|
-| Wetlands   | Wetlands     | Angler |
-| Forest     | Woodlands    | Prospector |
-| Midnight | Leshy | Final Boss |
-| Midnight_Ascension |Leshy (KCM) | Final Boss in KCM|
-|Pirateville | Royal | alt. Final Boss |
-
-Unless you have mods that allow battles before the final boss, Midnight, Midnight_Ascension and Pirateville are redundant.
-
-</details> 
-
-### Example:
-<details> <summary> Show/hide </summary>
-
-```json
-{
-  "name": "Example.BirdEncounter",
-  //internal name
-  
-  "minDifficulty":  1,
-  //how far into the map you need to go before you stumble into this. (unused, best to leave it at 1)
-  
-  "maxDifficulty":  32,
-  //how far until this encounter stops appearing (unused, best leave it at a high level)
-  
-  "regions": [
-    "Alpine",
-    "Forest"
-  ],
-  //what maps should this encounter appear in (alpine and forest is specified, will only show up in prospector and trapper/trader's map [Woodlands and Snow line respectively])
-  
-  "dominantTribes": 
-   [
-    "Bird"
-   ],
-   //the tribes that will be used as heads in totem battles
-  
-  "randomReplacementCards":
-  [
-    "Sparrow",
-    "RavenEgg",
-    "Porcupine",
-    "AntFlying",
-    "Cuckoo",
-    "Adder",
-    "Bee"
-    ],
-    //pool of cards that will be drawn at random when a random chance card is specified
-  
-  "redundantAbilities": 
-  [
-    "Flying"
-  ],
-  //what abilities won't appear during totem battles
-  
-  "turns": [
-    {
-      "cardInfo": [
-      //wave 1
-        {
-        // 1st card
-          "card": "Sparrow",
-          //"sparrow is specified"
-          
-          "randomReplaceChance": 50,
-          //"50% chance of a random card from the randomReplacementCards pool"
-          
-          "difficultyReq": 15,
-          //"what level of difficulty (how many nodes you've passed + challenge tweaks in KCM) should be passed until the sparrow/random card is replaced by the difficultyReplacement"
-          
-          "difficultyReplacement": "Vulture"
-          //"the card that replaces the original card in the battle when a level requirement is met 
-        },
-        {
-          //"2nd card"
-          "card": "RavenEgg",
-          "randomReplaceChance": 25,
-          "difficultyReq": 10,
-          "difficultyReplacement": "Raven"
-        }
-		]
-    },
-    {
-    //wave 2
-      "cardInfo": [
-        {
-          "card": "Sparrow",
-          "randomReplaceChance": 50,
-          "difficultyReq": 15,
-          "difficultyReplacement": "Vulture"
-        },
-        {
-          "card": " ",
-          //card is blank, no card shall be placed, useful for hiding cards until a specific level requirement or random chance cards (Not required for purposefully empty slots)
-          "randomReplaceChance": 25,
-          "difficultyReq": 10,
-          "difficultyReplacement": "Raven"
-        }
-      ]
-    }
-  ]
-}
-```
-</details>
-
-## Gramophone
-
-JSONLoader also allows you to add music tracks to the Gramophone in Leshy's cabin.
-To do this, your file needs to end in '_gram.jldr2' and should look like this:
-
-```json
-{
-  "Prefix": "Example",
-  "Tracks": [
-    {
-      "Track": "MyTrack.mp3",
-      "Volume": 1
-    },
-    {
-      "Track": "AnotherTrack.wav",
-      "Volume": 1
-    }
-  ]
-}
-```
-You should put your mod's prefix in the "Prefix" field. You can add as many tracks as you want inside of "Tracks", following the example above.
-
-"Track" should be the name of your audio file. The audio file should be located inside of the `BepInEx/plugins` folder. The supported audio formats currently are MP3, OGG, WAV and AIFF.
-
-"Volume" should be the volume of your track, from 0 to 1, where 0 is silence and 1 is full volume. If you want your track to be at half volume, for example, you can put 0.5 in the Volume field.
-
-## Localization
-
-If you want to translate your cards into other languages, add the language suffix to the end of the field name.
-
-For example, if you want to translate the *displayedName* field into French, you would add a *displayedName_fr* field to your card.
-
-### Card localisation
-```json
-{
-  "name": "JSON_SuperHypeMan", 
-  "modPrefix": "ExampleMod", 
-  "baseAttack": 6, 
-  "baseHealth": 9, 
-  "displayedName": "Super Hype Man", 
-  "displayedName_fr": "Super Animateur", 
-  "displayedName_it": "Super Uomo dell'Eccitazione", 
-  "displayedName_de": "Super Stimmungsmacher", 
-  "displayedName_es": "Super Animador", 
-  "displayedName_pt": "Super Animador", 
-  "description_tr": "Süper Coşku Adamı", 
-  "description_ru": "Супер Человек-Аниматор", 
-  "description_ja": "スーパーハイプマン", 
-  "description_ko": "슈퍼 하이프 맨", 
-  "description_zhcn": "超级炒作男", 
-  "description_zhtw": "超級炒作男"
-}
-```
-
-### New Languages
-```json
-{
-    "languageName": "Polish",
-    "languageCode": "nl",
-    "resetButtonText": "Reset with Polish",
-    "stringTablePath": "stringtable.csv"
-}
-```
-### New Language Fonts
-```json
-{
-    "fontReplacementPaths": [
-        {
-        "Type": "Liberation",
-        "AssetBundlePath": "en_mainfont.assetbundle",
-        "FontAssetName": "en_mainfont",
-        "TMPFontAssetName": "en_mainfont"
-        }
-    ]
-}
-```
-
-## Masks
-
-To replace a mask that a boss puts on their face you can do it in a few ways.
-
-### Replace a mask with a texture
-
-This will replace the angler mask model with a flat surface and apply a texture to it. The image dimensions are 1000x1500
-```json
-{
-  "maskName": "JSON_TestMask",
-  "type": "Override",
-  "texturePath": "testmask.png",
-  "maskType": "Angler"
-}
-```
-If you want to keep the original model but replace the texture you can add a field specifying the model type as below.
-```json
-  "modelType": "Angler"
-```
-
-## Regions
-
-All custom regions need their files to be named ending with `_region.jldr2`.
-
-JLDR2
-```json
-{
-  "name": "TestRegion",
-  "tier": 0,
-  "addToPool": true,
-  "terrainCards": ["BaitBucket"],
-  "encounters": ["Skinks"],
-  "likelyCards": ["Bullfrog"],
-  "dominantTribes": ["Insect"],
-  "bossPrepEncounter": "Submerge",
-  "boardLightColor": "0,193,122,255",
-  "cardsLightColor": "0,129,255,255",
-  "mapAlbedo": "customRegion_mapAlbedo.png",
-  "bosses": ["ProspectorBoss"],
-  "fillerScenery": [
-    {
-      "minScale": {"x": 0.06, "y": 0.05},
-      "maxScale": {"x": 0.09, "y": 0.22},
-      "prefabNames": ["Tree_3_Mossy"],
-      "radius": 0.06,
-      "perlinNoiseHeight": true
-    }
-  ],
-  "scarceScenery": [
-    {
-      "minDensity": 0.10,
-      "minInstances": 40,
-      "maxInstances": 50,
-      "minScale": {"x": 40.00, "y": 40.00},
-      "maxScale": {"x": 50.00, "y": 50.00},
-      "prefabNames": ["Fern_1"],
-      "radius": 0.05,
-      "perlinNoiseHeight": true
-    }
-  ],
-  "predefinedScenery": [{
-    "minScale": {"x": 0.06, "y": 0.05},
-    "maxScale": {"x": 0.09, "y": 0.22},
-    "prefabNames": ["Tree_3_Mossy"],
-    "radius": 0.06,
-    "perlinNoiseHeight": true,
-    "rotation": {"x": 0, "y": 0, "z": 0},
-    "scale": {"x": 1, "y": 1, "z": 1}
-  }],
-  "dialogueEvent": {
-    "eventName": "TestRegion",
-    "mainLines": ["The rank smell of rot and mold permeated the humid air.", "Every step forward was answered by some nearby slip or slither."],
-    "repeatLines": [["The air grew thick with moisture...", "The buzzing and chirping of insects drowned out the sound of your footfalls..."],
-      ["As the air grew humid your boots became harder to pull from the mud.", "The dank smell of tepid water invaded your nostrils."]]
-  }
-}
-```
-
-### tier
-Which position in the run the region will appear in.
-(Broken as of API 2.19.3)
-0. Any order
-1. First region in the run
-2. Second region in the run
-3. Third region in the run
-
-### addToPool
-If set to true then the region will be added to the pool of regions available to be randomly chosen in ascension runs.
-
-### terrainCards
-List of terrain cards that can be placed on the board when starting fights.
-
-NOTE: cards listed here need ot have the Terrain trait.
-
-### encounters
-Encounters that that can appear during fights.
-
-### likelyCards
-Extra Cards that can appear during ThreeChoice event nodes to be added to your deck.
-
-### dominantTribes
-Tribes that decide what card will appear in the Oil painting and in ThreeChoice event nodes.
-
-### bossPrepEncounter (Optional)
-The encounter that will be used to for the boss fight.
-If not specified then a random encounter will be chosen according to the node and games difficulty
-
-### boardLightColor
-Color that the map will show when moving between nodes
-
-### cardsLightColor
-Color tint cards will have.
-
-### mapAlbedo
-Name of an image that will be used on the map.
-
-### bosses
-Name of bosses/opponents that can appear when in this region.
-
-### fillerScenery
-List of Props that are scattered around the region.
-- **minScale** and **maxScale** are the minimum and maximum scale of the prop.
-- **prefabNames** are the names of the props that can appear on the map. see MapScenery.png for list of props.
-- **radius** is the radius of the area the prop that no other props can appear in.
-- **perlinNoiseHeight** is a boolean that determines if the prop position is randomized or not
-
-### scarceScenery
-Main props that are put on the map.
-- **minDensity** Not used
-- **minInstances** Minimum amount of instances that can spawn per map
-- **maxInstances** Maximum amount of instances that can spawn per map
-- **minScale** and **maxScale** are the minimum and maximum scale of the prop. Various per prop
-- **prefabNames** are the names of the props that can appear on the map. see MapScenery.png for list of props.
-- **radius** is the radius of the area the prop that no other props can appear in.
-- **perlinNoiseHeight** is a boolean that determines if the prop position is randomized or not
-
-### predefinedScenery
-Props that will always appear in the map.
-- **minScale** and **maxScale** are the minimum and maximum scale of the prop. Various per prop
-- **prefabNames** are the names of the props that can appear on the map. see MapScenery.png for list of props.
-- **radius** is the radius of the area the prop that no other props can appear in.
-- **perlinNoiseHeight** is a boolean that determines if the prop position is randomized or not
-- **rotation** Set rotation for all the props
-- **scale** Set scale for all the props
-
-### dialogueEvent
-- **eventName** Name of the dialogue event that plays when entering the region. Use the same name as the region.
-- **mainLines** The dialogue that plays when first entering the region
-- **repeatLines** Dialogue that plays every other time you enter the region or start a new map in the same region.
-
-### consumableItems
-Items that can be randomly given to the player when in this region.
-
-## Consumable Items
-
-Items are powerful tools that can be awarded.
-Similar to configils this is how to create an item to appear in the game.
-
-Create a file with `_item.jldr2` at the end of the file name.
-
-```json
-{
-  "GUID": "TestMod",
-  "rulebookName": "Geck Army",
-  "rulebookDescription": "Puts 4 Gecks in your hand",
-  "description": "The Geck Army is a powerful force to be reckoned with. It's a good thing you're the one in control of it.",
-  "icon": "base64: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",
-  "abilityBehaviour": [
-    {
-      "trigger": {
-        "triggerType": "OnActivate"
-      },
-      "drawCards": [
-        {
-          "card": {
-            "name": "Geck",
-            "retainMods": "false"
-          }
-        },
-        {
-          "card": {
-            "name": "Geck",
-            "retainMods": "false"
-          }
-        },
-        {
-          "card": {
-            "name": "Geck",
-            "retainMods": "false"
-          }
-        },
-        {
-          "card": {
-            "name": "Geck",
-            "retainMods": "false"
-          }
-        }
-      ]
-    }
-  ]
-}
-```
-
-| Key                 | Description                                                                   | Default              |
-|---------------------|-------------------------------------------------------------------------------|----------------------|
-| GUID                | GUID of the mod                                                               | ""                   |
-| rulebookName        | Name appears in rulebook                                                      | ""                   |
-| rulebookDescription | Description that appears in rulebook                                          | ""                   |
-| description         | LearnText that Leshy says first time seen                                     | ""                   |
-| icon                | Icon that appears in the rulebook and model if specific modelType requires it | null                 |
-| bottledCardName     | (Optional) Assign this if you want the item to be a card in a bottle          | ""                   |
-| regionSpecific      | Is this item only accessible in specific regions? (Assigned in regions)_      | false                |
-| notRandomlyGiven    | If True then the item will not appear as a choice to be collected             | false                |
-| rulebookCategory    | Which act should this item appear in?                                         | "Part1Rulebook"      |
-| modelType           | What is the appearance of this item?                                          | "BasicRuneWithVeins" |
-| pickupSoundId       | The sound this item makes when the player chooses/activates it                | "stone_object_up"    |
-| placedSoundId       | The sound this item makes when it lands during a battle                       | "stone_object_hit"   |
-| examineSoundId      | The sound this item makes when the player hovers their mouse over it          | "stone_object_hit"   |
-| powerLevel          | Likelihood of this item being chosen to be randomly given to the player       | 1                    |
-
-## Bottled Cards
-
-Vanilla inscyrption has items that are just a card in a bottle. When you activate it duriong a battle it gives you that card.
-This is what you need to do to add a new bottled card to the game.
-
-Make a file with `_item.jldr2` at the end of the file name
-```json
-{
-  "GUID": "TestMod",
-  "bottledCardName": "Urayuli",
-  "icon": "base64:iVBORw0KGgoAAAANSUhEUgAAAGQAAACWAgMAAABV1sXVAAAAAXNSR0IB2cksfwAAAAlwSFlzAAALEwAACxMBAJqcGAAAAAlQTFRFAAAAAAAAAQEB7L2CIAAAAAN0Uk5TAP//RFDWIQAAAflJREFUeJzt10tyhCAQBmC0io3r4Q4pT8ERWMh9rFnmFNasLE6ZBnx0w08yr81UhUrMyKd00zJGlXqpae8tBJ8asC7L9JikLZLcB0S1xTfFtKVr5KZMK+tNfA15pto7JCpWtZbcp00txiXRSKaW2CimLd1jcqHtBUr685jkioEaUEFdLBGqTjwJybZCwFWgPsrBIjHKKW3hNbVxWUNxlB5cO5rENSRukaS6oBWfOz9OdFNMEnh9nPZTB24i1NdRReE6OKOBMMcBMsw2aDncEbr6dh+jmHI4sx9a5X0OXwTS55FGBmKjF3mzjGQgsSfyFiOIHRFVlEFm2gz6S6LtyXGRBTGnyAS68z9K52XSXEQJpEwMnOZy3DvSByZ2pzyQOUXJ9pJUNygh/dyH+HFcKllCuAVqtYS93S/DIQurgZRViFWjEJ7/++Ua1gHK0lMvkpVmO1P2SAaaJZaRZEw14EJ1o5+VfudatibFMRGj0Y1/uENWvmKKc9jN9G+5tiRWDcuyuZQxrxoFRWUJWGLt+J2ZJE8+BVLsWUS7Pi+AFG6uJEBJE51zIYCsoSV74Z6Q9QkBo8XJ3IrcJpUP/x6L6lBxx1ydr7jqpfD2+eJbou4V84zYf2mKfMCwHPie4c8K4h3IHHvle9P2vuTr1ybNwXLhJ0lgVva/qf0AKeWOroyqESEAAAAASUVORK5CYII="
-}
-```
-
-## Installation
-
-See the Thunderstore or GitHub Wiki's for Instructions!!
-
-## Debugging
-The easiest way to check if the plugin is working properly or to debug an error is to enable the console. This can be done by changing
-```
-[Logging.Console]
-\## Enables showing a console for log output.
-\# Setting type: Boolean
-\# Default value: false
-Enabled = false
-```
-to
-```
-[Logging.Console]
-\## Enables showing a console for log output.
-\# Setting type: Boolean
-\# Default value: false
-Enabled = true
-```
-in **Inscryption/BepInEx/Config/BepInEx.cfg**
-
-___
-
-To add cards to your deck to test if your cards work, you can download the [debug menu mod](https://inscryption.thunderstore.io/package/JamesGames/DebugMenu/)
-
-___
-
-If you want help debugging you can ask in the #jsonloader channel in the [Inscryption modding discord server](https://discord.gg/QrJEF5Denm).
+Notice the `//` in the Regex? That's because C# needs it to be escaped in quotes, but don't worry we properly escape it for JSON in `ReadDocumentationFile.EscapeJSON()`.
