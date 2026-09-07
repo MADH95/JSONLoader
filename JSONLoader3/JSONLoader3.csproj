@@ -51,7 +51,7 @@
     <!--Cleanup Publish for our Build System-->
     <Target Name="StripAllNuGetFromPublish" AfterTargets="ComputeFilesToPublish">
         <ItemGroup>
-            <ResolvedFileToPublish Remove="@(ResolvedFileToPublish)" Condition="'%(ResolvedFileToPublish.Extension)' == '.dll' and '%(ResolvedFileToPublish.RelativePath)' != 'JSONLoader.dll'" />
+            <ResolvedFileToPublish Remove="@(ResolvedFileToPublish)" Condition="'%(ResolvedFileToPublish.Extension)' == '.dll' and '%(ResolvedFileToPublish.RelativePath)' != 'JSON Loader v3.dll'" />
         </ItemGroup>
     </Target>
 

@@ -71,6 +71,19 @@ for /f "usebackq tokens=*" %%A in (`type "%CSProj%" ^| findstr "<DependenciesCop
 set "DPLs=!DPLs:~1!"
 
 REM -------------------------------
+REM Read Build Locations
+REM -------------------------------
+set "BPLs="
+for /f "usebackq tokens=*" %%A in (`type "%CSProj%" ^| findstr "<BuildOutputLocations>"`) do (
+    set "line=%%A"
+    set "line=!line:<BuildOutputLocations>=!"
+    set "line=!line:</BuildOutputLocations>=!"
+    set "line=!line:;= !"
+    for %%B in (!line!) do set "BPLs=!BPLs! %%B"
+)
+set "BPLs=!BPLs:~1!"
+
+REM -------------------------------
 REM Read Markdown File Locations
 REM -------------------------------
 set "CHANGELOG="
@@ -147,7 +160,8 @@ REM -------------------------------
 if "!TFs!"=="~1" set "TFs=net6.0"
 if "!RIDs!"=="~1" set "RIDs=win-x64"
 if "!CLs!"=="~1" set "CLs=Thunderstore-Package-Elements"
-if "!DPLs!"=="~1" set "DPLs=Dependencies/BepInEx-Required-Dependencies"
+if "!DPLs!"=="~1" set "DPLs=exclude"
+if "!BPLs!"=="~1" set "BPLs=root"
 
 echo CONFIGURATION
 echo TargetFrameworks: !TFs!
@@ -157,6 +171,7 @@ echo DependencyLocations: !DPLs!
 echo CHANGELOGCopyLocation: !CHANGELOG!
 echo READMECopyLocation: !README!
 echo LICENSECopyLocation: !LICENSE!
+echo BuildOutputLocations: !BPLs!
 echo ReleaseMode: !RELEASEMODE!
 
 REM -------------------------------
@@ -269,17 +284,35 @@ for %%F in (!TFs!) do (
 
         if exist "!OUT!" rd /s /q "!OUT!"
         mkdir "!OUT!"
+        if "!BPLs!" == "root" (
+            echo Told to Export to root Location we are not making any Directories. Skipping.
+        ) else (
+            for %%B in (!BPLs!) do (
+                mkdir "!OUT!\%%B"
+            )
+        )
 
-        echo Publishing NET: %%F / %%R
-        dotnet publish "%CSProj%" -c "!RELEASEMODE!" -f "%%F" -r "%%R" -o "!OUT!" || echo Failed %%F/%%R
+        if "!BPLs!"=="root" (
+            echo Publishing NET: %%F / %%R
+            dotnet publish "%CSProj%" -c "!RELEASEMODE!" -f "%%F" -r "%%R" -o "!OUT!" || echo Failed %%F/%%R
+        ) else (
+            for %%B in (!BPLs!) do (
+                echo Publishing NET: %%F / %%R
+                dotnet publish "%CSProj%" -c "!RELEASEMODE!" -f "%%F" -r "%%R" -o "!OUT!\%%B" || echo Failed %%F/%%R
+            )
+        )
         copy /Y "!CHANGELOG!" "!OUT!"
         copy /Y "!README!" "!OUT!"
         copy /Y "!LICENSE!" "!OUT!"
         copy /Y "%MANIFEST_ROOT%\manifest.json" "!OUT!"
-        mkdir "!OUT!\plugins"
-        mkdir "!OUT!\plugins\Dependencies"
-        for %%L in (!DPLs!) do (
-            xcopy /E /I /Y "%%L" "!OUT!\plugins\Dependencies"
+        if "!DPLs!"=="exclude" (
+            echo Told to Exclude on Dependency Locations as the field became a Empty field. Skipping.
+        ) else (
+            mkdir "!OUT!\plugins"
+            mkdir "!OUT!\plugins\Dependencies"
+            for %%L in (!DPLs!) do (
+                xcopy /E /I /Y "%%L" "!OUT!\plugins\Dependencies"
+            )
         )
         for %%L in (!CLs!) do (
             xcopy /E /I /Y "%%L" "!OUT!"
