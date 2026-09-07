@@ -21,33 +21,7 @@ Thank you to the following folks for their amazing Contributations to this Proje
 * [Windows10CE](https://github.com/Windows10CE)
 
 JSONLoader and API 3.0.0 are on the Horizon, JSONLoader's will be first as it's the simpler of the two to upgrade.
-
-## Tools:
-For a Live Schema Based Editor for JSONLoader open up [JSON-Editor](https://json-editor.github.io/json-editor/?data=N4Ig9gDgLglmB2BnEAuUBXRBTA+vAhgLa75RQBOMARulFsigGb4A22ANCBOWIdDlSyMw5XABMsLLHVTM2WTpnFD86FlBwA3VunqoKuzoXwAPHBOgALVAAZONMghyIopXITATUARk4BjfGxnLCQYWE1cbkgscigAT2D8cj9rJlYOEERLMAB3HBiecgYQFPx4AHMsEE4ovg0IQLocYzMpCqhLHFF8FKwxWXSFEFEPCJw5IKiIGNg9NPlOEOFk3D8EFwGF8H4YeBwcmDFKqFQSyyw/AGsqMBNqkBg1+BZqU8RpvwoqzjAqACsLhoWPg4mBaKd4CJjCx7ohesZUMAAL6cDpYYhvD5fe6iACO6BgojEAgSEmYahO8wyYhg72BCTxBKJOAQLDimwyWVyLJ28H05EMIEhOHwYhpsAQrBwUxmMDmEyG+D+pn5gppiHwVCk+XFOD+iAQqqG6s12rWLGBEGwHONtNNkR401icoYBltGq1JHI5BBIrFNs4Js9Iu9vtEIgk5ADICD2qSPtJkmkVSpQxC9pDCZwawg7JQbs48d9TwoYDYOCgkCNgbtwaLiakTVYLC6uVdAvdGfr5iTTWBLlbOSNSKRQA=).
-
-### Instructions For JSON-Editor:
-* First navigate to where your JSONLoader Schemas are set to be created, be default it will be the `[JSONLoader3.dll Path]/Schemas` folder.
-* Find the Schema relevant to what you want to edit. It will follow the pattern of `LOADER_Type_Schema.json`, next open up the file.
-* Once open in a text editor press `CTRL+A`, or your OS Equivalent of Select All, followed by `CTRL+C` or your OS Equivalent of Copy.
-* Now, navigate to the JSON-Editor linked above.
-* What you'll do now, is scroll down to the bottom of the page where it says `Schema`, click where it shows `1 | {}` specifically the curly brace.
-* Press `CTRL+A` again but now follow it with `CTRL+V`, or your OS Equivalent of Paste.
-* Now that the Schemas in place press `Update Schema`, this will update the page above to have an Editor based on the Schema you inserted.
-
-### JSON-Editor Tips
-* Press in the Box to Edit a Property.
-* Press the Checkbox to enable editing for that property.
-* If there are multiple items to select for a given Property it has 2 way's of showing up.
-  * The first a scrolling pane with all the options.
-    * For this you will want to click to select a property. `CTRL-Click` to select another property. `SHIFT-Click` will allow you to select the property you clicked first, until the one you clicked while holding `SHIFT`.
-  * The other way is an Array of Tick Boxes.
-    * To apply an item you'll just Tick the Box next to it.
-* If you see `+ Item` by a Properties Name that means it is an Array of Objects, to add an Object to it just click the button.
-  * To delete an Item hit `[Insert Trashcan Here] item`.
-  * To copy the Item hit `[Insert 2 Overlapped Squares Here] item`.
-* You can press the upside down `^` to minimize the property. To unminimize press the sideways `^`.
-* Each property has an associated description, these are meant to help you understand what the field does, if you don't understand it you can always ask for help in the [Inscryption Modding](https://discord.gg/ZQPvfKEpwM) Discord.
-
+___
 ## JSON and CSV Loader API Documentation
 The below sections serve to document the support of each Version of JSONLoader, for more detail or to expand the detail between Updates refer to the [JSONLoader Wiki](https://thunderstore.io/c/inscryption/p/MADH95Mods/JSONCardLoader/wiki) or [JSONLoader GitHub Wiki](https://github.com/MADH95/JSONLoader/wiki). ***Notes for Contributing to the Wiki are Outlined on their respective Home Pages***.
 
@@ -178,7 +152,7 @@ Now you'll need to make the actual file for your Item added by JSONLoader. Go to
 Once that's done, Right-Click the window explorer pane in the folder, Select New `Text Document` or New `JSONLoader(X) File`, ensure the extension of the file matches the Item your trying to create. Now Open the file in a Text Editor, and insert `{}` into the file, this is so you have a valid JSON base. Each Support area of the Documentation will cover what to put into this file.
 
 Oh, before I leave you, give this a watch: [Web Dev Simplified: Learn JSON in 10 Minutes](https://www.youtube.com/watch?v=iiADhChRriM), this will give you a overview of what JSON is and how to work with it, and it will teach you the terminology.
-
+___
 ### Artwork Form Support:
 We support 3 ways in which you can load images for your Plugin. Below outline each form.
 
@@ -217,7 +191,7 @@ data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIAAAACACAYAAADDPmHLAAAAAXNSR0IArs
 This would decrypt to an image of the Archivist from the game. Though notably with JSONLoader alone this would be an All black image as it contains color, plus with the way we handle things, it portrait breaks, take it as a unintended quirk.
 
 If you want to make sure your syntax is valid open [Regexer](https://regexr.com/) and place in the Regex: `^(?:(?:\.\.\/|[a-zA-Z\d_-\s]+\/)*[a-zA-Z\d_-\s]+\.png|data:image\/png;base64,[A-Za-z0-9+/]+={0,2}|base64:[A-Za-z0-9+/]+={0,2})$` into the Expression box, and your path into the Text box. If your wondering why it's so long, we are validating 3 data forms in that Regex Patern.
-
+___
 ### JSONLoaderV1 Support:
 This version of JSONLoader supports Cards Exclusively and limited support for Modded Libraries. This is a Maintenance Version, outside of Bug Fixes it will NOT be updated.
 
@@ -298,13 +272,13 @@ The following are all of the fields available for JSONLoaderV1 Cards and what th
 |       Key        | Description                                                                                              |   Type |
 |:----------------:|----------------------------------------------------------------------------------------------------------|-------:|
 | `creatureWithin` | This represents the In-Code name of the card this card will leave behind in its place when it is to die. | String |
-
+___
 ### JSONLoaderV2 Support:
-
+___
 ### JSONLoaderV3 Support:
-
+___
 ### CSVLoader Support:
-
+___
 ### Configuration
 With the API we offer some Configuration which you can find located in: `Chaosyr.MADH95.Inscryption.JSON.CSVLoader.cfg`. The following is an overview of what you can configure and what they will do affecting the API of JSON and CSV Loader.
 
@@ -339,55 +313,7 @@ When this value is set to `true` the API will output some Additional Information
 
 #### Show Summary Information
 When this value is set to `true` when the API is validating Item's against their related Schema's, it will print the description of those properties as well. Again both to the Console and Log File.
-
 ___
-
-## JSONLoader Maintainer Documentation
-The below sections serve to document internal Information relevant for anyone maintaining JSONLoader, for more detail or to expand the detail between Updates refer to the [JSONLoader Wiki](https://thunderstore.io/c/inscryption/p/MADH95Mods/JSONCardLoader/wiki) or [JSONLoader GitHub Wiki](https://github.com/MADH95/JSONLoader/wiki). ***Notes for Contributing to the Wiki are Outlined on their respective Home Pages***.
-
-### JSON Object Tooltip Language
-This section goes over our Homemade `JSON Object Tooltip Language` used for creating our Schemas on the fly.
-
-#### HARD-CODED VALUES
-* REQUIRED - Mark this field as a Required field in the Schema.
-* EXCLUDED - Mark this field as something to not include in the Schema.
-
-#### VARIABLES
-All Variables will work as follows: VariableName(Definition), kinda like a KeyPairValue.
-The following is a list of all Variables:
-* MinimumLength - Int - Used in String and String Array - Mandates a Minimum Length.
-* Pattern - Raw Regex - Used in String and String Array - Mandates a Pattern the Value must follow.
-* Items - Boolean - Used in String Array and Object Array - Marks the fact the Array has items as true.
-* ItemType - Type - Used in String Array and Object Array - Used to define the type of Array in which the items belong. (e.g. string or object)
-* Enums - A List of Predefined Values - Used in String and String Array - This provides a Pre-Defined list of items users may use for defining the value.
-* UniqueItems - Boolean - Used in String Array and Object Array - This mandates uniqueness among the values.
-* Default - Value - Used in String, Int, and Boolean - This provides a default for Schema Validators.
-* Minimum - Int - Used in Int - This mandates a Minimum Number.
-* Maximum - Int - Used in Int - This mandates a Maximum Number.
-* AdditionalProperties - Boolean - Used in Object and Object Array - Determines whether additional properties are valid.
-
-If you inevitably need more as of present you'll need to code handling into the Schema and Linter.
-
-#### MULTI-VARIABLE
-To use more than one variable all you need to do is add a '|' between each Variable, this acts as a Delimiter.
-
-An example of such would be: 
-
-```
-[Tooltip("REQUIRED | MinimumLength(1) | Pattern(^[a-zA-Z\\d_]+$)")]
-```
-
-Notice the `//` in the Regex? That's because C# needs it to be escaped in quotes, but don't worry we properly escape it for JSON in `ReadDocumentationFile.EscapeJSON()`.
-
-### Logging
-Our API has a unique form of Logging to it you can call `JSONLoader3.FormatLogger()` to access it. 
-
-If you hover over the function it will tell you what the inputs are and what it does. 
-
-This is how we have the fancier color coded logging that BepInEx does not have.
-
-This Logging system is built on top of Cecil.ANSI_Utils from the [Cecil Libraries Organization](https://stoatgames.icu/subsidiaries/cecil-libraries-organization/#header-container-subsite) and ANSI Mod from Stoat Games enables the ability for Windows users.
-
 ## Installation
 
 <u>**FOR LINUX AND STEAMDECK:** Ensure that the game is set to run using `Proton` in he game settings on steam. Should be a setting like this: `Change launch behaviour` -> `Proton`.</u>
@@ -478,8 +404,8 @@ If you have issues with Mod Managers head to one of these discords;
 If you have any issues with Mac/Linux, Steam Deck, or Manual head over to the discord for this game:
 
 * **Inscryption Modding Discord:** [Here](https://discord.gg/ZQPvfKEpwM)
-
-## Installing the Package:
+___
+## Installing from the GitHub Package:
 
 <u>***If your using `MadH95-JSONCardLoader` for JLDR2 based mods, please make sure to go into `MADH.inscryption.JSONLoader.cfg` and disable JLDR Conversion, you may need to do this after launching the first time. If you don't `JSONLoader` in combination with `JSONLoader-Nightly` will register the card Twice to the Game.***</u>
 
@@ -540,7 +466,7 @@ If you have any issues with Mac/Linux, Steam Deck, or Manual head over to the di
 5. Now navigate to the location of your BepInEx install from your earlier setup for the API.
 6. Navigate to `plugins` and add a folder entitled `MadH95-JSON_and_CSV_Loader_Nightly`.
 7. Move the setup from steps `2-4` into the folder you created in step `7`.
-
+___
 ## Support
 If you need help with anything related to this API or Package head to the [Inscryption Modding](https://discord.gg/ZQPvfKEpwM).
 
