@@ -28,6 +28,10 @@ public class DefineConfiguration
     /// </summary>
     public static ConfigEntry<bool> ShowAdditionalInformation;
     /// <summary>
+    /// This config determines whether Linting Summary Information is enabled by the user or not.
+    /// </summary>
+    public static ConfigEntry<bool> ShowSummary;
+    /// <summary>
     /// The ConfigFile Variable referenced throughout this class.
     /// </summary>
     private static ConfigFile configFile;
@@ -50,6 +54,8 @@ public class DefineConfiguration
             "While this value is set to true, this API will show what is happening when its happening.");
         ShowAdditionalInformation = configFile.Bind("Logging", "Show Additional Information", false,
             "While this value is set to true, this API will show a more in depth lense as to what went wrong, and try to help explain why its wrong with links to references.");
+        ShowSummary = configFile.Bind("Logging", "Show Summary Information", false,
+            "While this value is set to true, this API will show the Summary for each property being verified by the Linter and some Additional Debug Information.");
         JSONLoader3.FormatLogger("info", "Configuration","Finished adding configuration for the Logging associated with this mod.");
     }
 }

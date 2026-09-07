@@ -38,30 +38,14 @@
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
             <PrivateAssets>all</PrivateAssets>
         </PackageReference>
-        <Reference Include="Antlr3.Runtime">
-            <HintPath>Dependencies\BepInEx-Required-Dependencies\Antlr3.Runtime.dll</HintPath>
-            <Publicize>true</Publicize>
-            <Private>true</Private>
-        </Reference>
-        <Reference Include="NCalc">
-            <HintPath>Dependencies\BepInEx-Required-Dependencies\NCalc.dll</HintPath>
-            <Publicize>true</Publicize>
-            <Private>true</Private>
-        </Reference>
-        <Reference Include="PanoramicData.NCalcExtensions">
-            <HintPath>Dependencies\BepInEx-Required-Dependencies\PanoramicData.NCalcExtensions.dll</HintPath>
-            <Publicize>true</Publicize>
-            <Private>true</Private>
-        </Reference>
     </ItemGroup>
+    
     <ItemGroup>
       <Folder Include="Cores\CSVLoaderV1Support\Schemas\" />
       <Folder Include="Cores\JSONLoaderV2Support\Schemas\" />
       <Folder Include="Cores\JSONLoaderV3Support\Schemas\" />
       <Folder Include="Peripheral\CSV_LINT\" />
-      <Folder Include="Peripheral\CSV_PARSER\" />
       <Folder Include="Peripheral\CSV_SCHEMA\" />
-      <Folder Include="Subperipheral\JSONLoader_Utilities\" />
     </ItemGroup>
 
     <!--Cleanup Publish for our Build System-->
@@ -78,13 +62,12 @@
         <CHANGELOGCopyLocation>CHANGELOG.md</CHANGELOGCopyLocation>
         <READMECopyLocation>README.md</READMECopyLocation>
         <LICENSECopyLocation>LICENSE.md</LICENSECopyLocation>
-        <DependenciesCopyLocations>Dependencies/BepInEx-Required-Dependencies</DependenciesCopyLocations>
         <ReleaseMode>Prerelease</ReleaseMode>
         <!--Thunderstore Manifest Properties-->
-        <ThunderstorePackageName>JSONCardLoader</ThunderstorePackageName>
-        <ThunderstorePackageVersion>2.7.0</ThunderstorePackageVersion>
-        <ThunderstoreWebsiteURL>https://github.com/MADH95/JSONCardLoaderPlugin</ThunderstoreWebsiteURL>
-        <ThunderstorePackageDescription>A mod made for Incryption to create custom cards, sigils, starter decks, tribes, encounters and more using JSON files.</ThunderstorePackageDescription>
-        <ThunderstorePackageDependencyStrings>BepInEx-BepInExPack_Inscryption-5.4.1902;API_dev-API-2.18.7</ThunderstorePackageDependencyStrings>
+        <ThunderstorePackageName>JSON_and_CSV_Loader_Nightly</ThunderstorePackageName>
+        <ThunderstorePackageVersion>0.0.3</ThunderstorePackageVersion>
+        <ThunderstoreWebsiteURL>https://github.com/MADH95/JSONLoader/tree/Refactor-JSONLoader-3</ThunderstoreWebsiteURL>
+        <ThunderstorePackageDescription>This is the Nightly version of JSONLoader, this is effectively a preview of whats to come to JSONLoader (and CSVLoader).</ThunderstorePackageDescription>
+        <ThunderstorePackageDependencyStrings>BepInEx-BepInExPack_Inscryption-5.4.2305;BepInEx-MonoMod_Loader_Inscryption-1.0.0;API_dev-API-2.24.0;Cecil_Libraries_Organization-Cecil_Libraries_Package-1.0.1;Stoat_Games-ANSI_Mod-2.0.1</ThunderstorePackageDependencyStrings>
     </PropertyGroup>
 </Project>

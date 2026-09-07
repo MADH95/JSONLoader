@@ -1,5 +1,6 @@
 using System;
 using BepInEx;
+using BepInEx.Logging;
 using Cecil_Libraries.ANSI_Utils.Lists;
 using Cecil_Libraries.ANSI_Utils.Objects;
 using JSONLoader3.Peripheral.FILE_Loader;
@@ -31,15 +32,15 @@ namespace JSONLoader3
         /// <summary>
         /// This color is associated with the Error Logging Level.
         /// </summary>
-        private static Color Error = new Color("Underline", "Red", highIntensity: true);
+        private static Color Error = new Color("Doubleline", "Red", highIntensity: true);
         /// <summary>
         /// This color is associated with the Warning Logging Level.
         /// </summary>
-        private static Color Warning = new Color("Italic", "Yellow", highIntensity: true);
+        private static Color Warning = new Color("Underlined", "Yellow", highIntensity: true);
         /// <summary>
         /// This color is associated with the Information Logging Level.
         /// </summary>
-        private static Color256 Information = new Color256("Regular", 230);
+        private static Color256 Information = new Color256("Bold", 230);
         /// <summary>
         /// This color is associated with the Debug Logging Level.
         /// </summary>
@@ -47,17 +48,26 @@ namespace JSONLoader3
         /// <summary>
         /// This color is associated with the ExtendedInformation Logging Level.
         /// </summary>
-        private static Color256 ExtendedInformation = new Color256("Bold", 228);
+        private static Color256 ExtendedInformation = new Color256("Italic", 228);
+        /// <summary>
+        /// This color is associated with the SummaryInformation Logging Level.
+        /// </summary>
+        private static Color256 SummaryInformation = new Color256("Framed", 219);
+        
+        private static ManualLogSource BepInExLogger;
 
         /// <summary>
         /// This serves as the Starting Point for the entire API, whatever is put here will be done first and foremost in startup.
         /// </summary>
         public void Awake()
         {
+            BepInExLogger = Logger;
+            
             DefineConfiguration.DefineConfigs(Config);
             FormatLogger("info", "Initialization for JSONLoader3 and CSVLoader","Finished Creating JSONLoader3 and CSVLoader Configuration");
             FindFiles.FindFilesToLoad();
             LoadFiles.LoadFoundFiles();
+            FormatLogger("info", "Initialization for JSONLoader3 and CSVLoader","Finished Loading JSONLoader, JSONLoader2, JSONLoader3 and CSVLoader.");
         }
 
         /// <summary>
@@ -82,7 +92,7 @@ namespace JSONLoader3
         ///             <description>This is meant for any General Details in which this API may spit out.</description>
         ///         </item>
         ///         <item>
-        ///             <term>ExtendedInformation (ExtendedInfo)</term>
+        ///             <term>AdditionalInformation (AdditionalInfo)</term>
         ///             <description>This is meant for any Additional Details in which this API may spit out.</description>
         ///         </item>
         ///         <item>
@@ -99,18 +109,46 @@ namespace JSONLoader3
             if (level.ToLower() == "error")
             {
                 Console.WriteLine(Error.Format() + $"[({source}) Error]: " + message + ANSICodeLists.ResetColor);
+                LogToBepInExFile(LogLevel.Error, source, message);
             } else if (level.ToLower() == "warning")
             {
                 Console.WriteLine(Warning.Format() + $"[({source}) Warning]: "+ message + ANSICodeLists.ResetColor);
+                LogToBepInExFile(LogLevel.Warning, source, message);
             } else if (level.ToLower() == "info" || level.ToLower() == "information")
             {
                 Console.WriteLine(Information.Format() + $"[({source}) Information]: "+ message + ANSICodeLists.ResetColor);
+                LogToBepInExFile(LogLevel.Info, source, message);
             } else if (level.ToLower() == "debug" && DefineConfiguration.ShowVerboseLogging.Value)
             {
                 Console.WriteLine(Debug.Format() + $"[({source}) Debug]: "+ message + ANSICodeLists.ResetColor);
-            } else if ((level.ToLower() == "extendedinfo" || level.ToLower() == "extendedinformation") && DefineConfiguration.ShowAdditionalInformation.Value)
+                LogToBepInExFile(LogLevel.Debug, source, message);
+            } else if ((level.ToLower() == "additionalinfo" || level.ToLower() == "additionalinformation") && DefineConfiguration.ShowAdditionalInformation.Value)
             {
-                Console.WriteLine(ExtendedInformation.Format() + $"[({source}) Extended Information]: "+ message + ANSICodeLists.ResetColor);
+                Console.WriteLine(ExtendedInformation.Format() + $"[({source}) Additional Information]: "+ message + ANSICodeLists.ResetColor);
+                LogToBepInExFile(LogLevel.Message, source, message);
+            } else if (level.ToLower() == "summary" && DefineConfiguration.ShowSummary.Value)
+            {
+                Console.WriteLine(SummaryInformation.Format() + $"[({source}) Summary Information]: "+ message + ANSICodeLists.ResetColor);
+                LogToBepInExFile(LogLevel.Message, source, message);
+            }
+        }
+
+        private static void LogToBepInExFile(LogLevel level, string source, string message)
+        {
+            ManualLogSource logSource = new ManualLogSource(JSONLoader3.PluginGuid);
+
+            LogEventArgs logEvent = new LogEventArgs(
+                $"[({source}) {level}]: {message}",
+                level,
+                logSource
+            );
+
+            foreach (ILogListener listener in BepInEx.Logging.Logger.Listeners)
+            {
+                if (listener is DiskLogListener)
+                {
+                    listener.LogEvent(typeof(JSONLoader3), logEvent);
+                }
             }
         }
     }

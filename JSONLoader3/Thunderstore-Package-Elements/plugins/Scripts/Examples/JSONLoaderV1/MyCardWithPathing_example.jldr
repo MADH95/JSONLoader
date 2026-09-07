@@ -1,0 +1,7 @@
+{
+    "name": "MyCustomCardWithPathing",
+    "texture": "Scripts/Examples/JSONLoaderV1/../Artwork/Cards/Assets/../MyCustomCardWithPathing.png",
+    "emissionTexture": "Scripts/Examples/JSONLoaderV1/../Artwork/Cards/Assets/../../../Artwork/Cards/Assets/MyCustomCardWithPathing_Emissive.png",
+    "displayedName": "Magicks Man with a Fancy PATH",
+    "hideAttackAndHealth": true
+}

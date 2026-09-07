@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Reflection;
+using System.Text;
 using JSONLoader3.Peripheral.XML_Parser;
 using UnityEngine;
 
@@ -58,7 +59,27 @@ public class TooltipDisector
 
         foreach (string tooltip in tooltipAttr.tooltip.Split('|'))
         {
-            tooltips.Add(tooltip.Trim());
+            StringBuilder current = new StringBuilder();
+            int depth = 0;
+
+            foreach (char c in tooltipAttr.tooltip)
+            {
+                if (c == '(') depth++;
+                if (c == ')') depth--;
+
+                if (c == '|' && depth == 0)
+                {
+                    tooltips.Add(current.ToString().Trim());
+                    current.Clear();
+                }
+                else
+                {
+                    current.Append(c);
+                }
+            }
+
+            if (current.Length > 0)
+                tooltips.Add(current.ToString().Trim());
         }
 
         return tooltips;

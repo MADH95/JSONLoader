@@ -42,7 +42,7 @@ public class Card
     ///
     /// New Description from JSONLoader v3.0.0: These Meta-Categories control how your card will show up within the game, see the following page for what each of them do; https://thunderstore.io/c/inscryption/p/MADH95Mods/JSONCardLoader/wiki/5396-vanilla-enums
     /// </summary>
-    [Tooltip("Items(true) | ItemType(string) | Enums(ChoiceNode, GBCPack, GBCPlayable, Part3Random, Rare, TraderOffer, AscensionUnlock) | UniqueItems(true)")]
+    [Tooltip("Items(true) | ItemType(string) | Enums(ChoiceNode, TraderOffer, Part3Random, Rare, GBCPack, GBCPlayable, AscensionUnlock) | UniqueItems(true)")]
     public List<string> metaCategories;
     /// <summary>
     /// Original Description from JSONLoader v1.7.2: "A string for the complexity of the card (See Enums.txt for a list of levels of complexity)" |
@@ -112,35 +112,35 @@ public class Card
     ///
     /// New Description from JSONLoader v3.0.0: This determines which Stat Icon to show on the card, this must be used alongside the associated Special Ability.
     /// </summary>
-    [Tooltip("Enums(Ants, Bell, Bones, CardsInHand, GreenGems, Mirror, SacrificesThisTurn)")]
+    [Tooltip("Enums(None, Ants, Bones, Mirror, Bell, GreenGems, CardsInHand, SacrificesThisTurn)")]
     public string specialStatIcon;
     /// <summary>
     /// Original Description from JSONLoader v1.7.2: "An string array for the tribes the card belongs to (See Enums.txt for a list of tribes)" |
     ///
     /// New Description from JSONLoader v3.0.0: This List determines what Tribes are applied to the card, this works with Base Game tribes only. Use a newer version of JSONLoader for Modded Tribes. You can find the full list here; https://thunderstore.io/c/inscryption/p/MADH95Mods/JSONCardLoader/wiki/5396-vanilla-enums
     /// </summary>
-    [Tooltip("Items(true) | ItemType(String) | Enums(Bird, Canine, Hooved, Insect, Reptile, Squirrel) | UniqueItems(true)")]
+    [Tooltip("Items(true) | ItemType(String) | Enums(None, Squirrel, Bird, Canine, Hooved, Reptile, Insect) | UniqueItems(true)")]
     public List<string> tribes;
     /// <summary>
     /// Original Description from JSONLoader v1.7.2: "An string array for the traits a card has (See Enums.txt for a list of traits)" |
     ///
     /// New Description from JSONLoader v3.0.0: This List determines what Traits are applied to this card, this works with Base Game traits only. Use a newer version of JSONLoader for Modded Traits. You can find the full list here; https://thunderstore.io/c/inscryption/p/MADH95Mods/JSONCardLoader/wiki/5396-vanilla-enums
     /// </summary>
-    [Tooltip("Items(true) | ItemType(String) | Enums(Ant, Bear, Blind, DeathcardCreationNonOption, EatsWarrens, FeedsStoat, Fused, Gem, Giant, Goat, Juvenile, KillsSurvivors, Lice, LikesHoney, Pelt, ProtectsCub, SatisfiesRingTrial, Structure, Terrain, Uncuttable, Undead, Wolf) | UniqueItems(true)")]
+    [Tooltip("Items(true) | ItemType(String) | Enums(None, EatsWarrens, FeedsStoat, LikesHoney, Wolf, Bear, Juvenile, ProtectsCub, Undead, Structure, Blind, Ant, Terrain, Pelt, Uncuttable, SatisfiesRingTrial, Giant, Gem, Fused, KillsSurvivors, Goat, DeathcardCreationNonOption, Lice) | UniqueItems(true)")]
     public List<string> traits;
     /// <summary>
     /// Original Description from JSONLoader v1.7.2: "A string array for the special abilities a card has (See Enums.txt for a list of special abilities)" |
     ///
     /// New Description from JSONLoader v3.0.0: This List determines what Special Abilities are applied to this card, this works specifically with Base Game Special Abilities. For Modded Special Abilities utilize the 'customSpecialAbilities' field. You can find the full list here; https://thunderstore.io/c/inscryption/p/MADH95Mods/JSONCardLoader/wiki/5396-vanilla-enums
     /// </summary>
-    [Tooltip("Items(true) | ItemType(String) | Enums(Ant, BellProximity, BountyHunter, BrokenCoinLeft, BrokenCoinRight, CagedWolf, CardsInHand, Cat, Daus, GiantCard, GiantMoon, GiantShip, GreenMage, JerseyDevil, Lammergeier, Mirror, Ouroboros, PackMule, RandomCard, SacrificesThisTurn, ShapeShifter, SpawnLice, TalkingCardChooser, TrapSpawner) | UniqueItems(true)")]
+    [Tooltip("Items(true) | ItemType(String) | Enums(None, Cat, EMPTY3, EMPTY4, EMPTY5, EMPTY6, Ant, RandomCard, Lammergeier, TalkingCardChooser, PackMule, Mirror, BellProximity, CagedWolf, TrapSpawner, GiantCard, GiantMoon, GreenMage, JerseyDevil, Daus, BountyHunter, BrokenCoinLeft, BrokenCoinRight, CardsInHand, Ouroboros, Shapeshifter, SacrificesThisTurn, SpawnLice, GiantShip) | UniqueItems(true)")]
     public List<string> specialAbilities;
     /// <summary>
     /// Original Description from JSONLoader v1.7.2: "A string array for the sigils a card has. (See Enums.txt for a list of sigil abilities)." |
     ///
     /// New Description from JSONLoader v3.0.0: This List determines what Abilities are applied to this card, this works specifically with Base Game Abilities. For Modded Abilities utilize the 'customAbilities' field. You can find the full list here; https://thunderstore.io/c/inscryption/p/MADH95Mods/JSONCardLoader/wiki/5396-vanilla-enums
     /// </summary>
-    [Tooltip("Items(true) | ItemType(String) | Enums(ActivatedDealDamage, ActivatedDrawSkeleton, ActivatedEnergyToBones, ActivatedHeal, ActivatedRandomPowerBone, ActivatedRandomPowerEnergy, ActivatedSacrificeDrawCards, ActivatedStatsUp, ActivatedStatsUpEnergy, AllStrike, Apparition, BeesOnHit, BombSpawner, BoneDigger, Brittle, BuffEnemy, BuffGems, BuffNeighbors, CellBuffSelf, CellDrawRandomCardOnDeath, CellTriStrike, ConduitBuffAttack, ConduitEnergy, ConduitFactory, ConduitHeal, ConduitNull, ConduitSpawnGems, CorpseEater, CreateBells, CreateDams, CreateEgg, DeathShield, Deathtouch, DebuffEnemy, DeleteFile, DoubleDeath, DoubleStrike, DrawAnt, DrawCopy, DrawCopyOnDeath, DrawNewHand, DrawRabbits, DrawRandomCardOnDeath, DrawVesselOnHit, DropRubyOnDeath, EdaxioArms, EdaxioHead, EdaxioLegs, EdaxioTorso, Evolve, ExplodeGems, ExplodeOnDeath, ExplodingCorpse, FileSizeDamage, Flying, GainAttackOnKill, GainBattery, GainGemBlue, GainGemGreen, GainGemOrange, GainGemTriple, GemDependant, GemsDraw, GuardDog, Haunter, HydraEgg, IceCube, LatchBrittle, LatchDeathShield, LatchExplodeOnDeath, Loot, MadeOfStone, Morsel, MoveBeside, OpponentBones, PermaDeath, PreventAttack, QuadrupleBones, RandomAbility, RandomConsumable, Reach, Sacrificial, Sentry, Sharp, ShieldGems, Sinkhole, SkeletonStrafe, Sniper, SplitStrike, SquirrelOrbit, SquirrelStrafe, SteelTrap, Strafe, StrafePush, StrafeSwap, Submerge, SubmergeSquid, SwapStats, TailOnHit, Transformer, TripleBlood, TriStrike, Tutor, VirtualReality, WhackAMole) | UniqueItems(true)")]
+    [Tooltip("Items(true) | ItemType(String) | Enums(None, DrawRabbits, BeesOnHit, Strafe, Deathtouch, Evolve, CreateDams, Tutor, WhackAMole, DrawCopy, TailOnHit, CorpseEater, QuadrupleBones, Submerge, DrawCopyOnDeath, Sharp, StrafePush, DrawAnt, GuardDog, Flying, Sacrificial, PreventAttack, TripleBlood, Reach, SplitStrike, TriStrike, IceCube, Sinkhole, BoneDigger, RandomConsumable, SteelTrap, RandomAbility, SquirrelOrbit, AllStrike, BuffNeighbours, Brittle, SkeletonStrafe, GainGemGreen, GainGemOrange, GainGemBlue, BuffGems, DropRubyOnDeath, GemsDraw, GemDependant, GainGemTriple, DrawNewHand, SquirrelStrafe, ConduitBuffAttack, ConduitFactory, ConduitHeal, ConduitNull, GainBattery, ExplodeOnDeath, Sniper, DeathShield, PermaDeath, LatchExplodeOnDeath, LatchBrittle, LatchDeathShield, FileSizeDamage, DeleteFile, Transformer, Sentry, ExplodeGems, ShieldGems, DrawVesselOnHit, ConduitEnergy, BombSpawner, DoubleDeath, ActivatedRandomPowerEnergy, ActivatedRandomPowerBone, ActivatedStatsUp, SwapStats, ActivatedDrawSkeleton, ActivatedDealDamage, CreateBells, BuffEnemy, ConduitSpawnGems, DrawRandomCardOnDeath, Loot, ActivatedSacrificeDrawCards, ActivatedStatsUpEnergy, ActivatedHeal, DebuffEnemy, CellBuffSelf, CellDrawRandomCardOnDeath, CellTriStrike, ActivatedEnergyToBones, MoveBeside, SubmergeSquid, BloodGuzzler, Haunter, ExplodingCorpse, Apparition, VirtualReality, EdaxioHead, EdaxioArms, EdaxioLegs, EdaxioTorso, CreateEgg, DoubleStrike, OpponentBones, StrafeSwap, Morsel, GainAttackOnKill, MadeOfStone, HydraEgg) | UniqueItems(true)")]
     public List<string> abilities;
     /// <summary>
     /// Original Description from JSONLoader v1.7.2: "An array of objects for the custom ability name and mod GUID (It's children are in the table below this one)" |
@@ -202,49 +202,49 @@ public class Card
     ///
     /// New Description from JSONLoader v3.0.0: This List determines the Appearance Behaviors in which will be applied to this card. Use a newer version of JSONLoader for Modded Appearance Behaviors. You can find the full list here; https://thunderstore.io/c/inscryption/p/MADH95Mods/JSONCardLoader/wiki/5396-vanilla-enums
     /// </summary>
-    [Tooltip("Items(true) | ItemType(String) | Enums(AddSnelkDecals, AlternatingBloodDecal, AnimatedPortrait, DynamicPortrait, FullCardPortrait, GiantAnimatedPortrait, GoldEmission, HologramPortrait, RareCardBackground, RareCardColors, SexyGoat, StaticGlitch, TerrainBackground, TerrainLayout, RedEmission, DefaultEmission, MoonParticleEffects) | UniqueItems(true)")]
-    public List<string> appearanceBehavior;
+    [Tooltip("Items(true) | ItemType(String) | Enums(StaticGlitch, FullCardPortrait, TerrainBackground, RareCardColors, AddSnelkDecals, AnimatedPortrait, GoldEmission, RareCardBackground, AlternatingBloodDecal, TerrainLayout, DynamicPortrait, GiantAnimatedPortrait, HologramPortrait, SexyGoat, RedEmission, DefaultEmission, MoonParticleEffects) | UniqueItems(true)")]
+    public List<string> appearanceBehaviour;
     /// <summary>
     /// Original Description from JSONLoader v1.7.2: "A string for the name of the card's image (must be .png). If it is in a subfolder within Artwork the subfolder should preceed the file name seperated by a '/' (or your system equivelent)" |
     ///
     /// New Description from JSONLoader v3.0.0: The Path to your cards Portrait, this is localized to your Plugins Folder. It's your job to keep it organized, do it as you would these 'JLDR' files. This must be a PNG File and must be a '114x94' image.
     /// </summary>
-    [Tooltip("Pattern(^[a-zA-Z\\d_]+.png$)")]
+    [Tooltip("Pattern(^(?:(?:\\.\\.\\/|[a-zA-Z\\d_-\\s]+\\/)*[a-zA-Z\\d_-\\s]+\\.png|data:image\\/png;base64,[A-Za-z0-9+/]+={0,2}|base64:[A-Za-z0-9+/]+={0,2})$)")]
     public string texture;
     /// <summary>
     /// Original Description from JSONLoader v1.7.2: "A string for the name of the card's alternate image (must be .png)" |
     ///
     /// New Description from JSONLoader v3.0.0: The Path to your cards Alternative Portrait, this is localized to your Plugins Folder. It's your job to keep it organized, do it as you would these 'JLDR' files. This must be a PNG File and must be a '114x94' image. This applies in the case you have a Goat's Eye or possibly some other cases.
     /// </summary>
-    [Tooltip("Pattern(^[a-zA-Z\\d_]+.png$)")]
+    [Tooltip("Pattern(^(?:(?:\\.\\.\\/|[a-zA-Z\\d_-\\s]+\\/)*[a-zA-Z\\d_-\\s]+\\.png|data:image\\/png;base64,[A-Za-z0-9+/]+={0,2}|base64:[A-Za-z0-9+/]+={0,2})$)")]
     public string altTexture;
     /// <summary>
     /// Original Description from JSONLoader v1.7.2: "A string for the name of the card's emission image (must be .png)" |
     ///
     /// New Description from JSONLoader v3.0.0: The Path to your cards Emissive Portrait, this is localized to your Plugins Folder. It's your job to keep it organized, do it as you would these 'JLDR' files. This must be a PNG File and must be a '114x94' image. This applies in the case you've transferred a sigil at the Sacrificial Stones onto this card.
     /// </summary>
-    [Tooltip("Pattern(^[a-zA-Z\\d_]+.png$)")]
+    [Tooltip("Pattern(^(?:(?:\\.\\.\\/|[a-zA-Z\\d_-\\s]+\\/)*[a-zA-Z\\d_-\\s]+\\.png|data:image\\/png;base64,[A-Za-z0-9+/]+={0,2}|base64:[A-Za-z0-9+/]+={0,2})$)")]
     public string emissionTexture;
     /// <summary>
     /// Original Description from JSONLoader v1.7.2: "A string for the name of the card's title image (must be .png)" |
     ///
     /// New Description from JSONLoader v3.0.0: The Path to your cards Title Graphic, this is localized to your Plugins Folder. It's your job to keep it organized, do it as you would these 'JLDR' files. This must be a PNG File and must be a '113x28' image. This applies specifically over your card name as a way of obscuring it like the Tentacle Cards are.
     /// </summary>
-    [Tooltip("Pattern(^[a-zA-Z\\d_]+.png$)")]
+    [Tooltip("Pattern(^(?:(?:\\.\\.\\/|[a-zA-Z\\d_-\\s]+\\/)*[a-zA-Z\\d_-\\s]+\\.png|data:image\\/png;base64,[A-Za-z0-9+/]+={0,2}|base64:[A-Za-z0-9+/]+={0,2})$)")]
     public string titleGraphic;
     /// <summary>
     /// Original Description from JSONLoader v1.7.2: "A string for the name of the card's act2 image (must be .png)" |
     ///
     /// New Description from JSONLoader v3.0.0: The Path to your cards Pixel Portrait, this is localized to your Plugins Folder. It's your job to keep it organized, do it as you would these 'JLDR' files. This must be a PNG File and must be a '41x28' image. This applies specifically in Act 2, its just that act's version of the card portrait.
     /// </summary>
-    [Tooltip("Pattern(^[a-zA-Z\\d_]+.png$)")]
+    [Tooltip("Pattern(^(?:(?:\\.\\.\\/|[a-zA-Z\\d_-\\s]+\\/)*[a-zA-Z\\d_-\\s]+\\.png|data:image\\/png;base64,[A-Za-z0-9+/]+={0,2}|base64:[A-Za-z0-9+/]+={0,2})$)")]
     public string pixelTexture;
     /// <summary>
     /// Original Description from JSONLoader v1.7.2: "A string array for the texture names of a card decals (must be .png)" |
     ///
     /// New Description from JSONLoader v3.0.0: This is a list of all the Decal Images in which will be stacked onto your card, this is localized to your Plugins Folder. It's your job to keep it organized, do it as you would these 'JLDR' files. This must be a PNG File and must be a '125x190' image.
     /// </summary>
-    [Tooltip("Pattern(^[a-zA-Z\\d_]+.png$) | UniqueItems(true)")]
+    [Tooltip("Items(True) | ItemType(string) | Pattern(^(?:(?:\\.\\.\\/|[a-zA-Z\\d_-\\s]+\\/)*[a-zA-Z\\d_-\\s]+\\.png|data:image\\/png;base64,[A-Za-z0-9+/]+={0,2}|base64:[A-Za-z0-9+/]+={0,2})$) | UniqueItems(true)")]
     public List<string> decals;
 }
 
@@ -259,14 +259,14 @@ public class AbilityData
     ///
     /// New Description from JSONLoader v3.0.0: This is the In-Code name of the Ability.
     /// </summary>
-    [Tooltip("REQUIRED | MinimumLength(1) | Pattern(^[a-zA-Z\\d_]+$)")]
+    [Tooltip("REQUIRED | MinimumLength(1) | Pattern(^[a-zA-Z\\d_\\s]+$)")]
     public string name;
     /// <summary>
     /// Original Description from JSONLoader v1.7.2: "The GUID the mod maker made for their mod. This may be found in the mod description. It is usually in the layout of 'MakerName.inscryption.ModName'" |
     ///
     /// New Description from JSONLoader v3.0.0: This is the Ability Libraries GUID, it's a similar concept to your card's prefix.
     /// </summary>
-    [Tooltip("REQUIRED | MinimumLength(1) | Pattern(^[a-zA-Z\\d_]+$)")]
+    [Tooltip("REQUIRED | MinimumLength(1) | Pattern(^[a-zA-Z\\d_.]+$)")]
     public string GUID;
 }
 
@@ -281,14 +281,14 @@ public class SpecialAbilityData
     ///
     /// New Description from JSONLoader v3.0.0: This is the In-Code name of the Special Ability.
     /// </summary>
-    [Tooltip("REQUIRED | MinimumLength(1) | Pattern(^[a-zA-Z\\d_]+$)")]
+    [Tooltip("REQUIRED | MinimumLength(1) | Pattern(^[a-zA-Z\\d_\\s]+$)")]
     public string name;
     /// <summary>
     /// Original Description from JSONLoader v1.7.2: "The GUID the mod maker made to identify their mod. This may be found in the mod description. It is usually in the layout of 'MakerName.inscryption.ModName'" |
     ///
     /// New Description from JSONLoader v3.0.0: This is the Special Ability Libraries GUID, it's a similar concept to your card's prefix.
     /// </summary>
-    [Tooltip("REQUIRED | MinimumLength(1) | Pattern(^[a-zA-Z\\d_]+$)")]
+    [Tooltip("REQUIRED | MinimumLength(1) | Pattern(^[a-zA-Z\\d_.]+$)")]
     public string GUID;
 }
 
@@ -332,7 +332,7 @@ public class TailData
     ///
     /// New Description from JSONLoader v3.0.0: The Path to your cards Tail Lost Portrait, this is localized to your Plugins Folder. It's your job to keep it organized, do it as you would these 'JLDR' files. This must be a PNG File and must be a '114x94' image. This applies specifically when this card is struck and lost its tail.
     /// </summary>
-    [Tooltip("Pattern(^[a-zA-Z\\d_]+.png$)")]
+    [Tooltip("Pattern(^(?:(?:\\.\\.\\/|[a-zA-Z\\d_-\\s]+\\/)*[a-zA-Z\\d_-\\s]+\\.png|data:image\\/png;base64,[A-Za-z0-9+/]+={0,2}|base64:[A-Za-z0-9+/]+={0,2})$)")]
     public string tailLostPortrait;
 }
 

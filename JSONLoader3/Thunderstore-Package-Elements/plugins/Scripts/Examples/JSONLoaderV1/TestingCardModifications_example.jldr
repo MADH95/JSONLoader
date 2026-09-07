@@ -1,0 +1,8 @@
+{
+    "fieldsToEdit": ["baseAttack", "baseHealth", "bonesCost", "displayedName"],
+    "name": "MantisGod",
+    "baseAttack": 0,
+    "baseHealth": 2,
+    "bonesCost": 3,
+    "displayedName": "Nerfed MANTIS GOD"
+}

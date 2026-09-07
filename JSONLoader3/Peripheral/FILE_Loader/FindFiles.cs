@@ -49,7 +49,7 @@ public class FindFiles
                             List<string> JSONFiles = Directory.GetFiles(newPath, "*", SearchOption.AllDirectories).ToList();
                             foreach (string JSONFile in JSONFiles)
                             {
-                                HandleJSONFile(JSONFile);
+                                HandleJSONFile(JSONFile, plugin);
                             }
                         }
                     }
@@ -64,7 +64,7 @@ public class FindFiles
                             List<string> CSVFiles = Directory.GetFiles(newPath, "*", SearchOption.AllDirectories).ToList();
                             foreach (string CSVFile in CSVFiles)
                             {
-                                HandleCSVFile(CSVFile);
+                                HandleCSVFile(CSVFile, plugin);
                             }
                         }
                     }
@@ -91,10 +91,16 @@ public class FindFiles
     /// A function used to handle Files for JSONLoader.
     /// </summary>
     /// <param name="JSONFile">The exact path to a JSONLoader file.</param>
+    /// <param name="plugin">The Full Path to the Plugin.</param>
     /// <remarks>This code is provided by Creator/Chaosyr/SaxbyMod/The Stoat Lord.</remarks>
-    internal static void HandleJSONFile(string JSONFile)
+    internal static void HandleJSONFile(string JSONFile, string plugin)
     {
         if (!JSONFile.EndsWith(".jldr", StringComparison.OrdinalIgnoreCase) && !JSONFile.EndsWith(".jldr2", StringComparison.OrdinalIgnoreCase) && !JSONFile.EndsWith(".jldr3", StringComparison.OrdinalIgnoreCase))
+        {
+            return;
+        }
+        
+        if (JSONFile.EndsWith("_example.jldr", StringComparison.OrdinalIgnoreCase) || JSONFile.EndsWith("_example.jldr2", StringComparison.OrdinalIgnoreCase) || JSONFile.EndsWith("_example.jldr3", StringComparison.OrdinalIgnoreCase))
         {
             return;
         }
@@ -104,20 +110,21 @@ public class FindFiles
             List<string> JSONFilesNew = Directory.GetFiles(JSONFile).ToList();
             foreach (string JSONFileNew in JSONFilesNew)
             {
-                HandleJSONFile(JSONFileNew);
+                HandleJSONFile(JSONFileNew, plugin);
             }
         }
+        
         if (JSONFile.EndsWith(".jldr", StringComparison.OrdinalIgnoreCase))
         {
-            LoadFiles.JLDRFiles.Add(JSONFile);
+            LoadFiles.JLDRFiles.Add((plugin, JSONFile));
         }
         else if (JSONFile.EndsWith(".jldr2", StringComparison.OrdinalIgnoreCase))
         {
-            LoadFiles.JLDR2Files.Add(JSONFile);
+            LoadFiles.JLDR2Files.Add((plugin, JSONFile));
         }
         else if (JSONFile.EndsWith(".jldr3", StringComparison.OrdinalIgnoreCase))
         {
-            LoadFiles.JLDR3Files.Add(JSONFile);
+            LoadFiles.JLDR3Files.Add((plugin, JSONFile));
         }
                                 
         JSONLoader3.FormatLogger("Debug", "FindFiles", $"Found File: {JSONFile} to load.");
@@ -127,10 +134,16 @@ public class FindFiles
     /// A function used to handle Files for CSVLoader.
     /// </summary>
     /// <param name="CSVFile">The exact path to a CSVLoader path.</param>
+    /// <param name="plugin">The Full Path to the Plugin.</param>
     /// <remarks>This code is provided by Creator/Chaosyr/SaxbyMod/The Stoat Lord.</remarks>
-    internal static void HandleCSVFile(string CSVFile)
+    internal static void HandleCSVFile(string CSVFile, string plugin)
     {
         if (!CSVFile.EndsWith(".csv", StringComparison.OrdinalIgnoreCase))
+        {
+            return;
+        }
+
+        if (CSVFile.EndsWith("_example.csv", StringComparison.OrdinalIgnoreCase))
         {
             return;
         }
@@ -140,12 +153,12 @@ public class FindFiles
             List<string> CSVFilesNew = Directory.GetFiles(CSVFile).ToList();
             foreach (string CSVFileNew in CSVFilesNew)
             {
-                HandleCSVFile(CSVFileNew);
+                HandleCSVFile(CSVFileNew, plugin);
             }
         }
         if (CSVFile.EndsWith(".csv", StringComparison.OrdinalIgnoreCase))
         {
-            LoadFiles.CSVFiles.Add(CSVFile);
+            LoadFiles.CSVFiles.Add((plugin, CSVFile));
         }
                                 
         JSONLoader3.FormatLogger("Debug", "FindFiles", $"Found File: {CSVFile} to load.");

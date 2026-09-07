@@ -3,6 +3,24 @@
 <details open>
 <summary>JSONLoader 3.0.0 Changelog</summary>
 
+## 3.0.0-push-3
+* Implemented a JSON Schema Loader.
+* Added another Level of Toggleable Logging.
+* Adjusted some Level's colors and looks.
+* MADE A FULL FLEDGED JSON LINTER.
+  * This takes our Schema created by WriteSchema, and the JSON passed in by whatever Utils a JSONLoader Version utilizes. Than with that cross references them and validates the JSON, including Syntax, and value validation.
+  * The Linter gives relatively in-depth feedback on how the error can be fixed, even more depth with "AdditionalInformation", "Summary", and "Debug" logging enabled.
+  * Keep in mind this Linter is NOT feature complete yet. But it's up to standards with what was needed for `JLDR` or JSONLoaderV1.
+* Implemented Utilities for ImageScanning in the class `ScanImages`, with it we support Base64 images, and file images (With relative path support.)
+* Updated `FindFiles` and `LoadFiles` to pass the `Plugin` through the system to the relevant loaders.
+* Fixed Tooltip Disector to account for `|` appearing within a Regex or Variable.
+* Implemented relatively full-fledged working `JLDR` support, it may be rough around the edges, so if you find any bugs please report them in the [Inscryption Modding](https://discord.gg/ZQPvfKEpwM) discord.
+* Implemented a CardObject that handles passing `JLDR` cards into the API via `CardManager.New()`.
+* This Version marks the beginning of Nightly Releases for JSONLoader, updates will vary based on Maintainer Availability, but ideally faster than the main API that way you can test features in advance.
+* Added Exclusion for `_example` in file loading for `.jldr`, `.jldr2`, `.jldr3`, and `.csv`.
+* Can now Log to the File as well, we have to do this specially because we Log with `Console.WriteLine()` internally.
+* Officially Licensed the Code for JSONLoader Nightly.
+
 ## 3.0.0-push-2
 
 * Implemented Configuration for:

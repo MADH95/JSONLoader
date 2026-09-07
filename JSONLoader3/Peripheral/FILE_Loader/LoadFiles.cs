@@ -14,19 +14,19 @@ public class LoadFiles
     /// <summary>
     /// A list of ALL JLDR Files.
     /// </summary>
-    internal static List<string> JLDRFiles = new List<string>();
+    internal static List<(string plugin, string file)> JLDRFiles = new List<(string plugin, string file)>();
     /// <summary>
     /// A list of ALL JLDR2 Files.
     /// </summary>
-    internal static List<string> JLDR2Files = new List<string>();
+    internal static List<(string plugin, string file)> JLDR2Files = new List<(string plugin, string file)>();
     /// <summary>
     /// A list of all JLDR3 Files.
     /// </summary>
-    internal static List<string> JLDR3Files = new List<string>();
+    internal static List<(string plugin, string file)> JLDR3Files = new List<(string plugin, string file)>();
     /// <summary>
     /// A list of all CSV Files.
     /// </summary>
-    internal static List<string> CSVFiles = new List<string>();
+    internal static List<(string plugin, string file)> CSVFiles = new List<(string plugin, string file)>();
 
     /// <summary>
     /// A function to Load All Found Files.
@@ -37,28 +37,26 @@ public class LoadFiles
         ReadDocumentationFile.FetchDocFile();
         
         JSONLoader3.FormatLogger("Info", "LoadFiles", "Loading JLDR Files!!");
-        foreach (string file in JLDRFiles)
+        foreach ((string pluginName, string file) in JLDRFiles)
         {
-            CardUtils.CardsToLoad.Add(file);
+            CardUtils.CardsToLoad.Add((pluginName, file));
         }
-        JSONLoader3.FormatLogger("Debug", "CardUtils", $"Writing JSONLoaderV1's {typeof(Card).Name}'s Schema so that we can Lint against it.");
-        WriteSchema.WriteJSONSchema<Card>("JSONLoaderV1");
         CardUtils.HandleCards();
         
-        JSONLoader3.FormatLogger("Info", "LoadFiles", "Loading JLDR Files!!");
-        foreach (string file in JLDR2Files)
+        JSONLoader3.FormatLogger("Info", "LoadFiles", "Loading JLDR2 Files!!");
+        foreach ((string pluginName, string file) in JLDR2Files)
         {
             
         }
         
-        JSONLoader3.FormatLogger("Info", "LoadFiles", "Loading JLDR Files!!");
-        foreach (string file in JLDR3Files)
+        JSONLoader3.FormatLogger("Info", "LoadFiles", "Loading JLDR3 Files!!");
+        foreach ((string pluginName, string file) in JLDR3Files)
         {
             
         }
         
-        JSONLoader3.FormatLogger("Info", "LoadFiles", "Loading JLDR Files!!");
-        foreach (string file in CSVFiles)
+        JSONLoader3.FormatLogger("Info", "LoadFiles", "Loading CSV Files!!");
+        foreach ((string pluginName, string file) in CSVFiles)
         {
             
         }

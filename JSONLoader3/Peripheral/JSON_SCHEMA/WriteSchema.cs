@@ -135,7 +135,7 @@ public class WriteSchema
         if (pattern != null)
             toWrite += $$"""
 
-                                     {{new string(' ', Indentation * 4)}}"pattern": "{{ReadDocumentationFile.EscapeJSON(pattern.Split('(').Last().Trim('(', ')'))}}",
+                                     {{new string(' ', Indentation * 4)}}"pattern": "{{ReadDocumentationFile.EscapeJSON(pattern.Substring(pattern.IndexOf('(') + 1, pattern.LastIndexOf(')') - pattern.IndexOf('(') - 1))}}",
                          """;
 
         // Optional Default Value
@@ -318,7 +318,7 @@ public class WriteSchema
             if (pattern != null)
                 toWrite += $$"""
 
-                                             {{new string(' ', Indentation * 4)}}"pattern": "{{ReadDocumentationFile.EscapeJSON(pattern.Split('(').Last().Trim('(', ')'))}}",
+                                             {{new string(' ', Indentation * 4)}}"pattern": "{{ReadDocumentationFile.EscapeJSON(pattern.Substring(pattern.IndexOf('(') + 1, pattern.LastIndexOf(')') - pattern.IndexOf('(') - 1))}}",
                              """;
 
             // Optional Enums Values
@@ -465,7 +465,7 @@ public class WriteSchema
                                  {{new string(' ', Indentation*4)}}"type": "object",
                                  {{new string(' ', Indentation*4)}}"description": "{{ReadDocumentationFile.EscapeJSON(ReadDocumentationFile.GetJSONSummary(ReadDocumentationFile.GetInfo(field.Name, Class)))}}",
                      """;
-        string returnedJSON = RecursiveWrite(field.FieldType, Indentation+3);
+        string returnedJSON = RecursiveWrite(field.FieldType, Indentation+2);
 
         toWrite += returnedJSON;
                 

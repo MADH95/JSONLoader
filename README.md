@@ -1,716 +1,551 @@
-# JSON Loader V2
+# JSON Loader V3
+The below documentation is likely going to become outdated, the most up to date documentation will be provided via GitHub and Thunderstore WIKI Systems.
 
-This is a mod made for Incryption to create custom cards, sigils, starter decks, tribes, encounters and more using JSON files.
+This package is now maintained by Chaosyr as of V2.7.0.
 
-Version 2.0 of this mod is designed to create full compatibility with Version 2.0+ of the API. JSON files compatible with this API will have an extension of .JLDR2
+If you wish to contribute to the project the GitHub is [MADH95/JSONLoader](https://github.com/MADH95/JSONCardLoaderPlugin). The Development Branch is: [MADH95/JSONLoader/Refactor-JSONLoader-3](https://github.com/MADH95/JSONLoader/tree/Refactor-JSONLoader-3).
 
-## Reloading
+Thank you to the following folks for their amazing Contributations to this Project:
 
-As a mod creator using JSONLoader you can press "shift + r" to apply the changes you've made to any jldr2 files without having to restart the game.
+* [MADH95](https://github.com/MADH95)
+* [JamesVeug](https://github.com/JamesVeug)
+* [LilySylvee](https://github.com/LilySylvee)
+* [kbmackenzie](https://github.com/kbmackenzie)
+* [Chaosyr](https://github.com/Chaosyr)
+* [divisionbyz0rro](https://github.com/divisionbyz0rro)
+* [IngoHHacks](https://github.com/IngoHHacks)
+* [Khaomi](https://github.com/Khaomi)
+* [vladdeSV](https://github.com/vladdeSV)
+* [TVFLabs](https://github.com/TVFLabs)
+* [UwUMacaroniTime](https://github.com/UwUMacaroniTime)
+* [Windows10CE](https://github.com/Windows10CE)
 
-## Validation and GUI editing
+JSONLoader and API 3.0.0 are on the Horizon, JSONLoader's will be first as it's the simpler of the two to upgrade.
 
-You can use this [online JSON Schema validator](https://www.jsonschemavalidator.net) to avoid syntax errors, and make sure the fields are correct in your jldr2 files. Just put the contents of the corresponding schema from the Schema folder located in the JSONLoader files or on the github page in the left hand panel, and the contents of the jldr2 file that you want to validate in the right hand panel. If the json appears to be invalid the website will tell you where the error is and what exactly is wrong.
+## Tools:
+For a Live Schema Based Editor for JSONLoader open up [JSON-Editor](https://json-editor.github.io/json-editor/?data=N4Ig9gDgLglmB2BnEAuUBXRBTA+vAhgLa75RQBOMARulFsigGb4A22ANCBOWIdDlSyMw5XABMsLLHVTM2WTpnFD86FlBwA3VunqoKuzoXwAPHBOgALVAAZONMghyIopXITATUARk4BjfGxnLCQYWE1cbkgscigAT2D8cj9rJlYOEERLMAB3HBiecgYQFPx4AHMsEE4ovg0IQLocYzMpCqhLHFF8FKwxWXSFEFEPCJw5IKiIGNg9NPlOEOFk3D8EFwGF8H4YeBwcmDFKqFQSyyw/AGsqMBNqkBg1+BZqU8RpvwoqzjAqACsLhoWPg4mBaKd4CJjCx7ohesZUMAAL6cDpYYhvD5fe6iACO6BgojEAgSEmYahO8wyYhg72BCTxBKJOAQLDimwyWVyLJ28H05EMIEhOHwYhpsAQrBwUxmMDmEyG+D+pn5gppiHwVCk+XFOD+iAQqqG6s12rWLGBEGwHONtNNkR401icoYBltGq1JHI5BBIrFNs4Js9Iu9vtEIgk5ADICD2qSPtJkmkVSpQxC9pDCZwawg7JQbs48d9TwoYDYOCgkCNgbtwaLiakTVYLC6uVdAvdGfr5iTTWBLlbOSNSKRQA=).
 
-There is also a [GUI](https://json-editor.github.io/json-editor/) based version that is an option, just input a schema in the panel at the bottom of the page and copy the json from the right hand panel when done!
+### Instructions For JSON-Editor:
+* First navigate to where your JSONLoader Schemas are set to be created, be default it will be the `[JSONLoader3.dll Path]/Schemas` folder.
+* Find the Schema relevant to what you want to edit. It will follow the pattern of `LOADER_Type_Schema.json`, next open up the file.
+* Once open in a text editor press `CTRL+A`, or your OS Equivalent of Select All, followed by `CTRL+C` or your OS Equivalent of Copy.
+* Now, navigate to the JSON-Editor linked above.
+* What you'll do now, is scroll down to the bottom of the page where it says `Schema`, click where it shows `1 | {}` specifically the curly brace.
+* Press `CTRL+A` again but now follow it with `CTRL+V`, or your OS Equivalent of Paste.
+* Now that the Schemas in place press `Update Schema`, this will update the page above to have an Editor based on the Schema you inserted.
 
-## Where do my files go?
+### JSON-Editor Tips
+* Press in the Box to Edit a Property.
+* Press the Checkbox to enable editing for that property.
+* If there are multiple items to select for a given Property it has 2 way's of showing up.
+  * The first a scrolling pane with all the options.
+    * For this you will want to click to select a property. `CTRL-Click` to select another property. `SHIFT-Click` will allow you to select the property you clicked first, until the one you clicked while holding `SHIFT`.
+  * The other way is an Array of Tick Boxes.
+    * To apply an item you'll just Tick the Box next to it.
+* If you see `+ Item` by a Properties Name that means it is an Array of Objects, to add an Object to it just click the button.
+  * To delete an Item hit `[Insert Trashcan Here] item`.
+  * To copy the Item hit `[Insert 2 Overlapped Squares Here] item`.
+* You can press the upside down `^` to minimize the property. To unminimize press the sideways `^`.
+* Each property has an associated description, these are meant to help you understand what the field does, if you don't understand it you can always ask for help in the [Inscryption Modding](https://discord.gg/ZQPvfKEpwM) Discord.
 
-Files go anywhere in the plugins folder, along with the artwork required for said file.
+## JSON and CSV Loader API Documentation
+The below sections serve to document the support of each Version of JSONLoader, for more detail or to expand the detail between Updates refer to the [JSONLoader Wiki](https://thunderstore.io/c/inscryption/p/MADH95Mods/JSONCardLoader/wiki) or [JSONLoader GitHub Wiki](https://github.com/MADH95/JSONLoader/wiki). ***Notes for Contributing to the Wiki are Outlined on their respective Home Pages***.
 
-## Converting Existing Cards to JLDR2
+### JSON Inscrybing
+All JSONLoader versions require the same things so, heres a unified basics for making things with JSONLoader. First off make sure you have a Keyboard, Mouse, Monitor, File Explorer, and a Text Editor. These are more or less all you need to make JSON's for this mod. However there are some mandatory steps to get your environments prepared.
 
-In order to have compatability with mod manager, version 2.0.0 breaks backwards compatability by default. Don't worry though! This mod comes with a backwards compatibility mode that can optionally be turned on. When turned on, all existing .JLDR files will be read in, converted to .JLDR2 files, and dumped back into the folder where the original JLDR was found. However, I cannot guarantee that the version will be 100% correct, especially when it comes to assigning the appropriate prefix to the card (see the first heading below under 'Custom Cards').
+#### File Explorer (Windows)
+In order for you to make the actual JLDR extension for your cards you'll need to follow the below steps in your File Explorer.
+1. Open File Explorer
+2. Find the `…` (or 3 dots in a row) button, and press it.
+3. Press `[Insert a Wrench Here] Options`.
+4. In the menu that just popped up you'll see 3 Tabs at the top, press the one labeled `View`.
+5. Under `Advanced Settings:` toggle off `Hide extensions for known file types`, another useful one to toggle would be `Show hidden files, folders, and drives`.
+6. After you've toggled these press `Apply to Folders`.
+7. Next, press `OK`.
 
-If you are a card creator, the best course of action is to set the config option to convert all JLDR files, manually inspect the JLDR2 files generated to ensure they are correct, then publish your mod with a brand new set of JLDR2 files.
+Now you should see File Extensions alongside all of your files. As stated before this will allow you to change the File Extension for the mod. 
 
-For the most part, JLDR2 and JLDR are the same. The key differences are outlined here:
+#### Getting the Path's
+Next up you'll likely want to grab a path, namely the one to your Plugins folder. This folder will lie wherever your BepInEx folder is. 
 
-### Abilities and Special Abilities
+If you use a Mod Manager, go to one of the following places:
+* R2ModMan: `Settings` -> `Directories` -> `Profile Folder` -> `Browse` -> Navigate via File Explorer to `BepInEx` -> Navigate via File Explorer to `plugins` -> Go to the File Explorer Address Bar -> Click It -> Hit `CTRL+C` or the OS Equivalent. 
+* GaleModManager: Click `File` in the Top Bar -> `Browse Profile Folder` -> Navigate via File Explorer to `BepInEx` -> Navigate via File Explorer to `plugins` -> Go to the File Explorer Address Bar -> Click It -> Hit `CTRL+C` or the OS Equivalent.
+* ThunderstoreModManager: `Settings` -> `Directories` -> `Profile Folder` -> `Browse` -> Navigate via File Explorer to `BepInEx` -> Navigate via File Explorer to `plugins` -> Go to the File Explorer Address Bar -> Click It -> Hit `CTRL+C` or the OS Equivalent.
 
-Previously, base game abilities and mod-added abilities were handled differently; they were completely separate parts of the file. Now, base game abilities and mod-added abilities are kept in the same list. Base game abilities are referred to by their enumerated name, such as "Flying" or "Reach." Mod-added abilities are referred to by a combination of the Mod GUID and their name. For example, the "Deathburst" ability from Void's sigil pack (part of the popular "All the Sigils" mod) is referred by the string "ATS.Deathburst"; in this example, "Deathburst" is the name of the ability, and "ATS" is the GUID of the mod. 
+If your manual it should be something like:
+1. Navigate to the Games Local Install Folder
+  * XboxGames: `C:\XboxGames\Inscryption\Content`
+  * Steam: `\steamapps\common\Inscryption` after you get to the Steam Install Folder. 
+2. Next navigate to `BepInEx/plugins`
+3. Go to the File Explorer Address Bar -> Click It -> Hit `CTRL+C` or the OS Equivalent.
 
-So to create a card with both Flying and Deathburst, you would do something like the following:
+Now store that path somewhere you'll remember it, you'll be coming back here a lot over the course of your mod.
 
-```json
-"abilities": [ "Flying", "ATS.Deathburst" ]
+#### Text Editor
+The recommended File Editor for JSONLoader is [VisualStudioCode](https://code.visualstudio.com/) as it has built in handlers for both JSON Syntax and CSV Syntax, if your working with JSONLoader at any point this should be your go-to editor, but if you have a preficed editor nothings stopping you from using it.
+
+#### Adding the File Extensions to the Context Menu (Windows 11)
+I'm going to include this for those on Windows 11 for other OS's the next section should work fine.
+
+1. In A Text Editor Create a new File.
+2. Enter the following into the file:
+   ```ini
+   Windows Registry Editor Version 5.00
+
+   [HKEY_CLASSES_ROOT\.md]
+   @="markdownfile"
+   
+   [HKEY_CLASSES_ROOT\.md\ShellNew]
+   "NullFile"=""
+   
+   [HKEY_CLASSES_ROOT\markdownfile]
+   @="Markdown Document"
+   
+   [HKEY_CLASSES_ROOT\markdownfile\DefaultIcon]
+   @="\"C:\\Users\\Chaos\\AppData\\Local\\Programs\\Microsoft VS Code\\a44adf7f53\\resources\\app\\resources\\win32\\markdown.ico\""
+   
+   [HKEY_CLASSES_ROOT\.json]
+   @="jsonfile"
+   
+   [HKEY_CLASSES_ROOT\.json\ShellNew]
+   "NullFile"=""
+   
+   [HKEY_CLASSES_ROOT\jsonfile]
+   @="JSON File"
+   
+   [HKEY_CLASSES_ROOT\jsonfile\DefaultIcon]
+   @="\"C:\\Users\\Chaos\\AppData\\Local\\Programs\\Microsoft VS Code\\a44adf7f53\\resources\\app\\resources\\win32\\json.ico\""
+   
+   [HKEY_CLASSES_ROOT\.jldr]
+   @="jldrfile"
+   
+   [HKEY_CLASSES_ROOT\.jldr\ShellNew]
+   "NullFile"=""
+   
+   [HKEY_CLASSES_ROOT\jldrfile]
+   @="JSONLoader File"
+   
+   [HKEY_CLASSES_ROOT\jldrfile\DefaultIcon]
+   @="\"C:\\Users\\Chaos\\AppData\\Local\\Programs\\Microsoft VS Code\\a44adf7f53\\resources\\app\\resources\\win32\\json.ico\""
+   
+   [HKEY_CLASSES_ROOT\.jldr2]
+   @="jldr2file"
+   
+   [HKEY_CLASSES_ROOT\.jldr2\ShellNew]
+   "NullFile"=""
+   
+   [HKEY_CLASSES_ROOT\jldr2file]
+   @="JSONLoader2 File"
+   
+   [HKEY_CLASSES_ROOT\jldr2file\DefaultIcon]
+   @="\"C:\\Users\\Chaos\\AppData\\Local\\Programs\\Microsoft VS Code\\a44adf7f53\\resources\\app\\resources\\win32\\json.ico\""
+   
+   [HKEY_CLASSES_ROOT\.jldr3]
+   @="jldr3file"
+   
+   [HKEY_CLASSES_ROOT\.jldr3\ShellNew]
+   "NullFile"=""
+   
+   [HKEY_CLASSES_ROOT\jldr3file]
+   @="JSONLoader3 File"
+   
+   [HKEY_CLASSES_ROOT\jldr3file\DefaultIcon]
+   @="\"C:\\Users\\Chaos\\AppData\\Local\\Programs\\Microsoft VS Code\\a44adf7f53\\resources\\app\\resources\\win32\\json.ico\""
+   
+   [HKEY_CLASSES_ROOT\.csv]
+   @="csvfile"
+   
+   [HKEY_CLASSES_ROOT\.csv\ShellNew]
+   "NullFile"=""
+   
+   [HKEY_CLASSES_ROOT\csvfile]
+   @="CSV File"
+   
+   [HKEY_CLASSES_ROOT\csvfile\DefaultIcon]
+   @="\"C:\\Users\\Chaos\\AppData\\Local\\Programs\\Microsoft VS Code\\a44adf7f53\\resources\\app\\resources\\win32\\html.ico\""
+   ```
+3. Save the file as a `[SomeName].reg`, then run it.
+4. Next Restart your File Explorer via Task Manager
+
+What this did was add the following file types to your Right Click Context Menu: `.md`, `.json`, `.jldr`, `.jldr2`, `.jldr3`, and `.csv`. So that now when you want to make a new JSONLoader file you can press `New` -> `JSONLoader(X) File` in the Context Menu. Note for the Icons this is set to utilize those of [Visual Studio Code](https://code.visualstudio.com/)
+
+#### Creating the JSON File
+
+Now you'll need to make the actual file for your Item added by JSONLoader. Go to the Plugins folder, then you'll make a new directory or folder under it, this will be your Mod's folder. Make another directory under it called simply `plugins` this will make your life a little easier when uploading your mods, as the folders will be sticky. Now make a folder called `Scripts`, this will be where your JSON's are expected to live unless you explicitly define it in a file included in your mod, that's not relevant now though.
+
+Once that's done, Right-Click the window explorer pane in the folder, Select New `Text Document` or New `JSONLoader(X) File`, ensure the extension of the file matches the Item your trying to create. Now Open the file in a Text Editor, and insert `{}` into the file, this is so you have a valid JSON base. Each Support area of the Documentation will cover what to put into this file.
+
+Oh, before I leave you, give this a watch: [Web Dev Simplified: Learn JSON in 10 Minutes](https://www.youtube.com/watch?v=iiADhChRriM), this will give you a overview of what JSON is and how to work with it, and it will teach you the terminology.
+
+### Artwork Form Support:
+We support 3 ways in which you can load images for your Plugin. Below outline each form.
+
+#### Plugins Folder Scanning:
+This is the simplest form, simply just define your pngs name, at the root of the plugins folder. This is for the case where you don't want to make an art folder, and are not releasing the mod.
+
+#### Relative Path to Image:
+What we mean by this is that you can hand us a relative path from your plugins folder to your png. See the Example Card "MyCardWithPathing_example.jldr" for an example of how you can do this.
+
+But the syntax is pretty much just;
+
+* `/` after the folders name to indicate we need to go into that folder.
+* `../` before the file or folders name to indicate we need to go up a folder.
+* Plain Text is treated as a folder name.
+* Plain Text followed by `.png` is treated as the file.
+
+If you want to make sure your syntax is valid open [Regexer](https://regexr.com/) and place in the Regex: `^(?:(?:\.\.\/|[a-zA-Z\d_-\s]+\/)*[a-zA-Z\d_-\s]+\.png|data:image\/png;base64,[A-Za-z0-9+/]+={0,2}|base64:[A-Za-z0-9+/]+={0,2})$` into the Expression box, and your path into the Text box. If your wondering why it's so long, we are validating 3 data forms in that Regex Patern.
+
+#### Base64 Encoded Images:
+You may not be as familiar with this type of image, but more or less its an image where the image itself is in textual form, specifically encrypted in the format of a 64imal number system (basically there are 64 numbers instead of the usual 10), this is great if you want to keep your art from being included in another person's mod while keeping it in your own (Though someone could always go in the json and copy the base64). It also removed the need to make a physical image for the texture.
+
+Anyways there are two ways in which we validly accept base64 in Texture related fields. The first would be:
+
+* `base64:`
+
+This is how its allowed in JSONLoader2's setup (as of writing the Non-Nightly version of JSONLoader) But we also allow for the path variant of base64 as well. E.G.
+
+* `data:image/png;base64,`
+
+Note the start of the string if you do it this way **MUST MATCH THIS FORMAT**. An example Base64 you could pass in would be:
+
+```
+data:image/png;base64,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"
 ```
 
-This holds true for all custom enumerations on a card. In the case of Abilities and Special Abilities, this is very different behaviour from previous versions of JSONLoader. However, all enumerations are treated this way. For example, mod added Traits, Metacategories, special stat icons, etc can all be handled exactly the same way.
+This would decrypt to an image of the Archivist from the game. Though notably with JSONLoader alone this would be an All black image as it contains color, plus with the way we handle things, it portrait breaks, take it as a unintended quirk.
 
-### Evolve, Ice Cube, and Tail
+If you want to make sure your syntax is valid open [Regexer](https://regexr.com/) and place in the Regex: `^(?:(?:\.\.\/|[a-zA-Z\d_-\s]+\/)*[a-zA-Z\d_-\s]+\.png|data:image\/png;base64,[A-Za-z0-9+/]+={0,2}|base64:[A-Za-z0-9+/]+={0,2})$` into the Expression box, and your path into the Text box. If your wondering why it's so long, we are validating 3 data forms in that Regex Patern.
 
-Previously, these parameters were set as individual objects on the card. In a JLDR2, they have been "flattened" into the main card definition. The best way to understand this is to see an example:
+### JSONLoaderV1 Support:
+This version of JSONLoader supports Cards Exclusively and limited support for Modded Libraries. This is a Maintenance Version, outside of Bug Fixes it will NOT be updated.
 
-**JLDR**
-```json
-{
-    "evolution": {
-        "name": "Bear",
-        "turnsToEvolve": 1
-    },
-    "tail": {
-        "name": "BearTail",
-        "tailLostPortrait": "taillessbear.png"
-    },
-    "iceCube": {
-        "creatureWithin": "FrozenBear"
-    }
-}
+#### JSONLoaderV1 Cards:
+JSONLoaderV1 Cards support allows you to well make JSON Based Cards for the Game, note they aren't the most Complex things in this version of the mod.
+
+The following are all of the fields available for JSONLoaderV1 Cards and what they do:
+
+##### Card Fields
+
+|           Key            | Description                                                                                                                                                                                                                                                                                                                                                                                                                                         |                     Type |
+|:------------------------:|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-------------------------:|
+|      `fieldsToEdit`      | Any items applied within this field will be used for overwriting the In-Game card associated with the field 'name'.                                                                                                                                                                                                                                                                                                                                 |             String Array |
+|          `name`          | The In-Code name for the card, please append on a Prefix unique to your mod if you are NOT editing a base game card. For example; "JSONFanMod5_Gorilla".                                                                                                                                                                                                                                                                                            |                   String |
+|     `displayedName`      | The In-Game name for the card, it can be anything as long as this font can display it; https://font.download/font/heavyweight                                                                                                                                                                                                                                                                                                                       |                   String |
+|      `description`       | The In-Game flavor for the card, this will show when receiving the card for the first time, if you want to prevent it being seen from saving use; https://thunderstore.io/c/inscryption/p/creator/Fuck_Dialouge_Saving/                                                                                                                                                                                                                             |                   String |
+|     `metaCategories`     | These Meta-Categories control how your card will show up within the game, see the following page for what each of them do; https://thunderstore.io/c/inscryption/p/MADH95Mods/JSONCardLoader/wiki/5396-vanilla-enums                                                                                                                                                                                                                                |             String Array |
+|     `cardComplexity`     | This controls WHEN your card can show up in the game, see the following page for what each of them do; https://thunderstore.io/c/inscryption/p/MADH95Mods/JSONCardLoader/wiki/5396-vanilla-enums                                                                                                                                                                                                                                                    |                   String |
+|         `temple`         | This controls which temple in Act 2 the card is apart of, as well as meant to determine which Act outside Act 2 the card shows up in, whether mods follow the convention is up to question, but that's what these do. So, Nature is Act 1 and the Nature Temple, Tech is Act 3 and the Technology Temple, Undead is the Grimora Portion of the Finale and the Undead Temple, Wizard is the Magnificus Portion of the Finale and the Magicks Temple. |                   String |
+|       `baseAttack`       | This value determines the attack value of the card, it cannot be negative.                                                                                                                                                                                                                                                                                                                                                                          |                      Int |
+|       `baseHealth`       | This value determines the health value of the card, it cannot be negative or 0.                                                                                                                                                                                                                                                                                                                                                                     |                      Int |
+|  `hideAttackAndHealth`   | This boolean value determines whether the Attack and Health of the card should be hidden or not.                                                                                                                                                                                                                                                                                                                                                    |                  Boolean |
+|       `bloodCost`        | This value determines the amount of Blood this card will cost.                                                                                                                                                                                                                                                                                                                                                                                      |                      Int |
+|       `bonesCost`        | This value determines the amount of Bones this card will cost.                                                                                                                                                                                                                                                                                                                                                                                      |                      Int |
+|       `energyCost`       | This value determines the amount of Energy this card will cost.                                                                                                                                                                                                                                                                                                                                                                                     |                      Int | 
+|       `gemColors`        | The following 3 values are accepted here: Green for the Green Gem, Orange for the Orange Gem, and Blue for the Blue Gem. Each of these correlates to the Gem Cost of a card. This version of JSONLoader does not support multiple of the same color of gem.                                                                                                                                                                                         |             String Array |
+|    `specialStatIcon`     | This determines which Stat Icon to show on the card, this must be used alongside the associated Special Ability.                                                                                                                                                                                                                                                                                                                                    |                   String |
+|         `tribes`         | This List determines what Tribes are applied to the card, this works with Base Game tribes only. Use a newer version of JSONLoader for Modded Tribes. You can find the full list here; https://thunderstore.io/c/inscryption/p/MADH95Mods/JSONCardLoader/wiki/5396-vanilla-enums                                                                                                                                                                    |             String Array |
+|         `traits`         | This List determines what Traits are applied to this card, this works with Base Game traits only. Use a newer version of JSONLoader for Modded Traits. You can find the full list here; https://thunderstore.io/c/inscryption/p/MADH95Mods/JSONCardLoader/wiki/5396-vanilla-enums                                                                                                                                                                   |             String Array |
+|    `specialAbilities`    | This List determines what Special Abilities are applied to this card, this works specifically with Base Game Special Abilities. For Modded Special Abilities utilize the 'customSpecialAbilities' field. You can find the full list here; https://thunderstore.io/c/inscryption/p/MADH95Mods/JSONCardLoader/wiki/5396-vanilla-enums                                                                                                                 |             String Array |
+|       `abilities`        | This List determines what Abilities are applied to this card, this works specifically with Base Game Abilities. For Modded Abilities utilize the 'customAbilities' field. You can find the full list here; https://thunderstore.io/c/inscryption/p/MADH95Mods/JSONCardLoader/wiki/5396-vanilla-enums                                                                                                                                                |             String Array |
+|    `customAbilities`     | This List determines the Modded Abilities that will be applied to this card. You may find this to be a useful resource; https://github.com/Chaosyr/SaxbyModEnums/wiki                                                                                                                                                                                                                                                                               |        AbilityData Array |
+| `customSpecialAbilities` | This List determines the Modded Special Abilities that will be applied to this card. You may find this to be a useful resource; https://github.com/Chaosyr/SaxbyModEnums/wiki                                                                                                                                                                                                                                                                       | SpecialAbilityData Array |
+|       `evolution`        | This Object determines the Evolution related Parameters for this card, such as what it will turn into, and how long it will take to turn into it.                                                                                                                                                                                                                                                                                                   |               EvolveData |
+|  `defaultEvolutionName`  | This determines what the Default Evolution Name will be, note it will appear in the format of; '[defaultEvolutionName] [displayedName]', just replace the variables with your JSON's values.                                                                                                                                                                                                                                                        |                   String |
+|          `tail`          | This Object determines the LooseTail related Parameters for this card, such as this cards Texture after losing its tail, or the Card the Tail Will Be.                                                                                                                                                                                                                                                                                              |                 TailData |
+|        `iceCube`         | This Object determines the IceCube related Parameters for this card, namely what card it will be turned into, if left empty the default is an Opossum.                                                                                                                                                                                                                                                                                              |              IceCubeData |
+| `flipPortraitForStrafe`  | A bool determining whether this cards portrait will flip when the card moves. (like the sigil icon does)                                                                                                                                                                                                                                                                                                                                            |                  Boolean |
+|       `onePerDeck`       | A bool determining if there can only be one copy of this card within the Player's deck.                                                                                                                                                                                                                                                                                                                                                             |                  Boolean |
+|   `appearanceBehavior`   | This List determines the Appearance Behaviors in which will be applied to this card. Use a newer version of JSONLoader for Modded Appearance Behaviors. You can find the full list here; https://thunderstore.io/c/inscryption/p/MADH95Mods/JSONCardLoader/wiki/5396-vanilla-enums                                                                                                                                                                  |             String Array |
+|        `texture`         | The Path to your cards Portrait, this is localized to your Plugins Folder. It's your job to keep it organized, do it as you would these 'JLDR' files. This must be a PNG File and must be a '114x94' image.                                                                                                                                                                                                                                         |                   String |
+|       `altTexture`       | The Path to your cards Alternative Portrait, this is localized to your Plugins Folder. It's your job to keep it organized, do it as you would these 'JLDR' files. This must be a PNG File and must be a '114x94' image. This applies in the case you have a Goat's Eye or possibly some other cases.                                                                                                                                                |                   String |
+|    `emissionTexture`     | The Path to your cards Emissive Portrait, this is localized to your Plugins Folder. It's your job to keep it organized, do it as you would these 'JLDR' files. This must be a PNG File and must be a '114x94' image. This applies in the case you've transferred a sigil at the Sacrificial Stones onto this card.                                                                                                                                  |                   String |
+|      `titleGraphic`      | The Path to your cards Title Graphic, this is localized to your Plugins Folder. It's your job to keep it organized, do it as you would these 'JLDR' files. This must be a PNG File and must be a '113x28' image. This applies specifically over your card name as a way of obscuring it like the Tentacle Cards are.                                                                                                                                |                   String |
+|      `pixelTexture`      | The Path to your cards Pixel Portrait, this is localized to your Plugins Folder. It's your job to keep it organized, do it as you would these 'JLDR' files. This must be a PNG File and must be a '41x28' image. This applies specifically in Act 2, its just that act's version of the card portrait.                                                                                                                                              |                   String |
+|         `decals`         | This is a list of all the Decal Images in which will be stacked onto your card, this is localized to your Plugins Folder. It's your job to keep it organized, do it as you would these 'JLDR' files. This must be a PNG File and must be a '125x190' image.                                                                                                                                                                                         |             String Array |
+
+###### AbilityData Object
+
+|  Key   | Description                                                                       |   Type |
+|:------:|-----------------------------------------------------------------------------------|-------:|
+| `name` | This is the In-Code name of the Ability.                                          | String |
+| `GUID` | This is the Ability Libraries GUID, it's a similar concept to your card's prefix. | String |
+
+###### SpecialAbilityData Object
+
+|  Key   | Description                                                                               |   Type |
+|:------:|-------------------------------------------------------------------------------------------|-------:|
+| `name` | This is the In-Code name of the Special Ability.                                          | String |
+| `GUID` | This is the Special Ability Libraries GUID, it's a similar concept to your card's prefix. | String |
+
+###### EvolveData Object
+
+|       Key       | Description                                                                                                                                                           |   Type |
+|:---------------:|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------|-------:|
+|     `name`      | This represents the In-Code name of the card this card is meant to evolve into.                                                                                       | String |
+| `turnsToEvolve` | This value represents the amount of turns it takes for this card to evolve. This version's Turn Count must be between 1-3 for more use a newer version of JSONLoader. |    Int |
+
+###### TailData Object
+
+|        Key         | Description                                                                                                                                                                                                                                                                                 |   Tupe |
+|:------------------:|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-------:|
+|       `name`       | This represents the In-Code name of the card this card will leave in its old lane if Loose Tail triggers.                                                                                                                                                                                   | String |
+| `tailLostPortrait` | The Path to your cards Tail Lost Portrait, this is localized to your Plugins Folder. It's your job to keep it organized, do it as you would these 'JLDR' files. This must be a PNG File and must be a '114x94' image. This applies specifically when this card is struck and lost its tail. | String |
+
+###### IceCubeData Object
+
+|       Key        | Description                                                                                              |   Type |
+|:----------------:|----------------------------------------------------------------------------------------------------------|-------:|
+| `creatureWithin` | This represents the In-Code name of the card this card will leave behind in its place when it is to die. | String |
+
+### JSONLoaderV2 Support:
+
+### JSONLoaderV3 Support:
+
+### CSVLoader Support:
+
+### Configuration
+With the API we offer some Configuration which you can find located in: `Chaosyr.MADH95.Inscryption.JSON.CSVLoader.cfg`. The following is an overview of what you can configure and what they will do affecting the API of JSON and CSV Loader.
+
+#### JSON Loading Origination Path
+This is effectively a CSV as a value. All values passed into it must be Paths using similar logic to that seen in the Artwork Form Support section of this README.
+
+By default, this value is set to: `Scripts, Plugins/Scripts` to make mods work without the User needing to configure this. But if you need more Paths just add them to the end of the CSV. 
+
+These paths are Relative to your mods specific folder under the `plugins` folder, well more so any mod specific folder under the `plugins` folder but yes.
+
+This value effects what folders JSON Loader will recursively load JSON's from.
+
+#### CSV Loading Origination Path
+This is effectively a CSV as a value. All values passed into it must be Paths using similar logic to that seen in the Artwork Form Support section of this README.
+
+By default, this value is set to: `Sheets, Plugins/Sheets` to make mods work without the User needing to configure this. But if you need more Paths just add them to the end of the CSV.
+
+These paths are Relative to your mods specific folder under the `plugins` folder, well more so any mod specific folder under the `plugins` folder but yes.
+
+This value effects what folders CSV Loader will recursively load CSV's from.
+
+#### Schema Save Path
+This must represent one SINGULAR path, similar to those above. This path is relative to the DLL this API takes root within.
+
+The default value is `/Schemas`.
+
+#### Show Verbose Logging
+It's less of a Verbose Logging but when set to `true`, the API will output Debug information in the Console and in the Log File.
+
+#### Show Additional Information
+When this value is set to `true` the API will output some Additional Information with common errors with the API. Think o it as a modmakers tooling. This will be outputted to the File and Console.
+
+#### Show Summary Information
+When this value is set to `true` when the API is validating Item's against their related Schema's, it will print the description of those properties as well. Again both to the Console and Log File.
+
+___
+
+## JSONLoader Maintainer Documentation
+The below sections serve to document internal Information relevant for anyone maintaining JSONLoader, for more detail or to expand the detail between Updates refer to the [JSONLoader Wiki](https://thunderstore.io/c/inscryption/p/MADH95Mods/JSONCardLoader/wiki) or [JSONLoader GitHub Wiki](https://github.com/MADH95/JSONLoader/wiki). ***Notes for Contributing to the Wiki are Outlined on their respective Home Pages***.
+
+### JSON Object Tooltip Language
+This section goes over our Homemade `JSON Object Tooltip Language` used for creating our Schemas on the fly.
+
+#### HARD-CODED VALUES
+* REQUIRED - Mark this field as a Required field in the Schema.
+* EXCLUDED - Mark this field as something to not include in the Schema.
+
+#### VARIABLES
+All Variables will work as follows: VariableName(Definition), kinda like a KeyPairValue.
+The following is a list of all Variables:
+* MinimumLength - Int - Used in String and String Array - Mandates a Minimum Length.
+* Pattern - Raw Regex - Used in String and String Array - Mandates a Pattern the Value must follow.
+* Items - Boolean - Used in String Array and Object Array - Marks the fact the Array has items as true.
+* ItemType - Type - Used in String Array and Object Array - Used to define the type of Array in which the items belong. (e.g. string or object)
+* Enums - A List of Predefined Values - Used in String and String Array - This provides a Pre-Defined list of items users may use for defining the value.
+* UniqueItems - Boolean - Used in String Array and Object Array - This mandates uniqueness among the values.
+* Default - Value - Used in String, Int, and Boolean - This provides a default for Schema Validators.
+* Minimum - Int - Used in Int - This mandates a Minimum Number.
+* Maximum - Int - Used in Int - This mandates a Maximum Number.
+* AdditionalProperties - Boolean - Used in Object and Object Array - Determines whether additional properties are valid.
+
+If you inevitably need more as of present you'll need to code handling into the Schema and Linter.
+
+#### MULTI-VARIABLE
+To use more than one variable all you need to do is add a '|' between each Variable, this acts as a Delimiter.
+
+An example of such would be: 
+
+```
+[Tooltip("REQUIRED | MinimumLength(1) | Pattern(^[a-zA-Z\\d_]+$)")]
 ```
 
-**JLDR2**
-```json
-{
-    "evolveIntoName": "Bear",
-    "evolveTurns": 1,
-    "tailName": "BearTail",
-    "tailLostPortrait": "taillessbear.png",
-    "iceCubeName": "FrozenBear"
-}
-```
+Notice the `//` in the Regex? That's because C# needs it to be escaped in quotes, but don't worry we properly escape it for JSON in `ReadDocumentationFile.EscapeJSON()`.
 
-As you can see, the JLDR2 file has fewer child objects that have to be defined; the evolve, tail, and ice cube parameters are now on the card itself, reducing the overall size of the card file.
+### Logging
+Our API has a unique form of Logging to it you can call `JSONLoader3.FormatLogger()` to access it. 
 
-## Custom Cards
+If you hover over the function it will tell you what the inputs are and what it does. 
 
-To create your own cards you just create a .jldr2 file (written in json) and fill in all the fields you want your card to have (fields you don't include will be defaulted). The *name* field is required, and the rest are optional with default values (though that would be a boring card). Those fields and their values are specified in the table below. For reference, an example custom card (8 more f\*cking bears_example.jldr2) is included in the **Cards** folder in this repo.
+This is how we have the fancier color coded logging that BepInEx does not have.
 
-### New Cards and Card Prefixes
-
-If you are creating a new card, you need to consider how to name your card so that it does not end up accidentally sharing a name with someone else's card in the future. The accepted way to prevent naming collisions in the community is to prefix the names of your cards with a simple name or code representing your card pack. For example, if you are adding a bunch of cards for Act 3 themed around the all-time classic action movie The Matrix, you might prefix all of your cards with "matrix_" - for example, "matrix_Neo" and "matrix_Trinity." Then, if someone comes along after you and creates a card pack based on mythology and religion, and they also want to create a card called Trinity, they will name their card "myth_Trinity," and we no longer have any issues with having two cards *named* "Trinity." Note that they can both still be called "Trinity" on the card, but the internal game name is different.
-
-Cards that are loaded via JSONLoader should indicate what their specific prefix is using the *modPrefix* field. This helps the card loading process recognize that you have properly prefixed your card and aren't simply using snake_case naming for multi-word cards. More specifically, we can't tell if a card named "Snow_Man" represents a snowman card, or if it's a card named "Man" with a mod prefix of "Snow."
-
-Note that if your card's name and prefix don't match, the game will force it to match. So if your card's name is "StrongBad" and your card prefix is "HSR", the internal name of your card will be "HSR_StrongBad".
-
-### Editing base game cards
-
-To edit a card from the base game, you similarly create a .jldr2 file and fill in the fields you want to edit on the card. You must include the *name* to be able to identify the card; the mod prefix is not necessary. Any fields you fill out will be changed, and everything else will stay the same. Note that you can only edit cards from the base game this way: you cannot edit cards from other mods.
-
-## The fields
-
-Cards have lots of fields that can be filled - this is a list of all field names and their purposes. The fields you wish to include in the .jldr2 file should be copied exactly from this table, and any fields that refer to *[Enums.md](https://github.com/MADH95/JSONLoader/blob/master/Enums.md)* or *[Card Names.md](https://github.com/MADH95/JSONLoader/blob/master/Card%20Names.md)* should have their strings be copied exactly from there.
-
-| Field | Description |
-|------|-------------|
-| name | **[Required]** A string for the name the game will use to identify the card - should contain no spaces. When editing, this field must match the card's name (See *[Card Names.md](https://github.com/MADH95/JSONLoader/blob/master/Card%20Names.md)* for a list of ingame card names) |
-| displayedName | **[Optional]** **[Default: ""]** A string for the name displayed on the card |
-| description | **[Optional]** **[Default: ""]** A string for the description Leshy gives when you find the card |
-| metaCategories | **[Optional]** A string array of meta catagories the card has. See *[Enums.md](https://github.com/MADH95/JSONLoader/blob/master/Enums.md)* for the list that the game ships with. These can also be fully qualified guid+ability strings if they were added by another mod. |
-| cardComplexity | **[Optional]** **[Default: Vanilla]** A string for the complexity of the card (See *[Enums.md](https://github.com/MADH95/JSONLoader/blob/master/Enums.md)* for a list of levels of complexity) |
-| temple | **[Optional]** **[Default: Nature]** A string for which Scrybe created the card |
-| baseAttack | **[Optional]** **[Default: 0]** An integer value for the attack of a card |
-| baseHealth | **[Optional]** **[Default: 1]** An integer value for the health of a card |
-| hideAttackAndHealth | **[Default: false]** A boolean value to toggle if the cards attack and health are visible |
-| bloodCost | **[Optional]** **[Default: 0]** An integer value for the blood cost of a card |
-| bonesCost | **[Optional]** An integer value for the bones cost of a card |
-| energyCost | **[Optional]** An integer value for the energy cost of a card |
-| gemsCost | **[Optional]** A string array for the gems cost of a card (See *[Enums.md](https://github.com/MADH95/JSONLoader/blob/master/Enums.md)* for a list of gems) |
-| specialStatIcon | **[Optional]** An string for which special stat icon the card has. See *[Enums.md](https://github.com/MADH95/JSONLoader/blob/master/Enums.md)* for the list that the game ships with. These can also be fully qualified guid+ability strings if they were added by another mod. |
-| tribes | **[Optional]** An string array for the tribes the card belongs to. See *[Enums.md](https://github.com/MADH95/JSONLoader/blob/master/Enums.md)* for the list that the game ships with. These can also be fully qualified guid+ability strings if they were added by another mod. |
-| traits | **[Optional]** An string array for the traits a card has. See *[Enums.md](https://github.com/MADH95/JSONLoader/blob/master/Enums.md)* for the list that the game ships with. These can also be fully qualified guid+ability strings if they were added by another mod. |
-| specialAbilities | **[Optional]** A string array for the special abilities a card has. See *[Enums.md](https://github.com/MADH95/JSONLoader/blob/master/Enums.md)* for the list that the game ships with. These can also be fully qualified guid+ability strings if they were added by another mod. |
-| abilities | **[Optional]** A string array for the sigils a card has. See *[Enums.md](https://github.com/MADH95/JSONLoader/blob/master/Enums.md)* for the list that the game ships with. These can also be fully qualified guid+ability strings if they were added by another mod. |
-| evolveIntoName | **[Optional]** The name of the card that this card will evolve into when it has the Evolve sigil |
-| evolveTurns | **[Optional]** The number of turns to evolve |
-| defaultEvolutionName | **[Optional]** The name the card will have when it evolves (when it doesn't have evolve_ fields set) |
-| tailName | **[Optional]** The name of the tail card produced when this card has TailOnHit |
-| tailLostPortrait | **[Optional]** The .png file to switch the card's art with when the tail is lost |
-| iceCubeName | **[Optional]** The name of the card generated when the card has the IceCube ability |
-| flipPortraitForStrafe | **[Optional]** A boolean to determine if the cards portrait should flip when it uses one of the strafe sigils |
-| onePerDeck | **[Optional]** A boolean value that toggles if there can be only one of the card per deck |
-| appearanceBehaviour | **[Optional]** A string array for the behaviours the cards appearance should have. See *[Enums.md](https://github.com/MADH95/JSONLoader/blob/master/Enums.md)* for the list that the game ships with. These can also be fully qualified guid+ability strings if they were added by another mod. |
-| texture | **[Optional]** A string for the name of the card's image (must be .png). If it is in a subfolder within *Artwork* the subfolder should preceed the file name seperated by a '/' (or your system equivelent) |
-| altTexture | **[Optional]** A string for the name of the card's alternate image (must be .png) |
-| emissionTexture | **[Optional]** A string for the name of the card's emission image (must be .png) |
-| titleGraphic | **[Optional]** A string for the name of the card's title image (must be .png) |
-| pixelTexture | **[Optional]** A string for the name of the card's act2 image (must be .png) |
-| animatedPortrait | **[Unavailable]** |
-| decals | **[Optional]** A string array for the texture names of a card decals (must be .png) |
-
-## Configils
-
-Besides cards JSONLoader also allows you to create sigils. To do this, your file needs to end in '_sigil.jldr2'.
-
-Here is the [documentation](https://docs.google.com/document/d/1QLAfomaTcatm-foU2P1ZoqGQFFvhCfmEnN4jIxAWceQ/edit?usp=sharing) for making sigils.
-
-## Talking Cards
-
-JSONLoader also allows you to create talking cards! To do this, your file needs to end in '\_talk.jldr2'.
-
-All of the documentation for that can be found [here](https://github.com/KBMackenzie/InscryptionJSONDump/blob/main/Documentation/Talking_Card_Guide.md)!
-
-## Starter Decks
-
-JSONLoader also allows you to create starter decks. To do this, your file needs to end in '_deck.jldr2' and should look like this:
-
-```json
-{
-    "decks": [
-        {
-            "name": "DeckName1",
-            "iconTexture": "icon.png",
-            "cards": [ "Card1", "Card2", "Card3" ]
-        },
-        {
-            "name": "DeckName2",
-            "iconTexture": "icon2.png",
-            "cards": [ "Card4", "Card5", "Card6" ]
-        }
-    ]
-}
-```
-
-Note that you can define any number of starter decks in a single '_deck.jldr2' file, and that the expected format of a '_deck.jldr2' file looks very different than that of other jldr2 files.
-
-## Tribes
-
-JSONLoader also allows you to create tribes. To do this, your file needs to end in '_tribe.jldr2' or '_tribes.jldr2' and should look like this:
-
-```json
-{
-    "tribes": [
-    {
-      "name": "TribeName1",
-	  "guid": "YourModGuid",
-	  "tribeIcon": "tribeicon_custom1.png",
-	  "appearInTribeChoices": true,
-	  "choiceCardBackTexture": "card_rewardback_custom1.png"
-    },
-	{
-      "name": "TribeName2",
-	  "guid": "YourModGuid",
-	  "appearInTribeChoices": false
-    }
-  ]
-}
-```
-
-Note that much like starter decks, any number of tribes can be defined in a single '_tribe.jldr2' file. Also note that if a tribe doesn't have a choiceCardBackTexture, one will be auto-generated based on the tribe's icon.
-
-## Encounters
-
-JSONLoader also allows you to create encounters. To do this, your file needs to end in '_encounter.jldr2' and should look like this:
-
-```json
-{
-	"name": "",
-	"minDifficulty": 0,
-	"maxDifficulty": 0,
-	"regions": [""],
-	"dominantTribes": [""],
-	"randomReplacementCards": [""],
-	"redundantAbilities": [""],
-	"turns": [{
-		"cardInfo": [{
-			"card": "",
-			"randomReplaceChance": 0,
-			"difficultyReq": 0,
-			"difficultyReplacement": ""
-		}]
-	}]
-}
-```
-
-These are all the vanilla regions that you can use for your encounters:
-Alpine, Forest, Midnight, Midnight_Ascension, Pirateville, Wetlands
-
-## How do they work? this guide is aimed to help!
-
-Things you need to know:
-
-* When saving an encounter file it must end in "_encounter.jldr2"
-* Remember to check if the json is valid (jsonlint is a good website to check)
-* When making encounters with custom cards, the internal name is used (including prefixes, ex: IGCC_Boar)
-
-### How every piece works individually:
-<details> <summary> Show/hide </summary>
-
-| part  | description | example|
-| ------------- |:-------------:| :-------------:| 
-| name | Internal name, utilized by debugmenu to test your encounter| name: "Example.JungleTheme"|
-| minDifficulty    | How far into a level you should be in for the encounter to show up, determined by map nodes and KCM challenge skulls. (REDUNDANT: currently broken, use 1)  |minDifficulty: 6|
-| maxDifficulty   | How far into a level you should be for the encounter to stop appearing. (REDUNDANT: currently broken, use 99)    | maxDifficulty: 32 |
-| regions     | What maps should the encounter appear in, multiple can be selected    | regions: [ "Wetlands", "Alpine", "Forest"]|
-| dominantTribes | What tribe should be selected when the encounter is a totem battle |"dominantTribes":["Feline"] |
-| randomReplacementCards |What cards should be chosen from a pool, when randomReplacementChance is defined in a slot | "randomReplacementCards": [ "Stoat", "Sparrow", "Snapper" ]|
-|redundantAbilities | What abilities shouldn't appear when the encounter is a totem battle | "redundantAbilities": ["TouchOfDeath"] |
-|turns|The entire blueprint of the encounter| "turns": [{ }]|
-|cardInfo|the individual row blueprint, card placements are randomized | "cardInfo":[{card:"Wolf"},{card:"Opposum"}]|
-|card | What the card should be. | "card": RatKing|
-|randomReplaceChance|How much, in percentage, of a chance should a random card replace "card" from the randomReplaceCards pool.| "randomReplaceChance":50
-|difficultyReq|What level should the "difficultyReplacement" card replace the originally defined card (works on node level and challenge skulls).| "difficultyReq": 16|
-|difficultyReplacement| What card should replace the originally defined card, when the player reaches the specified "difficultyReq" level. 
-
-</details>
-
-### map enums:
- <details> <summary> Show/hide </summary>
-
-| Internal  | In-game | Boss' map|
-| ------------- |:-------------:| :-------------:| 
-| Alpine     | Snow line    |Trapper/Trader|
-| Wetlands   | Wetlands     | Angler |
-| Forest     | Woodlands    | Prospector |
-| Midnight | Leshy | Final Boss |
-| Midnight_Ascension |Leshy (KCM) | Final Boss in KCM|
-|Pirateville | Royal | alt. Final Boss |
-
-Unless you have mods that allow battles before the final boss, Midnight, Midnight_Ascension and Pirateville are redundant.
-
-
-</details> 
-
-### Example:
-<details> <summary> Show/hide </summary>
-
-```json
-{
-  "name": "Example.BirdEncounter",
-  //internal name
-  
-  "minDifficulty":  1,
-  //how far into the map you need to go before you stumble into this. (unused, best to leave it at 1)
-  
-  "maxDifficulty":  32,
-  //how far until this encounter stops appearing (unused, best leave it at a high level)
-  
-  "regions": [
-    "Alpine",
-    "Forest"
-  ],
-  //what maps should this encounter appear in (alpine and forest is specified, will only show up in prospector and trapper/trader's map [Woodlands and Snow line respectively])
-  
-  "dominantTribes": 
-   [
-    "Bird"
-   ],
-   //the tribes that will be used as heads in totem battles
-  
-  "randomReplacementCards":
-  [
-    "Sparrow",
-    "RavenEgg",
-    "Porcupine",
-    "AntFlying",
-    "Cuckoo",
-    "Adder",
-    "Bee"
-    ],
-    //pool of cards that will be drawn at random when a random chance card is specified
-  
-  "redundantAbilities": 
-  [
-    "Flying"
-  ],
-  //what abilities won't appear during totem battles
-  
-  
-  "turns": [
-    {
-      "cardInfo": [
-      //wave 1
-        {
-        // 1st card
-          "card": "Sparrow",
-          //"sparrow is specified"
-          
-          "randomReplaceChance": 50,
-          //"50% chance of a random card from the randomReplacementCards pool"
-          
-          "difficultyReq": 15,
-          //"what level of difficulty (how many nodes you've passed + challenge tweaks in KCM) should be passed until the sparrow/random card is replaced by the difficultyReplacement"
-          
-          "difficultyReplacement": "Vulture"
-          //"the card that replaces the original card in the battle when a level requirement is met 
-        },
-        {
-          //"2nd card"
-          "card": "RavenEgg",
-          "randomReplaceChance": 25,
-          "difficultyReq": 10,
-          "difficultyReplacement": "Raven"
-        }
-		]
-    },
-    {
-    //wave 2
-      "cardInfo": [
-        {
-          "card": "Sparrow",
-          "randomReplaceChance": 50,
-          "difficultyReq": 15,
-          "difficultyReplacement": "Vulture"
-        },
-        {
-          "card": " ",
-          //card is blank, no card shall be placed, useful for hiding cards until a specific level requirement or random chance cards (Not required for purposefully empty slots)
-          "randomReplaceChance": 25,
-          "difficultyReq": 10,
-          "difficultyReplacement": "Raven"
-        }
-      ]
-    }
-  ]
-}
-```
-</details>
-
-## Gramophone
-
-JSONLoader also allows you to add music tracks to the Gramophone in Leshy's cabin.
-To do this, your file needs to end in '_gram.jldr2' and should look like this:
-
-```json
-{
-  "Prefix": "Example",
-  "Tracks": [
-    {
-      "Track": "MyTrack.mp3",
-      "Volume": 1
-    },
-    {
-      "Track": "AnotherTrack.wav",
-      "Volume": 1
-    }
-  ]
-}
-```
-You should put your mod's prefix in the "Prefix" field. You can add as many tracks as you want inside of "Tracks", following the example above.
-
-"Track" should be the name of your audio file. The audio file should be located inside of the `BepInEx/plugins` folder. The supported audio formats currently are MP3, OGG, WAV and AIFF.
-
-"Volume" should be the volume of your track, from 0 to 1, where 0 is silence and 1 is full volume. If you want your track to be at half volume, for example, you can put 0.5 in the Volume field.
-
-
-## Localization
-
-If you want to translate your cards into other languages, add the language suffix to the end of the field name. 
-
-For example, if you want to translate the *displayedName* field into French, you would add a *displayedName_fr* field to your card. 
-
-### Card localisation
-```json
-{
-  "name": "JSON_SuperHypeMan", 
-  "modPrefix": "ExampleMod", 
-  "baseAttack": 6, 
-  "baseHealth": 9, 
-  "displayedName": "Super Hype Man", 
-  "displayedName_fr": "Super Animateur", 
-  "displayedName_it": "Super Uomo dell'Eccitazione", 
-  "displayedName_de": "Super Stimmungsmacher", 
-  "displayedName_es": "Super Animador", 
-  "displayedName_pt": "Super Animador", 
-  "description_tr": "Süper Coşku Adamı", 
-  "description_ru": "Супер Человек-Аниматор", 
-  "description_ja": "スーパーハイプマン", 
-  "description_ko": "슈퍼 하이프 맨", 
-  "description_zhcn": "超级炒作男", 
-  "description_zhtw": "超級炒作男"
-}
-```
-
-### New Languages
-```json
-{
-    "languageName": "Polish",
-    "languageCode": "nl",
-    "resetButtonText": "Reset with Polish",
-    "stringTablePath": "stringtable.csv"
-}
-```
-### New Language Fonts
-```json
-{
-    "fontReplacementPaths": [
-        {
-        "Type": "Liberation",
-        "AssetBundlePath": "en_mainfont.assetbundle",
-        "FontAssetName": "en_mainfont",
-        "TMPFontAssetName": "en_mainfont"
-        }
-    ]
-}
-```
-
-## Masks
-
-To replace a mask that a boss puts on their face you can do it in a few ways.
-
-### Replace a mask with a texture
-
-This will replace the angler mask model with a flat surface and apply a texture to it. The image dimensions are 1000x1500
-```json
-{
-  "maskName": "JSON_TestMask",
-  "type": "Override",
-  "texturePath": "testmask.png",
-  "maskType": "Angler"
-}
-```
-If you want to keep the original model but replace the texture you can add a field specifying the model type as below.
-```json
-  "modelType": "Angler"
-```
-
-## Regions
-
-All custom regions need their files to be named ending with `_region.jldr2`.
-
-JLDR2
-```json
-{
-  "name": "TestRegion",
-  "tier": 0,
-  "addToPool": true,
-  "terrainCards": ["BaitBucket"],
-  "encounters": ["Skinks"],
-  "likelyCards": ["Bullfrog"],
-  "dominantTribes": ["Insect"],
-  "bossPrepEncounter": "Submerge",
-  "boardLightColor": "0,193,122,255",
-  "cardsLightColor": "0,129,255,255",
-  "mapAlbedo": "customRegion_mapAlbedo.png",
-  "bosses": ["ProspectorBoss"],
-  "fillerScenery": [
-    {
-      "minScale": {"x": 0.06, "y": 0.05},
-      "maxScale": {"x": 0.09, "y": 0.22},
-      "prefabNames": ["Tree_3_Mossy"],
-      "radius": 0.06,
-      "perlinNoiseHeight": true
-    }
-  ],
-  "scarceScenery": [
-    {
-      "minDensity": 0.10,
-      "minInstances": 40,
-      "maxInstances": 50,
-      "minScale": {"x": 40.00, "y": 40.00},
-      "maxScale": {"x": 50.00, "y": 50.00},
-      "prefabNames": ["Fern_1"],
-      "radius": 0.05,
-      "perlinNoiseHeight": true
-    }
-  ],
-  "predefinedScenery": [{
-    "minScale": {"x": 0.06, "y": 0.05},
-    "maxScale": {"x": 0.09, "y": 0.22},
-    "prefabNames": ["Tree_3_Mossy"],
-    "radius": 0.06,
-    "perlinNoiseHeight": true,
-    "rotation": {"x": 0, "y": 0, "z": 0},
-    "scale": {"x": 1, "y": 1, "z": 1}
-  }],
-  "dialogueEvent": {
-    "eventName": "TestRegion",
-    "mainLines": ["The rank smell of rot and mold permeated the humid air.", "Every step forward was answered by some nearby slip or slither."],
-    "repeatLines": [["The air grew thick with moisture...", "The buzzing and chirping of insects drowned out the sound of your footfalls..."],
-      ["As the air grew humid your boots became harder to pull from the mud.", "The dank smell of tepid water invaded your nostrils."]]
-  }
-}
-```
-
-### tier
-Which position in the run the region will appear in.
-(Broken as of API 2.19.3)
-0. Any order
-1. First region in the run
-2. Second region in the run
-3. Third region in the run
-
-
-### addToPool
-If set to true then the region will be added to the pool of regions available to be randomly chosen in ascension runs.
-
-### terrainCards
-List of terrain cards that can be placed on the board when starting fights.
-
-NOTE: cards listed here need ot have the Terrain trait. 
-
-### encounters
-Encounters that that can appear during fights.
-
-### likelyCards
-Extra Cards that can appear during ThreeChoice event nodes to be added to your deck.
-
-### dominantTribes
-Tribes that decide what card will appear in the Oil painting and in ThreeChoice event nodes.
-
-### bossPrepEncounter (Optional)
-The encounter that will be used to for the boss fight.
-If not specified then a random encounter will be chosen according to the node and games difficulty
-
-### boardLightColor
-Color that the map will show when moving between nodes
-
-### cardsLightColor
-Color tint cards will have.
-
-### mapAlbedo
-Name of an image that will be used on the map.
-
-### bosses
-Name of bosses/opponents that can appear when in this region.
-
-### fillerScenery
-List of Props that are scattered around the region.
-- **minScale** and **maxScale** are the minimum and maximum scale of the prop.
-- **prefabNames** are the names of the props that can appear on the map. see MapScenery.png for list of props.
-- **radius** is the radius of the area the prop that no other props can appear in.
-- **perlinNoiseHeight** is a boolean that determines if the prop position is randomized or not
-
-### scarceScenery
-Main props that are put on the map.
-- **minDensity** Not used
-- **minInstances** Minimum amount of instances that can spawn per map
-- **maxInstances** Maximum amount of instances that can spawn per map
-- **minScale** and **maxScale** are the minimum and maximum scale of the prop. Various per prop
-- **prefabNames** are the names of the props that can appear on the map. see MapScenery.png for list of props.
-- **radius** is the radius of the area the prop that no other props can appear in.
-- **perlinNoiseHeight** is a boolean that determines if the prop position is randomized or not
-
-
-### predefinedScenery
-Props that will always appear in the map.
-- **minScale** and **maxScale** are the minimum and maximum scale of the prop. Various per prop
-- **prefabNames** are the names of the props that can appear on the map. see MapScenery.png for list of props.
-- **radius** is the radius of the area the prop that no other props can appear in.
-- **perlinNoiseHeight** is a boolean that determines if the prop position is randomized or not
-- **rotation** Set rotation for all the props 
-- **scale** Set scale for all the props
-
-
-### dialogueEvent
-- **eventName** Name of the dialogue event that plays when entering the region. Use the same name as the region.
-- **mainLines** The dialogue that plays when first entering the region
-- **repeatLines** Dialogue that plays every other time you enter the region or start a new map in the same region.
-
-### consumableItems
-Items that can be randomly given to the player when in this region.
-
-## Consumable Items
-
-Items are powerful tools that can be awarded.
-Similar to configils this is how to create an item to appear in the game.
-
-Create a file with `_item.jldr2` at the end of the file name.
-
-```json
-{
-  "GUID": "TestMod",
-  "rulebookName": "Geck Army",
-  "rulebookDescription": "Puts 4 Gecks in your hand",
-  "description": "The Geck Army is a powerful force to be reckoned with. It's a good thing you're the one in control of it.",
-  "icon": "base64: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",
-  "abilityBehaviour": [
-    {
-      "trigger": {
-        "triggerType": "OnActivate"
-      },
-      "drawCards": [
-        {
-          "card": {
-            "name": "Geck",
-            "retainMods": "false"
-          }
-        },
-        {
-          "card": {
-            "name": "Geck",
-            "retainMods": "false"
-          }
-        },
-        {
-          "card": {
-            "name": "Geck",
-            "retainMods": "false"
-          }
-        },
-        {
-          "card": {
-            "name": "Geck",
-            "retainMods": "false"
-          }
-        }
-      ]
-    }
-  ]
-}
-```
-
-| Key                 | Description                                                                   | Default              |
-|---------------------|-------------------------------------------------------------------------------|----------------------|
-| GUID                | GUID of the mod                                                               | ""                   |
-| rulebookName        | Name appears in rulebook                                                      | ""                   |
-| rulebookDescription | Description that appears in rulebook                                          | ""                   |
-| description         | LearnText that Leshy says first time seen                                     | ""                   |
-| icon                | Icon that appears in the rulebook and model if specific modelType requires it | null                 |
-| bottledCardName     | (Optional) Assign this if you want the item to be a card in a bottle          | ""                   |
-| regionSpecific      | Is this item only accessible in specific regions? (Assigned in regions)_      | false                |
-| notRandomlyGiven    | If True then the item will not appear as a choice to be collected             | false                |
-| rulebookCategory    | Which act should this item appear in?                                         | "Part1Rulebook"      |
-| modelType           | What is the appearance of this item?                                          | "BasicRuneWithVeins" |
-| pickupSoundId       | The sound this item makes when the player chooses/activates it                | "stone_object_up"    |
-| placedSoundId       | The sound this item makes when it lands during a battle                       | "stone_object_hit"   |
-| examineSoundId      | The sound this item makes when the player hovers their mouse over it          | "stone_object_hit"   |
-| powerLevel          | Likelihood of this item being chosen to be randomly given to the player       | 1                    |
-
-
-## Bottled Cards
-
-Vanilla inscyrption has items that are just a card in a bottle. When you activate it duriong a battle it gives you that card.
-This is what you need to do to add a new bottled card to the game.
-
-
-Make a file with `_item.jldr2` at the end of the file name
-```json
-{
-  "GUID": "TestMod",
-  "bottledCardName": "Urayuli",
-  "icon": "base64:iVBORw0KGgoAAAANSUhEUgAAAGQAAACWAgMAAABV1sXVAAAAAXNSR0IB2cksfwAAAAlwSFlzAAALEwAACxMBAJqcGAAAAAlQTFRFAAAAAAAAAQEB7L2CIAAAAAN0Uk5TAP//RFDWIQAAAflJREFUeJzt10tyhCAQBmC0io3r4Q4pT8ERWMh9rFnmFNasLE6ZBnx0w08yr81UhUrMyKd00zJGlXqpae8tBJ8asC7L9JikLZLcB0S1xTfFtKVr5KZMK+tNfA15pto7JCpWtZbcp00txiXRSKaW2CimLd1jcqHtBUr685jkioEaUEFdLBGqTjwJybZCwFWgPsrBIjHKKW3hNbVxWUNxlB5cO5rENSRukaS6oBWfOz9OdFNMEnh9nPZTB24i1NdRReE6OKOBMMcBMsw2aDncEbr6dh+jmHI4sx9a5X0OXwTS55FGBmKjF3mzjGQgsSfyFiOIHRFVlEFm2gz6S6LtyXGRBTGnyAS68z9K52XSXEQJpEwMnOZy3DvSByZ2pzyQOUXJ9pJUNygh/dyH+HFcKllCuAVqtYS93S/DIQurgZRViFWjEJ7/++Ua1gHK0lMvkpVmO1P2SAaaJZaRZEw14EJ1o5+VfudatibFMRGj0Y1/uENWvmKKc9jN9G+5tiRWDcuyuZQxrxoFRWUJWGLt+J2ZJE8+BVLsWUS7Pi+AFG6uJEBJE51zIYCsoSV74Z6Q9QkBo8XJ3IrcJpUP/x6L6lBxx1ydr7jqpfD2+eJbou4V84zYf2mKfMCwHPie4c8K4h3IHHvle9P2vuTr1ybNwXLhJ0lgVva/qf0AKeWOroyqESEAAAAASUVORK5CYII="
-}
-```
-
-
+This Logging system is built on top of Cecil.ANSI_Utils from the [Cecil Libraries Organization](https://stoatgames.icu/subsidiaries/cecil-libraries-organization/#header-container-subsite) and ANSI Mod from Stoat Games enables the ability for Windows users.
 
 ## Installation
 
-### Automatic
-Simply download with Thunderstore Mod Manager!
+<u>**FOR LINUX AND STEAMDECK:** Ensure that the game is set to run using `Proton` in he game settings on steam. Should be a setting like this: `Change launch behaviour` -> `Proton`.</u>
+
+### Installing with a Mod Manager
+1. Download and install [Thunderstore Mod Manager](https://www.overwolf.com/app/Thunderstore-Thunderstore_Mod_Manager), [Gale](https://thunderstore.io/c/inscryption/p/Kesomannen/GaleModManager/) or [r2modman](https://thunderstore.io/c/inscryption/p/ebkr/r2modman/).
+2. Click the **Install with Mod Manager** button on the top of [BepInEx's](https://thunderstore.io/c/inscryption/p/BepInEx/BepInExPack_Inscryption/) page.
+3. Run the game via the mod manager.
+
+If you have issues with Mod Managers head to one of these discords;
+
+* **Thunderstore Support Discord:** [Here](https://discord.gg/Fbz54kQAxg)
+* **R2ModMan Support Discord:** [Here](https://discord.gg/R85wjqa4WN)
+* **Gale Mod Manager Support Discord:** [Here](https://discord.gg/sfuWXRfeTt)
+
+### Installing Manually
+1. Install [BepInEx](https://thunderstore.io/package/download/BepInEx/BepInExPack_Inscryption/5.4.2305/) by pressing `Manual Download` and extract the contents into a folder. **Do not extract into the game folder!**
+2. Move the contents of the `BepInExPack_Inscryption` folder into the game folder (where the game executable is; usually found here: `C:\Program Files (x86)\Steam\steamapps\common\Inscryption`).
+3. Run the game. If everything was done correctly, you will see the BepInEx console appear on your desktop. Close the game after it finishes loading.
+4. Install [MonoModLoader](https://inscryption.thunderstore.io/package/BepInEx/MonoMod_Loader_Inscryption/) and extract the contents into a folder.
+5. Move the contents of the `patchers` folder into `BepInEx/patchers` (If any of the mentioned BepInEx folders don't exist, just create them).
+6. Install [Inscryption API](https://inscryption.thunderstore.io/package/API_dev/API/) and extract the contents into a folder.
+7. Move the contents of the `plugins` folder into `BepInEx/plugins` and the contents of the `monomod` folder into the `BepInEx/monomod` folder.
+8. Run the game again. If everything runs correctly, a message will appear in the console telling you that the API was loaded.
+9. For any additional mods create a new subfolder, it can be called anything and extract the zips archive into it and if there is a `BepInEx` folder within the zip instead drop the contents of that folder into the `BepInEx` root for the modding instance. EX;
+    ```
+    BepInEx // These go within the BepInEx root folder
+    |-- config
+    |-- patchers
+    |-- plugins
+    |-- monomod
+    |-- core
+    plugins // Files within go into the created plugin subfolder that was created for the mod
+    |-- Art
+    |-- Scripts
+    |-- MyMod.dll
+    manifest.json // Ignorable, but if kept, goes in plugin subfolder
+    README.md // Ignorable, but if kept, goes in plugin subfolder
+    CHANGELOG.md // Ignorable, but if kept, goes in plugin subfolder
+    icon.png // Ignorable, but if kept, goes in plugin subfolder
+    ```
+10. Run the game once more and everything should be correct and working.
+
+### Installing Manually (XBOX Game-Pass)
+1. Install [BepInEx](https://thunderstore.io/package/download/BepInEx/BepInExPack_Inscryption/5.4.2305/) by pressing `Manual Download` and extract the contents into a folder. **Do not extract into the game folder!**
+2. Move the contents of the `BepInExPack_Inscryption` folder into the game folder (where the game executable is; usually found here: `C:\XboxGames\Inscryption\Content`).
+3. Install the following package: [XboxSilencio](https://thunderstore.io/c/inscryption/p/CORE_API_TEAM/GamepassSilencio/), this is a package which aims to solve frictions with XBOX Gamepass specific installations, such as HueyFS related errors.
+4. Run the game. If everything was done correctly, you will see the BepInEx console appear on your desktop. Close the game after it finishes loading.
+5. Install [MonoModLoader](https://inscryption.thunderstore.io/package/BepInEx/MonoMod_Loader_Inscryption/) and extract the contents into a folder.
+6. Move the contents of the `patchers` folder into `BepInEx/patchers` (If any of the mentioned BepInEx folders don't exist, just create them).
+7. Install [Inscryption API](https://inscryption.thunderstore.io/package/API_dev/API/) and extract the contents into a folder.
+8. Move the contents of the `plugins` folder into `BepInEx/plugins` and the contents of the `monomod` folder into the `BepInEx/monomod` folder.
+9. Run the game again. If everything runs correctly, a message will appear in the console telling you that the API was loaded.
+10. For any additional mods create a new subfolder, it can be called anything and extract the zips archive into it and if there is a `BepInEx` folder within the zip instead drop the contents of that folder into the `BepInEx` root for the modding instance. EX;
+    ```
+    BepInEx // These go within the BepInEx root folder
+    |-- config
+    |-- patchers
+    |-- plugins
+    |-- monomod
+    |-- core
+    plugins // Files within go into the created plugin subfolder that was created for the mod
+    |-- Art
+    |-- Scripts
+    |-- MyMod.dll
+    manifest.json // Ignorable, but if kept, goes in plugin subfolder
+    README.md // Ignorable, but if kept, goes in plugin subfolder
+    CHANGELOG.md // Ignorable, but if kept, goes in plugin subfolder
+    icon.png // Ignorable, but if kept, goes in plugin subfolder
+    ```
+11. Run the game once more and everything should be correct and working.
+
+### Installing on the Steam Deck
+1. Download [r2modman](https://thunderstore.io/c/inscryption/p/ebkr/r2modman/) on the Steam Deck's Desktop Mode and open it from its download using its `AppImage` file.
+2. Download the mods you plan on using and their dependencies.
+3. Go to the setting of the profile you are using for the mods and click `Browse Profile Folder`.
+4. Copy the BepInEx folder, then go to Steam and open Inscryption's Properties menu
+5. Go to `Installed Files` click `Browse` to open the folder containing Inscryption's local files; paste the BepInEx folder there.
+6. Enter Gaming Mode and check 'Force the use of a specific Steam Play compatibility tool' in the Properties menu under `Compatibility`.
+7. Go to the launch parameters and enter `WINEDLLOVERRIDES="winhttp.dll=n,b" %command%`.
+8. Open Inscryption. If everything was done correctly, you should see a console appear on your screen.
+
+### Mac & Linux
+1. Follow the steps here first: <https://docs.bepinex.dev/articles/user_guide/installation/index.html>
+2. Next do steps 4-10 of the Manual Installation
+3. Your game should be setup for inscryption modding now
+
+If you have any issues with Mac/Linux, Steam Deck, or Manual head over to the discord for this game:
+
+* **Inscryption Modding Discord:** [Here](https://discord.gg/ZQPvfKEpwM)
+
+## Installing the Package:
+
+<u>***If your using `MadH95-JSONCardLoader` for JLDR2 based mods, please make sure to go into `MADH.inscryption.JSONLoader.cfg` and disable JLDR Conversion, you may need to do this after launching the first time. If you don't `JSONLoader` in combination with `JSONLoader-Nightly` will register the card Twice to the Game.***</u>
+
+### Manager
+
+1. Find the package that correlates with your system, below is a quick reference of the RID's and what they correlate to;
+  - Win-x64: XBOX Gamepass Version of the game (based on the game on Windows)
+  - Win-x86: For the Steam Version of the game (based on the game on Windows)
+  - We also offer versions for the following:
+    - Linux-Arm64
+    - Linux-Arm
+    - Linux-Musl-Arm64
+    - Linux-Musl-X64
+    - Linux-X64
+    - OSX-Arm64 (Mac)
+    - OSX-X64 (Mac)
+    - Win-Arm64
+2. Enter your Mod Manager and Import as a Local Mod via the Following Steps:
+  - R2ModMan
+    1. Open the Application, Navigate to Inscryption, Navigate to the Profile you wish to Install to.
+    2. Press `Settings`.
+    3. Type `Import` into the Search box as highlighted below
+
+        <img width="1919" height="1079" alt="image" src="https://github.com/user-attachments/assets/1ae6e189-b80e-42fc-bf23-fd6305502353" />
+    4. Press `Import Local Mod`.
+    5. Press `Select File` and Navigate to and Select the File you just downloaded from this Release.
+    6. If you followed the steps correctly it should appear as follows (with the correct version of this GitHub release,
+
+        <img width="649" height="599" alt="image" src="https://github.com/user-attachments/assets/ecafca6f-999c-4991-a9a7-8232db56b65b" />
+
+       <u>*For this version it should so `0.0.3` when importing.*</u>
+    7. Where it says `Author`: `Unknown` replace the `Unknown` with `MADH95`.
+    8. Press `Import Local Mod`.
+    9. Wait for Dependencies to Resolve and your set. (Note for any mods on Thunderstore needing an older version of JSONLoader you may want to also install them directly from the website, or do these steps after you finished installing those mods, you must remove ONLY the old version of the mod.)
+  - Gale
+    1. Open the Application, Navigate to the Game, Than the Profile.
+    2. At the top of the screen (on the left) press `Import` than `... Local Mod`.
+    3. Navigate to and Select the File you just downloaded from this Release.
+    4. Wait for Dependencies to Resolve and your set. (Note for any mods on Thunderstore needing an older version of JSONLoader you may want to also install them directly from the website, or do these steps after you finished installing those mods, you must remove ONLY the old version of the mod.)
 
 ### Manual
-To install this plugin you first need to install BepInEx as a mod loader for Inscryption. A guide to do this can be found [here](https://docs.bepinex.dev/articles/user_guide/installation/index.html#where-to-download-bepinex)
 
-You will also need the newest version of the [InscryptionAPI](https://github.com/ScottWilson0903/InscryptionAPI) plugin.
+1. Find the package that correlates with your system, below is a quick reference of the RID's and what they correlate to;
+  - Win-x64: XBOX Gamepass Version of the game (based on the game on Windows)
+  - Win-x86: For the Steam Version of the game (based on the game on Windows)
+  - We also offer versions for the following:
+    - Linux-Arm64
+    - Linux-Arm
+    - Linux-Musl-Arm64
+    - Linux-Musl-X64
+    - Linux-X64
+    - OSX-Arm64 (Mac)
+    - OSX-X64 (Mac)
+    - Win-Arm64
+2. Extract the Zip to a new folder.
+3. Take the files and folders under `plugins` of the zip and move them up a folder.
+4. Delete the `plugins` folder from the Extracted directory.
+5. Now navigate to the location of your BepInEx install from your earlier setup for the API.
+6. Navigate to `plugins` and add a folder entitled `MadH95-JSON_and_CSV_Loader_Nightly`.
+7. Move the setup from steps `2-4` into the folder you created in step `7`.
 
-Finally, you simply need to put the **JSONLoader.dll** folder in **BepInEx/plugins**.
+## Support
+If you need help with anything related to this API or Package head to the [Inscryption Modding](https://discord.gg/ZQPvfKEpwM).
 
-## Debugging
-The easiest way to check if the plugin is working properly or to debug an error is to enable the console. This can be done by changing
-```
-[Logging.Console]
-\## Enables showing a console for log output.
-\# Setting type: Boolean
-\# Default value: false
-Enabled = false
-```
-to
-```
-[Logging.Console]
-\## Enables showing a console for log output.
-\# Setting type: Boolean
-\# Default value: false
-Enabled = true
-```
-in **Inscryption/BepInEx/Config/BepInEx.cfg**
+If its related to Installation and not Mod Manager related please use Modding Help, otherwise if it is Mod Manager related head to their respective discords as linked earlier.
 
-___
+If its related to the Behavior of the API in relation to the mod your making use the JSONLoader channel, if its related to mods by others use Modding Help.
 
-To add cards to your deck to test if your cards work, you can download the [debug menu mod](https://inscryption.thunderstore.io/package/JamesGames/DebugMenu/)
-
-___
-
-If you want help debugging you can ask in the #jsonloader channel in the [Inscryption modding discord server](https://discord.gg/QrJEF5Denm).
+If you need anything specific from the maintainer of this Package contact: `@thincreator3483` on discord.

@@ -1,3 +1,5 @@
+# Vanilla Card Names
+
 ## Cards
 
 | In Code Name              | In Game Name        |
