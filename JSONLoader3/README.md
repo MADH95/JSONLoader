@@ -58,7 +58,7 @@ If your manual it should be something like:
 Now store that path somewhere you'll remember it, you'll be coming back here a lot over the course of your mod.
 
 #### Text Editor
-The recommended File Editor for JSONLoader is [VisualStudioCode](https://code.visualstudio.com/) as it has built in handlers for both JSON Syntax and CSV Syntax, if your working with JSONLoader at any point this should be your go-to editor, but if you have a preficed editor nothings stopping you from using it.
+The recommended File Editor for JSONLoader is [VisualStudioCode](https://code.visualstudio.com/) as it has built in handlers for both JSON Syntax and CSV Syntax, if your working with JSONLoader at any point this should be your go-to editor, but if you have a preficed editor nothings stopping you from using it. If you don't want to download anything there is a Website called [JSONEditorOnline](https://jsoneditoronline.org/) which does similar.
 
 #### Adding the File Extensions to the Context Menu (Windows 11)
 I'm going to include this for those on Windows 11 for other OS's the next section should work fine.
@@ -262,7 +262,7 @@ The following are all of the fields available for JSONLoaderV1 Cards and what th
 
 ###### TailData Object
 
-|        Key         | Description                                                                                                                                                                                                                                                                                 |   Tupe |
+|        Key         | Description                                                                                                                                                                                                                                                                                 |   Type |
 |:------------------:|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-------:|
 |       `name`       | This represents the In-Code name of the card this card will leave in its old lane if Loose Tail triggers.                                                                                                                                                                                   | String |
 | `tailLostPortrait` | The Path to your cards Tail Lost Portrait, this is localized to your Plugins Folder. It's your job to keep it organized, do it as you would these 'JLDR' files. This must be a PNG File and must be a '114x94' image. This applies specifically when this card is struck and lost its tail. | String |
