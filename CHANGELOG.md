@@ -3,7 +3,15 @@
 <details open>
 <summary>JSONLoader 3.0.0 Changelog</summary>
 
-## 3.0.0-push-3
+## 3.0.0-Nightly-0.0.4
+* Fixed the Image Related Regexes provided under JSONLoaderV1's Card Object.
+* Added Ability for Image Paths to be just the FileName, in this case we try to recursively search the Plugin Folder for the image.
+* Added Compatibility Option for ensuring older JSONLoader Mods continue to work.
+* Defaulted Verbose to False like it was meant to be.
+* Updated README.
+* Updated Default Routes for finding JSON's.
+
+## 3.0.0-Nightly-0.0.3
 * Implemented a JSON Schema Loader.
 * Added another Level of Toggleable Logging.
 * Adjusted some Level's colors and looks.
@@ -21,8 +29,7 @@
 * Can now Log to the File as well, we have to do this specially because we Log with `Console.WriteLine()` internally.
 * Officially Licensed the Code for JSONLoader Nightly.
 
-## 3.0.0-push-2
-
+## 3.0.0-Nightly-0.0.2
 * Implemented Configuration for:
   * JSON Loading Origination Path: 
     * "These paths are case insensitive, and determine where JSON Scripts may be sourced from in order to load. If your a mod maker shipping mods, make a 'plugins' folder in your mods folder, and put a folder in there called 'scripts', this is where your JSON scripts should reside. If you need another path, you can override this value with your mod, we'll provide a system for you to do so."
@@ -46,7 +53,7 @@
 * Revamped the ENTIRE README.md
 * Possibly some other stuff I'm forgetting about.
 
-## 3.0.0-push-1
+## 3.0.0-Nightly-0.0.1
 * Removed API Dlls from the Repository, migrate to TS-Nuget.
 * Created the Basic Configuration for the JSON AND CSV Loader API.
 * Created Colored Logging for the API using Cecil.ANSI_Utils. (yes while this does add 2 more dependencies, it's useful for color coding our mods logging, as well as formatting it.)

@@ -1,5 +1,7 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using InscryptionAPI.Helpers;
 using UnityEngine;
 
@@ -22,6 +24,11 @@ public class ScanImages
         if (imagePath.StartsWith("data:image/png;base64,") || imagePath.StartsWith("base64:"))
         {
             return GetTextureFromBase64(imagePath);
+        }
+
+        if (!imagePath.Contains("/"))
+        {
+            return GetSpriteFromFileName(imagePath, plugin);
         }
 
         return GetTextureFromPluginAndPath(plugin, imagePath);
@@ -126,7 +133,7 @@ public class ScanImages
                 JSONLoader3.FormatLogger("AdditionalInformation", "ScanImages", "We tried the following 2 paths: ");
                 JSONLoader3.FormatLogger("AdditionalInformation", "ScanImages", Path.GetFullPath(Path.Combine(plugin, filePath.Replace('/', Path.DirectorySeparatorChar))));
                 JSONLoader3.FormatLogger("AdditionalInformation", "ScanImages", Path.GetFullPath(Path.Combine(plugin, "plugins", filePath.Replace('/', Path.DirectorySeparatorChar))));
-                JSONLoader3.FormatLogger("AdditionalInformation", "ScanImages", "To resolve this, just make sure the Path leads to where your asset is located, we don't recursively scan.");
+                JSONLoader3.FormatLogger("AdditionalInformation", "ScanImages", "To resolve this, just make sure the Path leads to where your asset is located, we don't recursively scan in this case.");
 
                 Texture2D fallbackTexture = new Texture2D(114, 94);
 
@@ -141,6 +148,35 @@ public class ScanImages
         return GetCustomImage(
             Path.GetFileNameWithoutExtension(filePath),
             Path.GetDirectoryName(fullPath)
+        );
+    }
+
+    /// <summary>
+    /// Gets the Image when all you have is the FileName and PluginPath.
+    /// </summary>
+    /// <param name="fileName">The Name of the File.</param>
+    /// <param name="pluginPath">The Plugin in which is originating the request for the file.</param>
+    /// <returns>A Sprite if Successful it will have the image requested, if it failed it will be an empty image.</returns>
+    public static Sprite GetSpriteFromFileName(string fileName, string pluginPath)
+    {
+        List<string> Files = Directory.GetFiles(pluginPath, "*", SearchOption.AllDirectories).ToList();
+        foreach (string file in Files)
+        {
+            if (file.EndsWith(".png"))
+            {
+                if (Path.GetFileName(file) == fileName)
+                {
+                    return GetCustomImage(file.Replace(".png", ""), pluginPath);
+                }
+            }
+        }
+
+        Texture2D fallbackTexture = new Texture2D(114, 94);
+
+        return Sprite.Create(
+            fallbackTexture,
+            new Rect(0f, 0f, 114f, 94f),
+            new Vector2(0.5f, 0.5f)
         );
     }
     

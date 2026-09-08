@@ -39,32 +39,62 @@ public class FindFiles
                 List<string> plugins = Directory.GetDirectories(PathBase).ToList();
                 foreach (string plugin in plugins)
                 {
-                    JSONLoader3.FormatLogger("Debug", "FindFiles", $"Checking Plugin: {plugin} for loadable JSON files.");
-                    foreach (string JSONPath in DefineConfiguration.JSONLoadingPaths.Value.Split(','))
+                    if (DefineConfiguration.toggleRecursiveOnPlugin.Value)
                     {
-                        if (Directory.Exists(plugin + Path.DirectorySeparatorChar + JSONPath.Trim().Replace('/', Path.DirectorySeparatorChar)))
+                        List<string> JSONFiles = Directory.GetFiles(plugin, "*", SearchOption.AllDirectories).ToList();
+                        foreach (string JSONFile in JSONFiles)
                         {
-                            string newPath = plugin +
-                                             Path.DirectorySeparatorChar + JSONPath.Trim().Replace('/', Path.DirectorySeparatorChar);
-                            List<string> JSONFiles = Directory.GetFiles(newPath, "*", SearchOption.AllDirectories).ToList();
-                            foreach (string JSONFile in JSONFiles)
+                            HandleJSONFile(JSONFile, plugin);
+                        }
+                    }
+                    else
+                    {
+                        JSONLoader3.FormatLogger("Debug", "FindFiles",
+                            $"Checking Plugin: {plugin} for loadable JSON files.");
+                        foreach (string JSONPath in DefineConfiguration.JSONLoadingPaths.Value.Split(','))
+                        {
+                            if (Directory.Exists(plugin + Path.DirectorySeparatorChar +
+                                                 JSONPath.Trim().Replace('/', Path.DirectorySeparatorChar)))
                             {
-                                HandleJSONFile(JSONFile, plugin);
+                                string newPath = plugin + Path.DirectorySeparatorChar +
+                                                 JSONPath.Trim().Replace('/', Path.DirectorySeparatorChar);
+                                List<string> JSONFiles = Directory.GetFiles(newPath, "*", SearchOption.AllDirectories)
+                                    .ToList();
+                                foreach (string JSONFile in JSONFiles)
+                                {
+                                    HandleJSONFile(JSONFile, plugin);
+                                }
                             }
                         }
                     }
-                    
-                    JSONLoader3.FormatLogger("Debug", "FindFiles", $"Checking Plugin: {plugin} for loadable CSV files.");
-                    foreach (string CSVPath in DefineConfiguration.CSVLoadingPaths.Value.Split(','))
+
+                    if (DefineConfiguration.toggleRecursiveOnPlugin.Value)
                     {
-                        if (Directory.Exists(plugin + Path.DirectorySeparatorChar + CSVPath.Trim().Replace('/', Path.DirectorySeparatorChar)))
+                        List<string> CSVFiles = Directory.GetFiles(plugin, "*", SearchOption.AllDirectories)
+                            .ToList();
+                        foreach (string CSVFile in CSVFiles)
                         {
-                            string newPath = plugin +
-                                             Path.DirectorySeparatorChar + CSVPath.Trim().Replace('/', Path.DirectorySeparatorChar);
-                            List<string> CSVFiles = Directory.GetFiles(newPath, "*", SearchOption.AllDirectories).ToList();
-                            foreach (string CSVFile in CSVFiles)
+                            HandleCSVFile(CSVFile, plugin);
+                        }
+                    }
+                    else
+                    {
+                        JSONLoader3.FormatLogger("Debug", "FindFiles",
+                            $"Checking Plugin: {plugin} for loadable CSV files.");
+                        foreach (string CSVPath in DefineConfiguration.CSVLoadingPaths.Value.Split(','))
+                        {
+                            if (Directory.Exists(plugin + Path.DirectorySeparatorChar +
+                                                 CSVPath.Trim().Replace('/', Path.DirectorySeparatorChar)))
                             {
-                                HandleCSVFile(CSVFile, plugin);
+                                string newPath = plugin +
+                                                 Path.DirectorySeparatorChar + CSVPath.Trim()
+                                                     .Replace('/', Path.DirectorySeparatorChar);
+                                List<string> CSVFiles = Directory.GetFiles(newPath, "*", SearchOption.AllDirectories)
+                                    .ToList();
+                                foreach (string CSVFile in CSVFiles)
+                                {
+                                    HandleCSVFile(CSVFile, plugin);
+                                }
                             }
                         }
                     }

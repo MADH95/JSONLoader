@@ -32,6 +32,10 @@ public class DefineConfiguration
     /// </summary>
     public static ConfigEntry<bool> ShowSummary;
     /// <summary>
+    /// Toggles Global Recursiveness from the Plugin Level.
+    /// </summary>
+    public static ConfigEntry<bool> toggleRecursiveOnPlugin;
+    /// <summary>
     /// The ConfigFile Variable referenced throughout this class.
     /// </summary>
     private static ConfigFile configFile;
@@ -44,18 +48,21 @@ public class DefineConfiguration
     {
         configFile = config;
         
-        JSONLoadingPaths = configFile.Bind("Configuration", "JSON Loading Origination Path", "Scripts, Plugins/Scripts",
+        JSONLoadingPaths = configFile.Bind("Configuration", "JSON Loading Origination Path", "Scripts, Plugins/Scripts, Cards, Plugins/Cards",
             "These paths are case insensitive, and determine where JSON Scripts may be sourced from in order to load. If your a mod maker shipping mods, make a 'plugins' folder in your mods folder, and put a folder in there called 'scripts', this is where your JSON scripts should reside. If you need another path, you can override this value with your mod, we'll provide a system for you to do so.");
         CSVLoadingPaths = configFile.Bind("Configuration", "CSV Loading Origination Path", "Sheets, Plugins/Sheets",
             "These paths are case insensitive, and determine where CSV Sheets may be sourced from in order to load. If your a mod maker shipping mods, make a 'plugins' folder in your mods folder, and put a folder in there called 'sheets', this is where your CSV Sheets should reside. If you need another path, you can override this value with your mod, we'll provide a system for you to do so.");
         SchemaSavePath = configFile.Bind("Configuration", "Schema Save Path", "/Schemas", "This determines where JSON Schemas will be saved to as we create them, this path will be localized to the DLL's folder. You can use '../' to mean go up a folder.");
         JSONLoader3.FormatLogger("info", "Configuration","Finished adding configuration for the Loading Paths associated with this mod.");
-        ShowVerboseLogging = configFile.Bind("Logging", "Show Verbose Logging", true,
+        ShowVerboseLogging = configFile.Bind("Logging", "Show Verbose Logging", false,
             "While this value is set to true, this API will show what is happening when its happening.");
         ShowAdditionalInformation = configFile.Bind("Logging", "Show Additional Information", false,
             "While this value is set to true, this API will show a more in depth lense as to what went wrong, and try to help explain why its wrong with links to references.");
         ShowSummary = configFile.Bind("Logging", "Show Summary Information", false,
             "While this value is set to true, this API will show the Summary for each property being verified by the Linter and some Additional Debug Information.");
         JSONLoader3.FormatLogger("info", "Configuration","Finished adding configuration for the Logging associated with this mod.");
+        toggleRecursiveOnPlugin = configFile.Bind("Compatibility", "Recursively Scan At Plugin Level", false,
+            "While this value is set to true, this API will recursively scan for JSONs and CSVs from the Plugins level, rather than the set folders. This is defaulted to false for the purposes of keeping Load Times fast, but if you have a mod that isn't structured for this toggle this setting on.");
+        JSONLoader3.FormatLogger("info", "Configuration","Finished adding configuration for the Compatibility associated with this mod.");
     }
 }

@@ -38,20 +38,20 @@ In order for you to make the actual JLDR extension for your cards you'll need to
 6. After you've toggled these press `Apply to Folders`.
 7. Next, press `OK`.
 
-Now you should see File Extensions alongside all of your files. As stated before this will allow you to change the File Extension for the mod. 
+Now you should see File Extensions alongside all of your files. As stated before this will allow you to change the File Extension for the mod.
 
 #### Getting the Path's
-Next up you'll likely want to grab a path, namely the one to your Plugins folder. This folder will lie wherever your BepInEx folder is. 
+Next up you'll likely want to grab a path, namely the one to your Plugins folder. This folder will lie wherever your BepInEx folder is.
 
 If you use a Mod Manager, go to one of the following places:
-* R2ModMan: `Settings` -> `Directories` -> `Profile Folder` -> `Browse` -> Navigate via File Explorer to `BepInEx` -> Navigate via File Explorer to `plugins` -> Go to the File Explorer Address Bar -> Click It -> Hit `CTRL+C` or the OS Equivalent. 
+* R2ModMan: `Settings` -> `Directories` -> `Profile Folder` -> `Browse` -> Navigate via File Explorer to `BepInEx` -> Navigate via File Explorer to `plugins` -> Go to the File Explorer Address Bar -> Click It -> Hit `CTRL+C` or the OS Equivalent.
 * GaleModManager: Click `File` in the Top Bar -> `Browse Profile Folder` -> Navigate via File Explorer to `BepInEx` -> Navigate via File Explorer to `plugins` -> Go to the File Explorer Address Bar -> Click It -> Hit `CTRL+C` or the OS Equivalent.
 * ThunderstoreModManager: `Settings` -> `Directories` -> `Profile Folder` -> `Browse` -> Navigate via File Explorer to `BepInEx` -> Navigate via File Explorer to `plugins` -> Go to the File Explorer Address Bar -> Click It -> Hit `CTRL+C` or the OS Equivalent.
 
 If your manual it should be something like:
 1. Navigate to the Games Local Install Folder
-  * XboxGames: `C:\XboxGames\Inscryption\Content`
-  * Steam: `\steamapps\common\Inscryption` after you get to the Steam Install Folder. 
+* XboxGames: `C:\XboxGames\Inscryption\Content`
+* Steam: `\steamapps\common\Inscryption` after you get to the Steam Install Folder.
 2. Next navigate to `BepInEx/plugins`
 3. Go to the File Explorer Address Bar -> Click It -> Hit `CTRL+C` or the OS Equivalent.
 
@@ -169,7 +169,7 @@ But the syntax is pretty much just;
 * Plain Text is treated as a folder name.
 * Plain Text followed by `.png` is treated as the file.
 
-If you want to make sure your syntax is valid open [Regexer](https://regexr.com/) and place in the Regex: `^(?:(?:\.\.\/|[a-zA-Z\d_-\s]+\/)*[a-zA-Z\d_-\s]+\.png|data:image\/png;base64,[A-Za-z0-9+/]+={0,2}|base64:[A-Za-z0-9+/]+={0,2})$` into the Expression box, and your path into the Text box. If your wondering why it's so long, we are validating 3 data forms in that Regex Patern.
+If you want to make sure your syntax is valid open [Regexer](https://regexr.com/) and place in the Regex: `^(?:(?:\.\.\/|[a-zA-Z\d_\s-]+\/)*[a-zA-Z\d_\s-]+\.png|data:image\/png;base64,[A-Za-z0-9+/]+={0,2}|base64:[A-Za-z0-9+/]+={0,2})$` into the Expression box, and your path into the Text box. If your wondering why it's so long, we are validating 3 data forms in that Regex Patern.
 
 #### Base64 Encoded Images:
 You may not be as familiar with this type of image, but more or less its an image where the image itself is in textual form, specifically encrypted in the format of a 64imal number system (basically there are 64 numbers instead of the usual 10), this is great if you want to keep your art from being included in another person's mod while keeping it in your own (Though someone could always go in the json and copy the base64). It also removed the need to make a physical image for the texture.
@@ -190,7 +190,7 @@ data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIAAAACACAYAAADDPmHLAAAAAXNSR0IArs
 
 This would decrypt to an image of the Archivist from the game. Though notably with JSONLoader alone this would be an All black image as it contains color, plus with the way we handle things, it portrait breaks, take it as a unintended quirk.
 
-If you want to make sure your syntax is valid open [Regexer](https://regexr.com/) and place in the Regex: `^(?:(?:\.\.\/|[a-zA-Z\d_-\s]+\/)*[a-zA-Z\d_-\s]+\.png|data:image\/png;base64,[A-Za-z0-9+/]+={0,2}|base64:[A-Za-z0-9+/]+={0,2})$` into the Expression box, and your path into the Text box. If your wondering why it's so long, we are validating 3 data forms in that Regex Patern.
+If you want to make sure your syntax is valid open [Regexer](https://regexr.com/) and place in the Regex: `^(?:(?:\.\.\/|[a-zA-Z\d_\s-]+\/)*[a-zA-Z\d_\s-]+\.png|data:image\/png;base64,[A-Za-z0-9+/]+={0,2}|base64:[A-Za-z0-9+/]+={0,2})$` into the Expression box, and your path into the Text box. If your wondering why it's so long, we are validating 3 data forms in that Regex Patern.
 ___
 ### JSONLoaderV1 Support:
 This version of JSONLoader supports Cards Exclusively and limited support for Modded Libraries. This is a Maintenance Version, outside of Bug Fixes it will NOT be updated.
@@ -285,7 +285,7 @@ With the API we offer some Configuration which you can find located in: `Chaosyr
 #### JSON Loading Origination Path
 This is effectively a CSV as a value. All values passed into it must be Paths using similar logic to that seen in the Artwork Form Support section of this README.
 
-By default, this value is set to: `Scripts, Plugins/Scripts` to make mods work without the User needing to configure this. But if you need more Paths just add them to the end of the CSV. 
+By default, this value is set to: `Scripts, Plugins/Scripts, Cards, Plugins/Cards` to make mods work without the User needing to configure this. But if you need more Paths just add them to the end of the CSV.
 
 These paths are Relative to your mods specific folder under the `plugins` folder, well more so any mod specific folder under the `plugins` folder but yes.
 
@@ -313,6 +313,9 @@ When this value is set to `true` the API will output some Additional Information
 
 #### Show Summary Information
 When this value is set to `true` when the API is validating Item's against their related Schema's, it will print the description of those properties as well. Again both to the Console and Log File.
+
+### Recursively Scan At Plugin Level
+Compatibility mode that makes the File Finder recursively scan from the Plugin Level rather than from the specified Path's levels in their respective configs.
 ___
 ## Installation
 
@@ -412,9 +415,9 @@ ___
 ### Manager
 
 1. Find the package that correlates with your system, below is a quick reference of the RID's and what they correlate to;
-  - Win-x64: XBOX Gamepass Version of the game (based on the game on Windows)
-  - Win-x86: For the Steam Version of the game (based on the game on Windows)
-  - We also offer versions for the following:
+- Win-x64: XBOX Gamepass Version of the game (based on the game on Windows)
+- Win-x86: For the Steam Version of the game (based on the game on Windows)
+- We also offer versions for the following:
     - Linux-Arm64
     - Linux-Arm
     - Linux-Musl-Arm64
@@ -424,7 +427,7 @@ ___
     - OSX-X64 (Mac)
     - Win-Arm64
 2. Enter your Mod Manager and Import as a Local Mod via the Following Steps:
-  - R2ModMan
+- R2ModMan
     1. Open the Application, Navigate to Inscryption, Navigate to the Profile you wish to Install to.
     2. Press `Settings`.
     3. Type `Import` into the Search box as highlighted below
@@ -440,7 +443,7 @@ ___
     7. Where it says `Author`: `Unknown` replace the `Unknown` with `MADH95`.
     8. Press `Import Local Mod`.
     9. Wait for Dependencies to Resolve and your set. (Note for any mods on Thunderstore needing an older version of JSONLoader you may want to also install them directly from the website, or do these steps after you finished installing those mods, you must remove ONLY the old version of the mod.)
-  - Gale
+- Gale
     1. Open the Application, Navigate to the Game, Than the Profile.
     2. At the top of the screen (on the left) press `Import` than `... Local Mod`.
     3. Navigate to and Select the File you just downloaded from this Release.
@@ -449,9 +452,9 @@ ___
 ### Manual
 
 1. Find the package that correlates with your system, below is a quick reference of the RID's and what they correlate to;
-  - Win-x64: XBOX Gamepass Version of the game (based on the game on Windows)
-  - Win-x86: For the Steam Version of the game (based on the game on Windows)
-  - We also offer versions for the following:
+- Win-x64: XBOX Gamepass Version of the game (based on the game on Windows)
+- Win-x86: For the Steam Version of the game (based on the game on Windows)
+- We also offer versions for the following:
     - Linux-Arm64
     - Linux-Arm
     - Linux-Musl-Arm64

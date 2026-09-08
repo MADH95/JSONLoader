@@ -209,42 +209,42 @@ public class Card
     ///
     /// New Description from JSONLoader v3.0.0: The Path to your cards Portrait, this is localized to your Plugins Folder. It's your job to keep it organized, do it as you would these 'JLDR' files. This must be a PNG File and must be a '114x94' image.
     /// </summary>
-    [Tooltip("Pattern(^(?:(?:\\.\\.\\/|[a-zA-Z\\d_-\\s]+\\/)*[a-zA-Z\\d_-\\s]+\\.png|data:image\\/png;base64,[A-Za-z0-9+/]+={0,2}|base64:[A-Za-z0-9+/]+={0,2})$)")]
+    [Tooltip("Pattern(^(?:(?:\\.\\.\\/|[a-zA-Z\\d_\\s-]+\\/)*[a-zA-Z\\d_\\s-]+\\.png|data:image\\/png;base64,[A-Za-z0-9+/]+={0,2}|base64:[A-Za-z0-9+/]+={0,2})$)")]
     public string texture;
     /// <summary>
     /// Original Description from JSONLoader v1.7.2: "A string for the name of the card's alternate image (must be .png)" |
     ///
     /// New Description from JSONLoader v3.0.0: The Path to your cards Alternative Portrait, this is localized to your Plugins Folder. It's your job to keep it organized, do it as you would these 'JLDR' files. This must be a PNG File and must be a '114x94' image. This applies in the case you have a Goat's Eye or possibly some other cases.
     /// </summary>
-    [Tooltip("Pattern(^(?:(?:\\.\\.\\/|[a-zA-Z\\d_-\\s]+\\/)*[a-zA-Z\\d_-\\s]+\\.png|data:image\\/png;base64,[A-Za-z0-9+/]+={0,2}|base64:[A-Za-z0-9+/]+={0,2})$)")]
+    [Tooltip("Pattern(^(?:(?:\\.\\.\\/|[a-zA-Z\\d_\\s-]+\\/)*[a-zA-Z\\d_\\s-]+\\.png|data:image\\/png;base64,[A-Za-z0-9+/]+={0,2}|base64:[A-Za-z0-9+/]+={0,2})$)")]
     public string altTexture;
     /// <summary>
     /// Original Description from JSONLoader v1.7.2: "A string for the name of the card's emission image (must be .png)" |
     ///
     /// New Description from JSONLoader v3.0.0: The Path to your cards Emissive Portrait, this is localized to your Plugins Folder. It's your job to keep it organized, do it as you would these 'JLDR' files. This must be a PNG File and must be a '114x94' image. This applies in the case you've transferred a sigil at the Sacrificial Stones onto this card.
     /// </summary>
-    [Tooltip("Pattern(^(?:(?:\\.\\.\\/|[a-zA-Z\\d_-\\s]+\\/)*[a-zA-Z\\d_-\\s]+\\.png|data:image\\/png;base64,[A-Za-z0-9+/]+={0,2}|base64:[A-Za-z0-9+/]+={0,2})$)")]
+    [Tooltip("Pattern(^(?:(?:\\.\\.\\/|[a-zA-Z\\d_\\s-]+\\/)*[a-zA-Z\\d_\\s-]+\\.png|data:image\\/png;base64,[A-Za-z0-9+/]+={0,2}|base64:[A-Za-z0-9+/]+={0,2})$)")]
     public string emissionTexture;
     /// <summary>
     /// Original Description from JSONLoader v1.7.2: "A string for the name of the card's title image (must be .png)" |
     ///
     /// New Description from JSONLoader v3.0.0: The Path to your cards Title Graphic, this is localized to your Plugins Folder. It's your job to keep it organized, do it as you would these 'JLDR' files. This must be a PNG File and must be a '113x28' image. This applies specifically over your card name as a way of obscuring it like the Tentacle Cards are.
     /// </summary>
-    [Tooltip("Pattern(^(?:(?:\\.\\.\\/|[a-zA-Z\\d_-\\s]+\\/)*[a-zA-Z\\d_-\\s]+\\.png|data:image\\/png;base64,[A-Za-z0-9+/]+={0,2}|base64:[A-Za-z0-9+/]+={0,2})$)")]
+    [Tooltip("Pattern(^(?:(?:\\.\\.\\/|[a-zA-Z\\d_\\s-]+\\/)*[a-zA-Z\\d_\\s-]+\\.png|data:image\\/png;base64,[A-Za-z0-9+/]+={0,2}|base64:[A-Za-z0-9+/]+={0,2})$)")]
     public string titleGraphic;
     /// <summary>
     /// Original Description from JSONLoader v1.7.2: "A string for the name of the card's act2 image (must be .png)" |
     ///
     /// New Description from JSONLoader v3.0.0: The Path to your cards Pixel Portrait, this is localized to your Plugins Folder. It's your job to keep it organized, do it as you would these 'JLDR' files. This must be a PNG File and must be a '41x28' image. This applies specifically in Act 2, its just that act's version of the card portrait.
     /// </summary>
-    [Tooltip("Pattern(^(?:(?:\\.\\.\\/|[a-zA-Z\\d_-\\s]+\\/)*[a-zA-Z\\d_-\\s]+\\.png|data:image\\/png;base64,[A-Za-z0-9+/]+={0,2}|base64:[A-Za-z0-9+/]+={0,2})$)")]
+    [Tooltip("Pattern(^(?:(?:\\.\\.\\/|[a-zA-Z\\d_\\s-]+\\/)*[a-zA-Z\\d_\\s-]+\\.png|data:image\\/png;base64,[A-Za-z0-9+/]+={0,2}|base64:[A-Za-z0-9+/]+={0,2})$)")]
     public string pixelTexture;
     /// <summary>
     /// Original Description from JSONLoader v1.7.2: "A string array for the texture names of a card decals (must be .png)" |
     ///
     /// New Description from JSONLoader v3.0.0: This is a list of all the Decal Images in which will be stacked onto your card, this is localized to your Plugins Folder. It's your job to keep it organized, do it as you would these 'JLDR' files. This must be a PNG File and must be a '125x190' image.
     /// </summary>
-    [Tooltip("Items(True) | ItemType(string) | Pattern(^(?:(?:\\.\\.\\/|[a-zA-Z\\d_-\\s]+\\/)*[a-zA-Z\\d_-\\s]+\\.png|data:image\\/png;base64,[A-Za-z0-9+/]+={0,2}|base64:[A-Za-z0-9+/]+={0,2})$) | UniqueItems(true)")]
+    [Tooltip("Items(True) | ItemType(string) | Pattern(^(?:(?:\\.\\.\\/|[a-zA-Z\\d_\\s-]+\\/)*[a-zA-Z\\d_\\s-]+\\.png|data:image\\/png;base64,[A-Za-z0-9+/]+={0,2}|base64:[A-Za-z0-9+/]+={0,2})$) | UniqueItems(true)")]
     public List<string> decals;
 }
 
@@ -332,7 +332,7 @@ public class TailData
     ///
     /// New Description from JSONLoader v3.0.0: The Path to your cards Tail Lost Portrait, this is localized to your Plugins Folder. It's your job to keep it organized, do it as you would these 'JLDR' files. This must be a PNG File and must be a '114x94' image. This applies specifically when this card is struck and lost its tail.
     /// </summary>
-    [Tooltip("Pattern(^(?:(?:\\.\\.\\/|[a-zA-Z\\d_-\\s]+\\/)*[a-zA-Z\\d_-\\s]+\\.png|data:image\\/png;base64,[A-Za-z0-9+/]+={0,2}|base64:[A-Za-z0-9+/]+={0,2})$)")]
+    [Tooltip("Pattern(^(?:(?:\\.\\.\\/|[a-zA-Z\\d_\\s-]+\\/)*[a-zA-Z\\d_\\s-]+\\.png|data:image\\/png;base64,[A-Za-z0-9+/]+={0,2}|base64:[A-Za-z0-9+/]+={0,2})$)")]
     public string tailLostPortrait;
 }
 
