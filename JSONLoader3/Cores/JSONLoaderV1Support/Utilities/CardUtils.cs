@@ -28,7 +28,7 @@ public class CardUtils
     /// <summary>
     /// A public facing read-only collection of all JLDR Cards passed to the API.
     /// </summary>
-    public static ReadOnlyCollection<CardInfo> allJLDRCardsPublic = new ReadOnlyCollection<CardInfo>(allJLDRCards);
+    public static ReadOnlyCollection<CardInfo> allJLDRCardsPublic => allJLDRCards.AsReadOnly();
 
     /// <summary>
     /// A function to handle the loading of <see cref="JSONLoaderV1Support.Schemas.Card"/>'s.
@@ -388,7 +388,7 @@ public class CardUtils
                     $"Found {propertyName} with value of ({tail}) successfully while parsing {typeof(Card).Name} from {Path.GetFileNameWithoutExtension(pluginName)} specifically {Path.GetFileNameWithoutExtension(file)}.");
             }
 
-            if (propertyName == "iceCube" && depth == 0)
+            if (propertyName == "iceCube" && depth == 1)
             {
                 List<(int depth, string propertyName, string propertyValue)> iceCubeData = LintingTools.GetObjectProperties(propertyValue);
 
@@ -481,6 +481,5 @@ public class CardUtils
             pluginName);
         CardInfo info = objectCard.ConvertCardObjectToCardInfo();
         allJLDRCards.Add(info);
-        allJLDRCardsPublic = new ReadOnlyCollection<CardInfo>(allJLDRCards);
     }
 }

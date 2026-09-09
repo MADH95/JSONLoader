@@ -3,6 +3,8 @@ using BepInEx;
 using BepInEx.Logging;
 using Cecil_Libraries.ANSI_Utils.Lists;
 using Cecil_Libraries.ANSI_Utils.Objects;
+using DiskCardGame;
+using JSONLoader3.Cores.JSONLoaderV1Support.Utilities;
 using JSONLoader3.Peripheral.FILE_Loader;
 using JSONLoader3.Peripheral.JSON_SCHEMA;
 using JSONLoader3.Subperipheral.JSONLoader_Configuration;
@@ -27,7 +29,8 @@ namespace JSONLoader3
         /// <summary>
         /// This resembles the Version of the API, when this is updated make sure to update the value.
         /// </summary>
-        public const string PluginVersion = "3.0.0";
+        public const string PluginVersion = "3.0.0.00000005";
+        // Major, Minor, Patch - Nightly - Major (00), Minor (00), Patch (05), the (0) between indicate dash separators.
 
         /// <summary>
         /// This color is associated with the Error Logging Level.
@@ -67,6 +70,10 @@ namespace JSONLoader3
             FormatLogger("info", "Initialization for JSONLoader3 and CSVLoader","Finished Creating JSONLoader3 and CSVLoader Configuration");
             FindFiles.FindFilesToLoad();
             LoadFiles.LoadFoundFiles();
+            foreach (CardInfo info in CardUtils.allJLDRCardsPublic)
+            {
+                FormatLogger("info", "Initialization for JSONLoader3 and CSVLoader",$"Successfully Loaded card: {info.name}");
+            }
             FormatLogger("info", "Initialization for JSONLoader3 and CSVLoader","Finished Loading JSONLoader, JSONLoader2, JSONLoader3 and CSVLoader.");
         }
 

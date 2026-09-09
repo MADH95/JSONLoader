@@ -5,7 +5,7 @@
         <RuntimeIdentifiers>win-x64;win-x86;win-arm64;linux-x64;linux-arm;linux-arm64;linux-musl-x64;linux-musl-arm64;osx-x64;osx-arm64</RuntimeIdentifiers>
         <AssemblyName>JSON Loader v3</AssemblyName>
         <Description>This is the new Modulated and API Based system in which JSONLoader will run off of (and maybe a CSV loader too)</Description>
-        <Version>3.0.0</Version>
+        <Version>3.0.0-Nightly-0.0.5</Version>
         <Authors>Chaosyr</Authors>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
         <LangVersion>Latest</LangVersion>
@@ -65,7 +65,7 @@
         <ReleaseMode>Prerelease</ReleaseMode>
         <!--Thunderstore Manifest Properties-->
         <ThunderstorePackageName>JSON_and_CSV_Loader_Nightly</ThunderstorePackageName>
-        <ThunderstorePackageVersion>0.0.3</ThunderstorePackageVersion>
+        <ThunderstorePackageVersion>0.0.5</ThunderstorePackageVersion>
         <ThunderstoreWebsiteURL>https://github.com/MADH95/JSONLoader/tree/Refactor-JSONLoader-3</ThunderstoreWebsiteURL>
         <ThunderstorePackageDescription>This is the Nightly version of JSONLoader, this is effectively a preview of whats to come to JSONLoader (and CSVLoader).</ThunderstorePackageDescription>
         <ThunderstorePackageDependencyStrings>BepInEx-BepInExPack_Inscryption-5.4.2305;BepInEx-MonoMod_Loader_Inscryption-1.0.0;API_dev-API-2.24.0;Cecil_Libraries_Organization-Cecil_Libraries_Package-1.0.1;Stoat_Games-ANSI_Mod-2.0.1</ThunderstorePackageDependencyStrings>

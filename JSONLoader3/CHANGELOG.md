@@ -3,6 +3,12 @@
 <details open>
 <summary>JSONLoader 3.0.0 Changelog</summary>
 
+## 3.0.0-Nightly-0.0.5
+* Fixed IceCube not loading correctly on boot (it used to check for the wrong depth.)
+* Fixes `allJLDRCardsPublic` for automatic updating as cards are loaded.
+* Add Non-Debug logging for successful addition of cards.
+* Fix potential loading issue due to versioning.
+
 ## 3.0.0-Nightly-0.0.4
 * Fixed the Image Related Regexes provided under JSONLoaderV1's Card Object.
 * Added Ability for Image Paths to be just the FileName, in this case we try to recursively search the Plugin Folder for the image.
