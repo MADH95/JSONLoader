@@ -28,6 +28,7 @@ namespace JSONLoader3.Peripheral.Tooltip_Parser;
 /// * Minimum - Int - Used in Int - This mandates a Minimum Number.
 /// * Maximum - Int - Used in Int - This mandates a Maximum Number.
 /// * AdditionalProperties - Boolean - Used in Object and Object Array - Determines whether additional properties are valid.
+/// * AnyOf - WOAH SEE THE SECTION BY THE SAME NAME - Used in String Array - Defines whether other variations are okay for this array.
 ///
 /// If you inevitably need more as of present you'll need to code handling into the Schema and Linter.
 ///
@@ -38,6 +39,23 @@ namespace JSONLoader3.Peripheral.Tooltip_Parser;
 /// An example of such would be: [Tooltip("REQUIRED | MinimumLength(1) | Pattern(^[a-zA-Z\\d_]+$)")]
 ///
 /// Notice the '//' in the Regex? That's because C# needs it to be escaped in quotes, but don't worry we properly escape it for JSON in <see cref="ReadDocumentationFile.EscapeJSON"/>
+///
+/// AnyOf Variable
+///
+/// To use this we need to define some special syntaxes, it kinda has its own language within the language.
+///
+/// First things first, any valid AnyOf Items should be surrounded in '[]' and than after that split by the ';' delimitor.
+///
+/// Next up to define the properties we have our own set of vars, with their own definitions:
+///
+/// * Title - The Title of the Validator Set for the Array.
+/// * Description - The Description of the Validator Set for the Array.
+/// * Type - The Type in which the Validator is used to Validate.
+/// * Enums - A list of options which are valid under that validator.
+///
+/// To define it would be for example "AnyOf([Title: Base Game Meta Category, Description: A Meta Category from the Base Game, Type: string, Enums: ChoiceNode > TraderOffer > Part3Random > Rare > GBCPack > GBCPlayable > AscensionUnlock];[Title: Modded Meta Category, Description: Format is {Mod GUID}.{Meta Category Name}, Type: string])"
+///
+/// Each variable is delimited by ',' within the AnyOf Validator Set, and the ':' acts as delimiter between field and value. Lastly within Enums because we delimit our fields with ',' the delimiter is '>'.
 /// </summary>
 /// <remarks>This code is provided by Creator/Chaosyr/SaxbyMod/The Stoat Lord.</remarks>
 /// <example>Hey, please go to the Original Class to view this properly.</example>

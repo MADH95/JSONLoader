@@ -68,7 +68,7 @@ public class Card
     /// <summary>
     /// Original Description from JSONLoader v1.7.2: "An integer value for the health of a card" |
     ///
-    /// New Description from JSONLoader v3.0.0: This value determines the health value of the card, it cannot be negative or 0.
+    /// New Description from JSONLoader v3.0.0: This value determines the health value of the card, it cannot be negative or 1.
     /// </summary>
     [Tooltip("Default(1) | Minimum(1)")]
     public int baseHealth;

@@ -3,6 +3,23 @@
 <details open>
 <summary>JSONLoader 3.0.0 Changelog</summary>
 
+## 3.0.0-Nightly-0.0.6
+* Fixed JLDR Card Schema refering to Health with `can't be negative or below 0` to `can't be negative or below 1` matching the schema requirements.
+* Fixed a similar issue to the above occuring in the CardUtils for JLDR Cards.
+* Fixed an issue with JLDR Cards where we don't check for if the Card in the `Evolution`, `IceCube`, or `Tail` was provided by JSONLoader before passing it. If its from JSONLoader we now properly handle it.
+* Fixed Defaults for `Temple`, and `CardComplexity` for JLDR Cards not being set.
+* Fixed Defaults for `TurnsToEvolve` not being set on a throw.
+* Fixed `tailName` and `evolutionName` sets to refer to `name` as they are referred to within the `Evolution` and `Tail` Schemas.
+* Updated WriteSchema to use `StartsWith()` rather than `GetIndex()` like we were using before.
+* Implemented Writing for `AdditionalProperties` with a Type under WriteSchema.
+* Added Validation for the Schema Type `AnyOf[]`.
+* Added Variable to TooltipDisector for `AnyOf[]`.
+* Added Ability for WriteSchema to write `AnyOf[]`.
+* Removed a load of Debug Logging that was irrelevant to the process.
+* Reordered how the JLDR Card Loads its properties to match Schema Order.
+* Implemented JLDR2 Card's fully, note there may be some lingering bugs.
+* Clarified some Debug Lines.
+
 ## 3.0.0-Nightly-0.0.5
 * Fixed IceCube not loading correctly on boot (it used to check for the wrong depth.)
 * Fixes `allJLDRCardsPublic` for automatic updating as cards are loaded.

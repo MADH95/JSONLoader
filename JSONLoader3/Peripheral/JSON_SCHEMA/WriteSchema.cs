@@ -103,6 +103,90 @@ public class WriteSchema
     }
 
     /// <summary>
+    /// This function handles the Schema Writing logic for AnyOf[] fields within JSON Schema.
+    /// </summary>
+    /// <param name="anyOf">The String Value associated with the AnyOf Tooltip.</param>
+    /// <param name="Indentation">The amount of excess indentation needed.</param>
+    /// <returns>A Multi-Line String representing the Handled AnyOf Array.</returns>
+    /// <remarks>This code is provided by Creator/Chaosyr/SaxbyMod/The Stoat Lord.</remarks>
+    public static string HandleAnyOf(string anyOf, int Indentation)
+    {
+        string toWrite = "";
+        List<string> anyOfProps = anyOf.Replace('(', ' ').Replace(')', ' ').Split(';').ToList();
+        foreach (string anyOfProp in anyOfProps)
+        {
+            toWrite += $$"""
+                         
+                                         {{new string(' ', Indentation * 4)}}{
+                         """;
+            List<string> anyOfPropProps = anyOfProp.Replace('[', ' ').Replace(']', ' ').Split(',').ToList();
+            
+            
+            List<(string field, string value)> anyOfPropPropsFields = new List<(string field, string value)>();
+            
+            foreach (string item in anyOfPropProps)
+            {
+                int separatorIndex = item.IndexOf(':');
+
+                if (separatorIndex >= 0)
+                {
+                    anyOfPropPropsFields.Add((
+                        item.Substring(0, separatorIndex).Trim(),
+                        item.Substring(separatorIndex + 1).Trim()
+                    ));
+                }
+            }
+            
+            // Handle Title
+            (string field, string value) title = anyOfPropPropsFields.FirstOrDefault(x => x.field == "Title");
+            toWrite += $$"""
+                         
+                                             {{new string(' ', Indentation * 4)}}"title": "{{title.value}}",
+                         """;
+            
+            // Handle Description
+            (string field, string value) description = anyOfPropPropsFields.FirstOrDefault(x => x.field == "Description");
+            toWrite += $$"""
+                         
+                                             {{new string(' ', Indentation * 4)}}"description": "{{description.value}}",
+                         """;
+            
+            (string field, string value) type = anyOfPropPropsFields.FirstOrDefault(x => x.field == "Type");
+            toWrite += $$"""
+                         
+                                             {{new string(' ', Indentation * 4)}}"type": "{{type.value}}",
+                         """;
+
+            if (type.value == "string")
+            {
+                // Optional Enums Values
+                (string field, string value) enums = anyOfPropPropsFields.FirstOrDefault(x => x.field == "Enums");
+                if (enums != (null, null))
+                {
+                    toWrite += $$"""
+
+                                                     {{new string(' ', Indentation * 4)}}"enum": [
+                                                         {{new string(' ', Indentation * 4)}}{{string.Join($", {Environment.NewLine}                        {new string(' ', Indentation * 4)}", enums.value.Split('>').Select(x => $"\"{x.Trim()}\""))}}
+                                                     {{new string(' ', Indentation * 4)}}],
+                                 """;
+                }
+            }
+
+            toWrite = toWrite.TrimEnd();
+            toWrite = toWrite.TrimEnd(',');
+            toWrite += $$"""
+                         
+                                         {{new string(' ', Indentation * 4)}}},
+                         """;
+        }
+        
+        toWrite = toWrite.TrimEnd();
+        toWrite = toWrite.TrimEnd(',');
+
+        return toWrite;
+    }
+
+    /// <summary>
     /// This function handles String related JSON Schema Components.
     /// </summary>
     /// <param name="writableFields">A list of all the writable fields, we namely use it here for comma assurance.</param>
@@ -123,7 +207,7 @@ public class WriteSchema
                      """;
 
         // Optional Minimum Length
-        string minLength = tooltips.FirstOrDefault(x => x.IndexOf("MinimumLength", StringComparison.Ordinal) >= 0);
+        string minLength = tooltips.FirstOrDefault(x => x.StartsWith("MinimumLength(", StringComparison.Ordinal));
         if (minLength != null)
             toWrite += $$"""
 
@@ -131,7 +215,7 @@ public class WriteSchema
                          """;
 
         // Optional Regex Pattern
-        string pattern = tooltips.FirstOrDefault(x => x.IndexOf("Pattern", StringComparison.Ordinal) >= 0);
+        string pattern = tooltips.FirstOrDefault(x => x.StartsWith("Pattern(", StringComparison.Ordinal));
         if (pattern != null)
             toWrite += $$"""
 
@@ -139,7 +223,7 @@ public class WriteSchema
                          """;
 
         // Optional Default Value
-        string @default = tooltips.FirstOrDefault(x => x.IndexOf("Default", StringComparison.Ordinal) >= 0);
+        string @default = tooltips.FirstOrDefault(x => x.StartsWith("Default(", StringComparison.Ordinal));
         if (@default != null)
             toWrite += $$"""
 
@@ -147,13 +231,30 @@ public class WriteSchema
                          """;
 
         // Optional Enums Values
-        string enums = tooltips.FirstOrDefault(x => x.IndexOf("Enums", StringComparison.Ordinal) >= 0);
+        string enums = tooltips.FirstOrDefault(x => x.StartsWith("Enums(", StringComparison.Ordinal));
         if (enums != null)
         {
             toWrite += $$"""
 
                                      {{new string(' ', Indentation * 4)}}"enum": [
                                          {{new string(' ', Indentation * 4)}}{{string.Join($", {Environment.NewLine}                {new string(' ', Indentation * 4)}", enums.Split('(').Last().Trim('(', ')').Split(',').Select(x => $"\"{x.Trim()}\""))}}
+                                     {{new string(' ', Indentation * 4)}}],
+                         """;
+        }
+        
+        // Optional AnyOf
+        string anyOf = tooltips.FirstOrDefault(x => x.StartsWith("AnyOf(", StringComparison.Ordinal));
+        if (anyOf != null)
+        {
+            toWrite += $$"""
+
+                                     {{new string(' ', Indentation * 4)}}"anyOf": [
+                         """;
+
+            toWrite += HandleAnyOf(anyOf, Indentation);
+
+            toWrite += $$"""
+
                                      {{new string(' ', Indentation * 4)}}],
                          """;
         }
@@ -194,7 +295,7 @@ public class WriteSchema
                      """;
 
         // Optional Default Value
-        string @default = tooltips.FirstOrDefault(x => x.IndexOf("Default", StringComparison.Ordinal) >= 0);
+        string @default = tooltips.FirstOrDefault(x => x.StartsWith("Default(", StringComparison.Ordinal));
         if (@default != null)
             toWrite += $$"""
 
@@ -202,7 +303,7 @@ public class WriteSchema
                          """;
 
         // Option Minimum Value
-        string minimum = tooltips.FirstOrDefault(x => x.IndexOf("Minimum", StringComparison.Ordinal) >= 0);
+        string minimum = tooltips.FirstOrDefault(x => x.StartsWith("Minimum(", StringComparison.Ordinal));
         if (minimum != null)
             toWrite += $$"""
 
@@ -210,7 +311,7 @@ public class WriteSchema
                          """;
 
         // Option Maximum Value
-        string maximum = tooltips.FirstOrDefault(x => x.IndexOf("Maximum", StringComparison.Ordinal) >= 0);
+        string maximum = tooltips.FirstOrDefault(x => x.StartsWith("Maximum(", StringComparison.Ordinal));
         if (maximum != null)
             toWrite += $$"""
 
@@ -253,7 +354,7 @@ public class WriteSchema
                      """;
                 
         // Optional Default Value
-        string @default = tooltips.FirstOrDefault(x => x.IndexOf("Default", StringComparison.Ordinal) >= 0);
+        string @default = tooltips.FirstOrDefault(x => x.StartsWith("Default(", StringComparison.Ordinal));
         if (@default != null)
             toWrite += $$"""
 
@@ -296,7 +397,7 @@ public class WriteSchema
                      """;
 
         // Optional Items Value
-        string items = tooltips.FirstOrDefault(x => x.IndexOf("Items", StringComparison.Ordinal) >= 0);
+        string items = tooltips.FirstOrDefault(x => x.StartsWith("Items(", StringComparison.Ordinal));
         if (items != null && items.Split('(').Last().Trim('(', ')').ToLower() == "true")
         {
             toWrite += $$"""
@@ -305,8 +406,7 @@ public class WriteSchema
                          """;
 
             // Optional ItemType Value
-            string itemType =
-                tooltips.FirstOrDefault(x => x.IndexOf("ItemType", StringComparison.Ordinal) >= 0);
+            string itemType = tooltips.FirstOrDefault(x => x.StartsWith("ItemType(", StringComparison.Ordinal));
             if (itemType != null)
                 toWrite += $$"""
 
@@ -314,7 +414,7 @@ public class WriteSchema
                              """;
 
             // Optional Regex Pattern
-            string pattern = tooltips.FirstOrDefault(x => x.IndexOf("Pattern", StringComparison.Ordinal) >= 0);
+            string pattern = tooltips.FirstOrDefault(x => x.StartsWith("Pattern(", StringComparison.Ordinal));
             if (pattern != null)
                 toWrite += $$"""
 
@@ -322,13 +422,30 @@ public class WriteSchema
                              """;
 
             // Optional Enums Values
-            string enums = tooltips.FirstOrDefault(x => x.IndexOf("Enums", StringComparison.Ordinal) >= 0);
+            string enums = tooltips.FirstOrDefault(x => x.StartsWith("Enums(", StringComparison.Ordinal));
             if (enums != null)
             {
                 toWrite += $$"""
 
                                              {{new string(' ', Indentation * 4)}}"enum": [
                                                  {{new string(' ', Indentation * 4)}}{{string.Join($", {Environment.NewLine}                    {new string(' ', Indentation * 4)}", enums.Split('(').Last().Trim('(', ')').Split(',').Select(x => $"\"{x.Trim()}\""))}}
+                                             {{new string(' ', Indentation * 4)}}],
+                             """;
+            }
+            
+            // Optional AnyOf
+            string anyOf = tooltips.FirstOrDefault(x => x.StartsWith("AnyOf(", StringComparison.Ordinal));
+            if (anyOf != null)
+            {
+                toWrite += $$"""
+
+                                             {{new string(' ', Indentation * 4)}}"anyOf": [
+                             """;
+
+                toWrite += HandleAnyOf(anyOf, Indentation + 1);
+
+                toWrite += $$"""
+
                                              {{new string(' ', Indentation * 4)}}],
                              """;
             }
@@ -342,7 +459,7 @@ public class WriteSchema
         }
 
         // Optional UniqueItems Value
-        string UniqueItems = tooltips.FirstOrDefault(x => x.IndexOf("UniqueItems", StringComparison.Ordinal) >= 0);
+        string UniqueItems = tooltips.FirstOrDefault(x => x.StartsWith("UniqueItems(", StringComparison.Ordinal));
         if (UniqueItems != null)
             toWrite += $$"""
 
@@ -386,7 +503,7 @@ public class WriteSchema
                              """;
                 
                 // Optional Items Value
-                string items = tooltips.FirstOrDefault(x => x.IndexOf("Items", StringComparison.Ordinal) >= 0);
+                string items = tooltips.FirstOrDefault(x => x.StartsWith("Items(", StringComparison.Ordinal));
                 if (items != null && items.Split('(').Last().Trim('(', ')').ToLower() == "true")
                 {
                     toWrite += $$"""
@@ -395,8 +512,7 @@ public class WriteSchema
                                  """;
 
                     // Optional ItemType Value
-                    string itemType =
-                        tooltips.FirstOrDefault(x => x.IndexOf("ItemType", StringComparison.Ordinal) >= 0);
+                    string itemType = tooltips.FirstOrDefault(x => x.StartsWith("ItemType(", StringComparison.Ordinal));
                     if (itemType != null)
                         toWrite += $$"""
                                      
@@ -404,16 +520,30 @@ public class WriteSchema
                                      """;
                     
                     // Optional AdditionalProperties Value
-                    string additionalProperties = tooltips.FirstOrDefault(x => x.IndexOf("AdditionalProperties", StringComparison.Ordinal) >= 0);
+                    string additionalProperties = tooltips.FirstOrDefault(x => x.StartsWith("AdditionalProperties(", StringComparison.Ordinal));
                     if (additionalProperties != null)
-                        toWrite += $$"""
-                                     
-                                                     {{new string(' ', Indentation*4)}}"additionalProperties": {{additionalProperties.Split('(').Last().Trim('(', ')').ToLower()}},
-                                     """;
+                    {
+                        string value = additionalProperties.Split('(').Last().Trim('(', ')').ToLower();
+                        if (value == "true" || value == "false")
+                            toWrite += $$"""
 
-                    string returnedJSON = RecursiveWrite(elementType, Indentation+3);
-                
-                    toWrite += returnedJSON;
+                                                     {{new string(' ', Indentation*4)}}"additionalProperties": {{value}},
+                                         """;
+                        else
+                            toWrite += $$"""
+
+                                                     {{new string(' ', Indentation*4)}}"additionalProperties": {
+                                                         {{new string(' ', Indentation*4)}}"type": "{{value}}"
+                                                     {{new string(' ', Indentation*4)}}},
+                                         """;
+                    }
+
+                    if (elementType != typeof(object))
+                    {
+                        string returnedJSON = RecursiveWrite(elementType, Indentation+3);
+
+                        toWrite += returnedJSON;
+                    } 
                     
                     toWrite = toWrite.TrimEnd();
                     toWrite = toWrite.TrimEnd(',');
@@ -424,7 +554,7 @@ public class WriteSchema
                 }
                 
                 // Optional UniqueItems Value
-                string UniqueItems = tooltips.FirstOrDefault(x => x.IndexOf("UniqueItems", StringComparison.Ordinal) >= 0);
+                string UniqueItems = tooltips.FirstOrDefault(x => x.StartsWith("UniqueItems(", StringComparison.Ordinal));
                 if (UniqueItems != null)
                     toWrite += $$"""
                                  
@@ -465,10 +595,32 @@ public class WriteSchema
                                  {{new string(' ', Indentation*4)}}"type": "object",
                                  {{new string(' ', Indentation*4)}}"description": "{{ReadDocumentationFile.EscapeJSON(ReadDocumentationFile.GetJSONSummary(ReadDocumentationFile.GetInfo(field.Name, Class)))}}",
                      """;
-        string returnedJSON = RecursiveWrite(field.FieldType, Indentation+2);
+            // Optional AdditionalProperties Value
+            string additionalProperties = tooltips.FirstOrDefault(x => x.StartsWith("AdditionalProperties(", StringComparison.Ordinal));
+            if (additionalProperties != null)
+            {
+                string value = additionalProperties.Split('(').Last().Trim('(', ')').ToLower();
+                if (value == "true" || value == "false")
+                    toWrite += $$"""
 
-        toWrite += returnedJSON;
-                
+                                             {{new string(' ', Indentation*4)}}"additionalProperties": {{value}},
+                                 """;
+                else
+                    toWrite += $$"""
+
+                                             {{new string(' ', Indentation*4)}}"additionalProperties": {
+                                                 {{new string(' ', Indentation*4)}}"type": "{{value}}"
+                                             {{new string(' ', Indentation*4)}}},
+                                 """;
+            }
+
+            if (field.FieldType != typeof(object))
+            {
+                string returnedJSON = RecursiveWrite(field.FieldType, Indentation + 2);
+
+                toWrite += returnedJSON;
+            } 
+
         toWrite = toWrite.TrimEnd();
         toWrite = toWrite.TrimEnd(',');
         toWrite += $$"""
@@ -562,7 +714,6 @@ public class WriteSchema
             // Handles Object JSON Schema Types
             else if (field.FieldType.IsClass)
             {
-                
                 WritingWriter.Write(HandleObject(writableFields, field, tooltips, 0, typeof(Class)));
             }
         }
@@ -628,28 +779,24 @@ public class WriteSchema
             // Handles Boolean JSON Schema Types
             else if (field.FieldType == typeof(bool))
             {
-                
                 toSendOut += HandleBoolean(writableFields, field, tooltips, Indentation, Class);
             }
             
             // Handles Array JSON Schema Types
             else if (field.FieldType == typeof(List<string>))
             {
-                
                 toSendOut += HandleStringArray(writableFields, field, tooltips, Indentation, Class);
             }
 
             // Handles Object Array JSON Schema Types
             else if (field.FieldType.IsGenericType && field.FieldType.GetGenericTypeDefinition() == typeof(List<>))
             {
-                
                 toSendOut += HandleObjectArray(writableFields, field, tooltips, Indentation, Class);
             }
             
             // Handles Object JSON Schema Types
             else if (field.FieldType.IsClass)
             {
-                
                 toSendOut += HandleObject(writableFields, field, tooltips, Indentation, Class);
             }
         }

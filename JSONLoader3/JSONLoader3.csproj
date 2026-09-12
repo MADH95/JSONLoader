@@ -42,7 +42,6 @@
     
     <ItemGroup>
       <Folder Include="Cores\CSVLoaderV1Support\Schemas\" />
-      <Folder Include="Cores\JSONLoaderV2Support\Schemas\" />
       <Folder Include="Cores\JSONLoaderV3Support\Schemas\" />
       <Folder Include="Peripheral\CSV_LINT\" />
       <Folder Include="Peripheral\CSV_SCHEMA\" />

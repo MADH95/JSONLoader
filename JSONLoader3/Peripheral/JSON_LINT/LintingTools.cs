@@ -58,7 +58,7 @@ public class LintingTools
             requiredFieldTicks.Add((field, false));
         }
 
-        JSONLoader3.FormatLogger("Debug", "LintingTools", $"Required Fields: {string.Join(", ", requiredFields)}");
+        JSONLoader3.FormatLogger("Debug", "LintingTools", $"Required Properties Found: {string.Join(", ", requiredFields)}");
 
         foreach ((int depth, string propertyName, string propertyValue) prop in JSONProperties.Where(x => x.depth == 1))
         {
@@ -112,27 +112,11 @@ public class LintingTools
                     }
                 }
             }
-            else
-            {
-                JSONLoader3.FormatLogger("Debug", "LintingTools", $"Successfully Linted for Path: {path}");
-            }
 
             if (requiredFields.Contains(prop.propertyName))
             {
-                JSONLoader3.FormatLogger(
-                    "Debug",
-                    "LintingTools",
-                    $"'{prop.propertyName}' is a required field."
-                );
-
                 for (int i = 0; i < requiredFieldTicks.Count; i++)
                 {
-                    JSONLoader3.FormatLogger(
-                        "Debug",
-                        "LintingTools",
-                        $"Required Tick [{i}]: ({requiredFieldTicks[i].Item1}, {requiredFieldTicks[i].Item2})"
-                    );
-
                     if (requiredFieldTicks[i].Item1 == prop.propertyName)
                     {
                         requiredFieldTicks[i] = (prop.propertyName, true);
@@ -140,7 +124,7 @@ public class LintingTools
                         JSONLoader3.FormatLogger(
                             "Debug",
                             "LintingTools",
-                            $"Ticked '{prop.propertyName}' as checked."
+                            $"Ticked \"{prop.propertyName}\" as checked for the Required Properties."
                         );
 
                         break;
@@ -161,12 +145,6 @@ public class LintingTools
                 }
             }
         }
-
-        JSONLoader3.FormatLogger(
-            "Debug",
-            "LintingTools",
-            $"Final Required Ticks: {string.Join(", ", requiredFieldTicks.Select(x => $"({x.field}, {x.checkedField})"))}"
-        );
 
         foreach ((string field, bool check) in requiredFieldTicks)
         {
@@ -524,6 +502,71 @@ public class LintingTools
             .Where(x => x.depth == objectDepth)
             .ToList();
     }
+    
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="jsonObject">A String representing the JSON Object.</param>
+    /// <param name="propertyToFind">The Property in which you want to find in the Schema Sample passed in.</param>
+    /// <param name="file">The full path to the JSON File.</param>
+    /// <returns></returns>
+    internal static List<(int depth, string propertyName, string propertyValue)> GetObjectProperties(string jsonObject, string propertyToFind, string file)
+    {
+        if (jsonObject.Trim() != "{")
+        {
+            return GetObjectProperties(jsonObject);
+        }
+
+        List<string> JSONFile = File.ReadAllLines(file).ToList();
+
+        int propertyIndex = JSONFile.FindIndex(x =>
+            x.Trim().StartsWith($"\"{propertyToFind}\""));
+
+        if (propertyIndex == -1)
+        {
+            return new List<(int depth, string propertyName, string propertyValue)>();
+        }
+
+        string completeObject = JSONFile[propertyIndex]
+            .Substring(JSONFile[propertyIndex].IndexOf(":") + 1)
+            .Trim();
+
+        int depth = 0;
+
+        foreach (char character in completeObject)
+        {
+            if (character == '{')
+            {
+                depth++;
+            }
+            else if (character == '}')
+            {
+                depth--;
+            }
+        }
+
+        while (depth > 0 && propertyIndex + 1 < JSONFile.Count)
+        {
+            propertyIndex++;
+
+            string nextLine = JSONFile[propertyIndex].Trim();
+            completeObject += "\n" + nextLine;
+
+            foreach (char character in nextLine)
+            {
+                if (character == '{')
+                {
+                    depth++;
+                }
+                else if (character == '}')
+                {
+                    depth--;
+                }
+            }
+        }
+
+        return GetObjectProperties(completeObject.TrimEnd(','));
+    }
 
     /// <summary>
     /// See <see cref="DigThroughArrayFindRelevant"/> for more details.
@@ -590,6 +633,66 @@ public class LintingTools
 
         return DigThroughArrayFindRelevant(completeArray.TrimEnd(','));
     }
+    
+    /// <summary>
+    /// Gets The Schemas under the AnyOf Type.
+    /// </summary>
+    /// <param name="JSONSchema">A List Of String resembling the Schema Segment to Dig Through.</param>
+    /// <returns>A List of Schemas associated with the AnyOf Type.</returns>
+    /// /// <remarks>This code is provided by Creator/Chaosyr/SaxbyMod/The Stoat Lord.</remarks>
+    internal static List<List<string>> GetAnyOfSchemas(List<string> JSONSchema)
+    {
+        List<List<string>> anyOfSchemas = new List<List<string>>();
+
+        int anyOfIndex = JSONSchema.FindIndex(x =>
+            x.Trim().StartsWith("\"anyOf\": ["));
+
+        if (anyOfIndex == -1)
+        {
+            return anyOfSchemas;
+        }
+
+        List<string> currentSchema = null;
+        int braceDepth = 0;
+
+        for (int i = anyOfIndex + 1; i < JSONSchema.Count; i++)
+        {
+            string line = JSONSchema[i];
+
+            if (line.Trim().StartsWith("{"))
+            {
+                if (braceDepth == 0)
+                {
+                    currentSchema = new List<string>();
+                }
+
+                braceDepth++;
+            }
+
+            if (currentSchema != null)
+            {
+                currentSchema.Add(line);
+            }
+
+            if (line.Trim().StartsWith("}"))
+            {
+                braceDepth--;
+
+                if (braceDepth == 0 && currentSchema != null)
+                {
+                    anyOfSchemas.Add(currentSchema);
+                    currentSchema = null;
+                }
+            }
+
+            if (line.Trim() == "]" && braceDepth == 0)
+            {
+                break;
+            }
+        }
+
+        return anyOfSchemas;
+    }
 
     /// <summary>
     /// See <see cref="DigThroughArrayFindRelevant"/> for more details.
@@ -649,6 +752,11 @@ public class LintingTools
         foreach (string line in description.Split('|').ToList())
             JSONLoader3.FormatLogger("Summary", "LintingTools", line.Trim().Replace("\\\"", "\""));
 
+        if (type == "string" && PropertySchema.Any(x => x.Trim().StartsWith("\"anyOf\": [")))
+        {
+            return ValidateAnyOf(jsonPropertyName, jsonPropertyValue, PropertySchema, file, schemaFile);
+        }
+
         if (type == "string")
         {
             return ValidateString(jsonPropertyName, jsonPropertyValue, newPropertySchema, file, schemaFile);
@@ -676,6 +784,52 @@ public class LintingTools
         }
 
         return true;
+    }
+
+    /// <summary>
+    /// This is the JSON Validator's AnyOf Handler, it handles ensuring the String Property is Valid.
+    /// </summary>
+    /// <param name="jsonPropertyName">The Property we are Validating.</param>
+    /// <param name="jsonPropertyValue">The Property Value we are Validating.</param>
+    /// <param name="PropertySchema">The List of String representing the Schema.</param>
+    /// <param name="file">The Full Path to the JSON File.</param>
+    /// <param name="schemaFile">The Full Path to the JSON Schema File.</param>
+    /// <returns>A true if valid, a false if invalid.</returns>
+    /// <remarks>This code is provided by Creator/Chaosyr/SaxbyMod/The Stoat Lord.</remarks>
+    public static bool ValidateAnyOf(string jsonPropertyName, string jsonPropertyValue, List<string> PropertySchema, string file, string schemaFile)
+    {
+        List<List<string>> anyOfSchema = GetAnyOfSchemas(PropertySchema);
+
+        JSONLoader3.FormatLogger("Debug", "LintingTools",
+            $"Found {anyOfSchema.Count} Branches worth of Validators for validating {jsonPropertyName}. Attempting to validate against all of them, only one needs to pass to succeed.");
+
+        foreach (List<string> validator in anyOfSchema)
+        {
+            if (ValidatePropertyAgainstSchema(jsonPropertyName, jsonPropertyValue, validator, file, schemaFile))
+            {
+                JSONLoader3.FormatLogger("Debug", "LintingTools",
+                    $"This Validator has succeeded in validating {jsonPropertyName} with value of ({jsonPropertyValue})");
+                return true;
+            }
+            else
+            {
+                JSONLoader3.FormatLogger("Debug", "LintingTools",
+                    $"This Validator has failed in validating {jsonPropertyName} with value of ({jsonPropertyValue})");
+            }
+        }
+
+        JSONLoader3.FormatLogger("ERROR", "LintingTools",
+            $"We could not validate {jsonPropertyName} against any of the Validators available for {jsonPropertyName} ensure your value is valid. The JSON this error occured in: {Path.GetFileNameWithoutExtension(file)}");
+        JSONLoader3.FormatLogger("AdditionalInformation", "LintingTools",
+            $"This error triggers when none of the validators for {jsonPropertyName} returned errorless.");
+        JSONLoader3.FormatLogger("AdditionalInformation", "LintingTools",
+            $"If you want to fix this, check how the Schema is trying to validate {jsonPropertyName} and ensure ({jsonPropertyValue} is valid against at least one of them.");
+        JSONLoader3.FormatLogger("AdditionalInformation", "LintingTools",
+            $"Here's the full path to the file the issue takes root in: {file}");
+        JSONLoader3.FormatLogger("AdditionalInformation", "LintingTools",
+            $"You can also find the full Schema here: {schemaFile}");
+
+        return false;
     }
 
     /// <summary>
@@ -815,36 +969,8 @@ public class LintingTools
                 $"Here's the full path to the file the issue takes root in: {file}");
             return false;
         }
-        
-        string valueToCheck = jsonPropertyValue.Trim().Trim('"');
 
-        JSONLoader3.FormatLogger(
-            "Debug",
-            "LintingTools",
-            $"Enums found for {jsonPropertyName}: ({string.Join(", ", enums)})"
-        );
-
-        JSONLoader3.FormatLogger(
-            "Debug",
-            "LintingTools",
-            $"Value being checked: ({valueToCheck})"
-        );
-
-        bool validEnum = enums.Any(enumValue =>
-            string.Equals(
-                enumValue.Trim(),
-                valueToCheck,
-                StringComparison.Ordinal
-            )
-        );
-
-        JSONLoader3.FormatLogger(
-            "Debug",
-            "LintingTools",
-            $"Enum validation result for ({valueToCheck}): {validEnum}"
-        );
-
-        if (enums.Count > 0 && !validEnum)
+        if (enums.Count > 0 && !enums.Any(enumValue => string.Equals(enumValue.Trim(), jsonPropertyValue.Trim().Trim('"'), StringComparison.Ordinal)))
         {
             JSONLoader3.FormatLogger("ERROR", "LintingTools",
                 $"The string does not match any of the required Enums for {jsonPropertyName} according to the Schema. The JSON this error occured in: {Path.GetFileNameWithoutExtension(file)}");
@@ -1133,18 +1259,6 @@ public class LintingTools
 
         foreach ((int depth, string propertyName, string propertyValue) prop in JSONProperties)
         {
-            JSONLoader3.FormatLogger(
-                "Debug",
-                "LintingTools",
-                $"Object Traversal: [{prop.propertyName}] JSON Depth [{prop.depth}]"
-            );
-
-            JSONLoader3.FormatLogger(
-                "Debug",
-                "LintingTools",
-                $"Object Schema: {string.Join(", ", JSONSchemaProperties.Select(x => $"[{x.depth}] {x.propertyName}"))}"
-            );
-
             int normalizedDepth = prop.depth - objectDepth + 1;
 
             string path = GetTraversalPath(
@@ -1201,27 +1315,11 @@ public class LintingTools
                         "This is a warning because additionalProperties was enabled for this Object thus we're letting it slide.");
                 }
             }
-            else
-            {
-                JSONLoader3.FormatLogger("Debug", "LintingTools", $"Successfully Linted for Path: {path}");
-            }
 
             if (requiredFields.Contains(prop.propertyName))
             {
-                JSONLoader3.FormatLogger(
-                    "Debug",
-                    "LintingTools",
-                    $"'{prop.propertyName}' is a required field."
-                );
-
                 for (int i = 0; i < requiredFieldTicks.Count; i++)
                 {
-                    JSONLoader3.FormatLogger(
-                        "Debug",
-                        "LintingTools",
-                        $"Required Tick [{i}]: ({requiredFieldTicks[i].Item1}, {requiredFieldTicks[i].Item2})"
-                    );
-
                     if (requiredFieldTicks[i].Item1 == prop.propertyName)
                     {
                         requiredFieldTicks[i] = (prop.propertyName, true);
@@ -1229,7 +1327,7 @@ public class LintingTools
                         JSONLoader3.FormatLogger(
                             "Debug",
                             "LintingTools",
-                            $"Ticked '{prop.propertyName}' as checked."
+                            $"Ticked \"{prop.propertyName}\" as checked for the Required Properties."
                         );
 
                         break;
@@ -1250,12 +1348,6 @@ public class LintingTools
                     return false;
             }
         }
-
-        JSONLoader3.FormatLogger(
-            "Debug",
-            "LintingTools",
-            $"Final Required Ticks: {string.Join(", ", requiredFieldTicks.Select(x => $"({x.field}, {x.checkedField})"))}"
-        );
 
         foreach ((string field, bool check) in requiredFieldTicks)
         {
@@ -1379,6 +1471,41 @@ public class LintingTools
                     JSONLoader3.FormatLogger("ERROR", "LintingTools",
                         $"Could not dissect array item for {jsonPropertyName}. The JSON this error occured in: {Path.GetFileNameWithoutExtension(file)}");
                     return false;
+                }
+                
+                if (itemSchema.Any(x => x.Trim().StartsWith("\"anyOf\": [")))
+                {
+                    foreach (string item2 in arrayItems)
+                    {
+                        List<string> jsonDummy2 = new List<string>
+                        {
+                            "{",
+                            $"\"{jsonPropertyName}\": {item2}",
+                            "}"
+                        };
+
+                        List<(int depth, string propertyName, string propertyValue)> dissectedItem2 =
+                            DisectedJSON(jsonDummy2);
+
+                        if (dissectedItem2.Count == 0)
+                        {
+                            JSONLoader3.FormatLogger("ERROR", "LintingTools",
+                                $"Could not dissect array item for {jsonPropertyName}. The JSON this error occured in: {Path.GetFileNameWithoutExtension(file)}");
+                            return false;
+                        }
+
+                        if (!ValidateAnyOf(
+                                dissectedItem2[0].propertyName,
+                                dissectedItem2[0].propertyValue,
+                                itemSchema,
+                                file,
+                                schemaFile))
+                        {
+                            return false;
+                        }
+                    }
+
+                    return true;
                 }
 
                 if (type == "string")

@@ -4,9 +4,7 @@ using BepInEx.Logging;
 using Cecil_Libraries.ANSI_Utils.Lists;
 using Cecil_Libraries.ANSI_Utils.Objects;
 using DiskCardGame;
-using JSONLoader3.Cores.JSONLoaderV1Support.Utilities;
 using JSONLoader3.Peripheral.FILE_Loader;
-using JSONLoader3.Peripheral.JSON_SCHEMA;
 using JSONLoader3.Subperipheral.JSONLoader_Configuration;
 
 namespace JSONLoader3
@@ -29,7 +27,7 @@ namespace JSONLoader3
         /// <summary>
         /// This resembles the Version of the API, when this is updated make sure to update the value.
         /// </summary>
-        public const string PluginVersion = "3.0.0.00000005";
+        public const string PluginVersion = "3.0.0.00000006";
         // Major, Minor, Patch - Nightly - Major (00), Minor (00), Patch (05), the (0) between indicate dash separators.
 
         /// <summary>
@@ -70,9 +68,13 @@ namespace JSONLoader3
             FormatLogger("info", "Initialization for JSONLoader3 and CSVLoader","Finished Creating JSONLoader3 and CSVLoader Configuration");
             FindFiles.FindFilesToLoad();
             LoadFiles.LoadFoundFiles();
-            foreach (CardInfo info in CardUtils.allJLDRCardsPublic)
+            foreach (CardInfo info in Cores.JSONLoaderV1Support.Utilities.CardUtils.allJLDRCardsPublic)
             {
-                FormatLogger("info", "Initialization for JSONLoader3 and CSVLoader",$"Successfully Loaded card: {info.name}");
+                FormatLogger("info", "Initialization for JSONLoader3 and CSVLoader",$"Successfully Loaded JSONLoaderV1 {typeof(Cores.JSONLoaderV1Support.Schemas.Card).Name}: {info.name}");
+            }
+            foreach (CardInfo info in Cores.JSONLoaderV2Support.Utilities.CardUtils.allJLDR2CardsPublic)
+            {
+                FormatLogger("info", "Initialization for JSONLoader3 and CSVLoader",$"Successfully Loaded JSONLoaderV2 {typeof(Cores.JSONLoaderV2Support.Schemas.Card).Name}: {info.name}");
             }
             FormatLogger("info", "Initialization for JSONLoader3 and CSVLoader","Finished Loading JSONLoader, JSONLoader2, JSONLoader3 and CSVLoader.");
         }
