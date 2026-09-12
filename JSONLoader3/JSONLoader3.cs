@@ -4,8 +4,13 @@ using BepInEx.Logging;
 using Cecil_Libraries.ANSI_Utils.Lists;
 using Cecil_Libraries.ANSI_Utils.Objects;
 using DiskCardGame;
+using HarmonyLib;
 using JSONLoader3.Peripheral.FILE_Loader;
 using JSONLoader3.Subperipheral.JSONLoader_Configuration;
+using JSONLoader3.Subperipheral.JSONLoaderStartupPhase;
+using UnityEngine;
+using UnityEngine.LowLevel;
+using Color = Cecil_Libraries.ANSI_Utils.Objects.Color;
 
 namespace JSONLoader3
 {
@@ -27,7 +32,7 @@ namespace JSONLoader3
         /// <summary>
         /// This resembles the Version of the API, when this is updated make sure to update the value.
         /// </summary>
-        public const string PluginVersion = "3.0.0.00000006";
+        public const string PluginVersion = "3.0.0.00001000";
         // Major, Minor, Patch - Nightly - Major (00), Minor (00), Patch (05), the (0) between indicate dash separators.
 
         /// <summary>
@@ -58,12 +63,27 @@ namespace JSONLoader3
         private static ManualLogSource BepInExLogger;
 
         /// <summary>
-        /// This serves as the Starting Point for the entire API, whatever is put here will be done first and foremost in startup.
+        /// Sets up some of the API including making our Startup Phase.
         /// </summary>
         public void Awake()
         {
             BepInExLogger = Logger;
+
+            AddJSONLoaderStartupPhase.OnStartupPhaseExecuted = JSONLoaderStartupPhase;
             
+            AddJSONLoaderStartupPhase.Install();
+            
+            FormatLogger(
+                "info",
+                "Initialization for JSONLoader3 and CSVLoader",
+                "JSONLoader3 startup phase armed.");
+        }
+        
+        /// <summary>
+        /// This serves as the Starting Point for the entire API, whatever is put here will be done first and foremost in startup.
+        /// </summary>
+        public void JSONLoaderStartupPhase()
+        {
             DefineConfiguration.DefineConfigs(Config);
             FormatLogger("info", "Initialization for JSONLoader3 and CSVLoader","Finished Creating JSONLoader3 and CSVLoader Configuration");
             FindFiles.FindFilesToLoad();

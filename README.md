@@ -493,7 +493,7 @@ ___
 
       <img width="649" height="599" alt="image" src="https://github.com/user-attachments/assets/ecafca6f-999c-4991-a9a7-8232db56b65b" />
 
-     <u>*For this version it should so `0.0.6` when importing.*</u>
+     <u>*For this version it should so `0.1.0` when importing.*</u>
   7. Where it says `Author`: `Unknown` replace the `Unknown` with `MADH95`.
   8. Press `Import Local Mod`.
   9. Wait for Dependencies to Resolve and your set. (Note for any mods on Thunderstore needing an older version of JSONLoader you may want to also install them directly from the website, or do these steps after you finished installing those mods, you must remove ONLY the old version of the mod.)

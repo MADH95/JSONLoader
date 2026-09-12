@@ -27,10 +27,12 @@ public class Card
     /// <summary>
     /// The In-Game name for the card, it can be anything as long as this font can display it; https://font.download/font/heavyweight
     /// </summary>
+    [Tooltip("Default( )")]
     public string displayedName;
     /// <summary>
     /// The In-Game flavor for the card, this will show when receiving the card for the first time, if you want to prevent it being seen from saving use; https://thunderstore.io/c/inscryption/p/creator/Fuck_Dialouge_Saving/
     /// </summary>
+    [Tooltip("Default( )")]
     public string description;
     /// <summary>
     /// These Meta-Categories control how your card will show up within the game, see the following page for what each of them do; https://thunderstore.io/c/inscryption/p/MADH95Mods/JSONCardLoader/wiki/5396-vanilla-enums
@@ -120,6 +122,7 @@ public class Card
     /// <summary>
     /// This determines what the Default Evolution Name will be, note it will appear in the format of; '[defaultEvolutionName] [displayedName]', just replace the variables with your JSON's values.
     /// </summary>
+    [Tooltip("Default( )")]
     public string defaultEvolutionName;
     /// <summary>
     /// This represents the In-Code name of the card this card will leave in its old lane if Loose Tail triggers. It should match the following: [Mod Prefix]_[Name].

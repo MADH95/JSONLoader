@@ -876,7 +876,7 @@ public class LintingTools
             if (line.Contains("\"default\": \""))
             {
                 @default = line.Trim()
-                    .Replace("\"default\": \"", "")
+                    .Replace("\"default\": \"", "").Replace(" ", "D")
                     .Trim('"', ',');
             }
             

@@ -30,12 +30,14 @@ public class Card
     ///
     /// New Description from JSONLoader v3.0.0: The In-Game name for the card, it can be anything as long as this font can display it; https://font.download/font/heavyweight
     /// </summary>
+    [Tooltip("Default( )")]
     public string displayedName;
     /// <summary>
     /// Original Description from JSONLoader v1.7.2: "A string for the description Leshy gives when you find the card" |
     ///
     /// New Description from JSONLoader v3.0.0: The In-Game flavor for the card, this will show when receiving the card for the first time, if you want to prevent it being seen from saving use; https://thunderstore.io/c/inscryption/p/creator/Fuck_Dialouge_Saving/
     /// </summary>
+    [Tooltip("Default( )")]
     public string description;
     /// <summary>
     /// Original Description from JSONLoader v1.7.2: "A string array of meta catagories the card has (See Enums.txt for a list of catagories)" |
@@ -168,6 +170,7 @@ public class Card
     ///
     /// New Description from JSONLoader v3.0.0: This determines what the Default Evolution Name will be, note it will appear in the format of; '[defaultEvolutionName] [displayedName]', just replace the variables with your JSON's values.
     /// </summary>
+    [Tooltip("Default( )")]
     public string defaultEvolutionName;
     /// <summary>
     /// Original Description from JSONLoader v1.7.2: "A json object for the tailParams of the card. (It's children are in the table below this one)" |

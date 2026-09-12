@@ -3,6 +3,13 @@
 <details open>
 <summary>JSONLoader 3.0.0 Changelog</summary>
 
+## 3.0.0-Nightly-0.1.0
+* Fixed Enum Parsing failing for Modded Values within JLDR2 Cards.
+* Added a Phase so that JSONLoader can load after all `Awake()` methods are resolved and before all `Start()` methods are resolved, this is tied to the `PlayerLoopSystem`.
+* Fixed issue where we weren't intializing Lists when they were potentially uninitialized.
+* Allowed empty defaults for `description`, `defaultEvolutionName`, and `description` under the Linter and Writer.
+* Likely a few other tweaks, but this should fix a plethora of issues with JLDR2 loading.
+
 ## 3.0.0-Nightly-0.0.6
 * Fixed JLDR Card Schema refering to Health with `can't be negative or below 0` to `can't be negative or below 1` matching the schema requirements.
 * Fixed a similar issue to the above occuring in the CardUtils for JLDR Cards.

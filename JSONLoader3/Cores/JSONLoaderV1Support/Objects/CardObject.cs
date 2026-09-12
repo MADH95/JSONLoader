@@ -338,13 +338,16 @@ public class CardObject
                 {
                     info.description = description;
                 }
-        
+
                 if (fieldsToEdit.Contains("metaCategories"))
                 {
-                    if (metaCategories != null) 
+                    if (metaCategories != null)
+                    {
+                        info.metaCategories = new List<CardMetaCategory>();
                         info.metaCategories = metaCategories.Where(x => !string.IsNullOrEmpty(x)).Select(x => (CardMetaCategory)Enum.Parse(typeof(CardMetaCategory), x)).ToList();
+                    }
                 }
-        
+
                 if (fieldsToEdit.Contains("cardComplexity"))
                 {
                     if (!string.IsNullOrEmpty(cardComplexity))
@@ -386,43 +389,59 @@ public class CardObject
                 {
                     info.energyCost = energyCost;
                 }
-        
+
                 if (fieldsToEdit.Contains("gemColors"))
                 {
                     if (gemColors != null)
+                    {
+                        info.gemsCost = new List<GemType>();
                         info.gemsCost = gemColors.Where(x => !string.IsNullOrEmpty(x)).Select(x => (GemType)Enum.Parse(typeof(GemType), x)).ToList();
+                    }
                 }
-        
+
                 if (fieldsToEdit.Contains("specialStatIcon"))
                 {
                     if (!string.IsNullOrEmpty(specialStatIcon))
                         info.specialStatIcon = (SpecialStatIcon)Enum.Parse(typeof(SpecialStatIcon), specialStatIcon);
                 }
-        
+
                 if (fieldsToEdit.Contains("tribes"))
                 {
                     if (tribes != null)
-                        info.tribes = tribes.Where(x => !string.IsNullOrEmpty(x)).Select(x => (Tribe)Enum.Parse(typeof(Tribe), x)).ToList();
+                    {
+                        info.tribes = new List<Tribe>();
+                        info.tribes = tribes.Where(x => !string.IsNullOrEmpty(x))
+                           .Select(x => (Tribe)Enum.Parse(typeof(Tribe), x)).ToList();
+                    }
                 }
-        
+
                 if (fieldsToEdit.Contains("traits"))
                 {
                     if (traits != null)
+                    {
+                        info.traits = new List<Trait>();
                         info.traits = traits.Where(x => !string.IsNullOrEmpty(x)).Select(x => (Trait)Enum.Parse(typeof(Trait), x)).ToList();
+                    }
                 }
-        
+
                 if (fieldsToEdit.Contains("specialAbilities"))
                 {
                     if (specialAbilities != null)
+                    {
+                        info.specialAbilities = new List<SpecialTriggeredAbility>();
                         info.specialAbilities = specialAbilities.Where(x => !string.IsNullOrEmpty(x)).Select(x => (SpecialTriggeredAbility)Enum.Parse(typeof(SpecialTriggeredAbility), x)).ToList();
+                    }
                 }
-        
+
                 if (fieldsToEdit.Contains("abilities"))
                 {
                     if (abilities != null)
+                    {
+                        info.abilities = new List<Ability>();
                         info.abilities = abilities.Where(x => !string.IsNullOrEmpty(x)).Select(x => (Ability)Enum.Parse(typeof(Ability), x)).ToList();
+                    }
                 }
-        
+
                 if (fieldsToEdit.Contains("customAbilities"))
                 {
                     if (customAbilities != null)
@@ -505,13 +524,16 @@ public class CardObject
                 {
                     info.onePerDeck = onePerDeck;
                 }
-        
+
                 if (fieldsToEdit.Contains("appearanceBehaviour"))
                 {
                     if (appearanceBehaviour != null)
+                    {
+                        info.appearanceBehaviour = new List<CardAppearanceBehaviour.Appearance>();
                         info.appearanceBehaviour = appearanceBehaviour.Where(x => !string.IsNullOrEmpty(x)).Select(x => (CardAppearanceBehaviour.Appearance)Enum.Parse(typeof(CardAppearanceBehaviour.Appearance), x)).ToList();
+                    }
                 }
-                
+
                 if (fieldsToEdit.Contains("texture") && !string.IsNullOrEmpty(texture))
                 {
                     Sprite Portrait = ScanImages.ParseImage(pluginName, texture);
@@ -555,7 +577,6 @@ public class CardObject
                 if (fieldsToEdit.Contains("decals") && decals != null)
                 {
                     info.decals = new List<Texture>();
-    
                     foreach (string texture2 in decals)
                     {
                         if (!string.IsNullOrEmpty(texture2))
@@ -571,6 +592,15 @@ public class CardObject
         } else
         {
             info = CardManager.New(JSONLoader3.PluginGuid, name, displayedName, baseAttack, baseHealth, description);
+            
+            info.metaCategories = new List<CardMetaCategory>();
+            info.gemsCost = new List<GemType>();
+            info.tribes = new List<Tribe>();
+            info.traits = new List<Trait>();
+            info.abilities = new List<Ability>();
+            info.specialAbilities = new List<SpecialTriggeredAbility>();
+            info.appearanceBehaviour = new List<CardAppearanceBehaviour.Appearance>();
+            info.decals = new List<Texture>();
             
             info.name = name;
             info.displayedName = displayedName;
