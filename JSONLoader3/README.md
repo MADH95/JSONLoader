@@ -183,7 +183,6 @@ This is how its allowed in JSONLoader2's setup (as of writing the Non-Nightly ve
 * `data:image/png;base64,`
 
 Note the start of the string if you do it this way **MUST MATCH THIS FORMAT**. An example Base64 you could pass in would be:
-</details>
 
 <details>
 <summary>Raw Base64</summary>

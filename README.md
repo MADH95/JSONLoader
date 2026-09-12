@@ -183,7 +183,6 @@ This is how its allowed in JSONLoader2's setup (as of writing the Non-Nightly ve
 * `data:image/png;base64,`
 
 Note the start of the string if you do it this way **MUST MATCH THIS FORMAT**. An example Base64 you could pass in would be:
-</details>
 
 <details>
 <summary>Raw Base64</summary>
@@ -473,36 +472,36 @@ ___
 - Win-x64: XBOX Gamepass Version of the game (based on the game on Windows)
 - Win-x86: For the Steam Version of the game (based on the game on Windows)
 - We also offer versions for the following:
-    - Linux-Arm64
-    - Linux-Arm
-    - Linux-Musl-Arm64
-    - Linux-Musl-X64
-    - Linux-X64
-    - OSX-Arm64 (Mac)
-    - OSX-X64 (Mac)
-    - Win-Arm64
+  - Linux-Arm64
+  - Linux-Arm
+  - Linux-Musl-Arm64
+  - Linux-Musl-X64
+  - Linux-X64
+  - OSX-Arm64 (Mac)
+  - OSX-X64 (Mac)
+  - Win-Arm64
 2. Enter your Mod Manager and Import as a Local Mod via the Following Steps:
 - R2ModMan
-    1. Open the Application, Navigate to Inscryption, Navigate to the Profile you wish to Install to.
-    2. Press `Settings`.
-    3. Type `Import` into the Search box as highlighted below
+  1. Open the Application, Navigate to Inscryption, Navigate to the Profile you wish to Install to.
+  2. Press `Settings`.
+  3. Type `Import` into the Search box as highlighted below
 
-        <img width="1919" height="1079" alt="image" src="https://github.com/user-attachments/assets/1ae6e189-b80e-42fc-bf23-fd6305502353" />
-    4. Press `Import Local Mod`.
-    5. Press `Select File` and Navigate to and Select the File you just downloaded from this Release.
-    6. If you followed the steps correctly it should appear as follows (with the correct version of this GitHub release,
+      <img width="1919" height="1079" alt="image" src="https://github.com/user-attachments/assets/1ae6e189-b80e-42fc-bf23-fd6305502353" />
+  4. Press `Import Local Mod`.
+  5. Press `Select File` and Navigate to and Select the File you just downloaded from this Release.
+  6. If you followed the steps correctly it should appear as follows (with the correct version of this GitHub release,
 
-        <img width="649" height="599" alt="image" src="https://github.com/user-attachments/assets/ecafca6f-999c-4991-a9a7-8232db56b65b" />
+      <img width="649" height="599" alt="image" src="https://github.com/user-attachments/assets/ecafca6f-999c-4991-a9a7-8232db56b65b" />
 
-       <u>*For this version it should so `0.0.6` when importing.*</u>
-    7. Where it says `Author`: `Unknown` replace the `Unknown` with `MADH95`.
-    8. Press `Import Local Mod`.
-    9. Wait for Dependencies to Resolve and your set. (Note for any mods on Thunderstore needing an older version of JSONLoader you may want to also install them directly from the website, or do these steps after you finished installing those mods, you must remove ONLY the old version of the mod.)
+     <u>*For this version it should so `0.0.6` when importing.*</u>
+  7. Where it says `Author`: `Unknown` replace the `Unknown` with `MADH95`.
+  8. Press `Import Local Mod`.
+  9. Wait for Dependencies to Resolve and your set. (Note for any mods on Thunderstore needing an older version of JSONLoader you may want to also install them directly from the website, or do these steps after you finished installing those mods, you must remove ONLY the old version of the mod.)
 - Gale
-    1. Open the Application, Navigate to the Game, Than the Profile.
-    2. At the top of the screen (on the left) press `Import` than `... Local Mod`.
-    3. Navigate to and Select the File you just downloaded from this Release.
-    4. Wait for Dependencies to Resolve and your set. (Note for any mods on Thunderstore needing an older version of JSONLoader you may want to also install them directly from the website, or do these steps after you finished installing those mods, you must remove ONLY the old version of the mod.)
+  1. Open the Application, Navigate to the Game, Than the Profile.
+  2. At the top of the screen (on the left) press `Import` than `... Local Mod`.
+  3. Navigate to and Select the File you just downloaded from this Release.
+  4. Wait for Dependencies to Resolve and your set. (Note for any mods on Thunderstore needing an older version of JSONLoader you may want to also install them directly from the website, or do these steps after you finished installing those mods, you must remove ONLY the old version of the mod.)
 
 ### Manual
 
@@ -510,14 +509,14 @@ ___
 - Win-x64: XBOX Gamepass Version of the game (based on the game on Windows)
 - Win-x86: For the Steam Version of the game (based on the game on Windows)
 - We also offer versions for the following:
-    - Linux-Arm64
-    - Linux-Arm
-    - Linux-Musl-Arm64
-    - Linux-Musl-X64
-    - Linux-X64
-    - OSX-Arm64 (Mac)
-    - OSX-X64 (Mac)
-    - Win-Arm64
+  - Linux-Arm64
+  - Linux-Arm
+  - Linux-Musl-Arm64
+  - Linux-Musl-X64
+  - Linux-X64
+  - OSX-Arm64 (Mac)
+  - OSX-X64 (Mac)
+  - Win-Arm64
 2. Extract the Zip to a new folder.
 3. Take the files and folders under `plugins` of the zip and move them up a folder.
 4. Delete the `plugins` folder from the Extracted directory.
