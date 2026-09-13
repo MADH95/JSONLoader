@@ -766,10 +766,6 @@ public class CardObject
 
             T enumValue = GuidManager.GetEnumValue<T>(prefix, actualValue);
 
-            Debug.Log(
-                $"[CardObject] Resolved '{value}' -> GUID: '{prefix}', Name: '{actualValue}', Enum: '{enumValue}', Value: {Convert.ToInt32(enumValue)} String Value '{actualValue}'"
-            );
-
             return enumValue;
         }
         
@@ -781,19 +777,11 @@ public class CardObject
             string actualValue = value.Substring(lastDotIndex + 1);
 
             T enumValue = GuidManager.GetEnumValue<T>(prefix, actualValue);
-
-            Debug.Log(
-                $"[CardObject] Resolved '{value}' -> GUID: '{prefix}', Name: '{actualValue}', Enum: '{enumValue}', Value: {Convert.ToInt32(enumValue)} String Value '{actualValue}'"
-            );
-
+            
             return enumValue;
         }
 
         T fallbackValue = (T)Enum.Parse(typeof(T), value);
-
-        Debug.Log(
-            $"[CardObject] Resolved '{value}' -> Enum: '{fallbackValue}', Value: {Convert.ToInt32(fallbackValue)} String Value '{value}'"
-        );
 
         return fallbackValue;
     }

@@ -464,8 +464,6 @@ If you have any issues with Mac/Linux, Steam Deck, or Manual head over to the di
 ___
 ## Installing from the GitHub Package:
 
-<u>***If your using `MadH95-JSONCardLoader` for JLDR2 based mods, please make sure to go into `MADH.inscryption.JSONLoader.cfg` and disable JLDR Conversion, you may need to do this after launching the first time. If you don't `JSONLoader` in combination with `JSONLoader-Nightly` will register the card Twice to the Game.***</u>
-
 ### Manager
 
 1. Find the package that correlates with your system, below is a quick reference of the RID's and what they correlate to;

@@ -3,6 +3,9 @@
 <details open>
 <summary>JSONLoader 3.0.0 Changelog</summary>
 
+## 3.0.0-Nightly-0.1.1
+* Added a Shell so that when Nightly is installed we don't load JSONLoaderV2.7.0 or earlier.
+
 ## 3.0.0-Nightly-0.1.0
 * Fixed Enum Parsing failing for Modded Values within JLDR2 Cards.
 * Added a Phase so that JSONLoader can load after all `Awake()` methods are resolved and before all `Start()` methods are resolved, this is tied to the `PlayerLoopSystem`.

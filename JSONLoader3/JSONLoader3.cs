@@ -32,7 +32,7 @@ namespace JSONLoader3
         /// <summary>
         /// This resembles the Version of the API, when this is updated make sure to update the value.
         /// </summary>
-        public const string PluginVersion = "3.0.0.00001000";
+        public const string PluginVersion = "3.0.0.00001001";
         // Major, Minor, Patch - Nightly - Major (00), Minor (00), Patch (05), the (0) between indicate dash separators.
 
         /// <summary>
