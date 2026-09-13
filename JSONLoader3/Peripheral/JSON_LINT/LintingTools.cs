@@ -520,7 +520,7 @@ public class LintingTools
         List<string> JSONFile = File.ReadAllLines(file).ToList();
 
         int propertyIndex = JSONFile.FindIndex(x =>
-            x.Trim().StartsWith($"\"{propertyToFind}\""));
+            x.Trim().StartsWith($"\"{propertyToFind}\":"));
 
         if (propertyIndex == -1)
         {
@@ -586,7 +586,7 @@ public class LintingTools
         List<string> JSONFile = File.ReadAllLines(file).ToList();
 
         int propertyIndex = JSONFile.FindIndex(x =>
-            x.Trim().StartsWith($"\"{propertyName}\""));
+            x.Trim().StartsWith($"\"{propertyName}\":"));
 
         if (propertyIndex == -1)
         {

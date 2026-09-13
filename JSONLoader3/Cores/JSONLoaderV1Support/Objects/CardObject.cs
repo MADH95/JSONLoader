@@ -324,7 +324,11 @@ public class CardObject
         CardInfo info = null;
         if (!fieldsToEdit.IsNullOrEmpty())
         {
-            CardInfo infoTemp = CardManager.AllCardsCopy.FirstOrDefault(x => x.name == name.Replace(JSONLoader3.PluginGuid + "_", ""));
+            CardInfo infoTemp = CardManager.BaseGameCards.FirstOrDefault(x => x.name == name.Replace(JSONLoader3.PluginGuid + "_", ""));
+            if (infoTemp == null)
+            {
+                infoTemp = CardManager.NewCards.FirstOrDefault(x => x.name == name.Replace(JSONLoader3.PluginGuid + "_", ""));
+            }
             if (infoTemp != null)
             {
                 info = infoTemp;

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.IO;
 using JSONLoader3.Peripheral.XML_Parser;
 
 namespace JSONLoader3.Peripheral.FILE_Loader;
@@ -43,9 +44,17 @@ public class LoadFiles
         JSONLoader3.FormatLogger("Info", "LoadFiles", "Loading JLDR2 Files!!");
         foreach ((string pluginName, string file) in JLDR2Files)
         {
-            Cores.JSONLoaderV2Support.Utilities.CardUtils.CardsToLoad.Add((pluginName, file));
+            if (Path.GetFileNameWithoutExtension(file).EndsWith("_deck"))
+            {
+                //Cores.JSONLoaderV2Support.Utilities.DeckUtils.StarterDecksToLoad.Add((pluginName, file));
+            }
+            else
+            {
+                Cores.JSONLoaderV2Support.Utilities.CardUtils.CardsToLoad.Add((pluginName, file));
+            }
         }
         Cores.JSONLoaderV2Support.Utilities.CardUtils.HandleCards();
+        //Cores.JSONLoaderV2Support.Utilities.DeckUtils.HandleDecks();
         
         JSONLoader3.FormatLogger("Info", "LoadFiles", "Loading JLDR3 Files!!");
         foreach ((string pluginName, string file) in JLDR3Files)

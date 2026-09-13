@@ -21,12 +21,12 @@ public class CardUtils
     internal static List<(string pluginName, string file)> CardsToLoad = new List<(string pluginName, string file)>();
 
     /// <summary>
-    /// An internal facing List of all JLDR Cards passed to the API.
+    /// An internal facing List of all JLDR <see cref="JSONLoaderV1Support.Schemas.Card"/>s passed to the API.
     /// </summary>
     internal static List<CardInfo> allJLDRCards = new List<CardInfo>();
 
     /// <summary>
-    /// A public facing read-only collection of all JLDR Cards passed to the API.
+    /// A public facing read-only collection of all JLDR <see cref="JSONLoaderV1Support.Schemas.Card"/>s passed to the API.
     /// </summary>
     public static ReadOnlyCollection<CardInfo> allJLDRCardsPublic => allJLDRCards.AsReadOnly();
 

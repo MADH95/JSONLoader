@@ -3,6 +3,14 @@
 <details open>
 <summary>JSONLoader 3.0.0 Changelog</summary>
 
+## 3.0.0-Nightly-0.1.2
+* Fixed Issues with some Logging Referencing the wrong class.
+* Makes `modPrefix` a non-required field, if its empty we instead use the Plugins GUID.
+* Update any Name References in the JSON Schema to have the option of validating against BaseGameNames as well.
+* Fix issue where we were updating cards based on the wrong list, before it was `CardManager.AllCardsCopy`, we now use `CardManager.BaseGameCards` which enables us to modify, we support modded cards via `CardManager.NewCards` (hopefully).
+* Added the beginnings of Starter Deck handling into the code, waiting on an API update to push it properly.
+* Fix a Linting Issue or two caused by field names being apart of a JSON Item.
+
 ## 3.0.0-Nightly-0.1.1
 * Added a Shell so that when Nightly is installed we don't load JSONLoaderV2.7.0 or earlier.
 
