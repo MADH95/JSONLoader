@@ -1,0 +1,12 @@
+{
+    "decks": [
+        {
+            "name": "Example",
+            "modPrefix": "EX",
+            "title": "Example Deck",
+            "cards": [],
+            "iconTexture": "deck.png",
+            "unlockLevel": 0
+        }
+    ]
+}

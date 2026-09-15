@@ -18,6 +18,7 @@
 
     <!--NUGET Dependencies-->
     <ItemGroup>
+        <PackageReference Include="API_dev-API" Version="2.24.1" />
         <PackageReference Include="BepInEx.Analyzers" Version="1.0.8" PrivateAssets="all" />
         <PackageReference Include="BepInEx.Core" Version="5.4.21" />
         <PackageReference Include="BepInEx.PluginInfoProps" Version="2.1.0" />

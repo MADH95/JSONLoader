@@ -3,6 +3,16 @@
 <details open>
 <summary>JSONLoader 3.0.0 Changelog</summary>
 
+## 3.0.0-Nightly-0.1.3
+* Note: We cannot implement the OLD JSONLoader API into our design, namely because it lacks the fields neccissary for us to do so, thus the old endpoints won't exist. THIS DOES NOT AFFECT FILE LOADING, THIS API IS EXPLICITLY USED IN THE C# WORLD OF THINGS, IF A MOD LOADS THEIR CARDS THIS WAY CONTACT THEM TO UPDATE TO THE NEW ENDPOINTS.
+* Implemented JLDR2 Starter Deck Support.
+* Updated `FindFiles()` to recursively scan the plugins folder in the case the configured path's aren't found successfully in the Plugin's folder.
+* Updated the Wiki links in the README to the correct Wiki for Nightly.
+* Properly `ToLower()` AnyOf types.
+* Add JLDR2 Card Examples, Add JLDR2 Deck Examples.
+* Updated API Reference to 2.24.1, for Starter Deck Support.
+* Added Section to Docs on "Fields To Edit" and "Extension Properties" into the README.
+
 ## 3.0.0-Nightly-0.1.2
 * Fixed Issues with some Logging Referencing the wrong class.
 * Makes `modPrefix` a non-required field, if its empty we instead use the Plugins GUID.

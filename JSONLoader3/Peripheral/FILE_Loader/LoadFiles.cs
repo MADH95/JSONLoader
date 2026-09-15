@@ -46,7 +46,7 @@ public class LoadFiles
         {
             if (Path.GetFileNameWithoutExtension(file).EndsWith("_deck"))
             {
-                //Cores.JSONLoaderV2Support.Utilities.DeckUtils.StarterDecksToLoad.Add((pluginName, file));
+                Cores.JSONLoaderV2Support.Utilities.DeckUtils.StarterDecksToLoad.Add((pluginName, file));
             }
             else
             {
@@ -54,7 +54,7 @@ public class LoadFiles
             }
         }
         Cores.JSONLoaderV2Support.Utilities.CardUtils.HandleCards();
-        //Cores.JSONLoaderV2Support.Utilities.DeckUtils.HandleDecks();
+        Cores.JSONLoaderV2Support.Utilities.DeckUtils.HandleDecks();
         
         JSONLoader3.FormatLogger("Info", "LoadFiles", "Loading JLDR3 Files!!");
         foreach ((string pluginName, string file) in JLDR3Files)

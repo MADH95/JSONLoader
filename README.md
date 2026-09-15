@@ -23,7 +23,7 @@ Thank you to the following folks for their amazing Contributations to this Proje
 JSONLoader and API 3.0.0 are on the Horizon, JSONLoader's will be first as it's the simpler of the two to upgrade.
 ___
 ## JSON and CSV Loader API Documentation
-The below sections serve to document the support of each Version of JSONLoader, for more detail or to expand the detail between Updates refer to the [JSONLoader Wiki](https://thunderstore.io/c/inscryption/p/MADH95Mods/JSONCardLoader/wiki) or [JSONLoader GitHub Wiki](https://github.com/MADH95/JSONLoader/wiki). ***Notes for Contributing to the Wiki are Outlined on their respective Home Pages***.
+The below sections serve to document the support of each Version of JSONLoader, for more detail or to expand the detail between Updates refer to the [JSONLoader Wiki](https://thunderstore.io/c/inscryption/p/MADH95Mods/JSON_and_CSV_Loader_Nightly/wiki/5766-home) or [JSONLoader GitHub Wiki](https://github.com/Chaosyr/JSONCardLoaderWiki/wiki). ***Notes for Contributing to the Wiki are Outlined on their respective Home Pages***.
 
 ### JSON Inscrybing
 All JSONLoader versions require the same things so, heres a unified basics for making things with JSONLoader. First off make sure you have a Keyboard, Mouse, Monitor, File Explorer, and a Text Editor. These are more or less all you need to make JSON's for this mod. However there are some mandatory steps to get your environments prepared.
@@ -196,6 +196,24 @@ This would decrypt to an image of the Archivist from the game. Though notably wi
 
 If you want to make sure your syntax is valid open [Regexer](https://regexr.com/) and place in the Regex: `^(?:(?:\.\.\/|[a-zA-Z\d_-\s]+\/)*[a-zA-Z\d_-\s]+\.png|data:image\/png;base64,[A-Za-z0-9+/]+={0,2}|base64:[A-Za-z0-9+/]+={0,2})$` into the Expression box, and your path into the Text box. If your wondering why it's so long, we are validating 3 data forms in that Regex Pattern.
 ___
+### The Fields to Edit System
+This is a system in which allows you to modify a base game item, such as a card or starter deck. It works as follows:
+* First add the `fieldsToEdit` String Array to the top of your JSON, or beginning of your CSV.
+* Next within the `[]` add a comma separated list of all fields in which you want to overwrite. 
+  * For example, the display name of a card would be `"fieldsToEdit": ["displayedName"]` or for a CSV `[displayedName]`
+* Lastly, ensure your `name` matches the name of a Base Game or Modded Item, note for modded items, that item must be added to the game before JSONLoader runs which for the most part should be the case.
+
+That's all there really is to it, if you need more overwrites you'll just extend the `fieldsToEdit` field with more properties.
+___
+### The Extension Properties System
+This is a system primarily on cards, it enables modded libraries to allow you to add additional properties to your JSON in which it will understand and interpret. To set it up it works as follows:
+* First add `extensionProperties` Object at the end of your JSON, or ending of the CSV.
+* Next within the `{}` add a comma separated list of fields matching the below scheme:
+  * `"fieldName": "fieldValue"` for JSON.
+  * `fieldName: fieldValue`
+
+Then that's it, as long as the `fieldName` and `fieldValue` line up correctly it will just work.
+___
 ### JSONLoaderV1 Support:
 This version of JSONLoader supports Cards Exclusively and limited support for Modded Libraries. This is a Maintenance Version, outside of Bug Fixes it will NOT be updated.
 
@@ -283,7 +301,7 @@ This version of JSONLoader supports several types of data, and supports Modded L
 #### JSONLoaderV2 Cards:
 JSONLoaderV2 Cards support allows you to well make JSON Based Cards for the Game, these can be pretty complex but overall relatively simple.
 
-The following are all of the fields available for JSONLoaderV1 Cards and what they do:
+The following are all of the fields available for JSONLoaderV2 Cards and what they do:
 
 ##### Card Fields
 
@@ -327,7 +345,27 @@ The following are all of the fields available for JSONLoaderV1 Cards and what th
 |        `decals`         | This is a list of all the Decal Images in which will be stacked onto your card, this is localized to your Plugins Folder. It's your job to keep it organized, do it as you would these 'JLDR' files. This must be a PNG File and must be a '125x190' image.                                                                                                                                                                                         | String Array |
 |  `extensionProperties`  | This is a list of all Extended Properties to this Card. You'll need to supply your own Field:Value pairs according to the mods specifications. If using the Editor, hit edit by the property to edit this Object.                                                                                                                                                                                                                                   |       Object |
 
-To Utilize Extension Properties, add a `"{Field}": "{Value}"`, for each Extension Property you wish to have on the card, note it must be within the fields `{}` braces.
+#### JSONLoaderV2 Starter Decks
+
+JSONLoaderV2 Starter Decks support allows you to well make JSON Based Starter Decks for the Game, these are incredibly simple to make.
+
+The following are all of the fields available for JSONLoaderV2 Starter Decks and what they do:
+
+##### Main Starter Deck Object
+|   Key   | Description                            |                  Type |
+|:-------:|----------------------------------------|----------------------:|
+| `decks` | A List of all Decks this Object holds. | StarterDeckInfo Array |
+
+##### StarterDeckInfo Object
+|      Key       | Description                                                                                                                                                                                                    |         Type |
+|:--------------:|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-------------:|
+| `fieldsToEdit` | Any items applied within this field will be used for overwriting the In-Game deck associated with the field 'name'.                                                                                            | String Array |
+|     `name`     | The In-Code name for the Starter Deck, when referencing this Starter Deck, it is the piece that comes after the 'modPrefix' field.                                                                             |       String |
+|  `modPrefix`   | The In-Code identifier for the Starter Deck, when referencing this Starter Deck, it is the piece that comes before the 'name' field.                                                                           |       String |
+|    `title`     | The Display Title for the Starter Deck, this is the name that will appear in game.                                                                                                                             |       String |
+|    `cards`     | The Full List of Cards within the Starter Deck.                                                                                                                                                                | String Array |
+| `iconTexture`  | The Path to your Starter Decks Icon, this is localized to your Plugins Folder. It's your job to keep it organized, do it as you would these 'JLDR' files. This must be a PNG File and must be a '35x44' image. |       String |
+| `unlockLevel`  | The Unlock Level of the Deck, this is used to determine what challenge level in which this Starter Deck will be unlocked.                                                                                      |      Integer |
 ___
 ### JSONLoaderV3 Support:
 ___

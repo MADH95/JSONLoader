@@ -72,8 +72,7 @@ public class CardUtils
     /// <param name="file">The full Path to the File.</param>
     /// <param name="pluginName">The full Path to the Plugin.</param>
     /// <remarks>This code is provided by Creator/Chaosyr/SaxbyMod/The Stoat Lord.</remarks>
-    public static void Parse(List<(int depth, string propertyName, string propertyValue)> JSONCard, string file,
-        string pluginName)
+    public static void Parse(List<(int depth, string propertyName, string propertyValue)> JSONCard, string file, string pluginName)
     {
         List<string> fieldsToEdit = new List<string>();
         string name = "";

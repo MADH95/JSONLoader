@@ -154,7 +154,7 @@ public class WriteSchema
             (string field, string value) type = anyOfPropPropsFields.FirstOrDefault(x => x.field == "Type");
             toWrite += $$"""
                          
-                                             {{new string(' ', Indentation * 4)}}"type": "{{type.value}}",
+                                             {{new string(' ', Indentation * 4)}}"type": "{{type.value.ToLower()}}",
                          """;
 
             if (type.value == "string")
@@ -527,13 +527,13 @@ public class WriteSchema
                         if (value == "true" || value == "false")
                             toWrite += $$"""
 
-                                                     {{new string(' ', Indentation*4)}}"additionalProperties": {{value}},
+                                                     {{new string(' ', Indentation*4)}}"additionalProperties": {{value.ToLower()}},
                                          """;
                         else
                             toWrite += $$"""
 
                                                      {{new string(' ', Indentation*4)}}"additionalProperties": {
-                                                         {{new string(' ', Indentation*4)}}"type": "{{value}}"
+                                                         {{new string(' ', Indentation*4)}}"type": "{{value.ToLower()}}"
                                                      {{new string(' ', Indentation*4)}}},
                                          """;
                     }
@@ -603,13 +603,13 @@ public class WriteSchema
                 if (value == "true" || value == "false")
                     toWrite += $$"""
 
-                                             {{new string(' ', Indentation*4)}}"additionalProperties": {{value}},
+                                             {{new string(' ', Indentation*4)}}"additionalProperties": {{value.ToLower()}},
                                  """;
                 else
                     toWrite += $$"""
 
                                              {{new string(' ', Indentation*4)}}"additionalProperties": {
-                                                 {{new string(' ', Indentation*4)}}"type": "{{value}}"
+                                                 {{new string(' ', Indentation*4)}}"type": "{{value.ToLower()}}"
                                              {{new string(' ', Indentation*4)}}},
                                  """;
             }
