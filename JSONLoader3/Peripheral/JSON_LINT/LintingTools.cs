@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using JSONLoader3.Peripheral.JSON_SCHEMA;
+using JSONLoader3.Subperipheral.JSONLoaderConfiguration;
 using Sirenix.Utilities;
 using UnityEngine.UIElements;
 
@@ -51,6 +52,8 @@ public class LintingTools
         List<(int depth, string propertyName, string propertyValue)> JSONSchemaProeprties = DisectedJSON(JSONSchema);
 
         List<string> requiredFields = GetRequiredFromSchema(JSONSchema);
+        List<List<string>> allOf = GetAllOf(JSONSchema);
+        List<(string field, bool checkedField)> requiredAllOfFieldTicks = new List<(string field, bool checkedField)>();
         List<(string field, bool checkedField)> requiredFieldTicks = new List<(string field, bool checkedField)>();
 
         foreach (string field in requiredFields)
@@ -58,15 +61,23 @@ public class LintingTools
             requiredFieldTicks.Add((field, false));
         }
 
-        JSONLoader3.FormatLogger("Debug", "LintingTools", $"Required Properties Found: {string.Join(", ", requiredFields)}");
+        foreach (List<string> oneOf in allOf)
+        foreach (string item in oneOf)
+            requiredAllOfFieldTicks.Add((item, false));
+
+        JSONLoader3.FormatLogger("Debug", "LintingTools", $"Required Fields: {string.Join(", ", requiredFields)}");
+
+        foreach (List<string> oneOf in allOf)
+        {
+            JSONLoader3.FormatLogger("Debug", "LintingTools", $"Having one of the following is also required: {string.Join(", ", oneOf)}");
+        }
 
         foreach ((int depth, string propertyName, string propertyValue) prop in JSONProperties.Where(x => x.depth == 1))
         {
             string path = GetTraversalPath(JSONSchemaProeprties, prop, 2);
             if (path == string.Empty)
             {
-                JSONLoader3.FormatLogger("ERROR", "LintingTools",
-                    $"Something went wrong while doing PathTraversal for {prop.propertyName} the following should help identify what you did wrong.");
+                JSONLoader3.FormatLogger("ERROR", "LintingTools", $"Something went wrong while doing PathTraversal for {prop.propertyName} the following should help identify what you did wrong.");
                 if (GetTraversalPath(JSONSchemaProeprties,
                         (prop.depth, prop.propertyName.ToCamelCase(), prop.propertyValue), 2) != string.Empty)
                 {
@@ -131,6 +142,26 @@ public class LintingTools
                     }
                 }
             }
+            
+            foreach (List<string> oneOf in allOf)
+            {
+                if (oneOf.Contains(prop.propertyName))
+                {
+                    for (int i = 0; i < requiredAllOfFieldTicks.Count; i++)
+                    {
+                        if (requiredAllOfFieldTicks[i].Item1 == prop.propertyName)
+                        {
+                            requiredAllOfFieldTicks[i] = (prop.propertyName, true);
+
+                            JSONLoader3.FormatLogger(
+                                "Debug",
+                                "LintingTools",
+                                $"Ticked \"{prop.propertyName}\" as checked for the Required Properties."
+                            );
+                        }
+                    }
+                }
+            }
 
             if (path != string.Empty)
             {
@@ -160,6 +191,43 @@ public class LintingTools
             }
         }
 
+        foreach (List<string> oneOf in allOf)
+        {
+            bool foundOne = false;
+
+            foreach (string field in oneOf)
+            {
+                if (requiredAllOfFieldTicks.Any(x => x.field == field && x.checkedField))
+                {
+                    foundOne = true;
+                    break;
+                }
+            }
+
+            if (!foundOne)
+            {
+                JSONLoader3.FormatLogger(
+                    "ERROR",
+                    "LintingTools",
+                    $"Missing one of the required fields: {string.Join(", ", oneOf)} within {Path.GetFileNameWithoutExtension(file)}."
+                );
+
+                JSONLoader3.FormatLogger(
+                    "AdditionalInformation",
+                    "LintingTools",
+                    $"At least one of the following fields must be present: {string.Join(", ", oneOf)}."
+                );
+
+                JSONLoader3.FormatLogger(
+                    "AdditionalInformation",
+                    "LintingTools",
+                    $"Here's the full path to the file the issue takes root in: {file}"
+                );
+
+                return (JSONProperties, false);
+            }
+        }
+
         return (JSONProperties, true);
     }
 
@@ -171,7 +239,7 @@ public class LintingTools
     /// <param name="spelunkingDepth">The Multiplier to the Schema Level.</param>
     /// <returns>A string resembling a Schema Based Traversal Path</returns>
     /// <remarks>This code is provided by Creator/Chaosyr/SaxbyMod/The Stoat Lord.</remarks>
-    public static string GetTraversalPath(
+    private static string GetTraversalPath(
         List<(int depth, string propertyName, string propertyValue)> JSONSchemaProperties,
         (int depth, string propertyName, string propertyValue) JSON, int spelunkingDepth)
     {
@@ -208,7 +276,7 @@ public class LintingTools
     /// <param name="JSONFile">The List of String representing the JSON File.</param>
     /// <returns>List (of a int resembling JSON depth, a string resembling the field Name, a string resembling the string Value)</returns>
     /// <remarks>This code is provided by Creator/Chaosyr/SaxbyMod/The Stoat Lord.</remarks>
-    public static List<(int depth, string propertyName, string propertyValue)> DisectedJSON(List<string> JSONFile)
+    private static List<(int depth, string propertyName, string propertyValue)> DisectedJSON(List<string> JSONFile)
     {
         List<(int depth, string propertyName, string propertyValue)> JSONProperty =
             new List<(int depth, string propertyName, string propertyValue)>();
@@ -255,7 +323,7 @@ public class LintingTools
     /// <param name="file">The full path to the JSON File.</param>
     /// <returns>A List of String representing the JSON File.</returns>
     /// <remarks>This code is provided by Creator/Chaosyr/SaxbyMod/The Stoat Lord.</remarks>
-    public static List<string> LoadInJSONItem(string file)
+    private static List<string> LoadInJSONItem(string file)
     {
         FileStream ReadingStream = File.OpenRead(file);
         StreamReader Reader = new StreamReader(ReadingStream);
@@ -279,7 +347,7 @@ public class LintingTools
     /// <param name="JSONSchema">A List of String representing the JSON Schema.</param>
     /// <returns>A List of String representing all of the JSON Lines relevant to the given Property.</returns>
     /// <remarks>This code is provided by Creator/Chaosyr/SaxbyMod/The Stoat Lord.</remarks>
-    public static List<string> GetJSONSchemaProperty(string propertyPath, List<string> JSONSchema)
+    private static List<string> GetJSONSchemaProperty(string propertyPath, List<string> JSONSchema)
     {
         List<string> path = propertyPath.Split('/').Where(x => !string.IsNullOrWhiteSpace(x)).ToList();
 
@@ -303,19 +371,58 @@ public class LintingTools
     /// <param name="JSONSchema">A List of String representing the JSON Schema.</param>
     /// <returns>A List of String representing all of the Required Properties for the Object.</returns>
     /// <remarks>This code is provided by Creator/Chaosyr/SaxbyMod/The Stoat Lord.</remarks>
-    public static List<string> GetRequiredFromSchema(List<string> JSONSchema)
+    private static List<string> GetRequiredFromSchema(List<string> JSONSchema)
     {
         List<string> toRequire = new List<string>();
 
         int start = -1;
         int end = -1;
+        int oneOfDepth = -1;
+        int allOfDepth = -1;
+        int currentDepth = 0;
 
         for (int i = 0; i < JSONSchema.Count; i++)
         {
-            if (JSONSchema[i].Trim().StartsWith("\"required\": ["))
+            string line = JSONSchema[i].Trim();
+
+            // Check for Required before entering any new section on this line.
+            if (line.StartsWith("\"required\": [") &&
+                allOfDepth == -1 &&
+                oneOfDepth == -1)
             {
                 start = i + 1;
                 break;
+            }
+
+            if (line.StartsWith("\"allOf\": ["))
+            {
+                allOfDepth = currentDepth;
+            }
+            else if (line.StartsWith("\"oneOf\": ["))
+            {
+                oneOfDepth = currentDepth;
+            }
+
+            foreach (char character in line)
+            {
+                if (character == '{' || character == '[')
+                {
+                    currentDepth++;
+                }
+                else if (character == '}' || character == ']')
+                {
+                    currentDepth--;
+                }
+            }
+
+            if (allOfDepth != -1 && currentDepth <= allOfDepth)
+            {
+                allOfDepth = -1;
+            }
+
+            if (oneOfDepth != -1 && currentDepth <= oneOfDepth)
+            {
+                oneOfDepth = -1;
             }
         }
 
@@ -348,19 +455,111 @@ public class LintingTools
     }
 
     /// <summary>
+    /// A function that gets all of the AllOf Properties from the passed in JSON Schema.
+    /// </summary>
+    /// <param name="JSONSchema">A List of String representing the JSON Schema.</param>
+    /// <returns>A List of a List of String representing all of the OneOf Properties contained within each AllOf.</returns>
+    /// <remarks>This code is provided by Creator/Chaosyr/SaxbyMod/The Stoat Lord.</remarks>
+    private static List<List<string>> GetAllOf(List<string> JSONSchema)
+    {
+        List<List<string>> allOfProperties = new List<List<string>>();
+
+        int currentDepth = 0;
+        int allOfDepth = -1;
+        int oneOfDepth = -1;
+
+        List<string> currentOneOf = null;
+
+        for (int i = 0; i < JSONSchema.Count; i++)
+        {
+            string line = JSONSchema[i].Trim();
+
+            // Enter an AllOf section.
+            if (line.StartsWith("\"allOf\": ["))
+            {
+                allOfDepth = currentDepth;
+            }
+            // Enter a OneOf section contained within an AllOf.
+            else if (line.StartsWith("\"oneOf\": [") && allOfDepth != -1)
+            {
+                oneOfDepth = currentDepth;
+                currentOneOf = new List<string>();
+            }
+            // Find Required Properties contained within the current OneOf.
+            else if (line.StartsWith("\"required\": [") && oneOfDepth != -1)
+            {
+                for (int requiredLine = i + 1; requiredLine < JSONSchema.Count; requiredLine++)
+                {
+                    string requiredLineValue = JSONSchema[requiredLine].Trim();
+
+                    if (requiredLineValue.TrimEnd(',') == "]")
+                    {
+                        break;
+                    }
+
+                    string requiredProperty = requiredLineValue.Trim('"', ',');
+
+                    if (!requiredProperty.IsNullOrWhitespace())
+                    {
+                        currentOneOf?.Add(requiredProperty);
+                    }
+                }
+            }
+
+            // Keep track of the JSON nesting depth.
+            foreach (char character in line)
+            {
+                if (character == '{' || character == '[')
+                {
+                    currentDepth++;
+                }
+                else if (character == '}' || character == ']')
+                {
+                    currentDepth--;
+                }
+            }
+
+            // Leave the OneOf section.
+            if (oneOfDepth != -1 && currentDepth <= oneOfDepth)
+            {
+                if (currentOneOf != null && currentOneOf.Count > 0)
+                {
+                    allOfProperties.Add(currentOneOf);
+                }
+
+                currentOneOf = null;
+                oneOfDepth = -1;
+            }
+
+            // Leave the AllOf section.
+            if (allOfDepth != -1 && currentDepth <= allOfDepth)
+            {
+                allOfDepth = -1;
+            }
+        }
+
+        return allOfProperties;
+    }
+
+    /// <summary>
     /// A Boolean for whether or not Extra Fields are Allowed for the Object by the Schema.
     /// </summary>
     /// <param name="JSONSchema">A List of String representing the JSON Schema.</param>
     /// <returns>A true if allowed, and a false if disallowed</returns>
     /// <remarks>This code is provided by Creator/Chaosyr/SaxbyMod/The Stoat Lord.</remarks>
-    public static bool AllowExtraFieldsCheck(List<string> JSONSchema)
+    private static bool AllowExtraFieldsCheck(List<string> JSONSchema)
     {
         bool additionalProps = true;
         foreach (string line in JSONSchema)
         {
             if (line.Contains("\"additionalProperties\": "))
             {
-                additionalProps = bool.Parse(line.Trim().Replace("\"additionalProperties\": ", "").Trim('"', ','));
+                string additionalPropertiesValue = line.Trim().Replace("\"additionalProperties\": ", "").Trim();
+                if (additionalPropertiesValue.StartsWith("{"))
+                {
+                    return true;
+                }
+                additionalProps = bool.Parse(additionalPropertiesValue.Trim('"', ','));
                 break;
             }
         }
@@ -369,12 +568,63 @@ public class LintingTools
     }
 
     /// <summary>
+    /// Gets the AdditionalProperties in a Schema Variant.
+    /// </summary>
+    /// <param name="JSONSchema">A List of String representing the JSON Schema.</param>
+    /// <returns>A true if allowed, and a false if disallowed</returns>
+    /// <remarks>This code is provided by Creator/Chaosyr/SaxbyMod/The Stoat Lord.</remarks>
+    private static List<string> GetAdditionalPropertiesSchema(List<string> JSONSchema)
+    {
+        int additionalPropertiesIndex = JSONSchema.FindIndex(x => x.Trim().StartsWith("\"additionalProperties\": {"));
+
+        if (additionalPropertiesIndex == -1)
+        {
+            return new List<string>();
+        }
+
+        List<string> additionalPropertiesSchema = new List<string>();
+
+        int braceDepth = 0;
+        bool startedObject = false;
+
+        for (int i = additionalPropertiesIndex; i < JSONSchema.Count; i++)
+        {
+            string currentLine = JSONSchema[i];
+
+            if (i > additionalPropertiesIndex)
+            {
+                additionalPropertiesSchema.Add(currentLine);
+            }
+
+            foreach (char character in currentLine)
+            {
+                if (character == '{')
+                {
+                    braceDepth++;
+                    startedObject = true;
+                }
+                else if (character == '}')
+                {
+                    braceDepth--;
+                }
+            }
+
+            if (startedObject && braceDepth == 0)
+            {
+                break;
+            }
+        }
+
+        return additionalPropertiesSchema;
+    }
+
+    /// <summary>
     /// Digs Through an Array, Finds all of the Arrays Contents, and Sends it back.
     /// </summary>
     /// <param name="jsonArray">A string representing the JSON Array.</param>
     /// <returns>A List of String representing the JSON Arrays Contents. An empty string is returned if the Array has no Items.</returns>
     /// <remarks>This code is provided by Creator/Chaosyr/SaxbyMod/The Stoat Lord.</remarks>
-    internal static List<string> DigThroughArrayFindRelevant(string jsonArray)
+    private static List<string> DigThroughArrayFindRelevant(string jsonArray)
     {
         if (!jsonArray.Trim().StartsWith("[") || !jsonArray.Trim().EndsWith("]"))
         {
@@ -420,7 +670,7 @@ public class LintingTools
     /// <param name="JSONSchema">A List Of String resembling the Schema Segment to Dig Through.</param>
     /// <returns>A List of String of all the Content related to the Property your after.</returns>
     /// <remarks>This code is provided by Creator/Chaosyr/SaxbyMod/The Stoat Lord.</remarks>
-    internal static List<string> DigThroughSchemaFindRelevant(string propertyToFind, List<string> JSONSchema)
+    private static List<string> DigThroughSchemaFindRelevant(string propertyToFind, List<string> JSONSchema)
     {
         int pointA = -1;
         foreach (string item in JSONSchema)
@@ -504,12 +754,13 @@ public class LintingTools
     }
     
     /// <summary>
-    /// 
+    /// This is a helper unused in this class directly, but useful if you need to GetProperties related to an Object in your Items Utilities.
     /// </summary>
     /// <param name="jsonObject">A String representing the JSON Object.</param>
     /// <param name="propertyToFind">The Property in which you want to find in the Schema Sample passed in.</param>
     /// <param name="file">The full path to the JSON File.</param>
-    /// <returns></returns>
+    /// <returns>List (of a int resembling JSON depth, a string resembling the field Name, a string resembling the string Value)</returns>
+    /// <remarks>This code is provided by Creator/Chaosyr/SaxbyMod/The Stoat Lord.</remarks>
     internal static List<(int depth, string propertyName, string propertyValue)> GetObjectProperties(string jsonObject, string propertyToFind, string file)
     {
         if (jsonObject.Trim() != "{")
@@ -639,8 +890,8 @@ public class LintingTools
     /// </summary>
     /// <param name="JSONSchema">A List Of String resembling the Schema Segment to Dig Through.</param>
     /// <returns>A List of Schemas associated with the AnyOf Type.</returns>
-    /// /// <remarks>This code is provided by Creator/Chaosyr/SaxbyMod/The Stoat Lord.</remarks>
-    internal static List<List<string>> GetAnyOfSchemas(List<string> JSONSchema)
+    /// <remarks>This code is provided by Creator/Chaosyr/SaxbyMod/The Stoat Lord.</remarks>
+    private static List<List<string>> GetAnyOfSchemas(List<string> JSONSchema)
     {
         List<List<string>> anyOfSchemas = new List<List<string>>();
 
@@ -713,10 +964,11 @@ public class LintingTools
     /// <param name="PropertySchema">The List of String representing the Schema.</param>
     /// <param name="file">The Full Path to the JSON File.</param>
     /// <param name="schemaFile">The Full Path to the JSON Schema File.</param>
+    /// <param name="validateAnyOf">Determines whether errors should log or not.</param>
     /// <returns>A true if valid, a false if invalid.</returns>
     /// <remarks>This code is provided by Creator/Chaosyr/SaxbyMod/The Stoat Lord.</remarks>
-    public static bool ValidatePropertyAgainstSchema(string jsonPropertyName, string jsonPropertyValue,
-        List<string> PropertySchema, string file, string schemaFile)
+    private static bool ValidatePropertyAgainstSchema(string jsonPropertyName, string jsonPropertyValue,
+        List<string> PropertySchema, string file, string schemaFile, bool validateAnyOf = false)
     {
         string type = "";
         string description = "";
@@ -754,28 +1006,28 @@ public class LintingTools
 
         if (type == "string" && PropertySchema.Any(x => x.Trim().StartsWith("\"anyOf\": [")))
         {
-            return ValidateAnyOf(jsonPropertyName, jsonPropertyValue, PropertySchema, file, schemaFile);
+            return ValidateAnyOf(jsonPropertyName, jsonPropertyValue, PropertySchema, file, schemaFile, validateAnyOf);
         }
 
         if (type == "string")
         {
-            return ValidateString(jsonPropertyName, jsonPropertyValue, newPropertySchema, file, schemaFile);
+            return ValidateString(jsonPropertyName, jsonPropertyValue, newPropertySchema, file, schemaFile, validateAnyOf);
         }
         else if (type == "integer")
         {
-            return ValidateInteger(jsonPropertyName, jsonPropertyValue, newPropertySchema, file, schemaFile);
+            return ValidateInteger(jsonPropertyName, jsonPropertyValue, newPropertySchema, file, schemaFile, validateAnyOf);
         }
         else if (type == "boolean")
         {
-            return ValidateBoolean(jsonPropertyName, jsonPropertyValue, newPropertySchema, file, schemaFile);
+            return ValidateBoolean(jsonPropertyName, jsonPropertyValue, newPropertySchema, file, schemaFile, validateAnyOf);
         }
         else if (type == "object")
         {
-            return ValidateObject(jsonPropertyName, jsonPropertyValue, newPropertySchema, file, schemaFile);
+            return ValidateObject(jsonPropertyName, jsonPropertyValue, newPropertySchema, file, schemaFile, validateAnyOf);
         }
         else if (type == "array")
         {
-            return ValidateArray(jsonPropertyName, jsonPropertyValue, newPropertySchema, file, schemaFile);
+            return ValidateArray(jsonPropertyName, jsonPropertyValue, newPropertySchema, file, schemaFile, validateAnyOf);
         }
         else
         {
@@ -794,9 +1046,10 @@ public class LintingTools
     /// <param name="PropertySchema">The List of String representing the Schema.</param>
     /// <param name="file">The Full Path to the JSON File.</param>
     /// <param name="schemaFile">The Full Path to the JSON Schema File.</param>
+    /// <param name="validateAnyOf">Determines whether errors should log or not.</param>
     /// <returns>A true if valid, a false if invalid.</returns>
     /// <remarks>This code is provided by Creator/Chaosyr/SaxbyMod/The Stoat Lord.</remarks>
-    public static bool ValidateAnyOf(string jsonPropertyName, string jsonPropertyValue, List<string> PropertySchema, string file, string schemaFile)
+    private static bool ValidateAnyOf(string jsonPropertyName, string jsonPropertyValue, List<string> PropertySchema, string file, string schemaFile, bool validateAnyOf = false)
     {
         List<List<string>> anyOfSchema = GetAnyOfSchemas(PropertySchema);
 
@@ -805,7 +1058,7 @@ public class LintingTools
 
         foreach (List<string> validator in anyOfSchema)
         {
-            if (ValidatePropertyAgainstSchema(jsonPropertyName, jsonPropertyValue, validator, file, schemaFile))
+            if (ValidatePropertyAgainstSchema(jsonPropertyName, jsonPropertyValue, validator, file, schemaFile, DefineConfiguration.HideValidationAnyOfErrors.Value))
             {
                 JSONLoader3.FormatLogger("Debug", "LintingTools",
                     $"This Validator has succeeded in validating {jsonPropertyName} with value of ({jsonPropertyValue})");
@@ -818,16 +1071,19 @@ public class LintingTools
             }
         }
 
-        JSONLoader3.FormatLogger("ERROR", "LintingTools",
-            $"We could not validate {jsonPropertyName} against any of the Validators available for {jsonPropertyName} ensure your value is valid. The JSON this error occured in: {Path.GetFileNameWithoutExtension(file)}");
-        JSONLoader3.FormatLogger("AdditionalInformation", "LintingTools",
-            $"This error triggers when none of the validators for {jsonPropertyName} returned errorless.");
-        JSONLoader3.FormatLogger("AdditionalInformation", "LintingTools",
-            $"If you want to fix this, check how the Schema is trying to validate {jsonPropertyName} and ensure ({jsonPropertyValue} is valid against at least one of them.");
-        JSONLoader3.FormatLogger("AdditionalInformation", "LintingTools",
-            $"Here's the full path to the file the issue takes root in: {file}");
-        JSONLoader3.FormatLogger("AdditionalInformation", "LintingTools",
-            $"You can also find the full Schema here: {schemaFile}");
+        if (!validateAnyOf)
+        {
+            JSONLoader3.FormatLogger("ERROR", "LintingTools",
+                $"We could not validate {jsonPropertyName} against any of the Validators available for {jsonPropertyName} ensure your value is valid. The JSON this error occured in: {Path.GetFileNameWithoutExtension(file)}");
+            JSONLoader3.FormatLogger("AdditionalInformation", "LintingTools",
+                $"This error triggers when none of the validators for {jsonPropertyName} returned errorless.");
+            JSONLoader3.FormatLogger("AdditionalInformation", "LintingTools",
+                $"If you want to fix this, check how the Schema is trying to validate {jsonPropertyName} and ensure ({jsonPropertyValue} is valid against at least one of them.");
+            JSONLoader3.FormatLogger("AdditionalInformation", "LintingTools",
+                $"Here's the full path to the file the issue takes root in: {file}");
+            JSONLoader3.FormatLogger("AdditionalInformation", "LintingTools",
+                $"You can also find the full Schema here: {schemaFile}");
+        }
 
         return false;
     }
@@ -840,10 +1096,11 @@ public class LintingTools
     /// <param name="PropertySchema">The List of String representing the Schema.</param>
     /// <param name="file">The Full Path to the JSON File.</param>
     /// <param name="schemaFile">The Full Path to the JSON Schema File.</param>
+    /// <param name="validateAnyOf">Determines whether errors should log or not.</param>
     /// <returns>A true if valid, a false if invalid.</returns>
     /// <remarks>This code is provided by Creator/Chaosyr/SaxbyMod/The Stoat Lord.</remarks>
-    public static bool ValidateString(string jsonPropertyName, string jsonPropertyValue, List<string> PropertySchema,
-        string file, string schemaFile)
+    private static bool ValidateString(string jsonPropertyName, string jsonPropertyValue, List<string> PropertySchema,
+        string file, string schemaFile, bool validateAnyOf = false)
     {
         int minLength = -1;
         Regex pattern = null;
@@ -908,82 +1165,102 @@ public class LintingTools
 
         if (!(jsonPropertyValue.StartsWith("\"") && jsonPropertyValue.EndsWith("\"")))
         {
-            JSONLoader3.FormatLogger("ERROR", "LintingTools",
-                $"Invalid String was Found. The JSON this error occured in: {Path.GetFileNameWithoutExtension(file)}");
-            JSONLoader3.FormatLogger("AdditionalInformation", "LintingTools",
-                "To fix this ensure the Value for this item is properly encases in Quotation marks.");
+            if (!validateAnyOf)
+            {
+                JSONLoader3.FormatLogger("ERROR", "LintingTools",
+                    $"Invalid String was Found. The JSON this error occured in: {Path.GetFileNameWithoutExtension(file)}");
+                JSONLoader3.FormatLogger("AdditionalInformation", "LintingTools",
+                    "To fix this ensure the Value for this item is properly encases in Quotation marks.");
+            }
+
             return false;
         }
 
         if (minLength != -1 && jsonPropertyValue.Trim('"').Length < minLength)
         {
-            JSONLoader3.FormatLogger("ERROR", "LintingTools",
-                $"The string is shorter than the Minimum Length ({minLength}) for {jsonPropertyName} according to the Schema for this Item. The JSON this error occured in: {Path.GetFileNameWithoutExtension(file)}");
-            JSONLoader3.FormatLogger("AdditionalInformation", "LintingTools",
-                $"To fix this just simply extend the length of {jsonPropertyValue} above {minLength}.");
-            JSONLoader3.FormatLogger("AdditionalInformation", "LintingTools",
-                "Sadly as it broke here, I'm going to have to call a break, meaning we are going to stop proccessing this item and move on to the next one.");
-            JSONLoader3.FormatLogger("AdditionalInformation", "LintingTools",
-                "Hopefully you'll have it fixed for next load up!!");
-            JSONLoader3.FormatLogger("AdditionalInformation", "LintingTools",
-                $"Here's the full path to the file the issue takes root in: {file}");
+            if (!validateAnyOf)
+            {
+                JSONLoader3.FormatLogger("ERROR", "LintingTools",
+                    $"The string is shorter than the Minimum Length ({minLength}) for {jsonPropertyName} according to the Schema for this Item. The JSON this error occured in: {Path.GetFileNameWithoutExtension(file)}");
+                JSONLoader3.FormatLogger("AdditionalInformation", "LintingTools",
+                    $"To fix this just simply extend the length of {jsonPropertyValue} above {minLength}.");
+                JSONLoader3.FormatLogger("AdditionalInformation", "LintingTools",
+                    "Sadly as it broke here, I'm going to have to call a break, meaning we are going to stop proccessing this item and move on to the next one.");
+                JSONLoader3.FormatLogger("AdditionalInformation", "LintingTools",
+                    "Hopefully you'll have it fixed for next load up!!");
+                JSONLoader3.FormatLogger("AdditionalInformation", "LintingTools",
+                    $"Here's the full path to the file the issue takes root in: {file}");
+            }
+
             return false;
         }
 
         if (pattern != null && !pattern.IsMatch(jsonPropertyValue.Trim('"')))
         {
-            JSONLoader3.FormatLogger("ERROR", "LintingTools",
-                $"The string value for {jsonPropertyName} is invalid based on the Regex specified by the Schema for this item ({pattern}). The JSON this error occured in: {Path.GetFileNameWithoutExtension(file)}");
-            JSONLoader3.FormatLogger("AdditionalInformation", "LintingTools",
-                $"To fix this copy the regex shown above and paste it into the expression box of https://regexr.com/.");
-            JSONLoader3.FormatLogger("AdditionalInformation", "LintingTools",
-                $"Now take your value ({jsonPropertyValue}) and put it in the Text Box below it.");
-            JSONLoader3.FormatLogger("AdditionalInformation", "LintingTools",
-                $"The Regex will be described under tools, so now just edit your value for {jsonPropertyName} until it is valid.");
-            JSONLoader3.FormatLogger("AdditionalInformation", "LintingTools",
-                $"Now just paste that value back into your JSON Key associated with {jsonPropertyName}, than your set for the next boot.");
-            JSONLoader3.FormatLogger("AdditionalInformation", "LintingTools",
-                "Keep in mind if it was an image, ensure the image matches that exact name. P.S. If your trying to route folders use '/' after the folders name to go in, and '../' to go in.");
-            JSONLoader3.FormatLogger("AdditionalInformation", "LintingTools",
-                "Sadly as it broke here, I'm going to have to call a break, meaning we are going to stop proccessing this item and move on to the next one.");
-            JSONLoader3.FormatLogger("AdditionalInformation", "LintingTools",
-                "Hopefully you'll have it fixed for next load up!!");
-            JSONLoader3.FormatLogger("AdditionalInformation", "LintingTools",
-                $"Here's the full path to the file the issue takes root in: {file}");
+            if (!validateAnyOf)
+            {
+                JSONLoader3.FormatLogger("ERROR", "LintingTools",
+                    $"The string value for {jsonPropertyName} is invalid based on the Regex specified by the Schema for this item ({pattern}). The JSON this error occured in: {Path.GetFileNameWithoutExtension(file)}");
+                JSONLoader3.FormatLogger("AdditionalInformation", "LintingTools",
+                    $"To fix this copy the regex shown above and paste it into the expression box of https://regexr.com/.");
+                JSONLoader3.FormatLogger("AdditionalInformation", "LintingTools",
+                    $"Now take your value ({jsonPropertyValue}) and put it in the Text Box below it.");
+                JSONLoader3.FormatLogger("AdditionalInformation", "LintingTools",
+                    $"The Regex will be described under tools, so now just edit your value for {jsonPropertyName} until it is valid.");
+                JSONLoader3.FormatLogger("AdditionalInformation", "LintingTools",
+                    $"Now just paste that value back into your JSON Key associated with {jsonPropertyName}, than your set for the next boot.");
+                JSONLoader3.FormatLogger("AdditionalInformation", "LintingTools",
+                    "Keep in mind if it was an image, ensure the image matches that exact name. P.S. If your trying to route folders use '/' after the folders name to go in, and '../' to go in.");
+                JSONLoader3.FormatLogger("AdditionalInformation", "LintingTools",
+                    "Sadly as it broke here, I'm going to have to call a break, meaning we are going to stop proccessing this item and move on to the next one.");
+                JSONLoader3.FormatLogger("AdditionalInformation", "LintingTools",
+                    "Hopefully you'll have it fixed for next load up!!");
+                JSONLoader3.FormatLogger("AdditionalInformation", "LintingTools",
+                    $"Here's the full path to the file the issue takes root in: {file}");
+            }
+
             return false;
         }
 
         if (@default.IsNullOrWhitespace() && jsonPropertyValue.Trim('"').IsNullOrWhitespace())
         {
-            JSONLoader3.FormatLogger("ERROR", "LintingTools",
-                $"The string is empty and there is no default value for {jsonPropertyName} either define it or remove it. The JSON this error occured in: {Path.GetFileNameWithoutExtension(file)}");
-            JSONLoader3.FormatLogger("AdditionalInformation", "LintingTools",
-                $"To fix this simply as the error states remove the KVP for {jsonPropertyName}");
-            JSONLoader3.FormatLogger("AdditionalInformation", "LintingTools",
-                $"Alternatively define a value for {jsonPropertyName} you can toggle on Summary in The Config to show the Properties Description for further Information about it..");
-            JSONLoader3.FormatLogger("AdditionalInformation", "LintingTools",
-                "Sadly as it broke here, I'm going to have to call a break, meaning we are going to stop proccessing this item and move on to the next one.");
-            JSONLoader3.FormatLogger("AdditionalInformation", "LintingTools",
-                "Hopefully you'll have it fixed for next load up!!");
-            JSONLoader3.FormatLogger("AdditionalInformation", "LintingTools",
-                $"Here's the full path to the file the issue takes root in: {file}");
+            if (!validateAnyOf)
+            {
+                JSONLoader3.FormatLogger("ERROR", "LintingTools",
+                    $"The string is empty and there is no default value for {jsonPropertyName} either define it or remove it. The JSON this error occured in: {Path.GetFileNameWithoutExtension(file)}");
+                JSONLoader3.FormatLogger("AdditionalInformation", "LintingTools",
+                    $"To fix this simply as the error states remove the KVP for {jsonPropertyName}");
+                JSONLoader3.FormatLogger("AdditionalInformation", "LintingTools",
+                    $"Alternatively define a value for {jsonPropertyName} you can toggle on Summary in The Config to show the Properties Description for further Information about it..");
+                JSONLoader3.FormatLogger("AdditionalInformation", "LintingTools",
+                    "Sadly as it broke here, I'm going to have to call a break, meaning we are going to stop proccessing this item and move on to the next one.");
+                JSONLoader3.FormatLogger("AdditionalInformation", "LintingTools",
+                    "Hopefully you'll have it fixed for next load up!!");
+                JSONLoader3.FormatLogger("AdditionalInformation", "LintingTools",
+                    $"Here's the full path to the file the issue takes root in: {file}");
+            }
+
             return false;
         }
 
         if (enums.Count > 0 && !enums.Any(enumValue => string.Equals(enumValue.Trim(), jsonPropertyValue.Trim().Trim('"'), StringComparison.Ordinal)))
         {
-            JSONLoader3.FormatLogger("ERROR", "LintingTools",
-                $"The string does not match any of the required Enums for {jsonPropertyName} according to the Schema. The JSON this error occured in: {Path.GetFileNameWithoutExtension(file)}");
-            JSONLoader3.FormatLogger("AdditionalInformation", "LintingTools",
-                $"To fix this just ensure the {jsonPropertyName} matches the actual Enums applicable for this field.");
-            JSONLoader3.FormatLogger("AdditionalInformation", "LintingTools",
-                $"Look at the Description for {jsonPropertyName} for a list of possible values for this field.");
-            JSONLoader3.FormatLogger("AdditionalInformation", "LintingTools",
-                "Sadly as it broke here, I'm going to have to call a break, meaning we are going to stop proccessing this item and move on to the next one.");
-            JSONLoader3.FormatLogger("AdditionalInformation", "LintingTools",
-                "Hopefully you'll have it fixed for next load up!!");
-            JSONLoader3.FormatLogger("AdditionalInformation", "LintingTools",
-                $"Here's the full path to the file the issue takes root in: {file}");
+            if (!validateAnyOf)
+            {
+                JSONLoader3.FormatLogger("ERROR", "LintingTools",
+                    $"The string does not match any of the required Enums for {jsonPropertyName} according to the Schema. The JSON this error occured in: {Path.GetFileNameWithoutExtension(file)}");
+                JSONLoader3.FormatLogger("AdditionalInformation", "LintingTools",
+                    $"To fix this just ensure the {jsonPropertyName} matches the actual Enums applicable for this field.");
+                JSONLoader3.FormatLogger("AdditionalInformation", "LintingTools",
+                    $"Look at the Description for {jsonPropertyName} for a list of possible values for this field.");
+                JSONLoader3.FormatLogger("AdditionalInformation", "LintingTools",
+                    "Sadly as it broke here, I'm going to have to call a break, meaning we are going to stop proccessing this item and move on to the next one.");
+                JSONLoader3.FormatLogger("AdditionalInformation", "LintingTools",
+                    "Hopefully you'll have it fixed for next load up!!");
+                JSONLoader3.FormatLogger("AdditionalInformation", "LintingTools",
+                    $"Here's the full path to the file the issue takes root in: {file}");
+            }
+
             return false;
         }
 
@@ -998,10 +1275,11 @@ public class LintingTools
     /// <param name="PropertySchema">The List of String representing the Schema.</param>
     /// <param name="file">The Full Path to the JSON File.</param>
     /// <param name="schemaFile">The Full Path to the JSON Schema File.</param>
+    /// <param name="validateAnyOf">Determines whether errors should log or not.</param>
     /// <returns>A true if valid, a false if invalid.</returns>
     /// <remarks>This code is provided by Creator/Chaosyr/SaxbyMod/The Stoat Lord.</remarks>
-    public static bool ValidateInteger(string jsonPropertyName, string jsonPropertyValue, List<string> PropertySchema,
-        string file, string schemaFile)
+    private static bool ValidateInteger(string jsonPropertyName, string jsonPropertyValue, List<string> PropertySchema,
+        string file, string schemaFile, bool validateAnyOf = false)
     {
         int minimum = -1;
         int maximum = -1;
@@ -1032,78 +1310,98 @@ public class LintingTools
 
         if ((jsonPropertyValue.StartsWith("\"") && jsonPropertyValue.EndsWith("\"")))
         {
-            JSONLoader3.FormatLogger("ERROR", "LintingTools",
-                $"Invalid Int was Found. The JSON this error occured in: {Path.GetFileNameWithoutExtension(file)}");
-            JSONLoader3.FormatLogger("AdditionalInformation", "LintingTools",
-                "To fix this ensure the Value for this item is NOT encased in Quotation marks.");
-            JSONLoader3.FormatLogger("AdditionalInformation", "LintingTools",
-                "Sadly as it broke here, I'm going to have to call a break, meaning we are going to stop proccessing this item and move on to the next one.");
-            JSONLoader3.FormatLogger("AdditionalInformation", "LintingTools",
-                "Hopefully you'll have it fixed for next load up!!");
-            JSONLoader3.FormatLogger("AdditionalInformation", "LintingTools",
-                $"Here's the full path to the file the issue takes root in: {file}");
+            if (!validateAnyOf)
+            {
+                JSONLoader3.FormatLogger("ERROR", "LintingTools",
+                    $"Invalid Int was Found. The JSON this error occured in: {Path.GetFileNameWithoutExtension(file)}");
+                JSONLoader3.FormatLogger("AdditionalInformation", "LintingTools",
+                    "To fix this ensure the Value for this item is NOT encased in Quotation marks.");
+                JSONLoader3.FormatLogger("AdditionalInformation", "LintingTools",
+                    "Sadly as it broke here, I'm going to have to call a break, meaning we are going to stop proccessing this item and move on to the next one.");
+                JSONLoader3.FormatLogger("AdditionalInformation", "LintingTools",
+                    "Hopefully you'll have it fixed for next load up!!");
+                JSONLoader3.FormatLogger("AdditionalInformation", "LintingTools",
+                    $"Here's the full path to the file the issue takes root in: {file}");
+            }
+
             return false;
         }
 
         if (jsonPropertyValue.IsNullOrWhitespace() && !hasDefault)
         {
-            JSONLoader3.FormatLogger("ERROR", "LintingTools",
-                $"The value is empty and there is no default value for {jsonPropertyName} either define it or remove it. The JSON this error occured in: {Path.GetFileNameWithoutExtension(file)}");
-            JSONLoader3.FormatLogger("AdditionalInformation", "LintingTools",
-                $"To fix this simply as the error states remove the KVP for {jsonPropertyName}");
-            JSONLoader3.FormatLogger("AdditionalInformation", "LintingTools",
-                $"Alternatively define a value for {jsonPropertyName} you can toggle on Summary in The Config to show the Properties Description for further Information about it..");
-            JSONLoader3.FormatLogger("AdditionalInformation", "LintingTools",
-                "Sadly as it broke here, I'm going to have to call a break, meaning we are going to stop proccessing this item and move on to the next one.");
-            JSONLoader3.FormatLogger("AdditionalInformation", "LintingTools",
-                "Hopefully you'll have it fixed for next load up!!");
-            JSONLoader3.FormatLogger("AdditionalInformation", "LintingTools",
-                $"Here's the full path to the file the issue takes root in: {file}");
+            if (!validateAnyOf)
+            {
+                JSONLoader3.FormatLogger("ERROR", "LintingTools",
+                    $"The value is empty and there is no default value for {jsonPropertyName} either define it or remove it. The JSON this error occured in: {Path.GetFileNameWithoutExtension(file)}");
+                JSONLoader3.FormatLogger("AdditionalInformation", "LintingTools",
+                    $"To fix this simply as the error states remove the KVP for {jsonPropertyName}");
+                JSONLoader3.FormatLogger("AdditionalInformation", "LintingTools",
+                    $"Alternatively define a value for {jsonPropertyName} you can toggle on Summary in The Config to show the Properties Description for further Information about it..");
+                JSONLoader3.FormatLogger("AdditionalInformation", "LintingTools",
+                    "Sadly as it broke here, I'm going to have to call a break, meaning we are going to stop proccessing this item and move on to the next one.");
+                JSONLoader3.FormatLogger("AdditionalInformation", "LintingTools",
+                    "Hopefully you'll have it fixed for next load up!!");
+                JSONLoader3.FormatLogger("AdditionalInformation", "LintingTools",
+                    $"Here's the full path to the file the issue takes root in: {file}");
+            }
+
             return false;
         }
 
         if (!int.TryParse(jsonPropertyValue, out int value))
         {
-            JSONLoader3.FormatLogger("ERROR", "LintingTools",
-                $"The Value passed in with {jsonPropertyName} is not a valid Integer. The JSON this error occured in: {Path.GetFileNameWithoutExtension(file)}");
-            JSONLoader3.FormatLogger("AdditionalInformation", "LintingTools",
-                $"The value associated with {jsonPropertyName} did not parse correctly as an Integer, the value being ({jsonPropertyValue})");
-            JSONLoader3.FormatLogger("AdditionalInformation", "LintingTools",
-                "Sadly as it broke here, I'm going to have to call a break, meaning we are going to stop proccessing this item and move on to the next one.");
-            JSONLoader3.FormatLogger("AdditionalInformation", "LintingTools",
-                "Hopefully you'll have it fixed for next load up!!");
-            JSONLoader3.FormatLogger("AdditionalInformation", "LintingTools",
-                $"Here's the full path to the file the issue takes root in: {file}");
+            if (!validateAnyOf)
+            {
+                JSONLoader3.FormatLogger("ERROR", "LintingTools",
+                    $"The Value passed in with {jsonPropertyName} is not a valid Integer. The JSON this error occured in: {Path.GetFileNameWithoutExtension(file)}");
+                JSONLoader3.FormatLogger("AdditionalInformation", "LintingTools",
+                    $"The value associated with {jsonPropertyName} did not parse correctly as an Integer, the value being ({jsonPropertyValue})");
+                JSONLoader3.FormatLogger("AdditionalInformation", "LintingTools",
+                    "Sadly as it broke here, I'm going to have to call a break, meaning we are going to stop proccessing this item and move on to the next one.");
+                JSONLoader3.FormatLogger("AdditionalInformation", "LintingTools",
+                    "Hopefully you'll have it fixed for next load up!!");
+                JSONLoader3.FormatLogger("AdditionalInformation", "LintingTools",
+                    $"Here's the full path to the file the issue takes root in: {file}");
+            }
+
             return false;
         }
 
         if (value > maximum && hasMaximum)
         {
-            JSONLoader3.FormatLogger("ERROR", "LintingTools",
-                $"The value of {jsonPropertyName} is Greater than the Maximum allowed by the Schema for this item, the maximum being {maximum}. The JSON this error occured in: {Path.GetFileNameWithoutExtension(file)}");
-            JSONLoader3.FormatLogger("AdditionalInformation", "LintingTools",
-                $"To fix this simply set the value of {jsonPropertyName} to a Integer less than {maximum}.");
-            JSONLoader3.FormatLogger("AdditionalInformation", "LintingTools",
-                "Sadly as it broke here, I'm going to have to call a break, meaning we are going to stop proccessing this item and move on to the next one.");
-            JSONLoader3.FormatLogger("AdditionalInformation", "LintingTools",
-                "Hopefully you'll have it fixed for next load up!!");
-            JSONLoader3.FormatLogger("AdditionalInformation", "LintingTools",
-                $"Here's the full path to the file the issue takes root in: {file}");
+            if (!validateAnyOf)
+            {
+                JSONLoader3.FormatLogger("ERROR", "LintingTools",
+                    $"The value of {jsonPropertyName} is Greater than the Maximum allowed by the Schema for this item, the maximum being {maximum}. The JSON this error occured in: {Path.GetFileNameWithoutExtension(file)}");
+                JSONLoader3.FormatLogger("AdditionalInformation", "LintingTools",
+                    $"To fix this simply set the value of {jsonPropertyName} to a Integer less than {maximum}.");
+                JSONLoader3.FormatLogger("AdditionalInformation", "LintingTools",
+                    "Sadly as it broke here, I'm going to have to call a break, meaning we are going to stop proccessing this item and move on to the next one.");
+                JSONLoader3.FormatLogger("AdditionalInformation", "LintingTools",
+                    "Hopefully you'll have it fixed for next load up!!");
+                JSONLoader3.FormatLogger("AdditionalInformation", "LintingTools",
+                    $"Here's the full path to the file the issue takes root in: {file}");
+            }
+
             return false;
         }
 
         if (value < minimum && hasMinimum)
         {
-            JSONLoader3.FormatLogger("ERROR", "LintingTools",
-                $"The value of {jsonPropertyName} is Less than the Minimum allowed by the Schema for this item, the minimum being {minimum}. The JSON this error occured in: {Path.GetFileNameWithoutExtension(file)}");
-            JSONLoader3.FormatLogger("AdditionalInformation", "LintingTools",
-                $"To fix this simply set the value of {jsonPropertyName} to a Integer greater than {minimum}.");
-            JSONLoader3.FormatLogger("AdditionalInformation", "LintingTools",
-                "Sadly as it broke here, I'm going to have to call a break, meaning we are going to stop proccessing this item and move on to the next one.");
-            JSONLoader3.FormatLogger("AdditionalInformation", "LintingTools",
-                "Hopefully you'll have it fixed for next load up!!");
-            JSONLoader3.FormatLogger("AdditionalInformation", "LintingTools",
-                $"Here's the full path to the file the issue takes root in: {file}");
+            if (!validateAnyOf)
+            {
+                JSONLoader3.FormatLogger("ERROR", "LintingTools",
+                    $"The value of {jsonPropertyName} is Less than the Minimum allowed by the Schema for this item, the minimum being {minimum}. The JSON this error occured in: {Path.GetFileNameWithoutExtension(file)}");
+                JSONLoader3.FormatLogger("AdditionalInformation", "LintingTools",
+                    $"To fix this simply set the value of {jsonPropertyName} to a Integer greater than {minimum}.");
+                JSONLoader3.FormatLogger("AdditionalInformation", "LintingTools",
+                    "Sadly as it broke here, I'm going to have to call a break, meaning we are going to stop proccessing this item and move on to the next one.");
+                JSONLoader3.FormatLogger("AdditionalInformation", "LintingTools",
+                    "Hopefully you'll have it fixed for next load up!!");
+                JSONLoader3.FormatLogger("AdditionalInformation", "LintingTools",
+                    $"Here's the full path to the file the issue takes root in: {file}");
+            }
+
             return false;
         }
 
@@ -1118,10 +1416,11 @@ public class LintingTools
     /// <param name="PropertySchema">The List of String representing the Schema.</param>
     /// <param name="file">The Full Path to the JSON File.</param>
     /// <param name="schemaFile">The Full Path to the JSON Schema File.</param>
+    /// <param name="validateAnyOf">Determines whether errors should log or not.</param>
     /// <returns>A true if valid, a false if invalid.</returns>
     /// <remarks>This code is provided by Creator/Chaosyr/SaxbyMod/The Stoat Lord.</remarks>
-    public static bool ValidateBoolean(string jsonPropertyName, string jsonPropertyValue, List<string> PropertySchema,
-        string file, string schemaFile)
+    private static bool ValidateBoolean(string jsonPropertyName, string jsonPropertyValue, List<string> PropertySchema,
+        string file, string schemaFile, bool validateAnyOf = false)
     {
         bool @default = false;
         bool hasDefault = false;
@@ -1136,63 +1435,79 @@ public class LintingTools
 
         if ((jsonPropertyValue.StartsWith("\"") && jsonPropertyValue.EndsWith("\"")))
         {
-            JSONLoader3.FormatLogger("ERROR", "LintingTools",
-                $"Invalid Boolean was Found. The JSON this error occured in: {Path.GetFileNameWithoutExtension(file)}");
-            JSONLoader3.FormatLogger("AdditionalInformation", "LintingTools",
-                "To fix this ensure the Value for this item is NOT encased in Quotation marks.");
-            JSONLoader3.FormatLogger("AdditionalInformation", "LintingTools",
-                "Sadly as it broke here, I'm going to have to call a break, meaning we are going to stop proccessing this item and move on to the next one.");
-            JSONLoader3.FormatLogger("AdditionalInformation", "LintingTools",
-                "Hopefully you'll have it fixed for next load up!!");
-            JSONLoader3.FormatLogger("AdditionalInformation", "LintingTools",
-                $"Here's the full path to the file the issue takes root in: {file}");
+            if (!validateAnyOf)
+            {
+                JSONLoader3.FormatLogger("ERROR", "LintingTools",
+                    $"Invalid Boolean was Found. The JSON this error occured in: {Path.GetFileNameWithoutExtension(file)}");
+                JSONLoader3.FormatLogger("AdditionalInformation", "LintingTools",
+                    "To fix this ensure the Value for this item is NOT encased in Quotation marks.");
+                JSONLoader3.FormatLogger("AdditionalInformation", "LintingTools",
+                    "Sadly as it broke here, I'm going to have to call a break, meaning we are going to stop proccessing this item and move on to the next one.");
+                JSONLoader3.FormatLogger("AdditionalInformation", "LintingTools",
+                    "Hopefully you'll have it fixed for next load up!!");
+                JSONLoader3.FormatLogger("AdditionalInformation", "LintingTools",
+                    $"Here's the full path to the file the issue takes root in: {file}");
+            }
+
             return false;
         }
 
         if (jsonPropertyValue.IsNullOrWhitespace() && !hasDefault)
         {
-            JSONLoader3.FormatLogger("ERROR", "LintingTools",
-                $"The value is empty and there is no default value for {jsonPropertyName} either define it or remove it. The JSON this error occured in: {Path.GetFileNameWithoutExtension(file)}");
-            JSONLoader3.FormatLogger("AdditionalInformation", "LintingTools",
-                $"To fix this simply as the error states remove the KVP for {jsonPropertyName}");
-            JSONLoader3.FormatLogger("AdditionalInformation", "LintingTools",
-                $"Alternatively define a value for {jsonPropertyName} you can toggle on Summary in The Config to show the Properties Description for further Information about it..");
-            JSONLoader3.FormatLogger("AdditionalInformation", "LintingTools",
-                "Sadly as it broke here, I'm going to have to call a break, meaning we are going to stop proccessing this item and move on to the next one.");
-            JSONLoader3.FormatLogger("AdditionalInformation", "LintingTools",
-                "Hopefully you'll have it fixed for next load up!!");
-            JSONLoader3.FormatLogger("AdditionalInformation", "LintingTools",
-                $"Here's the full path to the file the issue takes root in: {file}");
+            if (!validateAnyOf)
+            {
+                JSONLoader3.FormatLogger("ERROR", "LintingTools",
+                    $"The value is empty and there is no default value for {jsonPropertyName} either define it or remove it. The JSON this error occured in: {Path.GetFileNameWithoutExtension(file)}");
+                JSONLoader3.FormatLogger("AdditionalInformation", "LintingTools",
+                    $"To fix this simply as the error states remove the KVP for {jsonPropertyName}");
+                JSONLoader3.FormatLogger("AdditionalInformation", "LintingTools",
+                    $"Alternatively define a value for {jsonPropertyName} you can toggle on Summary in The Config to show the Properties Description for further Information about it..");
+                JSONLoader3.FormatLogger("AdditionalInformation", "LintingTools",
+                    "Sadly as it broke here, I'm going to have to call a break, meaning we are going to stop proccessing this item and move on to the next one.");
+                JSONLoader3.FormatLogger("AdditionalInformation", "LintingTools",
+                    "Hopefully you'll have it fixed for next load up!!");
+                JSONLoader3.FormatLogger("AdditionalInformation", "LintingTools",
+                    $"Here's the full path to the file the issue takes root in: {file}");
+            }
+
             return false;
         }
 
         if (!bool.TryParse(jsonPropertyValue, out bool value))
         {
-            JSONLoader3.FormatLogger("ERROR", "LintingTools",
-                $"The Value passed in with {jsonPropertyName} is not a valid Boolean. The JSON this error occured in: {Path.GetFileNameWithoutExtension(file)}");
-            JSONLoader3.FormatLogger("AdditionalInformation", "LintingTools",
-                $"The value associated with {jsonPropertyName} did not parse correctly as an Boolean, the value being ({jsonPropertyValue})");
-            JSONLoader3.FormatLogger("AdditionalInformation", "LintingTools",
-                "Sadly as it broke here, I'm going to have to call a break, meaning we are going to stop proccessing this item and move on to the next one.");
-            JSONLoader3.FormatLogger("AdditionalInformation", "LintingTools",
-                "Hopefully you'll have it fixed for next load up!!");
-            JSONLoader3.FormatLogger("AdditionalInformation", "LintingTools",
-                $"Here's the full path to the file the issue takes root in: {file}");
+            if (!validateAnyOf)
+            {
+                JSONLoader3.FormatLogger("ERROR", "LintingTools",
+                    $"The Value passed in with {jsonPropertyName} is not a valid Boolean. The JSON this error occured in: {Path.GetFileNameWithoutExtension(file)}");
+                JSONLoader3.FormatLogger("AdditionalInformation", "LintingTools",
+                    $"The value associated with {jsonPropertyName} did not parse correctly as an Boolean, the value being ({jsonPropertyValue})");
+                JSONLoader3.FormatLogger("AdditionalInformation", "LintingTools",
+                    "Sadly as it broke here, I'm going to have to call a break, meaning we are going to stop proccessing this item and move on to the next one.");
+                JSONLoader3.FormatLogger("AdditionalInformation", "LintingTools",
+                    "Hopefully you'll have it fixed for next load up!!");
+                JSONLoader3.FormatLogger("AdditionalInformation", "LintingTools",
+                    $"Here's the full path to the file the issue takes root in: {file}");
+            }
+
             return false;
         }
 
         if (jsonPropertyValue != jsonPropertyValue.ToLower())
         {
-            JSONLoader3.FormatLogger("ERROR", "LintingTools",
-                $"The Value passed in with {jsonPropertyName} did not have the correct casing, the Value ({jsonPropertyValue}) must be all lowercase. The JSON this error occured in: {Path.GetFileNameWithoutExtension(file)}");
-            JSONLoader3.FormatLogger("AdditionalInformation", "LintingTools",
-                $"To fix this just make sure the value associated with {jsonPropertyName} is in full lowercase.");
-            JSONLoader3.FormatLogger("AdditionalInformation", "LintingTools",
-                "Sadly as it broke here, I'm going to have to call a break, meaning we are going to stop proccessing this item and move on to the next one.");
-            JSONLoader3.FormatLogger("AdditionalInformation", "LintingTools",
-                "Hopefully you'll have it fixed for next load up!!");
-            JSONLoader3.FormatLogger("AdditionalInformation", "LintingTools",
-                $"Here's the full path to the file the issue takes root in: {file}");
+            if (!validateAnyOf)
+            {
+                JSONLoader3.FormatLogger("ERROR", "LintingTools",
+                    $"The Value passed in with {jsonPropertyName} did not have the correct casing, the Value ({jsonPropertyValue}) must be all lowercase. The JSON this error occured in: {Path.GetFileNameWithoutExtension(file)}");
+                JSONLoader3.FormatLogger("AdditionalInformation", "LintingTools",
+                    $"To fix this just make sure the value associated with {jsonPropertyName} is in full lowercase.");
+                JSONLoader3.FormatLogger("AdditionalInformation", "LintingTools",
+                    "Sadly as it broke here, I'm going to have to call a break, meaning we are going to stop proccessing this item and move on to the next one.");
+                JSONLoader3.FormatLogger("AdditionalInformation", "LintingTools",
+                    "Hopefully you'll have it fixed for next load up!!");
+                JSONLoader3.FormatLogger("AdditionalInformation", "LintingTools",
+                    $"Here's the full path to the file the issue takes root in: {file}");
+            }
+
             return false;
         }
 
@@ -1207,29 +1522,38 @@ public class LintingTools
     /// <param name="PropertySchema">The List of String representing the Schema.</param>
     /// <param name="file">The Full Path to the JSON File.</param>
     /// <param name="schemaFile">The Full Path to the JSON Schema File.</param>
+    /// <param name="validateAnyOf">Determines whether errors should log or not.</param>
     /// <returns>A true if valid, a false if invalid.</returns>
     /// <remarks>This code is provided by Creator/Chaosyr/SaxbyMod/The Stoat Lord.</remarks>
-    public static bool ValidateObject(string jsonPropertyName, string jsonPropertyValue, List<string> PropertySchema,
-        string file, string schemaFile)
+    private static bool ValidateObject(string jsonPropertyName, string jsonPropertyValue, List<string> PropertySchema,
+        string file, string schemaFile, bool validateAnyOf = false)
     {
-        List<string> fakeJSON = new List<string>();
+        List<(int depth, string propertyName, string propertyValue)> JSONProperties;
 
-        fakeJSON.Add("{");
-
-        // If this is already an object (such as an object inside an array),
-        // use its lines directly instead of wrapping it as a KVP.
-        if (jsonPropertyValue.Trim().StartsWith("{"))
+        if (jsonPropertyValue.Trim() == "{")
         {
+            JSONProperties = GetObjectProperties(jsonPropertyValue, jsonPropertyName, file);
+        }
+        else if (jsonPropertyValue.Trim().StartsWith("{"))
+        {
+            List<string> fakeJSON = new List<string>();
+
+            fakeJSON.Add("{");
             fakeJSON.AddRange(jsonPropertyValue.Trim().Split('\n'));
+            fakeJSON.Add("}");
+
+            JSONProperties = DisectedJSON(fakeJSON);
         }
         else
         {
+            List<string> fakeJSON = new List<string>();
+
+            fakeJSON.Add("{");
             fakeJSON.Add($"\"{jsonPropertyName}\": {jsonPropertyValue}");
+            fakeJSON.Add("}");
+
+            JSONProperties = DisectedJSON(fakeJSON);
         }
-
-        fakeJSON.Add("}");
-
-        List<(int depth, string propertyName, string propertyValue)> JSONProperties = DisectedJSON(fakeJSON);
 
         if (JSONProperties.Count == 0)
         {
@@ -1250,12 +1574,23 @@ public class LintingTools
             JSONSchemaProperties = DisectedJSON(PropertySchema);
 
         List<string> requiredFields = GetRequiredFromSchema(PropertySchema);
+        List<List<string>> allOf = GetAllOf(PropertySchema);
+        List<(string field, bool checkedField)> requiredAllOfFieldTicks = new List<(string field, bool checkedField)>();
         List<(string field, bool checkedField)> requiredFieldTicks = new List<(string field, bool checkedField)>();
 
         foreach (string field in requiredFields)
             requiredFieldTicks.Add((field, false));
+        
+        foreach (List<string> oneOf in allOf)
+            foreach (string item in oneOf)
+                requiredAllOfFieldTicks.Add((item, false));
 
         JSONLoader3.FormatLogger("Debug", "LintingTools", $"Required Fields: {string.Join(", ", requiredFields)}");
+
+        foreach (List<string> oneOf in allOf)
+        {
+            JSONLoader3.FormatLogger("Debug", "LintingTools", $"Having one of the following is also required: {string.Join(", ", oneOf)}");
+        }
 
         foreach ((int depth, string propertyName, string propertyValue) prop in JSONProperties)
         {
@@ -1268,51 +1603,73 @@ public class LintingTools
 
             if (path == string.Empty)
             {
-                JSONLoader3.FormatLogger("ERROR", "LintingTools",
-                    $"Something went wrong while doing PathTraversal for {prop.propertyName} the following should help identify what you did wrong.");
-
-                if (GetTraversalPath(
-                        JSONSchemaProperties,
-                        (normalizedDepth, prop.propertyName.ToCamelCase(), prop.propertyValue),
-                        2) != string.Empty)
+                if (GetTraversalPath(JSONSchemaProperties, (normalizedDepth, prop.propertyName.ToCamelCase(), prop.propertyValue), 2) != string.Empty)
                 {
-                    JSONLoader3.FormatLogger("ERROR", "LintingTools",
-                        $"The casing of {prop.propertyName} within {Path.GetFileNameWithoutExtension(file)} is not correct, it should be in camelCase.");
-                    JSONLoader3.FormatLogger("AdditionalInformation", "LintingTools",
-                        "Basically the Property needs to follow the correct convention which is first word in Lowercase, and the rest of the words first letters Capitalized.");
-                    JSONLoader3.FormatLogger("AdditionalInformation", "LintingTools", "likeThis");
-                    JSONLoader3.FormatLogger("AdditionalInformation", "LintingTools",
-                        $"In the JSON the KVP would look like: \"likeThis\": false");
-                    JSONLoader3.FormatLogger("AdditionalInformation", "LintingTools",
-                        $"Here's the full path to the file the issue takes root in: {file}");
+                    if (!validateAnyOf)
+                    {
+                        JSONLoader3.FormatLogger("ERROR", "LintingTools",
+                            $"The casing of {prop.propertyName} within {Path.GetFileNameWithoutExtension(file)} is not correct, it should be in camelCase.");
+                        JSONLoader3.FormatLogger("AdditionalInformation", "LintingTools",
+                            "Basically the Property needs to follow the correct convention which is first word in Lowercase, and the rest of the words first letters Capitalized.");
+                        JSONLoader3.FormatLogger("AdditionalInformation", "LintingTools", "likeThis");
+                        JSONLoader3.FormatLogger("AdditionalInformation", "LintingTools",
+                            $"In the JSON the KVP would look like: \"likeThis\": false");
+                        JSONLoader3.FormatLogger("AdditionalInformation", "LintingTools",
+                            $"Here's the full path to the file the issue takes root in: {file}");
+                    }
+
                     return false;
                 }
-
-                if (!AllowExtraFieldsCheck(PropertySchema))
+                
+                List<string> additionalPropertiesSchema = GetAdditionalPropertiesSchema(PropertySchema);
+                
+                
+                if (additionalPropertiesSchema.Count > 0)
                 {
-                    JSONLoader3.FormatLogger("ERROR", "LintingTools",
-                        $"The Property of {prop.propertyName} is not apart of the JSON Schema, please remove it from the JSON entitled {Path.GetFileNameWithoutExtension(file)}.");
-                    JSONLoader3.FormatLogger("AdditionalInformation", "LintingTools",
-                        $"If you want to stop seeing these when you make your jsons, just cross check the JSON against the Schema saving it.");
-                    JSONLoader3.FormatLogger("AdditionalInformation", "LintingTools",
-                        "Theres a nifty site called JSONEditor that you may find useful, theres a guide in the README.");
-                    JSONLoader3.FormatLogger("AdditionalInformation", "LintingTools",
-                        "Additionally you can cross-reference against the Property List we provide in our API's documentation and WIKI's.");
-                    JSONLoader3.FormatLogger("AdditionalInformation", "LintingTools",
-                        $"Here's the full path to the file the issue takes root in: {file}");
-                    JSONLoader3.FormatLogger("AdditionalInformation", "LintingTools",
-                        $"You can also find the full Schema here: {schemaFile}");
+                    if (!ValidatePropertyAgainstSchema(
+                            prop.propertyName,
+                            prop.propertyValue,
+                            additionalPropertiesSchema,
+                            file,
+                            schemaFile,
+                            validateAnyOf))
+                    {
+                        return false;
+                    }
+                }
+                else if (!AllowExtraFieldsCheck(PropertySchema))
+                {
+                    if (!validateAnyOf)
+                    {
+                        JSONLoader3.FormatLogger("ERROR", "LintingTools",
+                            $"The Property of {prop.propertyName} is not apart of the JSON Schema, please remove it from the JSON entitled {Path.GetFileNameWithoutExtension(file)}.");
+                        JSONLoader3.FormatLogger("AdditionalInformation", "LintingTools",
+                            $"If you want to stop seeing these when you make your jsons, just cross check the JSON against the Schema saving it.");
+                        JSONLoader3.FormatLogger("AdditionalInformation", "LintingTools",
+                            "Theres a nifty site called JSONEditor that you may find useful, theres a guide in the README.");
+                        JSONLoader3.FormatLogger("AdditionalInformation", "LintingTools",
+                            "Additionally you can cross-reference against the Property List we provide in our API's documentation and WIKI's.");
+                        JSONLoader3.FormatLogger("AdditionalInformation", "LintingTools",
+                            $"Here's the full path to the file the issue takes root in: {file}");
+                        JSONLoader3.FormatLogger("AdditionalInformation", "LintingTools",
+                            $"You can also find the full Schema here: {schemaFile}");
+                    }
+
+                    return false;
                 }
                 else
                 {
-                    JSONLoader3.FormatLogger("Warning", "LintingTools",
-                        $"The Property of {prop.propertyName} is not apart of the JSON Schema, please remove it from the JSON entitled {Path.GetFileNameWithoutExtension(file)}.");
-                    JSONLoader3.FormatLogger("AdditionalInformation", "LintingTools",
-                        $"Here's the full path to the file the issue takes root in: {file}");
-                    JSONLoader3.FormatLogger("AdditionalInformation", "LintingTools",
-                        $"You can also find the full Schema here: {schemaFile}");
-                    JSONLoader3.FormatLogger("AdditionalInformation", "LintingTools",
-                        "This is a warning because additionalProperties was enabled for this Object thus we're letting it slide.");
+                    if (!validateAnyOf)
+                    {
+                        JSONLoader3.FormatLogger("Warning", "LintingTools",
+                            $"The Property of {prop.propertyName} is not apart of the JSON Schema, please remove it from the JSON entitled {Path.GetFileNameWithoutExtension(file)}.");
+                        JSONLoader3.FormatLogger("AdditionalInformation", "LintingTools",
+                            $"Here's the full path to the file the issue takes root in: {file}");
+                        JSONLoader3.FormatLogger("AdditionalInformation", "LintingTools",
+                            $"You can also find the full Schema here: {schemaFile}");
+                        JSONLoader3.FormatLogger("AdditionalInformation", "LintingTools",
+                            "This is a warning because additionalProperties was enabled for this Object thus we're letting it slide.");
+                    }
                 }
             }
 
@@ -1335,6 +1692,26 @@ public class LintingTools
                 }
             }
 
+            foreach (List<string> oneOf in allOf)
+            {
+                if (oneOf.Contains(prop.propertyName))
+                {
+                    for (int i = 0; i < requiredAllOfFieldTicks.Count; i++)
+                    {
+                        if (requiredAllOfFieldTicks[i].Item1 == prop.propertyName)
+                        {
+                            requiredAllOfFieldTicks[i] = (prop.propertyName, true);
+
+                            JSONLoader3.FormatLogger(
+                                "Debug",
+                                "LintingTools",
+                                $"Ticked \"{prop.propertyName}\" as checked for the Required Properties."
+                            );
+                        }
+                    }
+                }
+            }
+            
             if (path != string.Empty)
             {
                 List<string> propSchema = GetJSONSchemaProperty(path, PropertySchema);
@@ -1344,7 +1721,7 @@ public class LintingTools
                         prop.propertyValue,
                         propSchema,
                         file,
-                        schemaFile))
+                        schemaFile, validateAnyOf))
                     return false;
             }
         }
@@ -1353,12 +1730,56 @@ public class LintingTools
         {
             if (!check)
             {
-                JSONLoader3.FormatLogger("ERROR", "LintingTools",
-                    $"Missing Required Field: {field} within {Path.GetFileNameWithoutExtension(file)}.");
-                JSONLoader3.FormatLogger("AdditionalInformation", "LintingTools",
-                    "To Fix this, simply add the field mentioned in the error to the json with the appropriate value.");
-                JSONLoader3.FormatLogger("AdditionalInformation", "LintingTools",
-                    $"Here's the full path to the file the issue takes root in: {file}");
+                if (!validateAnyOf)
+                {
+                    JSONLoader3.FormatLogger("ERROR", "LintingTools",
+                        $"Missing Required Field: {field} within {Path.GetFileNameWithoutExtension(file)}.");
+                    JSONLoader3.FormatLogger("AdditionalInformation", "LintingTools",
+                        "To Fix this, simply add the field mentioned in the error to the json with the appropriate value.");
+                    JSONLoader3.FormatLogger("AdditionalInformation", "LintingTools",
+                        $"Here's the full path to the file the issue takes root in: {file}");
+                }
+
+                return false;
+            }
+        }
+        
+        foreach (List<string> oneOf in allOf)
+        {
+            bool foundOne = false;
+
+            foreach (string field in oneOf)
+            {
+                if (requiredAllOfFieldTicks.Any(x => x.field == field && x.checkedField))
+                {
+                    foundOne = true;
+                    break;
+                }
+            }
+
+            if (!foundOne)
+            {
+                if (!validateAnyOf)
+                {
+                    JSONLoader3.FormatLogger(
+                        "ERROR",
+                        "LintingTools",
+                        $"Missing one of the required fields: {string.Join(", ", oneOf)} within {Path.GetFileNameWithoutExtension(file)}."
+                    );
+
+                    JSONLoader3.FormatLogger(
+                        "AdditionalInformation",
+                        "LintingTools",
+                        $"At least one of the following fields must be present: {string.Join(", ", oneOf)}."
+                    );
+
+                    JSONLoader3.FormatLogger(
+                        "AdditionalInformation",
+                        "LintingTools",
+                        $"Here's the full path to the file the issue takes root in: {file}"
+                    );
+                }
+
                 return false;
             }
         }
@@ -1374,23 +1795,28 @@ public class LintingTools
     /// <param name="PropertySchema">The List of String representing the Schema.</param>
     /// <param name="file">The Full Path to the JSON File.</param>
     /// <param name="schemaFile">The Full Path to the JSON Schema File.</param>
+    /// <param name="validateAnyOf">Determines whether errors should log or not.</param>
     /// <returns>A true if valid, a false if invalid.</returns>
     /// <remarks>This code is provided by Creator/Chaosyr/SaxbyMod/The Stoat Lord.</remarks>
-    public static bool ValidateArray(string jsonPropertyName, string jsonPropertyValue, List<string> PropertySchema,
-        string file, string schemaFile)
+    private static bool ValidateArray(string jsonPropertyName, string jsonPropertyValue, List<string> PropertySchema,
+        string file, string schemaFile, bool validateAnyOf = false)
     {
         List<string> arrayItems = GetArrayItems(jsonPropertyValue, jsonPropertyName, file);
 
         if (arrayItems.Count == 0)
         {
-            JSONLoader3.FormatLogger("Warning", "LintingTools",
-                $"The Array is empty for {jsonPropertyName} either define it or remove it. The JSON this warming occured in: {Path.GetFileNameWithoutExtension(file)}");
-            JSONLoader3.FormatLogger("AdditionalInformation", "LintingTools",
-                $"To fix this simply as the error states remove the KVP for {jsonPropertyName}");
-            JSONLoader3.FormatLogger("AdditionalInformation", "LintingTools",
-                $"Alternatively define a value for {jsonPropertyName} you can toggle on Summary in The Config to show the Properties Description for further Information about it..");
-            JSONLoader3.FormatLogger("AdditionalInformation", "LintingTools",
-                "This is a warning because we have never been strict about this, but if you want to stop seeing this warning do the above.");
+            if (!validateAnyOf)
+            {
+                JSONLoader3.FormatLogger("Warning", "LintingTools",
+                    $"The Array is empty for {jsonPropertyName} either define it or remove it. The JSON this warming occured in: {Path.GetFileNameWithoutExtension(file)}");
+                JSONLoader3.FormatLogger("AdditionalInformation", "LintingTools",
+                    $"To fix this simply as the error states remove the KVP for {jsonPropertyName}");
+                JSONLoader3.FormatLogger("AdditionalInformation", "LintingTools",
+                    $"Alternatively define a value for {jsonPropertyName} you can toggle on Summary in The Config to show the Properties Description for further Information about it..");
+                JSONLoader3.FormatLogger("AdditionalInformation", "LintingTools",
+                    "This is a warning because we have never been strict about this, but if you want to stop seeing this warning do the above.");
+            }
+
             return true;
         }
 
@@ -1407,16 +1833,20 @@ public class LintingTools
 
         if (uniqueItems && arrayItems.Distinct().Count() != arrayItems.Count)
         {
-            JSONLoader3.FormatLogger("ERROR", "LintingTools",
-                $"There is duplicated Array Items in the Array {jsonPropertyName}, according to the Schema for this Item, all Array Items must be Unique for {jsonPropertyName}. The JSON this error occured in: {Path.GetFileNameWithoutExtension(file)}");
-            JSONLoader3.FormatLogger("AdditionalInformation", "LintingTools",
-                "To fix this error just ensure all Items of the Array are Unique, e.g. No Repeats within it.");
-            JSONLoader3.FormatLogger("AdditionalInformation", "LintingTools",
-                "Sadly as it broke here, I'm going to have to call a break, meaning we are going to stop proccessing this item and move on to the next one.");
-            JSONLoader3.FormatLogger("AdditionalInformation", "LintingTools",
-                "Hopefully you'll have it fixed for next load up!!");
-            JSONLoader3.FormatLogger("AdditionalInformation", "LintingTools",
-                $"Here's the full path to the file the issue takes root in: {file}");
+            if (!validateAnyOf)
+            {
+                JSONLoader3.FormatLogger("ERROR", "LintingTools",
+                    $"There is duplicated Array Items in the Array {jsonPropertyName}, according to the Schema for this Item, all Array Items must be Unique for {jsonPropertyName}. The JSON this error occured in: {Path.GetFileNameWithoutExtension(file)}");
+                JSONLoader3.FormatLogger("AdditionalInformation", "LintingTools",
+                    "To fix this error just ensure all Items of the Array are Unique, e.g. No Repeats within it.");
+                JSONLoader3.FormatLogger("AdditionalInformation", "LintingTools",
+                    "Sadly as it broke here, I'm going to have to call a break, meaning we are going to stop proccessing this item and move on to the next one.");
+                JSONLoader3.FormatLogger("AdditionalInformation", "LintingTools",
+                    "Hopefully you'll have it fixed for next load up!!");
+                JSONLoader3.FormatLogger("AdditionalInformation", "LintingTools",
+                    $"Here's the full path to the file the issue takes root in: {file}");
+            }
+
             return false;
         }
 
@@ -1448,12 +1878,7 @@ public class LintingTools
             // into ValidateObject instead of wrapping them in a fake KVP.
             if (type == "object")
             {
-                valid = ValidateObject(
-                    jsonPropertyName,
-                    item,
-                    itemSchema,
-                    file,
-                    schemaFile);
+                valid = ValidateObject(jsonPropertyName, item, itemSchema, file, schemaFile, validateAnyOf);
             }
             else
             {
@@ -1494,12 +1919,7 @@ public class LintingTools
                             return false;
                         }
 
-                        if (!ValidateAnyOf(
-                                dissectedItem2[0].propertyName,
-                                dissectedItem2[0].propertyValue,
-                                itemSchema,
-                                file,
-                                schemaFile))
+                        if (!ValidateAnyOf(dissectedItem2[0].propertyName, dissectedItem2[0].propertyValue, itemSchema, file, schemaFile, validateAnyOf))
                         {
                             return false;
                         }
@@ -1510,39 +1930,19 @@ public class LintingTools
 
                 if (type == "string")
                 {
-                    valid = ValidateString(
-                        dissectedItem[0].propertyName,
-                        dissectedItem[0].propertyValue,
-                        itemSchema,
-                        file,
-                        schemaFile);
+                    valid = ValidateString( dissectedItem[0].propertyName, dissectedItem[0].propertyValue, itemSchema, file, schemaFile, validateAnyOf);
                 }
                 else if (type == "integer")
                 {
-                    valid = ValidateInteger(
-                        dissectedItem[0].propertyName,
-                        dissectedItem[0].propertyValue,
-                        itemSchema,
-                        file,
-                        schemaFile);
+                    valid = ValidateInteger(dissectedItem[0].propertyName, dissectedItem[0].propertyValue, itemSchema, file, schemaFile, validateAnyOf);
                 }
                 else if (type == "boolean")
                 {
-                    valid = ValidateBoolean(
-                        dissectedItem[0].propertyName,
-                        dissectedItem[0].propertyValue,
-                        itemSchema,
-                        file,
-                        schemaFile);
+                    valid = ValidateBoolean(dissectedItem[0].propertyName, dissectedItem[0].propertyValue, itemSchema, file, schemaFile, validateAnyOf);
                 }
                 else if (type == "array")
                 {
-                    valid = ValidateArray(
-                        dissectedItem[0].propertyName,
-                        dissectedItem[0].propertyValue,
-                        itemSchema,
-                        file,
-                        schemaFile);
+                    valid = ValidateArray(dissectedItem[0].propertyName, dissectedItem[0].propertyValue, itemSchema, file, schemaFile, validateAnyOf);
                 }
                 else
                 {

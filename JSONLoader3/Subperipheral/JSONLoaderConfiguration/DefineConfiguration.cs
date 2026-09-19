@@ -1,6 +1,6 @@
 using BepInEx.Configuration;
 
-namespace JSONLoader3.Subperipheral.JSONLoader_Configuration;
+namespace JSONLoader3.Subperipheral.JSONLoaderConfiguration;
 
 /// <summary>
 /// This class handles the defining of Configuration relevant to the JSONLoaders and CSVLoaders.
@@ -20,6 +20,10 @@ public class DefineConfiguration
     /// </summary>
     public static ConfigEntry<string> SchemaSavePath;
     /// <summary>
+    /// This config determines whether DebugLogging is enabled by the user or not.
+    /// </summary>
+    public static ConfigEntry<bool> ShowDebugLogging;
+    /// <summary>
     /// This config determines whether VerboseLogging is enabled by the user or not.
     /// </summary>
     public static ConfigEntry<bool> ShowVerboseLogging;
@@ -31,6 +35,10 @@ public class DefineConfiguration
     /// This config determines whether Linting Summary Information is enabled by the user or not.
     /// </summary>
     public static ConfigEntry<bool> ShowSummary;
+    /// <summary>
+    /// This config determines whether Linting Will output errors for Validation Path under Any Of's is enabled by the user or not.
+    /// </summary>
+    public static ConfigEntry<bool> HideValidationAnyOfErrors;
     /// <summary>
     /// Toggles Global Recursiveness from the Plugin Level.
     /// </summary>
@@ -54,12 +62,16 @@ public class DefineConfiguration
             "These paths are case insensitive, and determine where CSV Sheets may be sourced from in order to load. If your a mod maker shipping mods, make a 'plugins' folder in your mods folder, and put a folder in there called 'sheets', this is where your CSV Sheets should reside. If you need another path, you can override this value with your mod, we'll provide a system for you to do so.");
         SchemaSavePath = configFile.Bind("Configuration", "Schema Save Path", "/Schemas", "This determines where JSON Schemas will be saved to as we create them, this path will be localized to the DLL's folder. You can use '../' to mean go up a folder.");
         JSONLoader3.FormatLogger("info", "Configuration","Finished adding configuration for the Loading Paths associated with this mod.");
-        ShowVerboseLogging = configFile.Bind("Logging", "Show Verbose Logging", false,
+        ShowDebugLogging = configFile.Bind("Logging", "Show Debug Logging", false,
             "While this value is set to true, this API will show what is happening when its happening.");
+        ShowVerboseLogging = configFile.Bind("Logging", "Show Verbose Logging", false,
+            "While this value is set to true, this API will output the Verbose building of your JSONs/CSVs.");
         ShowAdditionalInformation = configFile.Bind("Logging", "Show Additional Information", false,
             "While this value is set to true, this API will show a more in depth lense as to what went wrong, and try to help explain why its wrong with links to references.");
         ShowSummary = configFile.Bind("Logging", "Show Summary Information", false,
             "While this value is set to true, this API will show the Summary for each property being verified by the Linter and some Additional Debug Information.");
+        HideValidationAnyOfErrors = configFile.Bind("Logging", "Hide AnyOf Validation Errors", true,
+            "When this is true the Linter will not output all errors occuring during Validating an AnyOf, namely, all Validator Paths that may error, meaning its not necessarily an error. Setting this to false is useful when all ValidationPaths for a property have failed.");
         JSONLoader3.FormatLogger("info", "Configuration","Finished adding configuration for the Logging associated with this mod.");
         toggleRecursiveOnPlugin = configFile.Bind("Compatibility", "Recursively Scan At Plugin Level", false,
             "While this value is set to true, this API will recursively scan for JSONs and CSVs from the Plugins level, rather than the set folders. This is defaulted to false for the purposes of keeping Load Times fast, but if you have a mod that isn't structured for this toggle this setting on.");

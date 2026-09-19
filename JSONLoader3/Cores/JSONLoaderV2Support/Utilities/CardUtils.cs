@@ -117,223 +117,223 @@ public class CardUtils
             if (propertyName == "fieldsToEdit" && depth==1)
             {
                 fieldsToEdit = LintingTools.GetArrayItems(propertyValue, propertyName, file).Select(x => x.Trim().Trim('"')).Where(x => !string.IsNullOrEmpty(x)).ToList();
-                JSONLoader3.FormatLogger("Debug", "CardUtils", $"Found {propertyName} with value of ({string.Join(", ", fieldsToEdit)}) successfully while parsing {typeof(Card).Name} from {Path.GetFileNameWithoutExtension(pluginName)} specifically {Path.GetFileNameWithoutExtension(file)}.");
+                JSONLoader3.FormatLogger("Verbose", "CardUtils", $"Found {propertyName} with value of ({string.Join(", ", fieldsToEdit)}) successfully while parsing {typeof(Card).Name} from {Path.GetFileNameWithoutExtension(pluginName)} specifically {Path.GetFileNameWithoutExtension(file)}.");
             }
             
             if (propertyName == "name" && depth==1)
             {
                 name = propertyValue.Trim('\"');
-                JSONLoader3.FormatLogger("Debug", "CardUtils", $"Found {propertyName} with value of ({name}) successfully while parsing {typeof(Card).Name} from {Path.GetFileNameWithoutExtension(pluginName)} specifically {Path.GetFileNameWithoutExtension(file)}.");
+                JSONLoader3.FormatLogger("Verbose", "CardUtils", $"Found {propertyName} with value of ({name}) successfully while parsing {typeof(Card).Name} from {Path.GetFileNameWithoutExtension(pluginName)} specifically {Path.GetFileNameWithoutExtension(file)}.");
             }
             
             if (propertyName == "modPrefix" && depth==1)
             {
                 modPrefix = propertyValue.Trim('\"');
-                JSONLoader3.FormatLogger("Debug", "CardUtils", $"Found {propertyName} with value of ({modPrefix}) successfully while parsing {typeof(Card).Name} from {Path.GetFileNameWithoutExtension(pluginName)} specifically {Path.GetFileNameWithoutExtension(file)}.");
+                JSONLoader3.FormatLogger("Verbose", "CardUtils", $"Found {propertyName} with value of ({modPrefix}) successfully while parsing {typeof(Card).Name} from {Path.GetFileNameWithoutExtension(pluginName)} specifically {Path.GetFileNameWithoutExtension(file)}.");
             }
             
             if (propertyName == "displayedName" && depth==1)
             {
                 displayedName = propertyValue.Trim('\"');
-                JSONLoader3.FormatLogger("Debug", "CardUtils", $"Found {propertyName} with value of ({displayedName}) successfully while parsing {typeof(Card).Name} from {Path.GetFileNameWithoutExtension(pluginName)} specifically {Path.GetFileNameWithoutExtension(file)}.");
+                JSONLoader3.FormatLogger("Verbose", "CardUtils", $"Found {propertyName} with value of ({displayedName}) successfully while parsing {typeof(Card).Name} from {Path.GetFileNameWithoutExtension(pluginName)} specifically {Path.GetFileNameWithoutExtension(file)}.");
             }
             
             if (propertyName == "description" && depth==1)
             {
                 description = propertyValue.Trim('\"');
-                JSONLoader3.FormatLogger("Debug", "CardUtils", $"Found {propertyName} with value of ({description}) successfully while parsing {typeof(Card).Name} from {Path.GetFileNameWithoutExtension(pluginName)} specifically {Path.GetFileNameWithoutExtension(file)}.");
+                JSONLoader3.FormatLogger("Verbose", "CardUtils", $"Found {propertyName} with value of ({description}) successfully while parsing {typeof(Card).Name} from {Path.GetFileNameWithoutExtension(pluginName)} specifically {Path.GetFileNameWithoutExtension(file)}.");
             }
             
             if (propertyName == "metaCategories" && depth==1)
             {
                 metaCategories = LintingTools.GetArrayItems(propertyValue, propertyName, file).Select(x => x.Trim().Trim('"')).Where(x => !string.IsNullOrEmpty(x)).ToList();
-                JSONLoader3.FormatLogger("Debug", "CardUtils", $"Found {propertyName} with value of ({string.Join(", ", metaCategories)}) successfully while parsing {typeof(Card).Name} from {Path.GetFileNameWithoutExtension(pluginName)} specifically {Path.GetFileNameWithoutExtension(file)}.");
+                JSONLoader3.FormatLogger("Verbose", "CardUtils", $"Found {propertyName} with value of ({string.Join(", ", metaCategories)}) successfully while parsing {typeof(Card).Name} from {Path.GetFileNameWithoutExtension(pluginName)} specifically {Path.GetFileNameWithoutExtension(file)}.");
             }
             
             if (propertyName == "cardComplexity" && depth==1)
             {
                 cardComplexity = propertyValue.Trim('\"');
-                JSONLoader3.FormatLogger("Debug", "CardUtils", $"Found {propertyName} with value of ({cardComplexity}) successfully while parsing {typeof(Card).Name} from {Path.GetFileNameWithoutExtension(pluginName)} specifically {Path.GetFileNameWithoutExtension(file)}.");
+                JSONLoader3.FormatLogger("Verbose", "CardUtils", $"Found {propertyName} with value of ({cardComplexity}) successfully while parsing {typeof(Card).Name} from {Path.GetFileNameWithoutExtension(pluginName)} specifically {Path.GetFileNameWithoutExtension(file)}.");
             }
             
             if (propertyName == "temple" && depth==1)
             {
                 temple = propertyValue.Trim('\"');
-                JSONLoader3.FormatLogger("Debug", "CardUtils", $"Found {propertyName} with value of ({temple}) successfully while parsing {typeof(Card).Name} from {Path.GetFileNameWithoutExtension(pluginName)} specifically {Path.GetFileNameWithoutExtension(file)}.");
+                JSONLoader3.FormatLogger("Verbose", "CardUtils", $"Found {propertyName} with value of ({temple}) successfully while parsing {typeof(Card).Name} from {Path.GetFileNameWithoutExtension(pluginName)} specifically {Path.GetFileNameWithoutExtension(file)}.");
             }
             
             if (propertyName == "baseAttack" && depth==1)
             {
                 baseAttack = int.Parse(propertyValue);
-                JSONLoader3.FormatLogger("Debug", "CardUtils", $"Found {propertyName} with value of ({baseAttack}) successfully while parsing {typeof(Card).Name} from {Path.GetFileNameWithoutExtension(pluginName)} specifically {Path.GetFileNameWithoutExtension(file)}.");
+                JSONLoader3.FormatLogger("Verbose", "CardUtils", $"Found {propertyName} with value of ({baseAttack}) successfully while parsing {typeof(Card).Name} from {Path.GetFileNameWithoutExtension(pluginName)} specifically {Path.GetFileNameWithoutExtension(file)}.");
             }
             
             if (propertyName == "baseHealth" && depth==1)
             {
                 baseHealth = int.Parse(propertyValue);
-                JSONLoader3.FormatLogger("Debug", "CardUtils", $"Found {propertyName} with value of ({baseHealth}) successfully while parsing {typeof(Card).Name} from {Path.GetFileNameWithoutExtension(pluginName)} specifically {Path.GetFileNameWithoutExtension(file)}.");
+                JSONLoader3.FormatLogger("Verbose", "CardUtils", $"Found {propertyName} with value of ({baseHealth}) successfully while parsing {typeof(Card).Name} from {Path.GetFileNameWithoutExtension(pluginName)} specifically {Path.GetFileNameWithoutExtension(file)}.");
             }
             
             if (propertyName == "hideAttackAndHealth" && depth==1)
             {
                 hideAttackAndHealth = bool.Parse(propertyValue);
-                JSONLoader3.FormatLogger("Debug", "CardUtils", $"Found {propertyName} with value of ({hideAttackAndHealth}) successfully while parsing {typeof(Card).Name} from {Path.GetFileNameWithoutExtension(pluginName)} specifically {Path.GetFileNameWithoutExtension(file)}.");
+                JSONLoader3.FormatLogger("Verbose", "CardUtils", $"Found {propertyName} with value of ({hideAttackAndHealth}) successfully while parsing {typeof(Card).Name} from {Path.GetFileNameWithoutExtension(pluginName)} specifically {Path.GetFileNameWithoutExtension(file)}.");
             }
             
             if (propertyName == "bloodCost" && depth==1)
             {
                 bloodCost = int.Parse(propertyValue);
-                JSONLoader3.FormatLogger("Debug", "CardUtils", $"Found {propertyName} with value of ({bloodCost}) successfully while parsing {typeof(Card).Name} from {Path.GetFileNameWithoutExtension(pluginName)} specifically {Path.GetFileNameWithoutExtension(file)}.");
+                JSONLoader3.FormatLogger("Verbose", "CardUtils", $"Found {propertyName} with value of ({bloodCost}) successfully while parsing {typeof(Card).Name} from {Path.GetFileNameWithoutExtension(pluginName)} specifically {Path.GetFileNameWithoutExtension(file)}.");
             }
             
             if (propertyName == "bonesCost" && depth==1)
             {
                 bonesCost = int.Parse(propertyValue);
-                JSONLoader3.FormatLogger("Debug", "CardUtils", $"Found {propertyName} with value of ({bonesCost}) successfully while parsing {typeof(Card).Name} from {Path.GetFileNameWithoutExtension(pluginName)} specifically {Path.GetFileNameWithoutExtension(file)}.");
+                JSONLoader3.FormatLogger("Verbose", "CardUtils", $"Found {propertyName} with value of ({bonesCost}) successfully while parsing {typeof(Card).Name} from {Path.GetFileNameWithoutExtension(pluginName)} specifically {Path.GetFileNameWithoutExtension(file)}.");
             }
             
             if (propertyName == "energyCost" && depth==1)
             {
                 energyCost = int.Parse(propertyValue);
-                JSONLoader3.FormatLogger("Debug", "CardUtils", $"Found {propertyName} with value of ({energyCost}) successfully while parsing {typeof(Card).Name} from {Path.GetFileNameWithoutExtension(pluginName)} specifically {Path.GetFileNameWithoutExtension(file)}.");
+                JSONLoader3.FormatLogger("Verbose", "CardUtils", $"Found {propertyName} with value of ({energyCost}) successfully while parsing {typeof(Card).Name} from {Path.GetFileNameWithoutExtension(pluginName)} specifically {Path.GetFileNameWithoutExtension(file)}.");
             }
             
             if (propertyName == "gemsCost" && depth==1)
             {
                 gemsCost = LintingTools.GetArrayItems(propertyValue, propertyName, file).Select(x => x.Trim().Trim('"')).Where(x => !string.IsNullOrEmpty(x)).ToList();
-                JSONLoader3.FormatLogger("Debug", "CardUtils", $"Found {propertyName} with value of ({string.Join(", ", gemsCost)}) successfully while parsing {typeof(Card).Name} from {Path.GetFileNameWithoutExtension(pluginName)} specifically {Path.GetFileNameWithoutExtension(file)}.");
+                JSONLoader3.FormatLogger("Verbose", "CardUtils", $"Found {propertyName} with value of ({string.Join(", ", gemsCost)}) successfully while parsing {typeof(Card).Name} from {Path.GetFileNameWithoutExtension(pluginName)} specifically {Path.GetFileNameWithoutExtension(file)}.");
             }
             
             if (propertyName == "specialStatIcon" && depth==1)
             {
                 specialStatIcon = propertyValue.Trim('\"');
-                JSONLoader3.FormatLogger("Debug", "CardUtils", $"Found {propertyName} with value of ({specialStatIcon}) successfully while parsing {typeof(Card).Name} from {Path.GetFileNameWithoutExtension(pluginName)} specifically {Path.GetFileNameWithoutExtension(file)}.");
+                JSONLoader3.FormatLogger("Verbose", "CardUtils", $"Found {propertyName} with value of ({specialStatIcon}) successfully while parsing {typeof(Card).Name} from {Path.GetFileNameWithoutExtension(pluginName)} specifically {Path.GetFileNameWithoutExtension(file)}.");
             }
             
             if (propertyName == "tribes" && depth==1)
             {
                 tribes = LintingTools.GetArrayItems(propertyValue, propertyName, file).Select(x => x.Trim().Trim('"')).Where(x => !string.IsNullOrEmpty(x)).ToList();
-                JSONLoader3.FormatLogger("Debug", "CardUtils", $"Found {propertyName} with value of ({string.Join(", ", tribes)}) successfully while parsing {typeof(Card).Name} from {Path.GetFileNameWithoutExtension(pluginName)} specifically {Path.GetFileNameWithoutExtension(file)}.");
+                JSONLoader3.FormatLogger("Verbose", "CardUtils", $"Found {propertyName} with value of ({string.Join(", ", tribes)}) successfully while parsing {typeof(Card).Name} from {Path.GetFileNameWithoutExtension(pluginName)} specifically {Path.GetFileNameWithoutExtension(file)}.");
             }
             
             if (propertyName == "traits" && depth==1)
             {
                 traits = LintingTools.GetArrayItems(propertyValue, propertyName, file).Select(x => x.Trim().Trim('"')).Where(x => !string.IsNullOrEmpty(x)).ToList();
-                JSONLoader3.FormatLogger("Debug", "CardUtils", $"Found {propertyName} with value of ({string.Join(", ", traits)}) successfully while parsing {typeof(Card).Name} from {Path.GetFileNameWithoutExtension(pluginName)} specifically {Path.GetFileNameWithoutExtension(file)}.");
+                JSONLoader3.FormatLogger("Verbose", "CardUtils", $"Found {propertyName} with value of ({string.Join(", ", traits)}) successfully while parsing {typeof(Card).Name} from {Path.GetFileNameWithoutExtension(pluginName)} specifically {Path.GetFileNameWithoutExtension(file)}.");
             }
             
             if (propertyName == "abilities" && depth==1)
             {
                 abilities = LintingTools.GetArrayItems(propertyValue, propertyName, file).Select(x => x.Trim().Trim('"')).Where(x => !string.IsNullOrEmpty(x)).ToList();
-                JSONLoader3.FormatLogger("Debug", "CardUtils", $"Found {propertyName} with value of ({string.Join(", ", abilities)}) successfully while parsing {typeof(Card).Name} from {Path.GetFileNameWithoutExtension(pluginName)} specifically {Path.GetFileNameWithoutExtension(file)}.");
+                JSONLoader3.FormatLogger("Verbose", "CardUtils", $"Found {propertyName} with value of ({string.Join(", ", abilities)}) successfully while parsing {typeof(Card).Name} from {Path.GetFileNameWithoutExtension(pluginName)} specifically {Path.GetFileNameWithoutExtension(file)}.");
             }
             
             if (propertyName == "specialAbilities" && depth==1)
             {
                 specialAbilities = LintingTools.GetArrayItems(propertyValue, propertyName, file).Select(x => x.Trim().Trim('"')).Where(x => !string.IsNullOrEmpty(x)).ToList();
-                JSONLoader3.FormatLogger("Debug", "CardUtils", $"Found {propertyName} with value of ({string.Join(", ", specialAbilities)}) successfully while parsing {typeof(Card).Name} from {Path.GetFileNameWithoutExtension(pluginName)} specifically {Path.GetFileNameWithoutExtension(file)}.");
+                JSONLoader3.FormatLogger("Verbose", "CardUtils", $"Found {propertyName} with value of ({string.Join(", ", specialAbilities)}) successfully while parsing {typeof(Card).Name} from {Path.GetFileNameWithoutExtension(pluginName)} specifically {Path.GetFileNameWithoutExtension(file)}.");
             }
             
             if (propertyName == "evolveIntoName" && depth==1)
             {
                 evolveIntoName = propertyValue.Trim('\"');
-                JSONLoader3.FormatLogger("Debug", "CardUtils", $"Found {propertyName} with value of ({evolveIntoName}) successfully while parsing {typeof(Card).Name} from {Path.GetFileNameWithoutExtension(pluginName)} specifically {Path.GetFileNameWithoutExtension(file)}.");
+                JSONLoader3.FormatLogger("Verbose", "CardUtils", $"Found {propertyName} with value of ({evolveIntoName}) successfully while parsing {typeof(Card).Name} from {Path.GetFileNameWithoutExtension(pluginName)} specifically {Path.GetFileNameWithoutExtension(file)}.");
             }
             
             if (propertyName == "evolveTurns" && depth==1)
             {
                 evolveTurns = int.Parse(propertyValue);
-                JSONLoader3.FormatLogger("Debug", "CardUtils", $"Found {propertyName} with value of ({evolveTurns}) successfully while parsing {typeof(Card).Name} from {Path.GetFileNameWithoutExtension(pluginName)} specifically {Path.GetFileNameWithoutExtension(file)}.");
+                JSONLoader3.FormatLogger("Verbose", "CardUtils", $"Found {propertyName} with value of ({evolveTurns}) successfully while parsing {typeof(Card).Name} from {Path.GetFileNameWithoutExtension(pluginName)} specifically {Path.GetFileNameWithoutExtension(file)}.");
             }
             
             if (propertyName == "defaultEvolutionName" && depth==1)
             {
                 defaultEvolutionName = propertyValue.Trim('\"');
-                JSONLoader3.FormatLogger("Debug", "CardUtils", $"Found {propertyName} with value of ({defaultEvolutionName}) successfully while parsing {typeof(Card).Name} from {Path.GetFileNameWithoutExtension(pluginName)} specifically {Path.GetFileNameWithoutExtension(file)}.");
+                JSONLoader3.FormatLogger("Verbose", "CardUtils", $"Found {propertyName} with value of ({defaultEvolutionName}) successfully while parsing {typeof(Card).Name} from {Path.GetFileNameWithoutExtension(pluginName)} specifically {Path.GetFileNameWithoutExtension(file)}.");
             }
             
             if (propertyName == "tailName" && depth==1)
             {
                 tailName = propertyValue.Trim('\"');
-                JSONLoader3.FormatLogger("Debug", "CardUtils", $"Found {propertyName} with value of ({tailName}) successfully while parsing {typeof(Card).Name} from {Path.GetFileNameWithoutExtension(pluginName)} specifically {Path.GetFileNameWithoutExtension(file)}.");
+                JSONLoader3.FormatLogger("Verbose", "CardUtils", $"Found {propertyName} with value of ({tailName}) successfully while parsing {typeof(Card).Name} from {Path.GetFileNameWithoutExtension(pluginName)} specifically {Path.GetFileNameWithoutExtension(file)}.");
             }
             
             if (propertyName == "tailLostPortrait" && depth==1)
             {
                 tailLostPortrait = propertyValue.Trim('\"');
-                JSONLoader3.FormatLogger("Debug", "CardUtils", $"Found {propertyName} with value of ({tailLostPortrait}) successfully while parsing {typeof(Card).Name} from {Path.GetFileNameWithoutExtension(pluginName)} specifically {Path.GetFileNameWithoutExtension(file)}.");
+                JSONLoader3.FormatLogger("Verbose", "CardUtils", $"Found {propertyName} with value of ({tailLostPortrait}) successfully while parsing {typeof(Card).Name} from {Path.GetFileNameWithoutExtension(pluginName)} specifically {Path.GetFileNameWithoutExtension(file)}.");
             }
             
             if (propertyName == "iceCubeName" && depth==1)
             {
                 iceCubeName = propertyValue.Trim('\"');
-                JSONLoader3.FormatLogger("Debug", "CardUtils", $"Found {propertyName} with value of ({iceCubeName}) successfully while parsing {typeof(Card).Name} from {Path.GetFileNameWithoutExtension(pluginName)} specifically {Path.GetFileNameWithoutExtension(file)}.");
+                JSONLoader3.FormatLogger("Verbose", "CardUtils", $"Found {propertyName} with value of ({iceCubeName}) successfully while parsing {typeof(Card).Name} from {Path.GetFileNameWithoutExtension(pluginName)} specifically {Path.GetFileNameWithoutExtension(file)}.");
             }
             
             if (propertyName == "flipPortraitForStrafe" && depth==1)
             {
                 flipPortraitForStrafe = bool.Parse(propertyValue);
-                JSONLoader3.FormatLogger("Debug", "CardUtils", $"Found {propertyName} with value of ({flipPortraitForStrafe}) successfully while parsing {typeof(Card).Name} from {Path.GetFileNameWithoutExtension(pluginName)} specifically {Path.GetFileNameWithoutExtension(file)}.");
+                JSONLoader3.FormatLogger("Verbose", "CardUtils", $"Found {propertyName} with value of ({flipPortraitForStrafe}) successfully while parsing {typeof(Card).Name} from {Path.GetFileNameWithoutExtension(pluginName)} specifically {Path.GetFileNameWithoutExtension(file)}.");
             }
                         
             if (propertyName == "onePerDeck" && depth==1)
             {
                 onePerDeck = bool.Parse(propertyValue);
-                JSONLoader3.FormatLogger("Debug", "CardUtils", $"Found {propertyName} with value of ({onePerDeck}) successfully while parsing {typeof(Card).Name} from {Path.GetFileNameWithoutExtension(pluginName)} specifically {Path.GetFileNameWithoutExtension(file)}.");
+                JSONLoader3.FormatLogger("Verbose", "CardUtils", $"Found {propertyName} with value of ({onePerDeck}) successfully while parsing {typeof(Card).Name} from {Path.GetFileNameWithoutExtension(pluginName)} specifically {Path.GetFileNameWithoutExtension(file)}.");
             }
             
             if (propertyName == "appearanceBehaviour" && depth==1)
             {
                 appearanceBehaviour = LintingTools.GetArrayItems(propertyValue, propertyName, file).Select(x => x.Trim().Trim('"')).Where(x => !string.IsNullOrEmpty(x)).ToList();
-                JSONLoader3.FormatLogger("Debug", "CardUtils", $"Found {propertyName} with value of ({string.Join(", ", appearanceBehaviour)}) successfully while parsing {typeof(Card).Name} from {Path.GetFileNameWithoutExtension(pluginName)} specifically {Path.GetFileNameWithoutExtension(file)}.");
+                JSONLoader3.FormatLogger("Verbose", "CardUtils", $"Found {propertyName} with value of ({string.Join(", ", appearanceBehaviour)}) successfully while parsing {typeof(Card).Name} from {Path.GetFileNameWithoutExtension(pluginName)} specifically {Path.GetFileNameWithoutExtension(file)}.");
             }
             
             if (propertyName == "texture" && depth==1)
             {
                 texture = propertyValue.Trim('\"');
-                JSONLoader3.FormatLogger("Debug", "CardUtils", $"Found {propertyName} with value of ({texture}) successfully while parsing {typeof(Card).Name} from {Path.GetFileNameWithoutExtension(pluginName)} specifically {Path.GetFileNameWithoutExtension(file)}.");
+                JSONLoader3.FormatLogger("Verbose", "CardUtils", $"Found {propertyName} with value of ({texture}) successfully while parsing {typeof(Card).Name} from {Path.GetFileNameWithoutExtension(pluginName)} specifically {Path.GetFileNameWithoutExtension(file)}.");
             }
             
             if (propertyName == "emissionTexture" && depth==1)
             {
                 emissionTexture = propertyValue.Trim('\"');
-                JSONLoader3.FormatLogger("Debug", "CardUtils", $"Found {propertyName} with value of ({emissionTexture}) successfully while parsing {typeof(Card).Name} from {Path.GetFileNameWithoutExtension(pluginName)} specifically {Path.GetFileNameWithoutExtension(file)}.");
+                JSONLoader3.FormatLogger("Verbose", "CardUtils", $"Found {propertyName} with value of ({emissionTexture}) successfully while parsing {typeof(Card).Name} from {Path.GetFileNameWithoutExtension(pluginName)} specifically {Path.GetFileNameWithoutExtension(file)}.");
             }
             
             if (propertyName == "altTexture" && depth==1)
             {
                 altTexture = propertyValue.Trim('\"');
-                JSONLoader3.FormatLogger("Debug", "CardUtils", $"Found {propertyName} with value of ({altTexture}) successfully while parsing {typeof(Card).Name} from {Path.GetFileNameWithoutExtension(pluginName)} specifically {Path.GetFileNameWithoutExtension(file)}.");
+                JSONLoader3.FormatLogger("Verbose", "CardUtils", $"Found {propertyName} with value of ({altTexture}) successfully while parsing {typeof(Card).Name} from {Path.GetFileNameWithoutExtension(pluginName)} specifically {Path.GetFileNameWithoutExtension(file)}.");
             }
             
             if (propertyName == "altEmissionTexture" && depth==1)
             {
                 altEmissionTexture = propertyValue.Trim('\"');
-                JSONLoader3.FormatLogger("Debug", "CardUtils", $"Found {propertyName} with value of ({altEmissionTexture}) successfully while parsing {typeof(Card).Name} from {Path.GetFileNameWithoutExtension(pluginName)} specifically {Path.GetFileNameWithoutExtension(file)}.");
+                JSONLoader3.FormatLogger("Verbose", "CardUtils", $"Found {propertyName} with value of ({altEmissionTexture}) successfully while parsing {typeof(Card).Name} from {Path.GetFileNameWithoutExtension(pluginName)} specifically {Path.GetFileNameWithoutExtension(file)}.");
             }
             
             if (propertyName == "pixelTexture" && depth==1)
             {
                 pixelTexture = propertyValue.Trim('\"');
-                JSONLoader3.FormatLogger("Debug", "CardUtils", $"Found {propertyName} with value of ({pixelTexture}) successfully while parsing {typeof(Card).Name} from {Path.GetFileNameWithoutExtension(pluginName)} specifically {Path.GetFileNameWithoutExtension(file)}.");
+                JSONLoader3.FormatLogger("Verbose", "CardUtils", $"Found {propertyName} with value of ({pixelTexture}) successfully while parsing {typeof(Card).Name} from {Path.GetFileNameWithoutExtension(pluginName)} specifically {Path.GetFileNameWithoutExtension(file)}.");
             }
             
             if (propertyName == "titleGraphic" && depth==1)
             {
                 titleGraphic = propertyValue.Trim('\"');
-                JSONLoader3.FormatLogger("Debug", "CardUtils", $"Found {propertyName} with value of ({titleGraphic}) successfully while parsing {typeof(Card).Name} from {Path.GetFileNameWithoutExtension(pluginName)} specifically {Path.GetFileNameWithoutExtension(file)}.");
+                JSONLoader3.FormatLogger("Verbose", "CardUtils", $"Found {propertyName} with value of ({titleGraphic}) successfully while parsing {typeof(Card).Name} from {Path.GetFileNameWithoutExtension(pluginName)} specifically {Path.GetFileNameWithoutExtension(file)}.");
             }
             
             if (propertyName == "decals" && depth==1)
             {
                 decals = LintingTools.GetArrayItems(propertyValue, propertyName, file).Select(x => x.Trim().Trim('"')).Where(x => !string.IsNullOrEmpty(x)).ToList();
-                JSONLoader3.FormatLogger("Debug", "CardUtils", $"Found {propertyName} with value of ({string.Join(", ", decals)}) successfully while parsing {typeof(Card).Name} from {Path.GetFileNameWithoutExtension(pluginName)} specifically {Path.GetFileNameWithoutExtension(file)}.");
+                JSONLoader3.FormatLogger("Verbose", "CardUtils", $"Found {propertyName} with value of ({string.Join(", ", decals)}) successfully while parsing {typeof(Card).Name} from {Path.GetFileNameWithoutExtension(pluginName)} specifically {Path.GetFileNameWithoutExtension(file)}.");
             }
             
             if (propertyName == "extensionProperties" && depth == 1)
             {
                 extensionProperties = LintingTools.GetObjectProperties(propertyValue, propertyName, file).ToDictionary(x => x.propertyName, x => x.propertyValue.Trim().Trim('"'));
-                JSONLoader3.FormatLogger("Debug", "CardUtils", $"Found {propertyName} with value of ({string.Join(", ", extensionProperties.Select(x => $"{x.Key}: {x.Value}"))}) successfully while parsing {typeof(Card).Name} from {Path.GetFileNameWithoutExtension(pluginName)} specifically {Path.GetFileNameWithoutExtension(file)}.");
+                JSONLoader3.FormatLogger("Verbose", "CardUtils", $"Found {propertyName} with value of ({string.Join(", ", extensionProperties.Select(x => $"{x.Key}: {x.Value}"))}) successfully while parsing {typeof(Card).Name} from {Path.GetFileNameWithoutExtension(pluginName)} specifically {Path.GetFileNameWithoutExtension(file)}.");
             }
         }
 

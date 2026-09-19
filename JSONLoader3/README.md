@@ -367,6 +367,8 @@ The following are all of the fields available for JSONLoaderV2 Starter Decks and
 | `iconTexture`  | The Path to your Starter Decks Icon, this is localized to your Plugins Folder. It's your job to keep it organized, do it as you would these 'JLDR' files. This must be a PNG File and must be a '35x44' image. |       String |
 | `unlockLevel`  | The Unlock Level of the Deck, this is used to determine what challenge level in which this Starter Deck will be unlocked.                                                                                      |      Integer |
 ___
+### ConfigilsV1 Support:
+___
 ### JSONLoaderV3 Support:
 ___
 ### CSVLoader Support:
@@ -397,14 +399,20 @@ This must represent one SINGULAR path, similar to those above. This path is rela
 
 The default value is `/Schemas`.
 
+#### Show Debug Logging
+When this value is set to `true`, the API will output Debug Information in the Console and in the Log File.
+
 #### Show Verbose Logging
-It's less of a Verbose Logging but when set to `true`, the API will output Debug information in the Console and in the Log File.
+When this value is set to `true`, the API will output Verbose Logs of Successful Additions in the Console and in the Log File.
 
 #### Show Additional Information
 When this value is set to `true` the API will output some Additional Information with common errors with the API. Think o it as a modmakers tooling. This will be outputted to the File and Console.
 
 #### Show Summary Information
 When this value is set to `true` when the API is validating Item's against their related Schema's, it will print the description of those properties as well. Again both to the Console and Log File.
+
+#### Hide AnyOf Validation Errors
+When this is true the Linter will not output all errors occuring during Validating an AnyOf, namely, all Validator Paths that may error, meaning its not necessarily an error. Setting this to false is useful when all ValidationPaths for a property have failed.
 
 ### Recursively Scan At Plugin Level
 Compatibility mode that makes the File Finder recursively scan from the Plugin Level rather than from the specified Path's levels in their respective configs.
@@ -529,7 +537,7 @@ ___
 
       <img width="649" height="599" alt="image" src="https://github.com/user-attachments/assets/ecafca6f-999c-4991-a9a7-8232db56b65b" />
 
-     <u>*For this version it should so `0.1.2` when importing.*</u>
+     <u>*For this version it should so `0.1.4` when importing.*</u>
   7. Where it says `Author`: `Unknown` replace the `Unknown` with `MADH95`.
   8. Press `Import Local Mod`.
   9. Wait for Dependencies to Resolve and your set. (Note for any mods on Thunderstore needing an older version of JSONLoader you may want to also install them directly from the website, or do these steps after you finished installing those mods, you must remove ONLY the old version of the mod.)

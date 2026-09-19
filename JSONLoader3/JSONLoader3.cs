@@ -6,7 +6,7 @@ using Cecil_Libraries.ANSI_Utils.Objects;
 using DiskCardGame;
 using HarmonyLib;
 using JSONLoader3.Peripheral.FILE_Loader;
-using JSONLoader3.Subperipheral.JSONLoader_Configuration;
+using JSONLoader3.Subperipheral.JSONLoaderConfiguration;
 using JSONLoader3.Subperipheral.JSONLoaderStartupPhase;
 using UnityEngine;
 using UnityEngine.LowLevel;
@@ -32,7 +32,7 @@ namespace JSONLoader3
         /// <summary>
         /// This resembles the Version of the API, when this is updated make sure to update the value.
         /// </summary>
-        public const string PluginVersion = "3.0.0.00001003";
+        public const string PluginVersion = "3.0.0.00001004";
         // Major, Minor, Patch - Nightly - Major (00), Minor (00), Patch (05), the (0) between indicate dash separators.
 
         /// <summary>
@@ -47,6 +47,10 @@ namespace JSONLoader3
         /// This color is associated with the Information Logging Level.
         /// </summary>
         private static Color256 Information = new Color256("Bold", 230);
+        /// <summary>
+        /// This color is associated with the Verbose Logging Level.
+        /// </summary>
+        private static Color256 Verbose = new Color256("Highlight", 248);
         /// <summary>
         /// This color is associated with the Debug Logging Level.
         /// </summary>
@@ -68,15 +72,12 @@ namespace JSONLoader3
         public void Awake()
         {
             BepInExLogger = Logger;
-
             AddJSONLoaderStartupPhase.OnStartupPhaseExecuted = JSONLoaderStartupPhase;
-            
             AddJSONLoaderStartupPhase.Install();
-            
-            FormatLogger(
-                "info",
-                "Initialization for JSONLoader3 and CSVLoader",
-                "JSONLoader3 startup phase armed.");
+            FormatLogger("info", "Initialization for JSONLoader3 and CSVLoader", "JSONLoader3 startup phase armed.");
+            DefineConfiguration.DefineConfigs(Config);
+            FormatLogger("info", "Initialization for JSONLoader3 and CSVLoader","Finished Creating JSONLoader3 and CSVLoader Configuration");
+            FormatLogger("info", "Initialization for JSONLoader3 and CSVLoader", $"If you find the errors unhelpful, toggle on AdditionalInformation in: {Config.ConfigFilePath}");
         }
         
         /// <summary>
@@ -84,8 +85,6 @@ namespace JSONLoader3
         /// </summary>
         public void JSONLoaderStartupPhase()
         {
-            DefineConfiguration.DefineConfigs(Config);
-            FormatLogger("info", "Initialization for JSONLoader3 and CSVLoader","Finished Creating JSONLoader3 and CSVLoader Configuration");
             FindFiles.FindFilesToLoad();
             LoadFiles.LoadFoundFiles();
             foreach (CardInfo info in Cores.JSONLoaderV1Support.Utilities.CardUtils.allJLDRCardsPublic)
@@ -128,6 +127,14 @@ namespace JSONLoader3
         ///             <term>Debug</term>
         ///             <description>This is meant for any Details in which this API usually would keep BTS but may spit out.</description>
         ///         </item>
+        ///         <item>
+        ///             <term>Summary</term>
+        ///             <description>This is used Exclusively by the Linter to Output Schema Property Descriptions.</description>
+        ///         </item>
+        ///         <item>
+        ///             <term>Verbose</term>
+        ///             <description>This is meant for showing exactly what a card is being defined with in Live Logging.</description>
+        ///         </item>
         ///     </list>
         /// </param>
         /// <param name="message">This is the message in which is to be spit out.</param>
@@ -147,7 +154,7 @@ namespace JSONLoader3
             {
                 Console.WriteLine(Information.Format() + $"[({source}) Information]: "+ message + ANSICodeLists.ResetColor);
                 LogToBepInExFile(LogLevel.Info, source, message);
-            } else if (level.ToLower() == "debug" && DefineConfiguration.ShowVerboseLogging.Value)
+            } else if (level.ToLower() == "debug" && DefineConfiguration.ShowDebugLogging.Value)
             {
                 Console.WriteLine(Debug.Format() + $"[({source}) Debug]: "+ message + ANSICodeLists.ResetColor);
                 LogToBepInExFile(LogLevel.Debug, source, message);
@@ -158,6 +165,10 @@ namespace JSONLoader3
             } else if (level.ToLower() == "summary" && DefineConfiguration.ShowSummary.Value)
             {
                 Console.WriteLine(SummaryInformation.Format() + $"[({source}) Summary Information]: "+ message + ANSICodeLists.ResetColor);
+                LogToBepInExFile(LogLevel.Message, source, message);
+            } else if (level.ToLower() == "verbose" && DefineConfiguration.ShowVerboseLogging.Value)
+            {
+                Console.WriteLine(Verbose.Format() + $"[({source}) Verbose Logging]: "+ message + ANSICodeLists.ResetColor);
                 LogToBepInExFile(LogLevel.Message, source, message);
             }
         }

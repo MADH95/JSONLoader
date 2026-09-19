@@ -1,0 +1,83 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+    <!--Core DLL Properties-->
+    <PropertyGroup>
+        <TargetFrameworks>netframework4.7.2</TargetFrameworks>
+        <RuntimeIdentifiers>win-x64;win-x86;win-arm64;linux-x64;linux-arm;linux-arm64;linux-musl-x64;linux-musl-arm64;osx-x64;osx-arm64</RuntimeIdentifiers>
+        <AssemblyName>ConfigilsV1</AssemblyName>
+        <Description>This is the ConfigilsV1 Sector of JSONLoader Nightly. It's purposefully its own DLL.</Description>
+        <Version>3.0.0-Nightly-0.1.4</Version>
+        <Authors>Chaosyr, MADH95, JamesVeug, LilySylvee, kbmackenzie, divisionbyz0rro, IngoHHacks, Khaomi, vladdeSV, TVFLabs, UwUMacaroniTime, Windows10CE</Authors>
+        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+        <LangVersion>Latest</LangVersion>
+        <RootNamespace>JSONLoader3</RootNamespace>
+        <NoWarn>$(NoWarn);AD0001;CS0612;CS0618;Publicizer001</NoWarn>
+        <SelfContained>true</SelfContained>
+        <CopyLocalLockFileAssemblies>false</CopyLocalLockFileAssemblies>
+        <IncludeBuildOutput>false</IncludeBuildOutput>
+        <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+        <OutputPath>..\JSONLoader3\Dependencies\ConfigilsV1\</OutputPath>
+    </PropertyGroup>
+
+    <!--NUGET Dependencies-->
+    <ItemGroup>
+        <PackageReference Include="BepInEx.Analyzers" Version="1.0.8" PrivateAssets="all" />
+        <PackageReference Include="BepInEx.Core" Version="5.4.21" />
+        <PackageReference Include="Cecil.ANSI_Utils" Version="2.0.0" />
+        <PackageReference Include="UnityEngine.Modules" Version="2019.4.24" IncludeAssets="compile" />
+        <PackageReference Include="Inscryption.GameLibs" Version="1.9.0-r.0" />
+
+        <PackageReference Include="API_dev-API" Version="2.24.1" Publicize="true">
+            <Private>false</Private>
+        </PackageReference>
+    </ItemGroup>
+
+    <!--Net Framework References-->
+    <ItemGroup Condition="'$(TargetFramework.TrimEnd(`0123456789`))' == 'net'">
+        <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.2" PrivateAssets="all" />
+    </ItemGroup>
+
+    <!--Local DLL Dependencies-->
+    <ItemGroup>
+        <PackageReference Include="BepInEx.AssemblyPublicizer.MSBuild" Version="0.4.3">
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+            <PrivateAssets>all</PrivateAssets>
+        </PackageReference>
+        <Reference Include="Antlr3.Runtime">
+            <HintPath>Dependencies\BepInEx-Required-Dependencies\Antlr3.Runtime.dll</HintPath>
+            <Publicize>true</Publicize>
+            <Private>false</Private>
+        </Reference>
+        <Reference Include="NCalc">
+            <HintPath>Dependencies\BepInEx-Required-Dependencies\NCalc.dll</HintPath>
+            <Publicize>true</Publicize>
+            <Private>false</Private>
+        </Reference>
+        <Reference Include="PanoramicData.NCalcExtensions">
+            <HintPath>Dependencies\BepInEx-Required-Dependencies\PanoramicData.NCalcExtensions.dll</HintPath>
+            <Publicize>true</Publicize>
+            <Private>false</Private>
+        </Reference>
+        <ProjectReference Include="..\JSONLoader3\JSONLoader3.csproj">
+            <Publicize>true</Publicize>
+            <ReferenceOutputAssembly>true</ReferenceOutputAssembly>
+            <Private>false</Private>
+            <CopyLocal>false</CopyLocal>
+        </ProjectReference>
+    </ItemGroup>
+
+    <!--Cleanup Publish for our Build System-->
+    <Target Name="StripAllNuGetFromPublish" AfterTargets="ComputeFilesToPublish">
+        <ItemGroup>
+            <ResolvedFileToPublish Remove="@(ResolvedFileToPublish)" Condition="'%(ResolvedFileToPublish.Extension)' == '.dll' and '%(ResolvedFileToPublish.RelativePath)' != 'ConfigilsV1.dll'" />
+        </ItemGroup>
+    </Target>
+    <Target Name="RemoveJSONLoaderDocumentation" AfterTargets="CopyFilesToOutputDirectory">
+        <ItemGroup>
+            <FilesToDelete Include="$(OutputPath)JSON Loader v3.xml" />
+            <FilesToDelete Include="$(OutputPath)JSON Loader v3.dll" />
+            <FilesToDelete Include="$(OutputPath)JSON Loader v3.pdb" />
+        </ItemGroup>
+
+        <Delete Files="@(FilesToDelete)" />
+    </Target>
+</Project>

@@ -83,7 +83,7 @@ public class DeckUtils
                     decks = LintingTools.GetObjectProperties(deck, propertyName, file).ToList();
 
                     JSONLoader3.FormatLogger(
-                        "Debug",
+                        "Verbose",
                         "CardUtils",
                         $"Found {propertyName} with value of ({string.Join(", ", decks.Select(x => $"{x.propertyName}: {x.propertyValue}"))}) successfully while parsing {typeof(JSONLoaderV2Support.Schemas.Deck).Name} from {Path.GetFileNameWithoutExtension(pluginName)} specifically {Path.GetFileNameWithoutExtension(file)}."
                     );
@@ -101,28 +101,28 @@ public class DeckUtils
                         {
                             fieldsToEdit = LintingTools.GetArrayItems(propertyValue2, propertyName2, file)
                                 .Select(x => x.Trim().Trim('"')).Where(x => !string.IsNullOrEmpty(x)).ToList();
-                            JSONLoader3.FormatLogger("Debug", "CardUtils",
+                            JSONLoader3.FormatLogger("Verbose", "CardUtils",
                                 $"Found {propertyName2} with value of ({string.Join(", ", fieldsToEdit)}) successfully while parsing {typeof(Deck).Name} from {Path.GetFileNameWithoutExtension(pluginName)} specifically {Path.GetFileNameWithoutExtension(file)}.");
                         }
 
                         if (propertyName2 == "name" && depth2 == 2)
                         {
                             name = propertyValue2.Trim('\"');
-                            JSONLoader3.FormatLogger("Debug", "CardUtils",
+                            JSONLoader3.FormatLogger("Verbose", "CardUtils",
                                 $"Found {propertyName} with value of ({name}) successfully while parsing {typeof(Deck).Name} from {Path.GetFileNameWithoutExtension(pluginName)} specifically {Path.GetFileNameWithoutExtension(file)}.");
                         }
 
                         if (propertyName2 == "modPrefix" && depth2 == 2)
                         {
                             modPrefix = propertyValue2.Trim('\"');
-                            JSONLoader3.FormatLogger("Debug", "CardUtils",
+                            JSONLoader3.FormatLogger("Verbose", "CardUtils",
                                 $"Found {propertyName} with value of ({modPrefix}) successfully while parsing {typeof(Deck).Name} from {Path.GetFileNameWithoutExtension(pluginName)} specifically {Path.GetFileNameWithoutExtension(file)}.");
                         }
 
                         if (propertyName2 == "title" && depth2 == 2)
                         {
                             title = propertyValue2.Trim('\"');
-                            JSONLoader3.FormatLogger("Debug", "CardUtils",
+                            JSONLoader3.FormatLogger("Verbose", "CardUtils",
                                 $"Found {propertyName} with value of ({title}) successfully while parsing {typeof(Deck).Name} from {Path.GetFileNameWithoutExtension(pluginName)} specifically {Path.GetFileNameWithoutExtension(file)}.");
                         }
 
@@ -130,21 +130,21 @@ public class DeckUtils
                         {
                             cards = LintingTools.GetArrayItems(propertyValue2, propertyName2, file)
                                 .Select(x => x.Trim().Trim('"')).Where(x => !string.IsNullOrEmpty(x)).ToList();
-                            JSONLoader3.FormatLogger("Debug", "CardUtils",
+                            JSONLoader3.FormatLogger("Verbose", "CardUtils",
                                 $"Found {propertyName2} with value of ({string.Join(", ", cards)}) successfully while parsing {typeof(Deck).Name} from {Path.GetFileNameWithoutExtension(pluginName)} specifically {Path.GetFileNameWithoutExtension(file)}.");
                         }
 
                         if (propertyName2 == "iconTexture" && depth2 == 2)
                         {
                             iconTexture = propertyValue2.Trim('\"');
-                            JSONLoader3.FormatLogger("Debug", "CardUtils",
+                            JSONLoader3.FormatLogger("Verbose", "CardUtils",
                                 $"Found {propertyName} with value of ({iconTexture}) successfully while parsing {typeof(Deck).Name} from {Path.GetFileNameWithoutExtension(pluginName)} specifically {Path.GetFileNameWithoutExtension(file)}.");
                         }
 
                         if (propertyName2 == "unlockLevel" && depth2 == 2)
                         {
                             unlockLevel = int.Parse(propertyValue2);
-                            JSONLoader3.FormatLogger("Debug", "CardUtils",
+                            JSONLoader3.FormatLogger("Verbose", "CardUtils",
                                 $"Found {propertyName} with value of ({unlockLevel}) successfully while parsing {typeof(Deck).Name} from {Path.GetFileNameWithoutExtension(pluginName)} specifically {Path.GetFileNameWithoutExtension(file)}.");
                         }
                     }

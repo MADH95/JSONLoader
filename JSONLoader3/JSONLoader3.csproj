@@ -5,7 +5,7 @@
         <RuntimeIdentifiers>win-x64;win-x86;win-arm64;linux-x64;linux-arm;linux-arm64;linux-musl-x64;linux-musl-arm64;osx-x64;osx-arm64</RuntimeIdentifiers>
         <AssemblyName>JSON Loader v3</AssemblyName>
         <Description>This is the new Modulated and API Based system in which JSONLoader will run off of (and maybe a CSV loader too)</Description>
-        <Version>3.0.0-Nightly-0.1.3</Version>
+        <Version>3.0.0-Nightly-0.1.4</Version>
         <Authors>Chaosyr, MADH95, JamesVeug, LilySylvee, kbmackenzie, divisionbyz0rro, IngoHHacks, Khaomi, vladdeSV, TVFLabs, UwUMacaroniTime, Windows10CE</Authors>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
         <LangVersion>Latest</LangVersion>
@@ -26,8 +26,6 @@
         <PackageReference Include="Inscryption.GameLibs" Version="1.9.0-r.0" />
 
         <PackageReference Include="API_dev-API" Version="2.24.1" Publicize="true">
-            <HintPath>..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Pony Island\PonyIsland_Data\Managed\Assembly-CSharp.dll</HintPath>
-            <Publicize>true</Publicize>
             <Private>false</Private>
         </PackageReference>
     </ItemGroup>
@@ -43,14 +41,22 @@
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
             <PrivateAssets>all</PrivateAssets>
         </PackageReference>
+        <Reference Include="ConfigilsV1">
+            <HintPath>Dependencies\ConfigilsV1\ConfigilsV1.dll</HintPath>
+            <Publicize>true</Publicize>
+            <Private>false</Private>
+        </Reference>
     </ItemGroup>
     
     <ItemGroup>
+      <Folder Include="Cores\ConfigilsV1Support\Objects\" />
+      <Folder Include="Cores\ConfigilsV1Support\Utilities\" />
       <Folder Include="Cores\CSVLoaderV1Support\Schemas\" />
       <Folder Include="Cores\JSONLoaderV3Support\Schemas\" />
       <Folder Include="Peripheral\CSV_LINT\" />
       <Folder Include="Peripheral\CSV_SCHEMA\" />
       <Folder Include="Subperipheral\JSONLoaderAPI\" />
+      <Folder Include="Subperipheral\JSONLoaderTranslatables\" />
       <Folder Include="Thunderstore-Package-Elements\plugins\Scripts\Examples\JSONLoaderV2\" />
     </ItemGroup>
 
@@ -72,7 +78,7 @@
         <DependenciesCopyLocations>Dependencies</DependenciesCopyLocations>
         <!--Thunderstore Manifest Properties-->
         <ThunderstorePackageName>JSON_and_CSV_Loader_Nightly</ThunderstorePackageName>
-        <ThunderstorePackageVersion>0.1.3</ThunderstorePackageVersion>
+        <ThunderstorePackageVersion>0.1.4</ThunderstorePackageVersion>
         <ThunderstoreWebsiteURL>https://github.com/MADH95/JSONLoader/tree/Refactor-JSONLoader-3</ThunderstoreWebsiteURL>
         <ThunderstorePackageDescription>This is the Nightly version of JSONLoader, this is effectively a preview of whats to come to JSONLoader (and CSVLoader).</ThunderstorePackageDescription>
         <ThunderstorePackageDependencyStrings>BepInEx-BepInExPack_Inscryption-5.4.2305;BepInEx-MonoMod_Loader_Inscryption-1.0.0;API_dev-API-2.24.1;Cecil_Libraries_Organization-Cecil_Libraries_Package-1.0.1;Stoat_Games-ANSI_Mod-2.0.1</ThunderstorePackageDependencyStrings>

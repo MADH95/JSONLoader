@@ -3,6 +3,20 @@
 <details open>
 <summary>JSONLoader 3.0.0 Changelog</summary>
 
+## 3.0.0-Nightly-0.1.4
+* Cleaned up some Logging.
+* Split Debug Logging into Debug and Verbose.
+* Added Optional Logging for Validation Set based Errors.
+* Allow Abilities for JSONLoaderV1 and JSONLoaderV2 Cards to Stack.
+* Fix ExtendedProperties Related Issues.
+* Start working on supporting ConfigilsV1.
+* Moved Configuration Initialization to `Awake()`.
+* Add Schema Support for `EXTENDS` and `ALTERNATIVES` along with `AlternativeNames`.
+* Add some Additional Cleanup to Logging and CSProjs.
+* Fixes some Linter Level issues.
+* Writer now uses `WritableFieldsExtended` to determine `writableFields` and uses that to determine `Required` and `AllOfRequired`.
+  * Note does not currently support Alternatives for Non-Required fields.
+
 ## 3.0.0-Nightly-0.1.3
 * Note: We cannot implement the OLD JSONLoader API into our design, namely because it lacks the fields neccissary for us to do so, thus the old endpoints won't exist. THIS DOES NOT AFFECT FILE LOADING, THIS API IS EXPLICITLY USED IN THE C# WORLD OF THINGS, IF A MOD LOADS THEIR CARDS THIS WAY CONTACT THEM TO UPDATE TO THE NEW ENDPOINTS.
 * Implemented JLDR2 Starter Deck Support.

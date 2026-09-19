@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using EasyFeedback.APIs;
 using JSONLoader3.Peripheral.FILE_Loader;
 using JSONLoader3.Peripheral.Tooltip_Parser;
 using JSONLoader3.Peripheral.XML_Parser;
-using JSONLoader3.Subperipheral.JSONLoader_Configuration;
+using JSONLoader3.Subperipheral.JSONLoaderConfiguration;
 using Sirenix.Utilities;
 
 namespace JSONLoader3.Peripheral.JSON_SCHEMA;
@@ -88,7 +89,38 @@ public class WriteSchema
     /// <remarks>This code is provided by Creator/Chaosyr/SaxbyMod/The Stoat Lord.</remarks>
     public static List<string> GetRequired(List<(FieldInfo field, List<string> tooltips)> fieldTooltipList)
     {
-        return fieldTooltipList.Where(x => x.tooltips.Contains("REQUIRED", StringComparer.Ordinal) && !x.tooltips.Contains("EXCLUDED", StringComparer.Ordinal)).Select(x => $"\"{x.field.Name}\"").ToList();
+        return fieldTooltipList.Where(x => x.tooltips.Contains("REQUIRED", StringComparer.Ordinal) && !x.tooltips.Contains("EXCLUDED", StringComparer.Ordinal) && !x.tooltips.Contains("ALTERNATIVES", StringComparer.Ordinal)).Select(x => $"\"{x.field.Name}\"").ToList();
+    }
+
+    /// <summary>
+    /// A function in which gets AllOf variant of Required Fields from a passed in Field to Tooltip List.
+    /// </summary>
+    /// <param name="fieldTooltipList">The full Field to Tooltip List from <see cref="GetToolTips"/>.</param>
+    /// <returns>A list of the required AllOf Variant Fields.</returns>
+    /// <remarks>This code is provided by Creator/Chaosyr/SaxbyMod/The Stoat Lord.</remarks>
+    public static List<List<string>> GetAllOfRequired(List<(FieldInfo field, List<string> tooltips)> fieldTooltipList)
+    {
+        List<List<string>> allOf = new List<List<string>>();
+
+        List<(FieldInfo field, List<string> tooltips)> alternatives = fieldTooltipList.Where(x => x.tooltips.Contains("REQUIRED", StringComparer.Ordinal) && !x.tooltips.Contains("EXCLUDED", StringComparer.Ordinal) && x.tooltips.Contains("ALTERNATIVES", StringComparer.Ordinal)).ToList();
+
+        foreach ((FieldInfo field, List<string> tooltips) in alternatives)
+        {
+            List<string> AltNames = new List<string>();
+
+            string alterNames = tooltips.FirstOrDefault(x => x.StartsWith("AlternativeNames(", StringComparison.Ordinal));
+
+            if (!alterNames.IsNullOrWhitespace())
+            {
+                alterNames = alterNames.Substring(alterNames.IndexOf('(') + 1, alterNames.LastIndexOf(')') - alterNames.IndexOf('(') - 1);
+                AltNames.AddRange(alterNames.Split(',').Select(x => x.Trim()));
+            }
+
+            AltNames.Add(field.Name);
+            allOf.Add(AltNames);
+        }
+
+        return allOf;
     }
 
     /// <summary>
@@ -100,6 +132,97 @@ public class WriteSchema
     public static List<(FieldInfo field, List<string> tooltips)> GetWritable(List<(FieldInfo field, List<string> tooltips)> fieldTooltipList)
     {
         return fieldTooltipList.Where(x => !x.tooltips.Contains("EXCLUDED", StringComparer.Ordinal)).ToList();
+    }
+    
+    /// <summary>
+    /// Gets all the Writable fields from a passed in Field to Tooltip List, recursively expanding fields marked with EXTENDS.
+    /// </summary>
+    /// <param name="fieldTooltipList">The full Field to Tooltip List from <see cref="GetToolTips"/>.</param>
+    /// <returns>All of the Writable fields, with EXTENDS fields recursively expanded.</returns>
+    /// <remarks>This code is provided by Creator/Chaosyr/SaxbyMod/The Stoat Lord.</remarks>
+    public static List<(FieldInfo field, List<string> tooltips)> GetWritableExtended(List<(FieldInfo field, List<string> tooltips)> fieldTooltipList)
+    {
+        List<(FieldInfo field, List<string> tooltips)> writableFields = new();
+
+        foreach ((FieldInfo field, List<string> tooltips) in GetWritable(fieldTooltipList))
+        {
+            if (IsExtends(tooltips))
+            {
+                if (field.FieldType.IsClass && field.FieldType != typeof(string))
+                {
+                    List<(FieldInfo field, List<string> tooltips)> extendedFields =
+                        GetToolTips(field.FieldType.GetFields().ToList());
+
+                    writableFields.AddRange(GetWritableExtended(extendedFields));
+                }
+
+                continue;
+            }
+
+            writableFields.Add((field, tooltips));
+        }
+
+        return writableFields;
+    }
+    
+    /// <summary>
+    /// Determines whether a field extends the current Schema Level.
+    /// </summary>
+    /// <param name="tooltips">The list of tooltips associated with the field.</param>
+    /// <returns>True if the field contains the EXTENDS tooltip.</returns>
+    /// <remarks>This code is provided by Creator/Chaosyr/SaxbyMod/The Stoat Lord.</remarks>
+    public static bool IsExtends(List<string> tooltips)
+    {
+        return tooltips.Contains("EXTENDS", StringComparer.Ordinal);
+    }
+
+    /// <summary>
+    /// Handles writing an AllOf segment of the Schema
+    /// </summary>
+    /// <param name="allOf">The List of a List of String representing the AllOf Condition.</param>
+    /// <param name="Indentation">The amount of additional Indentation.</param>
+    /// <returns>A Multi-Lined string representing the Handled AllOf</returns>
+    /// <remarks>This code is provided by Creator/Chaosyr/SaxbyMod/The Stoat Lord.</remarks>
+    public static string HandleAllOf(List<List<string>> allOf, int Indentation)
+    {
+        string toWrite = "";
+        toWrite += $$"""
+                   
+                       {{new string(' ', Indentation*4)}}"allOf": [
+                   """;
+        foreach (List<string> oneOf in allOf)
+        {
+            toWrite += $$"""
+                         
+                                 {{new string(' ', Indentation*4)}}{
+                                     {{new string(' ', Indentation*4)}}"oneOf": [
+                         """;
+            foreach (string property in oneOf)
+            {
+                toWrite += $$"""
+                             
+                                         {{new string(' ', Indentation*4)}}{
+                                             {{new string(' ', Indentation*4)}}"required": [
+                                                 {{new string(' ', Indentation*4)}}"{{property}}"
+                                             {{new string(' ', Indentation*4)}}]
+                                         {{new string(' ', Indentation*4)}}},
+                             """;
+            }
+            toWrite = toWrite.TrimEnd();
+            toWrite = toWrite.TrimEnd(',');
+            toWrite += $$"""
+                         
+                                     {{new string(' ', Indentation*4)}}]
+                                 {{new string(' ', Indentation*4)}}},
+                         """;
+        }
+        toWrite = toWrite.TrimEnd();
+        toWrite = toWrite.TrimEnd(',');
+        toWrite += $$"""
+                     
+                         {{new string(' ', Indentation*4)}}]
+                     """;
+        return toWrite;
     }
 
     /// <summary>
@@ -659,9 +782,10 @@ public class WriteSchema
                             """);
         
         List<(FieldInfo field, List<string> tooltips)> fieldTooltipList = GetToolTips(typeof(Class).GetFields().ToList());
+        List<(FieldInfo field, List<string> tooltips)> writableFields = GetWritableExtended(fieldTooltipList);
         
         // Handle Required Properties.
-        List<string> required = GetRequired(fieldTooltipList);
+        List<string> required = GetRequired(writableFields);
         if (!required.IsNullOrEmpty())
             WritingWriter.Write($$"""
                                   
@@ -670,6 +794,15 @@ public class WriteSchema
                                       ],
                                   """);
         
+        // Handle AllOf / OneOf Required Properties.
+        List<List<string>> allOf = GetAllOfRequired(writableFields);
+
+        if (!allOf.IsNullOrEmpty())
+        {
+            WritingWriter.Write(HandleAllOf(allOf, 0));
+            WritingWriter.Write(",");
+        }
+        
         // Open the Objects Properties
         WritingWriter.Write($$"""
                               
@@ -677,44 +810,42 @@ public class WriteSchema
                               """);
         
         // Get All Non-Excluded Fields and Write them to the Schema
-        List<(FieldInfo field, List<string> tooltips)> writableFields = GetWritable(fieldTooltipList);
         foreach ((FieldInfo field, List<string> tooltips) in writableFields)
         {
             // Handles String JSON Schema Types
             if (field.FieldType == typeof(string))
             {
-                WritingWriter.Write(HandleString(writableFields, field, tooltips, 0, typeof(Class)));
+                WritingWriter.Write(HandleString(writableFields, field, tooltips, 0, field.DeclaringType));
             }
 
             // Handles Int JSON Schema Types
             else if (field.FieldType == typeof(int))
             {
-                WritingWriter.Write(HandleInt(writableFields, field, tooltips, 0, typeof(Class)));
+                WritingWriter.Write(HandleInt(writableFields, field, tooltips, 0, field.DeclaringType));
             }
             
             // Handles Boolean JSON Schema Types
             else if (field.FieldType == typeof(bool))
             {
-                WritingWriter.Write(HandleBoolean(writableFields, field, tooltips, 0, typeof(Class)));
+                WritingWriter.Write(HandleBoolean(writableFields, field, tooltips, 0, field.DeclaringType));
             }
             
             // Handles Array JSON Schema Types
             else if (field.FieldType == typeof(List<string>))
             {
-                WritingWriter.Write(HandleStringArray(writableFields, field, tooltips, 0, typeof(Class)));
+                WritingWriter.Write(HandleStringArray(writableFields, field, tooltips, 0, field.DeclaringType));
             }
 
             // Handles Object Array JSON Schema Types
             else if (field.FieldType.IsGenericType && field.FieldType.GetGenericTypeDefinition() == typeof(List<>))
             {
-                
-                WritingWriter.Write(HandleObjectArray(writableFields, field, tooltips, 0, typeof(Class)));
+                WritingWriter.Write(HandleObjectArray(writableFields, field, tooltips, 0, field.DeclaringType));
             }
             
             // Handles Object JSON Schema Types
             else if (field.FieldType.IsClass)
             {
-                WritingWriter.Write(HandleObject(writableFields, field, tooltips, 0, typeof(Class)));
+                WritingWriter.Write(HandleObject(writableFields, field, tooltips, 0, field.DeclaringType));
             }
         }
 
@@ -740,11 +871,11 @@ public class WriteSchema
         
          // Get All the Fields of the Class, and get their associated Tooltips.
         List<FieldInfo> fields = Class.GetFields().ToList();
-        
         List<(FieldInfo field, List<string> tooltips)> fieldTooltipList = GetToolTips(fields);
+        List<(FieldInfo field, List<string> tooltips)> writableFields = GetWritableExtended(fieldTooltipList);
         
         // Handle Required Properties.
-        List<string> required = GetRequired(fieldTooltipList);
+        List<string> required = GetRequired(writableFields);
         if (!required.IsNullOrEmpty())
             toSendOut += $$"""
                            
@@ -753,6 +884,14 @@ public class WriteSchema
                                {{new string(' ', Indentation*4)}}],
                            """;
         
+        List<List<string>> allOf = GetAllOfRequired(writableFields);
+
+        if (!allOf.IsNullOrEmpty())
+        {
+            toSendOut += HandleAllOf(allOf, Indentation);
+            toSendOut += ",";
+        }
+        
         // Open the Objects Properties
         toSendOut += $$"""
                        
@@ -760,44 +899,42 @@ public class WriteSchema
                        """;
         
         // Get All Non-Excluded Fields and Write them to the Schema
-        List<(FieldInfo field, List<string> tooltips)> writableFields = GetWritable(fieldTooltipList);
         foreach ((FieldInfo field, List<string> tooltips) in writableFields)
         {
-            
             // Handles String JSON Schema Types
             if (field.FieldType == typeof(string))
             {
-                toSendOut += HandleString(writableFields, field, tooltips, Indentation, Class);
+                toSendOut += HandleString(writableFields, field, tooltips, Indentation, field.DeclaringType);
             }
 
             // Handles Int JSON Schema Types
             else if (field.FieldType == typeof(int))
             {
-                toSendOut += HandleInt(writableFields, field, tooltips, Indentation, Class);
+                toSendOut += HandleInt(writableFields, field, tooltips, Indentation, field.DeclaringType);
             }
             
             // Handles Boolean JSON Schema Types
             else if (field.FieldType == typeof(bool))
             {
-                toSendOut += HandleBoolean(writableFields, field, tooltips, Indentation, Class);
+                toSendOut += HandleBoolean(writableFields, field, tooltips, Indentation, field.DeclaringType);
             }
             
             // Handles Array JSON Schema Types
             else if (field.FieldType == typeof(List<string>))
             {
-                toSendOut += HandleStringArray(writableFields, field, tooltips, Indentation, Class);
+                toSendOut += HandleStringArray(writableFields, field, tooltips, Indentation, field.DeclaringType);
             }
 
             // Handles Object Array JSON Schema Types
             else if (field.FieldType.IsGenericType && field.FieldType.GetGenericTypeDefinition() == typeof(List<>))
             {
-                toSendOut += HandleObjectArray(writableFields, field, tooltips, Indentation, Class);
+                toSendOut += HandleObjectArray(writableFields, field, tooltips, Indentation, field.DeclaringType);
             }
             
             // Handles Object JSON Schema Types
             else if (field.FieldType.IsClass)
             {
-                toSendOut += HandleObject(writableFields, field, tooltips, Indentation, Class);
+                toSendOut += HandleObject(writableFields, field, tooltips, Indentation, field.DeclaringType);
             }
         }
 

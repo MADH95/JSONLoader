@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using JSONLoader3.Subperipheral.JSONLoader_Configuration;
+using JSONLoader3.Subperipheral.JSONLoaderConfiguration;
 
 namespace JSONLoader3.Peripheral.FILE_Loader;
 
