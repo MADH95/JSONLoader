@@ -3,6 +3,9 @@
 <details open>
 <summary>JSONLoader 3.0.0 Changelog</summary>
 
+## 3.0.0-Nightly-0.1.5
+* FIXED `appearenceBehavior` to `appearanceBehaviour` as it was intended for JSONLoader1's documentation.
+
 ## 3.0.0-Nightly-0.1.4
 * Cleaned up some Logging.
 * Split Debug Logging into Debug and Verbose.
