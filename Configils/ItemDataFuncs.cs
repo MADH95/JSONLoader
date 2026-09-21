@@ -55,10 +55,26 @@ namespace JLPlugin.Data
                     Process(data, item, true);
 
                     Plugin.VerboseLog($"Loaded JLDR2 (consumableItem) {filename}");
+                    
+                    Plugin.VerboseLog($"Outputting Verbose Consumable Item:");
+                    Plugin.VerboseLog($"GUID: {item.GUID}");
+                    Plugin.VerboseLog($"Icon: {item.icon}");
+                    Plugin.VerboseLog($"Bottled Card Name: {item.bottledCardName}");
+                    Plugin.VerboseLog($"Rulebook Name: {item.rulebookName}");
+                    Plugin.VerboseLog($"Rulebook Description: {item.rulebookDescription}");
+                    Plugin.VerboseLog($"Description: {item.description}");
+                    Plugin.VerboseLog($"Model Type: {item.modelType}");
+                    Plugin.VerboseLog($"Region Specific: {item.regionSpecific}");
+                    Plugin.VerboseLog($"Not Randomly Given: {item.notRandomlyGiven}");
+                    Plugin.VerboseLog($"Pickup Sound ID: {item.pickupSoundId}");
+                    Plugin.VerboseLog($"Placed Sound ID: {item.placedSoundId}");
+                    Plugin.VerboseLog($"Examine Sound ID: {item.examineSoundId}");
+                    Plugin.VerboseLog($"Power Level: {item.powerLevel}");
+                    Plugin.VerboseLog($"Rulebook Category: {item.rulebookCategory}");
                 }
                 catch (Exception e)
                 {
-                    Plugin.Log.LogError($"Error loading trait from {file}");
+                    Plugin.Log.LogError($"Error loading item from {file}");
                     Plugin.Log.LogError(e);
                 }
             }

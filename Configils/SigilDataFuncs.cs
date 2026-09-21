@@ -148,6 +148,23 @@ namespace JLPlugin.Data
                     ImportExportUtils.SetID(sigilInfo.GUID + "_" + sigilInfo.name.EnglishValue);
                     sigilInfo.GenerateNew();
                     Plugin.VerboseLog($"Loaded JSON sigil {sigilInfo.name}");
+                    
+                    Plugin.VerboseLog($"Outputting Verbose Sigil:");
+                    Plugin.VerboseLog($"GUID: {sigilInfo.GUID}");
+                    Plugin.VerboseLog($"Name: {sigilInfo.name}");
+                    Plugin.VerboseLog($"Description: {sigilInfo.description}");
+                    Plugin.VerboseLog($"Is Special Ability: {sigilInfo.isSpecialAbility}");
+                    Plugin.VerboseLog($"Is Power Stat: {sigilInfo.isPowerStat}");
+                    Plugin.VerboseLog($"Texture: {sigilInfo.texture}");
+                    Plugin.VerboseLog($"Pixel Texture: {sigilInfo.pixelTexture}");
+                    Plugin.VerboseLog($"Power Level: {sigilInfo.powerLevel}");
+                    Plugin.VerboseLog($"Can Stack: {sigilInfo.canStack}");
+                    Plugin.VerboseLog($"Opponent Usable: {sigilInfo.opponentUsable}");
+                    Plugin.VerboseLog($"Ability Learned Dialogue: {sigilInfo.abilityLearnedDialogue}");
+                    Plugin.VerboseLog($"Applies To Attack: {sigilInfo.appliesToAttack}");
+                    Plugin.VerboseLog($"Applies To Health: {sigilInfo.appliesToHealth}");
+                    Plugin.VerboseLog($"Meta Categories: {(sigilInfo.metaCategories == null ? "null" : string.Join(", ", sigilInfo.metaCategories))}");
+                    Plugin.VerboseLog($"Skipping AbilityBehaviour for now, maybe a future bug fix will add it.");
                 }
                 catch (Exception e)
                 {

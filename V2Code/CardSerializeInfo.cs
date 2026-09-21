@@ -280,7 +280,7 @@ namespace JLPlugin.V2.Data
                 }
                 else
                 {
-                    Plugin.Log.LogDebug($"Unknown language code {code} for card {displayedName} in field {field}");
+                    Plugin.VerboseLog($"Unknown language code {code} for card {displayedName} in field {field}");
                 }
             }
         }
@@ -296,6 +296,51 @@ namespace JLPlugin.V2.Data
             {
                 Plugin.VerboseLog($"Modifying {this.name}");
                 Apply(existingCard, this, true, existingCard.name);
+                
+                Plugin.VerboseLog($"Outputting Verbose Card:");
+                Plugin.VerboseLog($"Name: {name}");
+                Plugin.VerboseLog($"Mod Prefix: {modPrefix}");
+                Plugin.VerboseLog($"Decals: {(decals == null ? "null" : string.Join(", ", decals))}");
+                Plugin.VerboseLog($"Displayed Name: {displayedName}");
+                Plugin.VerboseLog($"Description: {description}");
+                Plugin.VerboseLog($"Base Attack: {baseAttack}");
+                Plugin.VerboseLog($"Base Health: {baseHealth}");
+                Plugin.VerboseLog($"Blood Cost: {bloodCost}");
+                Plugin.VerboseLog($"Bones Cost: {bonesCost}");
+                Plugin.VerboseLog($"Energy Cost: {energyCost}");
+                Plugin.VerboseLog($"Gems Cost: {(gemsCost == null ? "null" : string.Join(", ", gemsCost))}");
+                Plugin.VerboseLog($"Abilities: {(abilities == null ? "null" : string.Join(", ", abilities))}");
+                Plugin.Log.LogDebug(
+                    $"Special Abilities: {(specialAbilities == null ? "null" : string.Join(", ", specialAbilities))}");
+                Plugin.VerboseLog($"Special Stat Icon: {specialStatIcon}");
+                Plugin.Log.LogDebug(
+                    $"Meta Categories: {(metaCategories == null ? "null" : string.Join(", ", metaCategories))}");
+                Plugin.VerboseLog($"Card Complexity: {cardComplexity}");
+                Plugin.VerboseLog($"One Per Deck: {onePerDeck}");
+                Plugin.VerboseLog($"Temple: {temple}");
+                Plugin.VerboseLog($"Title Graphic: {titleGraphic}");
+                Plugin.VerboseLog($"Hide Attack And Health: {hideAttackAndHealth}");
+                Plugin.Log.LogDebug(
+                    $"Appearance Behaviour: {(appearanceBehaviour == null ? "null" : string.Join(", ", appearanceBehaviour))}");
+                Plugin.VerboseLog($"Texture: {texture}");
+                Plugin.VerboseLog($"Emission Texture: {emissionTexture}");
+                Plugin.VerboseLog($"Holo Portrait Prefab: {holoPortraitPrefab}");
+                Plugin.VerboseLog($"Animated Portrait: {animatedPortrait}");
+                Plugin.VerboseLog($"Alt Texture: {altTexture}");
+                Plugin.VerboseLog($"Alt Emission Texture: {altEmissionTexture}");
+                Plugin.VerboseLog($"Pixel Texture: {pixelTexture}");
+                Plugin.VerboseLog($"Tribes: {(tribes == null ? "null" : string.Join(", ", tribes))}");
+                Plugin.VerboseLog($"Traits: {(traits == null ? "null" : string.Join(", ", traits))}");
+                Plugin.VerboseLog($"Evolve Into Name: {evolveIntoName}");
+                Plugin.VerboseLog($"Evolve Turns: {evolveTurns}");
+                Plugin.VerboseLog($"Default Evolution Name: {defaultEvolutionName}");
+                Plugin.VerboseLog($"Tail Name: {tailName}");
+                Plugin.VerboseLog($"Tail Lost Portrait: {tailLostPortrait}");
+                Plugin.VerboseLog($"Ice Cube Name: {iceCubeName}");
+                Plugin.VerboseLog($"Flip Portrait For Strafe: {flipPortraitForStrafe}");
+                Plugin.Log.LogDebug(
+                    $"Extension Properties: {(extensionProperties == null ? "null" : string.Join(", ", extensionProperties.Select(x => $"{x.Key}={x.Value}")))}");
+                Plugin.VerboseLog($"File Path: {filePath}");
             }
             else
             {
@@ -305,6 +350,51 @@ namespace JLPlugin.V2.Data
                 newCard.name = this.name.StartsWith($"{localModPrefix}_") ? this.name : $"{localModPrefix}_{this.name}";
                 Apply(newCard, this, true, newCard.name);
                 CardManager.Add(localModPrefix, newCard);
+
+                Plugin.VerboseLog($"Outputting Verbose Card:");
+                Plugin.VerboseLog($"Name: {name}");
+                Plugin.VerboseLog($"Mod Prefix: {modPrefix}");
+                Plugin.VerboseLog($"Decals: {(decals == null ? "null" : string.Join(", ", decals))}");
+                Plugin.VerboseLog($"Displayed Name: {displayedName}");
+                Plugin.VerboseLog($"Description: {description}");
+                Plugin.VerboseLog($"Base Attack: {baseAttack}");
+                Plugin.VerboseLog($"Base Health: {baseHealth}");
+                Plugin.VerboseLog($"Blood Cost: {bloodCost}");
+                Plugin.VerboseLog($"Bones Cost: {bonesCost}");
+                Plugin.VerboseLog($"Energy Cost: {energyCost}");
+                Plugin.VerboseLog($"Gems Cost: {(gemsCost == null ? "null" : string.Join(", ", gemsCost))}");
+                Plugin.VerboseLog($"Abilities: {(abilities == null ? "null" : string.Join(", ", abilities))}");
+                Plugin.Log.LogDebug(
+                    $"Special Abilities: {(specialAbilities == null ? "null" : string.Join(", ", specialAbilities))}");
+                Plugin.VerboseLog($"Special Stat Icon: {specialStatIcon}");
+                Plugin.Log.LogDebug(
+                    $"Meta Categories: {(metaCategories == null ? "null" : string.Join(", ", metaCategories))}");
+                Plugin.VerboseLog($"Card Complexity: {cardComplexity}");
+                Plugin.VerboseLog($"One Per Deck: {onePerDeck}");
+                Plugin.VerboseLog($"Temple: {temple}");
+                Plugin.VerboseLog($"Title Graphic: {titleGraphic}");
+                Plugin.VerboseLog($"Hide Attack And Health: {hideAttackAndHealth}");
+                Plugin.Log.LogDebug(
+                    $"Appearance Behaviour: {(appearanceBehaviour == null ? "null" : string.Join(", ", appearanceBehaviour))}");
+                Plugin.VerboseLog($"Texture: {texture}");
+                Plugin.VerboseLog($"Emission Texture: {emissionTexture}");
+                Plugin.VerboseLog($"Holo Portrait Prefab: {holoPortraitPrefab}");
+                Plugin.VerboseLog($"Animated Portrait: {animatedPortrait}");
+                Plugin.VerboseLog($"Alt Texture: {altTexture}");
+                Plugin.VerboseLog($"Alt Emission Texture: {altEmissionTexture}");
+                Plugin.VerboseLog($"Pixel Texture: {pixelTexture}");
+                Plugin.VerboseLog($"Tribes: {(tribes == null ? "null" : string.Join(", ", tribes))}");
+                Plugin.VerboseLog($"Traits: {(traits == null ? "null" : string.Join(", ", traits))}");
+                Plugin.VerboseLog($"Evolve Into Name: {evolveIntoName}");
+                Plugin.VerboseLog($"Evolve Turns: {evolveTurns}");
+                Plugin.VerboseLog($"Default Evolution Name: {defaultEvolutionName}");
+                Plugin.VerboseLog($"Tail Name: {tailName}");
+                Plugin.VerboseLog($"Tail Lost Portrait: {tailLostPortrait}");
+                Plugin.VerboseLog($"Ice Cube Name: {iceCubeName}");
+                Plugin.VerboseLog($"Flip Portrait For Strafe: {flipPortraitForStrafe}");
+                Plugin.Log.LogDebug(
+                    $"Extension Properties: {(extensionProperties == null ? "null" : string.Join(", ", extensionProperties.Select(x => $"{x.Key}={x.Value}")))}");
+                Plugin.VerboseLog($"File Path: {filePath}");
             }
         }
 
@@ -343,7 +433,7 @@ namespace JLPlugin.V2.Data
             CardInfo baseGameCard = (CardInfo)CardManager.BaseGameCards.CardByName(this.name).Clone();
             if (baseGameCard != null)
             {
-                Plugin.Log.LogDebug($"Modifying {this.name}");
+                Plugin.VerboseLog($"Modifying {this.name}");
                 Apply(baseGameCard, this, true, name);
                 return baseGameCard;
             }
@@ -359,7 +449,7 @@ namespace JLPlugin.V2.Data
 
         public string WriteToFile(string filename, bool overwrite = true)
         {
-            Plugin.Log.LogDebug($"Writing card {this.name ?? "Unnamed"} to {filename}");
+            Plugin.VerboseLog($"Writing card {this.name ?? "Unnamed"} to {filename}");
             if (!filename.EndsWith("2")) // we now play with jldr2 files
                 filename = filename + "2";
 

@@ -43,8 +43,8 @@ namespace JLPlugin.Data
         {
             ImportExportUtils.SetDebugPath(path);
             ImportExportUtils.SetID(toEncounter ? encounterInfo.name : encounter.name);
-            
-            ImportExportUtils.ApplyProperty(()=>encounter.name, (a)=>encounter.name = a, ref encounterInfo.name, toEncounter, "Encounters", "name");
+
+            ImportExportUtils.ApplyProperty(() => encounter.name, (a) => encounter.name = a, ref encounterInfo.name, toEncounter, "Encounters", "name");
             ImportExportUtils.ApplyValue(ref encounter.minDifficulty, ref encounterInfo.minDifficulty, toEncounter, "Encounters", "minDifficulty");
             ImportExportUtils.ApplyValue(ref encounter.maxDifficulty, ref encounterInfo.maxDifficulty, toEncounter, "Encounters", "maxDifficulty");
             ImportExportUtils.ApplyValue(ref encounter.dominantTribes, ref encounterInfo.dominantTribes, toEncounter, "Encounters", "dominantTribes");
@@ -61,7 +61,7 @@ namespace JLPlugin.Data
                     {
                         var turnCardInfo = turnData.cardInfo[i];
                         EncounterBlueprintData.CardBlueprint TurnCardInfo = new EncounterBlueprintData.CardBlueprint();
-                        ImportExportUtils.ApplyValue(ref TurnCardInfo.card, ref turnCardInfo.card, true, "Encounters", $"turn_{i+1}_card");
+                        ImportExportUtils.ApplyValue(ref TurnCardInfo.card, ref turnCardInfo.card, true, "Encounters", $"turn_{i + 1}_card");
                         if (turnCardInfo.randomReplaceChance != null)
                         {
                             TurnCardInfo.randomReplaceChance = (int)turnCardInfo.randomReplaceChance;
@@ -70,7 +70,7 @@ namespace JLPlugin.Data
                         if (turnCardInfo.difficultyReplacement != null)
                         {
                             TurnCardInfo.difficultyReplace = true;
-                            ImportExportUtils.ApplyValue(ref TurnCardInfo.replacement, ref turnCardInfo.difficultyReplacement, true, "Encounters", $"turn_{i+1}_difficultyReplacement");
+                            ImportExportUtils.ApplyValue(ref TurnCardInfo.replacement, ref turnCardInfo.difficultyReplacement, true, "Encounters", $"turn_{i + 1}_difficultyReplacement");
                         }
 
                         if (turnCardInfo.difficultyReq != null)
@@ -117,7 +117,7 @@ namespace JLPlugin.Data
                     }
                 }
             }
-            
+
             if (toEncounter)
             {
                 if (encounterInfo.regions != null)
@@ -136,7 +136,7 @@ namespace JLPlugin.Data
                 encounterInfo.regions = regionDatas.Select((a) => a.name).ToList();
             }
         }
-        
+
         public static void LoadAllEncounters(List<string> files)
         {
             for (int index = 0; index < files.Count; index++)
@@ -166,6 +166,67 @@ namespace JLPlugin.Data
 
                     Process(encounter, encounterInfo, true, file);
                     Plugin.VerboseLog($"Loaded JSON encounters from {filename}!");
+
+                    Plugin.VerboseLog($"Outputting Verbose Encounter:");
+                    Plugin.VerboseLog($"Name: {encounterInfo.name}");
+                    Plugin.VerboseLog($"Min Difficulty: {encounterInfo.minDifficulty}");
+                    Plugin.VerboseLog($"Max Difficulty: {encounterInfo.maxDifficulty}");
+                    Plugin.Log.LogDebug(
+                        $"Regions: {(encounterInfo.regions == null ? "null" : string.Join(", ", encounterInfo.regions))}");
+                    Plugin.Log.LogDebug(
+                        $"Dominant Tribes: {(encounterInfo.dominantTribes == null ? "null" : string.Join(", ", encounterInfo.dominantTribes))}");
+                    Plugin.Log.LogDebug(
+                        $"Random Replacement Cards: {(encounterInfo.randomReplacementCards == null ? "null" : string.Join(", ", encounterInfo.randomReplacementCards))}");
+                    Plugin.Log.LogDebug(
+                        $"Redundant Abilities: {(encounterInfo.redundantAbilities == null ? "null" : string.Join(", ", encounterInfo.redundantAbilities))}");
+
+                    if (encounterInfo.turns == null)
+                    {
+                        Plugin.VerboseLog($"Turns: null");
+                    }
+                    else
+                    {
+                        Plugin.VerboseLog($"Turns: {encounterInfo.turns.Count}");
+
+                        for (int i = 0; i < encounterInfo.turns.Count; i++)
+                        {
+                            TurnInfo turn = encounterInfo.turns[i];
+
+                            if (turn == null)
+                            {
+                                Plugin.VerboseLog($"Turn {i + 1}: null");
+                                continue;
+                            }
+
+                            if (turn.cardInfo == null)
+                            {
+                                Plugin.VerboseLog($"Turn {i + 1}: Card Info: null");
+                                continue;
+                            }
+
+                            Plugin.VerboseLog($"Turn {i + 1}: {turn.cardInfo.Count} Cards");
+
+                            for (int j = 0; j < turn.cardInfo.Count; j++)
+                            {
+                                TurnCardInfo card = turn.cardInfo[j];
+
+                                if (card == null)
+                                {
+                                    Plugin.VerboseLog($"Turn {i + 1} Card {j + 1}: null");
+                                    continue;
+                                }
+
+                                Plugin.VerboseLog($"Turn {i + 1} Card {j + 1}:");
+                                Plugin.VerboseLog($"Turn {i + 1} Card {j + 1} - Card: {card.card}");
+                                Plugin.Log.LogDebug(
+                                    $"Turn {i + 1} Card {j + 1} - Random Replace Chance: {card.randomReplaceChance}");
+                                Plugin.Log.LogDebug(
+                                    $"Turn {i + 1} Card {j + 1} - Difficulty Requirement: {card.difficultyReq}");
+                                Plugin.Log.LogDebug(
+                                    $"Turn {i + 1} Card {j + 1} - Difficulty Replacement: {card.difficultyReplacement}");
+                            }
+                        }
+                    }
                 }
                 catch (System.Exception ex)
                 {

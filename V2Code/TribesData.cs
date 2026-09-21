@@ -77,6 +77,35 @@ namespace JLPlugin.Data
                         TribeManager.Add(tribedata.guid, tribedata.name, iconTex, tribedata.appearInTribeChoices,
                             backTex);
                     }
+                    
+                    Plugin.VerboseLog($"Outputting Verbose Tribe List:");
+
+                    if (tribeInfo.tribes == null)
+                    {
+                        Plugin.VerboseLog($"Tribes: null");
+                    }
+                    else
+                    {
+                        Plugin.VerboseLog($"Tribes: {tribeInfo.tribes.Length}");
+
+                        for (int i = 0; i < tribeInfo.tribes.Length; i++)
+                        {
+                            TribeInfo tribe = tribeInfo.tribes[i];
+
+                            if (tribe == null)
+                            {
+                                Plugin.VerboseLog($"Tribe {i + 1}: null");
+                                continue;
+                            }
+
+                            Plugin.VerboseLog($"Tribe {i + 1}:");
+                            Plugin.VerboseLog($"Tribe {i + 1} - Name: {tribe.name}");
+                            Plugin.VerboseLog($"Tribe {i + 1} - GUID: {tribe.guid}");
+                            Plugin.VerboseLog($"Tribe {i + 1} - Tribe Icon: {tribe.tribeIcon}");
+                            Plugin.VerboseLog($"Tribe {i + 1} - Appear In Tribe Choices: {tribe.appearInTribeChoices}");
+                            Plugin.VerboseLog($"Tribe {i + 1} - Choice Card Back Texture: {tribe.choiceCardBackTexture}");
+                        }
+                    }
                 }
                 catch (Exception e)
                 {

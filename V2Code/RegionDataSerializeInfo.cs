@@ -47,20 +47,143 @@ public class RegionSerializeInfo
 
 			files.RemoveAt(i--);
 			Plugin.VerboseLog("Loading JLDR2 (region) " + fileName);
-			
+
 			try
 			{
 				ImportExportUtils.SetDebugPath(path);
 				RegionSerializeInfo data = path.FromFilePath<RegionSerializeInfo>();
-				
-				RegionData region = RegionManager.AllRegionsCopy.Find(a=>a.name == data.name);
+
+				RegionData region = RegionManager.AllRegionsCopy.Find(a => a.name == data.name);
 				if (region == null)
 				{
 					region = RegionManager.New(data.name, data.tier, data.addToPool);
 				}
+
 				Process(region, data, true);
 
 				Plugin.VerboseLog("Loaded JSON region from " + fileName + "!");
+
+				Plugin.VerboseLog($"Outputting Verbose Region:");
+				Plugin.VerboseLog($"Name: {data.name}");
+				Plugin.VerboseLog($"Tier: {data.tier}");
+				Plugin.VerboseLog($"Add To Pool: {data.addToPool}");
+				Plugin.Log.LogDebug(
+					$"Terrain Cards: {(data.terrainCards == null ? "null" : string.Join(", ", data.terrainCards))}");
+				Plugin.Log.LogDebug(
+					$"Encounters: {(data.encounters == null ? "null" : string.Join(", ", data.encounters))}");
+				Plugin.Log.LogDebug(
+					$"Likely Cards: {(data.likelyCards == null ? "null" : string.Join(", ", data.likelyCards))}");
+				Plugin.Log.LogDebug(
+					$"Dominant Tribes: {(data.dominantTribes == null ? "null" : string.Join(", ", data.dominantTribes))}");
+				Plugin.VerboseLog($"Boss Prep Encounter: {data.bossPrepEncounter}");
+				Plugin.VerboseLog($"Board Light Color: {data.boardLightColor}");
+				Plugin.VerboseLog($"Cards Light Color: {data.cardsLightColor}");
+				Plugin.VerboseLog($"Map Albedo: {data.mapAlbedo}");
+				Plugin.VerboseLog($"Bosses: {(data.bosses == null ? "null" : string.Join(", ", data.bosses))}");
+				Plugin.VerboseLog($"Dialogue Event: {data.dialogueEvent}");
+				Plugin.VerboseLog($"Ambient Loop ID: {data.ambientLoopId}");
+				Plugin.Log.LogDebug(
+					$"Consumable Items: {(data.consumableItems == null ? "null" : string.Join(", ", data.consumableItems))}");
+
+				if (data.fillerScenery == null)
+				{
+					Plugin.VerboseLog($"Filler Scenery: null");
+				}
+				else
+				{
+					Plugin.VerboseLog($"Filler Scenery: {data.fillerScenery.Count}");
+
+					for (int index = 0; index < data.fillerScenery.Count; index++)
+					{
+						SceneryEntrySerializedInfo scenery = data.fillerScenery[index];
+
+						if (scenery == null)
+						{
+							Plugin.VerboseLog($"Filler Scenery {index + 1}: null");
+							continue;
+						}
+
+						Plugin.VerboseLog($"Filler Scenery {index + 1}:");
+						Plugin.Log.LogDebug(
+							$"Filler Scenery {index + 1} - Min Scale: {(scenery.minScale == null ? "null" : $"X={scenery.minScale.x}, Y={scenery.minScale.y}")}");
+						Plugin.Log.LogDebug(
+							$"Filler Scenery {index + 1} - Max Scale: {(scenery.maxScale == null ? "null" : $"X={scenery.maxScale.x}, Y={scenery.maxScale.y}")}");
+						Plugin.Log.LogDebug(
+							$"Filler Scenery {index + 1} - Prefab Names: {(scenery.prefabNames == null ? "null" : string.Join(", ", scenery.prefabNames))}");
+						Plugin.VerboseLog($"Filler Scenery {index + 1} - Radius: {scenery.radius}");
+						Plugin.Log.LogDebug(
+							$"Filler Scenery {index + 1} - Perlin Noise Height: {scenery.perlinNoiseHeight}");
+					}
+				}
+
+				if (data.scarceScenery == null)
+				{
+					Plugin.VerboseLog($"Scarce Scenery: null");
+				}
+				else
+				{
+					Plugin.VerboseLog($"Scarce Scenery: {data.scarceScenery.Count}");
+
+					for (int index = 0; index < data.scarceScenery.Count; index++)
+					{
+						ScarceSceneryEntrySerializedInfo scenery = data.scarceScenery[index];
+
+						if (scenery == null)
+						{
+							Plugin.VerboseLog($"Scarce Scenery {index + 1}: null");
+							continue;
+						}
+
+						Plugin.VerboseLog($"Scarce Scenery {index + 1}:");
+						Plugin.Log.LogDebug(
+							$"Scarce Scenery {index + 1} - Min Scale: {(scenery.minScale == null ? "null" : $"X={scenery.minScale.x}, Y={scenery.minScale.y}")}");
+						Plugin.Log.LogDebug(
+							$"Scarce Scenery {index + 1} - Max Scale: {(scenery.maxScale == null ? "null" : $"X={scenery.maxScale.x}, Y={scenery.maxScale.y}")}");
+						Plugin.Log.LogDebug(
+							$"Scarce Scenery {index + 1} - Prefab Names: {(scenery.prefabNames == null ? "null" : string.Join(", ", scenery.prefabNames))}");
+						Plugin.VerboseLog($"Scarce Scenery {index + 1} - Radius: {scenery.radius}");
+						Plugin.Log.LogDebug(
+							$"Scarce Scenery {index + 1} - Perlin Noise Height: {scenery.perlinNoiseHeight}");
+						Plugin.VerboseLog($"Scarce Scenery {index + 1} - Min Density: {scenery.minDensity}");
+						Plugin.VerboseLog($"Scarce Scenery {index + 1} - Min Instances: {scenery.minInstances}");
+						Plugin.VerboseLog($"Scarce Scenery {index + 1} - Max Instances: {scenery.maxInstances}");
+					}
+				}
+
+				if (data.predefinedScenery == null)
+				{
+					Plugin.VerboseLog($"Predefined Scenery: null");
+				}
+				else
+				{
+					Plugin.VerboseLog($"Predefined Scenery: {data.predefinedScenery.Count}");
+
+					for (int index = 0; index < data.predefinedScenery.Count; index++)
+					{
+						PredefinedEntrySerializedInfo scenery = data.predefinedScenery[index];
+
+						if (scenery == null)
+						{
+							Plugin.VerboseLog($"Predefined Scenery {index + 1}: null");
+							continue;
+						}
+
+						Plugin.VerboseLog($"Predefined Scenery {index + 1}:");
+						Plugin.Log.LogDebug(
+							$"Predefined Scenery {index + 1} - Min Scale: {(scenery.minScale == null ? "null" : $"X={scenery.minScale.x}, Y={scenery.minScale.y}")}");
+						Plugin.Log.LogDebug(
+							$"Predefined Scenery {index + 1} - Max Scale: {(scenery.maxScale == null ? "null" : $"X={scenery.maxScale.x}, Y={scenery.maxScale.y}")}");
+						Plugin.Log.LogDebug(
+							$"Predefined Scenery {index + 1} - Prefab Names: {(scenery.prefabNames == null ? "null" : string.Join(", ", scenery.prefabNames))}");
+						Plugin.VerboseLog($"Predefined Scenery {index + 1} - Radius: {scenery.radius}");
+						Plugin.Log.LogDebug(
+							$"Predefined Scenery {index + 1} - Perlin Noise Height: {scenery.perlinNoiseHeight}");
+						Plugin.Log.LogDebug(
+							$"Predefined Scenery {index + 1} - Rotation: {(scenery.rotation == null ? "null" : $"X={scenery.rotation.x}, Y={scenery.rotation.y}, Z={scenery.rotation.z}")}");
+						Plugin.Log.LogDebug(
+							$"Predefined Scenery {index + 1} - Scale: {(scenery.scale == null ? "null" : $"X={scenery.scale.x}, Y={scenery.scale.y}, Z={scenery.scale.z}")}");
+					}
+				}
 			}
 			catch (Exception e)
 			{

@@ -118,6 +118,38 @@ namespace JSONLoader.V2Code
                         languageInfo.languageCode, languageInfo.resetButtonText, stringTablePath, fontReplacements);
 
                     Plugin.VerboseLog($"Loaded JSON language {languageInfo.languageName} from {filename}!");
+                    
+                    Plugin.VerboseLog($"Outputting Verbose Language:");
+                    Plugin.VerboseLog($"Language Name: {languageInfo.languageName}");
+                    Plugin.VerboseLog($"Language Code: {languageInfo.languageCode}");
+                    Plugin.VerboseLog($"Reset Button Text: {languageInfo.resetButtonText}");
+                    Plugin.VerboseLog($"String Table Path: {languageInfo.stringTablePath}");
+
+                    if (languageInfo.fontReplacementPaths == null)
+                    {
+                        Plugin.VerboseLog($"Font Replacement Paths: null");
+                    }
+                    else
+                    {
+                        Plugin.VerboseLog($"Font Replacement Paths: {languageInfo.fontReplacementPaths.Count}");
+
+                        for (int i = 0; i < languageInfo.fontReplacementPaths.Count; i++)
+                        {
+                            Fonts replacement = languageInfo.fontReplacementPaths[i];
+
+                            if (replacement == null)
+                            {
+                                Plugin.VerboseLog($"Font Replacement {i + 1}: null");
+                                continue;
+                            }
+
+                            Plugin.VerboseLog($"Font Replacement {i + 1}:");
+                            Plugin.VerboseLog($"Font Replacement {i + 1} - Type: {replacement.Type}");
+                            Plugin.VerboseLog($"Font Replacement {i + 1} - Asset Bundle Path: {replacement.AssetBundlePath}");
+                            Plugin.VerboseLog($"Font Replacement {i + 1} - Font Asset Name: {replacement.FontAssetName}");
+                            Plugin.VerboseLog($"Font Replacement {i + 1} - TMP Font Asset Name: {replacement.TMPFontAssetName}");
+                        }
+                    }
                 }catch (Exception e)
                 {
                     Plugin.Log.LogError($"Error loading language {filename}");

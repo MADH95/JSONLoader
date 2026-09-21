@@ -44,6 +44,32 @@ namespace JLPlugin.Data
                     {
                         GuidManager.GetEnumValue<Trait>(trait.guid ?? Plugin.PluginGuid, trait.name);
                     }
+                    
+                    Plugin.VerboseLog($"Outputting Verbose Trait List:");
+
+                    if (traitList.traits == null)
+                    {
+                        Plugin.VerboseLog($"Traits: null");
+                    }
+                    else
+                    {
+                        Plugin.VerboseLog($"Traits: {traitList.traits.Length}");
+
+                        for (int i = 0; i < traitList.traits.Length; i++)
+                        {
+                            TraitInfo trait = traitList.traits[i];
+
+                            if (trait == null)
+                            {
+                                Plugin.VerboseLog($"Trait {i + 1}: null");
+                                continue;
+                            }
+
+                            Plugin.VerboseLog($"Trait {i + 1}:");
+                            Plugin.VerboseLog($"Trait {i + 1} - Name: {trait.name}");
+                            Plugin.VerboseLog($"Trait {i + 1} - GUID: {trait.guid}");
+                        }
+                    }
                 }
                 catch (Exception e)
                 {

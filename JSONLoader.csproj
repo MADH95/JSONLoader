@@ -5,7 +5,7 @@
         <RuntimeIdentifiers>win-x64;win-x86;win-arm64;linux-x64;linux-arm;linux-arm64;linux-musl-x64;linux-musl-arm64;osx-x64;osx-arm64</RuntimeIdentifiers>
         <AssemblyName>JSONLoader</AssemblyName>
         <Description>This is the DLL File that handles JSON Loading for Inscryption Mods, originally created by MadH95 with the help of several AMAZING Contributors!!</Description>
-        <Version>2.7.0</Version>
+        <Version>2.7.1</Version>
         <Authors>MADH95, JamesVeug, LilySylvee, kbmackenzie, Chaosyr, divisionbyz0rro, IngoHHacks, Khaomi, vladdeSV, TVFLabs, UwUMacaroniTime, Windows10CE</Authors>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
         <LangVersion>Latest</LangVersion>
@@ -82,9 +82,9 @@
         <ReleaseMode>Prerelease</ReleaseMode>
         <!--Thunderstore Manifest Properties-->
         <ThunderstorePackageName>JSONCardLoader</ThunderstorePackageName>
-        <ThunderstorePackageVersion>2.7.0</ThunderstorePackageVersion>
+        <ThunderstorePackageVersion>2.7.1</ThunderstorePackageVersion>
         <ThunderstoreWebsiteURL>https://github.com/MADH95/JSONCardLoaderPlugin</ThunderstoreWebsiteURL>
-        <ThunderstorePackageDescription>A mod made for Incryption to create custom cards, sigils, starter decks, tribes, encounters and more using JSON files.</ThunderstorePackageDescription>
-        <ThunderstorePackageDependencyStrings>BepInEx-BepInExPack_Inscryption-5.4.1902;API_dev-API-2.18.7</ThunderstorePackageDependencyStrings>
+        <ThunderstorePackageDescription>A mod made for Incryption to create custom cards, sigils, starter decks, tribes, encounters, items, regions, masks, talking cards, languages, gramophone tracks, and more using JSON files.</ThunderstorePackageDescription>
+        <ThunderstorePackageDependencyStrings>BepInEx-BepInExPack_Inscryption-5.4.2305;BepInEx-MonoMod_Loader_Inscryption-1.0.0;API_dev-API-2.24.1</ThunderstorePackageDependencyStrings>
     </PropertyGroup>
 </Project>

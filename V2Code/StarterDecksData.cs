@@ -44,6 +44,23 @@ namespace JLPlugin.Data
 
                     Plugin.VerboseLog(
                         $"Loaded JSON starter decks {string.Join(",", starterDeckInfo.decks.Select(s => s.name).ToList())}");
+                    
+                    for (int i = 0; i < starterDeckInfo.decks.Length; i++)
+                    {
+                        StarterDeckInfo deckData = starterDeckInfo.decks[i];
+
+                        if (deckData == null)
+                        {
+                            Plugin.VerboseLog($"Deck {i + 1}: null");
+                            continue;
+                        }
+
+                        Plugin.VerboseLog($"Deck {i + 1}:");
+                        Plugin.VerboseLog($"Deck {i + 1} - Name: {deckData.name}");
+                        Plugin.VerboseLog($"Deck {i + 1} - Cards: {(deckData.cards == null ? "null" : string.Join(", ", deckData.cards))}");
+                        Plugin.VerboseLog($"Deck {i + 1} - Icon Texture: {deckData.iconTexture}");
+                        Plugin.VerboseLog($"Deck {i + 1} - Unlock Level: {deckData.unlockLevel}");
+                    }
                 }
                 catch (System.Exception e)
                 {

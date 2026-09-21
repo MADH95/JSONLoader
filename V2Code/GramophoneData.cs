@@ -48,6 +48,33 @@ namespace JSONLoader.Data
                     }
 
                     Plugin.VerboseLog($"Loaded JSON gramophone tracks from {filename}!");
+                    
+                    Plugin.VerboseLog($"Outputting Verbose Gramophone:");
+                    Plugin.VerboseLog($"Prefix: {gramInfo.Prefix}");
+
+                    if (gramInfo.Tracks == null)
+                    {
+                        Plugin.VerboseLog($"Tracks: null");
+                    }
+                    else
+                    {
+                        Plugin.VerboseLog($"Tracks: {gramInfo.Tracks.Length}");
+
+                        for (int i = 0; i < gramInfo.Tracks.Length; i++)
+                        {
+                            TrackData track = gramInfo.Tracks[i];
+
+                            if (track == null)
+                            {
+                                Plugin.VerboseLog($"Track {i + 1}: null");
+                                continue;
+                            }
+
+                            Plugin.VerboseLog($"Track {i + 1}:");
+                            Plugin.VerboseLog($"Track {i + 1} - Track: {track.Track}");
+                            Plugin.VerboseLog($"Track {i + 1} - Volume: {track.Volume}");
+                        }
+                    }
                 }   
                 catch (System.Exception ex)
                 {

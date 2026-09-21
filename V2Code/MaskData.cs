@@ -67,6 +67,13 @@ namespace JSONLoader.V2Code
                         customMask.SetModelType(modelType.Value);
 
                     Plugin.VerboseLog($"Loaded JSON mask from {filename}!");
+                    
+                    Plugin.VerboseLog($"Outputting Verbose Mask:");
+                    Plugin.VerboseLog($"Mask Name: {mask.maskName}");
+                    Plugin.VerboseLog($"Texture Path: {mask.texturePath}");
+                    Plugin.VerboseLog($"Mask Type: {mask.maskType}");
+                    Plugin.VerboseLog($"Model Type: {mask.modelType}");
+                    Plugin.VerboseLog($"Type: {mask.type}");
                 }
                 catch (Exception e)
                 {
