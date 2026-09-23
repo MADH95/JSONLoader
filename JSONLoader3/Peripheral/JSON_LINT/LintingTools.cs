@@ -53,6 +53,7 @@ public class LintingTools
 
         List<string> requiredFields = GetRequiredFromSchema(JSONSchema);
         List<List<string>> allOf = GetAllOf(JSONSchema);
+        List<List<string>> alternativeNot = GetAlternativeNot(JSONSchema);
         List<(string field, bool checkedField)> requiredAllOfFieldTicks = new List<(string field, bool checkedField)>();
         List<(string field, bool checkedField)> requiredFieldTicks = new List<(string field, bool checkedField)>();
 
@@ -71,6 +72,12 @@ public class LintingTools
         {
             JSONLoader3.FormatLogger("Debug", "LintingTools", $"Having one of the following is also required: {string.Join(", ", oneOf)}");
         }
+        
+        foreach (List<string> alternatives in alternativeNot)
+        {
+            JSONLoader3.FormatLogger("Debug", "LintingTools", $"The following fields are mutually exclusive but optional: {string.Join(", ", alternatives)}");
+        }
+
 
         foreach ((int depth, string propertyName, string propertyValue) prop in JSONProperties.Where(x => x.depth == 1))
         {
@@ -216,6 +223,38 @@ public class LintingTools
                     "AdditionalInformation",
                     "LintingTools",
                     $"At least one of the following fields must be present: {string.Join(", ", oneOf)}."
+                );
+
+                JSONLoader3.FormatLogger(
+                    "AdditionalInformation",
+                    "LintingTools",
+                    $"Here's the full path to the file the issue takes root in: {file}"
+                );
+
+                return (JSONProperties, false);
+            }
+        }
+        
+        foreach (List<string> alternatives in alternativeNot)
+        {
+            List<string> foundFields = JSONProperties
+                .Where(x => alternatives.Contains(x.propertyName))
+                .Select(x => x.propertyName)
+                .Distinct()
+                .ToList();
+
+            if (foundFields.Count > 1)
+            {
+                JSONLoader3.FormatLogger(
+                    "ERROR",
+                    "LintingTools",
+                    $"Multiple mutually exclusive fields were found: {string.Join(", ", foundFields)} within {Path.GetFileNameWithoutExtension(file)}."
+                );
+
+                JSONLoader3.FormatLogger(
+                    "AdditionalInformation",
+                    "LintingTools",
+                    $"Only one of the following fields may be present at a time: {string.Join(", ", alternatives)}."
                 );
 
                 JSONLoader3.FormatLogger(
@@ -539,6 +578,93 @@ public class LintingTools
         }
 
         return allOfProperties;
+    }
+
+    /// <summary>
+    /// A function that gets all of the optional Alternative Properties from the passed in JSON Schema.
+    /// </summary>
+    /// <param name="JSONSchema">A List of String representing the JSON Schema.</param>
+    /// <returns>A List of a List of String representing the mutually exclusive Properties contained within each Not.</returns>
+    /// <remarks>This code is provided by Creator/Chaosyr/SaxbyMod/The Stoat Lord.</remarks>
+    private static List<List<string>> GetAlternativeNot(List<string> JSONSchema)
+    {
+        List<List<string>> alternativeProperties = new List<List<string>>();
+
+        int currentDepth = 0;
+        int allOfDepth = -1;
+        int notDepth = -1;
+
+        List<string> currentNot = null;
+
+        for (int i = 0; i < JSONSchema.Count; i++)
+        {
+            string line = JSONSchema[i].Trim();
+
+            // Enter an AllOf section.
+            if (line.StartsWith("\"allOf\": ["))
+            {
+                allOfDepth = currentDepth;
+            }
+            // Enter a Not section contained within an AllOf.
+            else if (line.StartsWith("\"not\": {") && allOfDepth != -1)
+            {
+                notDepth = currentDepth;
+                currentNot = new List<string>();
+            }
+            // Find Required Properties contained within the current Not.
+            else if (line.StartsWith("\"required\": [") && notDepth != -1)
+            {
+                for (int requiredLine = i + 1; requiredLine < JSONSchema.Count; requiredLine++)
+                {
+                    string requiredLineValue = JSONSchema[requiredLine].Trim();
+
+                    if (requiredLineValue.TrimEnd(',') == "]")
+                    {
+                        break;
+                    }
+
+                    string requiredProperty = requiredLineValue.Trim('"', ',');
+
+                    if (!requiredProperty.IsNullOrWhitespace())
+                    {
+                        currentNot?.Add(requiredProperty);
+                    }
+                }
+            }
+
+            // Keep track of the JSON nesting depth.
+            foreach (char character in line)
+            {
+                if (character == '{' || character == '[')
+                {
+                    currentDepth++;
+                }
+                else if (character == '}' || character == ']')
+                {
+                    currentDepth--;
+                }
+            }
+
+            // Leave the Not section.
+            if (notDepth != -1 && currentDepth <= notDepth)
+            {
+                if (currentNot != null && currentNot.Count > 0)
+                {
+                    alternativeProperties.Add(currentNot);
+                }
+
+                currentNot = null;
+                notDepth = -1;
+            }
+
+            // Leave the AllOf section.
+            if (allOfDepth != -1 && currentDepth <= allOfDepth)
+            {
+                allOfDepth = -1;
+            }
+        }
+
+        return alternativeProperties;
     }
 
     /// <summary>
@@ -1575,6 +1701,7 @@ public class LintingTools
 
         List<string> requiredFields = GetRequiredFromSchema(PropertySchema);
         List<List<string>> allOf = GetAllOf(PropertySchema);
+        List<List<string>> alternativeNot = GetAlternativeNot(PropertySchema);
         List<(string field, bool checkedField)> requiredAllOfFieldTicks = new List<(string field, bool checkedField)>();
         List<(string field, bool checkedField)> requiredFieldTicks = new List<(string field, bool checkedField)>();
 
@@ -1590,6 +1717,11 @@ public class LintingTools
         foreach (List<string> oneOf in allOf)
         {
             JSONLoader3.FormatLogger("Debug", "LintingTools", $"Having one of the following is also required: {string.Join(", ", oneOf)}");
+        }
+        
+        foreach (List<string> alternatives in alternativeNot)
+        {
+            JSONLoader3.FormatLogger("Debug", "LintingTools", $"The following fields are mutually exclusive but optional: {string.Join(", ", alternatives)}");
         }
 
         foreach ((int depth, string propertyName, string propertyValue) prop in JSONProperties)
@@ -1746,18 +1878,17 @@ public class LintingTools
         
         foreach (List<string> oneOf in allOf)
         {
-            bool foundOne = false;
+            int foundFields = 0;
 
             foreach (string field in oneOf)
             {
                 if (requiredAllOfFieldTicks.Any(x => x.field == field && x.checkedField))
                 {
-                    foundOne = true;
-                    break;
+                    foundFields++;
                 }
             }
 
-            if (!foundOne)
+            if (foundFields == 0)
             {
                 if (!validateAnyOf)
                 {
@@ -1770,7 +1901,64 @@ public class LintingTools
                     JSONLoader3.FormatLogger(
                         "AdditionalInformation",
                         "LintingTools",
-                        $"At least one of the following fields must be present: {string.Join(", ", oneOf)}."
+                        $"Exactly one of the following fields must be present: {string.Join(", ", oneOf)}."
+                    );
+
+                    JSONLoader3.FormatLogger(
+                        "AdditionalInformation",
+                        "LintingTools",
+                        $"Here's the full path to the file the issue takes root in: {file}"
+                    );
+                }
+
+                return false;
+            }
+
+            if (foundFields > 1)
+            {
+                if (!validateAnyOf)
+                {
+                    JSONLoader3.FormatLogger(
+                        "ERROR",
+                        "LintingTools",
+                        $"Multiple mutually exclusive required fields were found: {string.Join(", ", oneOf)} within {Path.GetFileNameWithoutExtension(file)}."
+                    );
+
+                    JSONLoader3.FormatLogger(
+                        "AdditionalInformation",
+                        "LintingTools",
+                        $"Exactly one of the following fields may be present: {string.Join(", ", oneOf)}."
+                    );
+
+                    JSONLoader3.FormatLogger(
+                        "AdditionalInformation",
+                        "LintingTools",
+                        $"Here's the full path to the file the issue takes root in: {file}"
+                    );
+                }
+
+                return false;
+            }
+        }
+        
+        foreach (List<string> alternatives in alternativeNot)
+        {
+            List<string> foundFields = JSONProperties.Where(x => alternatives.Contains(x.propertyName)).Select(x => x.propertyName).Distinct().ToList();
+
+            if (foundFields.Count > 1)
+            {
+                if (!validateAnyOf)
+                {
+                    JSONLoader3.FormatLogger(
+                        "ERROR",
+                        "LintingTools",
+                        $"Multiple mutually exclusive fields were found: {string.Join(", ", foundFields)} within {Path.GetFileNameWithoutExtension(file)}."
+                    );
+
+                    JSONLoader3.FormatLogger(
+                        "AdditionalInformation",
+                        "LintingTools",
+                        $"Only one of the following fields may be present at a time: {string.Join(", ", alternatives)}."
                     );
 
                     JSONLoader3.FormatLogger(

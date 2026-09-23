@@ -59,13 +59,25 @@ public class LoadFiles
         JSONLoader3.FormatLogger("Info", "LoadFiles", "Loading JLDR3 Files!!");
         foreach ((string pluginName, string file) in JLDR3Files)
         {
-            
+            JSONLoader3.FormatLogger("Info", "LoadFiles", $"""
+                                                           
+                                                           This note is here to say that we have loaded in the following file.
+                                                           {file}
+                                                           However, we currently don't have the support built in for this, if not evident by the lack of documentation.
+                                                           Our Priority is first reestablishing JSONLoaderV1 and JSONLoaderV2 support in full.
+                                                           """);
         }
         
         JSONLoader3.FormatLogger("Info", "LoadFiles", "Loading CSV Files!!");
         foreach ((string pluginName, string file) in CSVFiles)
         {
-            
+            JSONLoader3.FormatLogger("Info", "LoadFiles", $"""
+
+                                                           This note is here to say that we have loaded in the following file.
+                                                           {file}
+                                                           However, we currently don't have the support built in for this, if not evident by the lack of documentation.
+                                                           Our Priority is first reestablishing JSONLoaderV1 and JSONLoaderV2 support in full.
+                                                           """);
         }
     }
 }

@@ -165,7 +165,7 @@ public class CardUtils
                 JSONLoader3.FormatLogger("Verbose", "CardUtils", $"Found {propertyName} with value of ({hideAttackAndHealth}) successfully while parsing {typeof(Card).Name} from {Path.GetFileNameWithoutExtension(pluginName)} specifically {Path.GetFileNameWithoutExtension(file)}.");
             }
 
-            if (propertyName == "bloodCost" && depth == 1)
+            if ((propertyName == "bloodCost" && depth == 1) || (propertyName == "cost" && depth == 1))
             {
                 bloodCost = int.Parse(propertyValue);
                 JSONLoader3.FormatLogger("Verbose", "CardUtils", $"Found {propertyName} with value of ({bloodCost}) successfully while parsing {typeof(Card).Name} from {Path.GetFileNameWithoutExtension(pluginName)} specifically {Path.GetFileNameWithoutExtension(file)}.");

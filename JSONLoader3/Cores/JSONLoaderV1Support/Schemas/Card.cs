@@ -86,7 +86,7 @@ public class Card
     ///
     /// New Description from JSONLoader v3.0.0: This value determines the amount of Blood this card will cost.
     /// </summary>
-    [Tooltip("Default(0) | Minimum(0)")]
+    [Tooltip("ALTERNATIVES | AlternativeNames(cost) | Default(0) | Minimum(0)")]
     public int bloodCost;
     /// <summary>
     /// Original Description from JSONLoader v1.7.2: "An integer value for the bones cost of a card" |

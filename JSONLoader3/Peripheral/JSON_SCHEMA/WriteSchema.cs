@@ -122,6 +122,37 @@ public class WriteSchema
 
         return allOf;
     }
+    
+    /// <summary>
+    /// A function in which gets AnyOf variant of Alternative Names from a passed in Field to Tooltip List.
+    /// </summary>
+    /// <param name="fieldTooltipList">The full Field to Tooltip List from <see cref="GetToolTips"/>.</param>
+    /// <returns>A list of the required AllOf Variant Fields.</returns>
+    /// <remarks>This code is provided by Creator/Chaosyr/SaxbyMod/The Stoat Lord.</remarks>
+    public static List<List<string>> GetAnyOfAlternativeNames(List<(FieldInfo field, List<string> tooltips)> fieldTooltipList)
+    {
+        List<List<string>> allOf = new List<List<string>>();
+
+        List<(FieldInfo field, List<string> tooltips)> alternatives = fieldTooltipList.Where(x => !x.tooltips.Contains("REQUIRED", StringComparer.Ordinal) && !x.tooltips.Contains("EXCLUDED", StringComparer.Ordinal) && x.tooltips.Contains("ALTERNATIVES", StringComparer.Ordinal)).ToList();
+
+        foreach ((FieldInfo field, List<string> tooltips) in alternatives)
+        {
+            List<string> AltNames = new List<string>();
+
+            string alterNames = tooltips.FirstOrDefault(x => x.StartsWith("AlternativeNames(", StringComparison.Ordinal));
+
+            if (!alterNames.IsNullOrWhitespace())
+            {
+                alterNames = alterNames.Substring(alterNames.IndexOf('(') + 1, alterNames.LastIndexOf(')') - alterNames.IndexOf('(') - 1);
+                AltNames.AddRange(alterNames.Split(',').Select(x => x.Trim()));
+            }
+
+            AltNames.Add(field.Name);
+            allOf.Add(AltNames);
+        }
+
+        return allOf;
+    }
 
     /// <summary>
     /// Gets all the Writable fields from a passed in Field to Tooltip List.
@@ -180,50 +211,81 @@ public class WriteSchema
     /// Handles writing an AllOf segment of the Schema
     /// </summary>
     /// <param name="allOf">The List of a List of String representing the AllOf Condition.</param>
+    /// <param name="anyOfAlternates">The List of a List of String representing the AnyOfAlternatives Condition.</param>
     /// <param name="Indentation">The amount of additional Indentation.</param>
     /// <returns>A Multi-Lined string representing the Handled AllOf</returns>
     /// <remarks>This code is provided by Creator/Chaosyr/SaxbyMod/The Stoat Lord.</remarks>
-    public static string HandleAllOf(List<List<string>> allOf, int Indentation)
+    public static string HandleAllOf(List<List<string>> allOf, List<List<string>> anyOfAlternates, int Indentation)
     {
         string toWrite = "";
+
         toWrite += $$"""
-                   
-                       {{new string(' ', Indentation*4)}}"allOf": [
-                   """;
+
+                         {{new string(' ', Indentation * 4)}}"allOf": [
+                     """;
+
         foreach (List<string> oneOf in allOf)
         {
             toWrite += $$"""
-                         
-                                 {{new string(' ', Indentation*4)}}{
-                                     {{new string(' ', Indentation*4)}}"oneOf": [
+
+                                 {{new string(' ', Indentation * 4)}}{
+                                     {{new string(' ', Indentation * 4)}}"oneOf": [
                          """;
+
             foreach (string property in oneOf)
             {
                 toWrite += $$"""
-                             
-                                         {{new string(' ', Indentation*4)}}{
-                                             {{new string(' ', Indentation*4)}}"required": [
-                                                 {{new string(' ', Indentation*4)}}"{{property}}"
-                                             {{new string(' ', Indentation*4)}}]
-                                         {{new string(' ', Indentation*4)}}},
+
+                                             {{new string(' ', Indentation * 4)}}{
+                                                 {{new string(' ', Indentation * 4)}}"required": [
+                                                     {{new string(' ', Indentation * 4)}}"{{property}}"
+                                                 {{new string(' ', Indentation * 4)}}]
+                                             {{new string(' ', Indentation * 4)}}},
                              """;
             }
+
             toWrite = toWrite.TrimEnd();
             toWrite = toWrite.TrimEnd(',');
+
             toWrite += $$"""
-                         
-                                     {{new string(' ', Indentation*4)}}]
-                                 {{new string(' ', Indentation*4)}}},
+
+                                     {{new string(' ', Indentation * 4)}}]
+                                 {{new string(' ', Indentation * 4)}}},
                          """;
         }
+
+        foreach (List<string> names in anyOfAlternates)
+        {
+            for (int i = 0; i < names.Count; i++)
+            {
+                for (int j = i + 1; j < names.Count; j++)
+                {
+                    toWrite += $$"""
+
+                                         {{new string(' ', Indentation * 4)}}{
+                                             {{new string(' ', Indentation * 4)}}"not": {
+                                                 {{new string(' ', Indentation * 4)}}"required": [
+                                                     {{new string(' ', Indentation * 4)}}"{{names[i]}}",
+                                                     {{new string(' ', Indentation * 4)}}"{{names[j]}}"
+                                                 {{new string(' ', Indentation * 4)}}]
+                                             {{new string(' ', Indentation * 4)}}}
+                                         {{new string(' ', Indentation * 4)}}},
+                                 """;
+                }
+            }
+        }
+
         toWrite = toWrite.TrimEnd();
         toWrite = toWrite.TrimEnd(',');
+
         toWrite += $$"""
-                     
-                         {{new string(' ', Indentation*4)}}]
+
+                         {{new string(' ', Indentation * 4)}}]
                      """;
+
         return toWrite;
     }
+
 
     /// <summary>
     /// This function handles the Schema Writing logic for AnyOf[] fields within JSON Schema.
@@ -317,16 +379,18 @@ public class WriteSchema
     /// <param name="tooltips">The list of tooltips associated with that field.</param>
     /// <param name="Indentation">The amount of excess indentation needed.</param>
     /// <param name="Class">The class in which this property belongs.</param>
+    /// <param name="propertyName">The name of the Property, primarily for fields with Alternative Names.</param>
     /// <returns>A Multi-Line String representing the Handled String Property.</returns>
     /// <remarks>This code is provided by Creator/Chaosyr/SaxbyMod/The Stoat Lord.</remarks>
-    public static string HandleString(List<(FieldInfo field, List<string> tooltips)> writableFields, FieldInfo field, List<string> tooltips, int Indentation, Type Class)
+    public static string HandleString(List<(FieldInfo field, List<string> tooltips, string propertyName)> writableFields, FieldInfo field, List<string> tooltips, int Indentation, Type Class, string propertyName = null)
     {
         string toWrite = "";
+        string Name = propertyName ?? field.Name;
         toWrite += $$"""
 
-                             {{new string(' ', Indentation * 4)}}"{{field.Name}}": {
-                                 {{new string(' ', Indentation * 4)}}"type": "string",
-                                 {{new string(' ', Indentation * 4)}}"description": "{{ReadDocumentationFile.EscapeJSON(ReadDocumentationFile.GetJSONSummary(ReadDocumentationFile.GetInfo(field.Name, Class)))}}",
+                             {{new string(' ', Indentation*4)}}"{{Name}}": {
+                                 {{new string(' ', Indentation*4)}}"type": "string",
+                                 {{new string(' ', Indentation*4)}}"description": "{{ReadDocumentationFile.EscapeJSON(ReadDocumentationFile.GetJSONSummary(ReadDocumentationFile.GetInfo(field.Name, Class)))}}",
                      """;
 
         // Optional Minimum Length
@@ -389,7 +453,7 @@ public class WriteSchema
                              {{new string(' ', Indentation * 4)}}}
                      """;
 
-        if (writableFields.IndexOf((field, tooltips)) != writableFields.Count - 1)
+        if (writableFields.IndexOf((field, tooltips, propertyName)) != writableFields.Count - 1)
         {
             toWrite += ",";
         }
@@ -405,16 +469,18 @@ public class WriteSchema
     /// <param name="tooltips">The list of tooltips associated with that field.</param>
     /// <param name="Indentation">The amount of excess indentation needed.</param>
     /// <param name="Class">The class in which this property belongs.</param>
+    /// <param name="propertyName">The name of the Property, primarily for fields with Alternative Names.</param>
     /// <returns>A Multi-Line String representing the Handled Int Property.</returns>
     /// <remarks>This code is provided by Creator/Chaosyr/SaxbyMod/The Stoat Lord.</remarks>
-    public static string HandleInt(List<(FieldInfo field, List<string> tooltips)> writableFields, FieldInfo field, List<string> tooltips, int Indentation, Type Class)
+    public static string HandleInt(List<(FieldInfo field, List<string> tooltips, string propertyName)> writableFields, FieldInfo field, List<string> tooltips, int Indentation, Type Class, string propertyName = null)
     {
         string toWrite = "";
+        string Name = propertyName ?? field.Name;
         toWrite += $$"""
 
-                             {{new string(' ', Indentation * 4)}}"{{field.Name}}": {
-                                 {{new string(' ', Indentation * 4)}}"type": "integer",
-                                 {{new string(' ', Indentation * 4)}}"description": "{{ReadDocumentationFile.EscapeJSON(ReadDocumentationFile.GetJSONSummary(ReadDocumentationFile.GetInfo(field.Name, Class)))}}",
+                             {{new string(' ', Indentation*4)}}"{{Name}}": {
+                                 {{new string(' ', Indentation*4)}}"type": "integer",
+                                 {{new string(' ', Indentation*4)}}"description": "{{ReadDocumentationFile.EscapeJSON(ReadDocumentationFile.GetJSONSummary(ReadDocumentationFile.GetInfo(field.Name, Class)))}}",
                      """;
 
         // Optional Default Value
@@ -448,7 +514,7 @@ public class WriteSchema
                              {{new string(' ', Indentation * 4)}}}
                      """;
 
-        if (writableFields.IndexOf((field, tooltips)) != writableFields.Count - 1)
+        if (writableFields.IndexOf((field, tooltips, propertyName)) != writableFields.Count - 1)
         {
             toWrite += ",";
         }
@@ -464,14 +530,16 @@ public class WriteSchema
     /// <param name="tooltips">The list of tooltips associated with that field.</param>
     /// <param name="Indentation">The amount of excess indentation needed.</param>
     /// <param name="Class">The class in which this property belongs.</param>
+    /// <param name="propertyName">The name of the Property, primarily for fields with Alternative Names.</param>
     /// <returns>A Multi-Line String representing the Handled Boolean Property.</returns>
     /// <remarks>This code is provided by Creator/Chaosyr/SaxbyMod/The Stoat Lord.</remarks>
-    public static string HandleBoolean(List<(FieldInfo field, List<string> tooltips)> writableFields, FieldInfo field, List<string> tooltips, int Indentation, Type Class)
+    public static string HandleBoolean(List<(FieldInfo field, List<string> tooltips, string propertyName)> writableFields, FieldInfo field, List<string> tooltips, int Indentation, Type Class, string propertyName = null)
     {
         string toWrite = "";
+        string Name = propertyName ?? field.Name;
         toWrite += $$"""
 
-                             {{new string(' ', Indentation*4)}}"{{field.Name}}": {
+                             {{new string(' ', Indentation*4)}}"{{Name}}": {
                                  {{new string(' ', Indentation*4)}}"type": "boolean",
                                  {{new string(' ', Indentation*4)}}"description": "{{ReadDocumentationFile.EscapeJSON(ReadDocumentationFile.GetJSONSummary(ReadDocumentationFile.GetInfo(field.Name, Class)))}}",
                      """;
@@ -491,7 +559,7 @@ public class WriteSchema
                              {{new string(' ', Indentation*4)}}}
                      """;
 
-        if (writableFields.IndexOf((field, tooltips)) != writableFields.Count - 1)
+        if (writableFields.IndexOf((field, tooltips, propertyName)) != writableFields.Count - 1)
         {
             toWrite += ",";
         }
@@ -507,16 +575,18 @@ public class WriteSchema
     /// <param name="tooltips">The list of tooltips associated with that field.</param>
     /// <param name="Indentation">The amount of excess indentation needed.</param>
     /// <param name="Class">The class in which this property belongs.</param>
+    /// <param name="propertyName">The name of the Property, primarily for fields with Alternative Names.</param>
     /// <returns>A Multi-Line String representing the Handled String Array Property.</returns>
     /// <remarks>This code is provided by Creator/Chaosyr/SaxbyMod/The Stoat Lord.</remarks>
-    public static string HandleStringArray(List<(FieldInfo field, List<string> tooltips)> writableFields, FieldInfo field, List<string> tooltips, int Indentation, Type Class)
+    public static string HandleStringArray(List<(FieldInfo field, List<string> tooltips, string propertyName)> writableFields, FieldInfo field, List<string> tooltips, int Indentation, Type Class, string propertyName = null)
     {
         string toWrite = "";
+        string Name = propertyName ?? field.Name;
         toWrite += $$"""
 
-                             {{new string(' ', Indentation * 4)}}"{{field.Name}}": {
-                                 {{new string(' ', Indentation * 4)}}"type": "array",
-                                 {{new string(' ', Indentation * 4)}}"description": "{{ReadDocumentationFile.EscapeJSON(ReadDocumentationFile.GetJSONSummary(ReadDocumentationFile.GetInfo(field.Name, Class)))}}",
+                             {{new string(' ', Indentation*4)}}"{{Name}}": {
+                                 {{new string(' ', Indentation*4)}}"type": "array",
+                                 {{new string(' ', Indentation*4)}}"description": "{{ReadDocumentationFile.EscapeJSON(ReadDocumentationFile.GetJSONSummary(ReadDocumentationFile.GetInfo(field.Name, Class)))}}",
                      """;
 
         // Optional Items Value
@@ -596,7 +666,7 @@ public class WriteSchema
                              {{new string(' ', Indentation * 4)}}}
                      """;
 
-        if (writableFields.IndexOf((field, tooltips)) != writableFields.Count - 1)
+        if (writableFields.IndexOf((field, tooltips, propertyName)) != writableFields.Count - 1)
         {
             toWrite += ",";
         }
@@ -612,91 +682,94 @@ public class WriteSchema
     /// <param name="tooltips">The list of tooltips associated with that field.</param>
     /// <param name="Indentation">The amount of excess indentation needed.</param>
     /// <param name="Class">The class in which this property belongs.</param>
+    /// <param name="propertyName">The name of the Property, primarily for fields with Alternative Names.</param>
     /// <returns>A Multi-Line String representing the Handled Object Array Property.</returns>
     /// <remarks>This code is provided by Creator/Chaosyr/SaxbyMod/The Stoat Lord.</remarks>
-    public static string HandleObjectArray(List<(FieldInfo field, List<string> tooltips)> writableFields, FieldInfo field, List<string> tooltips, int Indentation, Type Class)
+    public static string HandleObjectArray(List<(FieldInfo field, List<string> tooltips, string propertyName)> writableFields, FieldInfo field, List<string> tooltips, int Indentation, Type Class, string propertyName = null)
     {
         Type elementType = field.FieldType.GetGenericArguments()[0];
-                string toWrite = "";
+        string toWrite = "";
+        string Name = propertyName ?? field.Name;
+        toWrite += $$"""
+
+                             {{new string(' ', Indentation * 4)}}"{{Name}}": {
+                                 {{new string(' ', Indentation * 4)}}"type": "array",
+                                 {{new string(' ', Indentation * 4)}}"description": "{{ReadDocumentationFile.EscapeJSON(ReadDocumentationFile.GetJSONSummary(ReadDocumentationFile.GetInfo(field.Name, Class)))}}",
+                     """;
+
+        // Optional Items Value
+        string items = tooltips.FirstOrDefault(x => x.StartsWith("Items(", StringComparison.Ordinal));
+        if (items != null && items.Split('(').Last().Trim('(', ')').ToLower() == "true")
+        {
+            toWrite += $$"""
+
+                                     {{new string(' ', Indentation * 4)}}"items": {
+                         """;
+
+            // Optional ItemType Value
+            string itemType = tooltips.FirstOrDefault(x => x.StartsWith("ItemType(", StringComparison.Ordinal));
+            if (itemType != null)
                 toWrite += $$"""
-                             
-                                     {{new string(' ', Indentation*4)}}"{{field.Name}}": {
-                                         {{new string(' ', Indentation*4)}}"type": "array",
-                                         {{new string(' ', Indentation*4)}}"description": "{{ReadDocumentationFile.EscapeJSON(ReadDocumentationFile.GetJSONSummary(ReadDocumentationFile.GetInfo(field.Name, Class)))}}",
+
+                                             {{new string(' ', Indentation * 4)}}"type": "{{itemType.Split('(').Last().Trim('(', ')').ToLower()}}",
                              """;
-                
-                // Optional Items Value
-                string items = tooltips.FirstOrDefault(x => x.StartsWith("Items(", StringComparison.Ordinal));
-                if (items != null && items.Split('(').Last().Trim('(', ')').ToLower() == "true")
-                {
+
+            // Optional AdditionalProperties Value
+            string additionalProperties =
+                tooltips.FirstOrDefault(x => x.StartsWith("AdditionalProperties(", StringComparison.Ordinal));
+            if (additionalProperties != null)
+            {
+                string value = additionalProperties.Split('(').Last().Trim('(', ')').ToLower();
+                if (value == "true" || value == "false")
                     toWrite += $$"""
-                                 
-                                             {{new string(' ', Indentation*4)}}"items": {
+
+                                             {{new string(' ', Indentation * 4)}}"additionalProperties": {{value.ToLower()}},
                                  """;
-
-                    // Optional ItemType Value
-                    string itemType = tooltips.FirstOrDefault(x => x.StartsWith("ItemType(", StringComparison.Ordinal));
-                    if (itemType != null)
-                        toWrite += $$"""
-                                     
-                                                     {{new string(' ', Indentation*4)}}"type": "{{itemType.Split('(').Last().Trim('(', ')').ToLower()}}",
-                                     """;
-                    
-                    // Optional AdditionalProperties Value
-                    string additionalProperties = tooltips.FirstOrDefault(x => x.StartsWith("AdditionalProperties(", StringComparison.Ordinal));
-                    if (additionalProperties != null)
-                    {
-                        string value = additionalProperties.Split('(').Last().Trim('(', ')').ToLower();
-                        if (value == "true" || value == "false")
-                            toWrite += $$"""
-
-                                                     {{new string(' ', Indentation*4)}}"additionalProperties": {{value.ToLower()}},
-                                         """;
-                        else
-                            toWrite += $$"""
-
-                                                     {{new string(' ', Indentation*4)}}"additionalProperties": {
-                                                         {{new string(' ', Indentation*4)}}"type": "{{value.ToLower()}}"
-                                                     {{new string(' ', Indentation*4)}}},
-                                         """;
-                    }
-
-                    if (elementType != typeof(object))
-                    {
-                        string returnedJSON = RecursiveWrite(elementType, Indentation+3);
-
-                        toWrite += returnedJSON;
-                    } 
-                    
-                    toWrite = toWrite.TrimEnd();
-                    toWrite = toWrite.TrimEnd(',');
+                else
                     toWrite += $$"""
-                                 
-                                             {{new string(' ', Indentation*4)}}},
-                                 """;
-                }
-                
-                // Optional UniqueItems Value
-                string UniqueItems = tooltips.FirstOrDefault(x => x.StartsWith("UniqueItems(", StringComparison.Ordinal));
-                if (UniqueItems != null)
-                    toWrite += $$"""
-                                 
-                                             {{new string(' ', Indentation*4)}}"uniqueItems": {{UniqueItems.Split('(').Last().Trim('(', ')').ToLower()}},
-                                 """;
 
-                toWrite = toWrite.TrimEnd();
-                toWrite = toWrite.TrimEnd(',');
-                toWrite += $$"""
-                             
-                                     {{new string(' ', Indentation*4)}}}
-                             """;
-                
-                if (writableFields.IndexOf((field, tooltips)) != writableFields.Count - 1)
-                {
-                    toWrite += ",";
-                }
+                                             {{new string(' ', Indentation * 4)}}"additionalProperties": {
+                                                 {{new string(' ', Indentation * 4)}}"type": "{{value.ToLower()}}"
+                                             {{new string(' ', Indentation * 4)}}},
+                                 """;
+            }
 
-                return toWrite;
+            if (elementType != typeof(object))
+            {
+                string returnedJSON = RecursiveWrite(elementType, Indentation + 3);
+
+                toWrite += returnedJSON;
+            }
+
+            toWrite = toWrite.TrimEnd();
+            toWrite = toWrite.TrimEnd(',');
+            toWrite += $$"""
+
+                                     {{new string(' ', Indentation * 4)}}},
+                         """;
+        }
+
+        // Optional UniqueItems Value
+        string UniqueItems = tooltips.FirstOrDefault(x => x.StartsWith("UniqueItems(", StringComparison.Ordinal));
+        if (UniqueItems != null)
+            toWrite += $$"""
+
+                                     {{new string(' ', Indentation * 4)}}"uniqueItems": {{UniqueItems.Split('(').Last().Trim('(', ')').ToLower()}},
+                         """;
+
+        toWrite = toWrite.TrimEnd();
+        toWrite = toWrite.TrimEnd(',');
+        toWrite += $$"""
+
+                             {{new string(' ', Indentation * 4)}}}
+                     """;
+
+        if (writableFields.IndexOf((field, tooltips, propertyName)) != writableFields.Count - 1)
+        {
+            toWrite += ",";
+        }
+
+        return toWrite;
     }
 
     /// <summary>
@@ -707,14 +780,16 @@ public class WriteSchema
     /// <param name="tooltips">The list of tooltips associated with that field.</param>
     /// <param name="Indentation">The amount of excess indentation needed.</param>
     /// <param name="Class">The class in which this property belongs.</param>
+    /// <param name="propertyName">The name of the Property, primarily for fields with Alternative Names.</param>
     /// <returns>A Multi-Line String representing the Handled Object Property.</returns>
     /// <remarks>This code is provided by Creator/Chaosyr/SaxbyMod/The Stoat Lord.</remarks>
-    public static string HandleObject(List<(FieldInfo field, List<string> tooltips)> writableFields, FieldInfo field, List<string> tooltips, int Indentation, Type Class)
+    public static string HandleObject(List<(FieldInfo field, List<string> tooltips, string propertyName)> writableFields, FieldInfo field, List<string> tooltips, int Indentation, Type Class, string propertyName = null)
     {
         string toWrite = "";
+        string Name = propertyName ?? field.Name;
         toWrite += $$"""
 
-                             {{new string(' ', Indentation*4)}}"{{field.Name}}": {
+                             {{new string(' ', Indentation*4)}}"{{Name}}": {
                                  {{new string(' ', Indentation*4)}}"type": "object",
                                  {{new string(' ', Indentation*4)}}"description": "{{ReadDocumentationFile.EscapeJSON(ReadDocumentationFile.GetJSONSummary(ReadDocumentationFile.GetInfo(field.Name, Class)))}}",
                      """;
@@ -751,12 +826,54 @@ public class WriteSchema
                              {{new string(' ', Indentation*4)}}}
                      """;
 
-        if (writableFields.IndexOf((field, tooltips)) != writableFields.Count - 1)
+        if (writableFields.IndexOf((field, tooltips, propertyName)) != writableFields.Count - 1)
         {
             toWrite += ",";
         }
 
         return toWrite;
+    }
+
+    /// <summary>
+    /// Gets a List of all Writable Fields including Alternative Names for a field.
+    /// </summary>
+    /// <param name="writableCurrent">The current version of WritableFields after Extending.</param>
+    /// <returns>The updated Writable Field in form of a List of a feildInfo, List of string, and string representing the PropertyName.</returns>
+    public static List<(FieldInfo field, List<string> tooltips, string propertyName)> GetWritableWithAlternates(List<(FieldInfo field, List<string> tooltips)> writableCurrent)
+    {
+        List<(FieldInfo field, List<string> tooltips, string propertyName)> returnVal = new();
+
+        foreach ((FieldInfo field, List<string> tooltips) in writableCurrent)
+        {
+            returnVal.Add((field, tooltips, field.Name));
+
+            if (!tooltips.Contains("ALTERNATIVES", StringComparer.Ordinal))
+            {
+                continue;
+            }
+
+            string alternativeNames = tooltips.FirstOrDefault(x =>
+                x.StartsWith("AlternativeNames(", StringComparison.Ordinal));
+
+            if (alternativeNames.IsNullOrWhitespace())
+            {
+                continue;
+            }
+
+            alternativeNames = alternativeNames.Substring(
+                alternativeNames.IndexOf('(') + 1,
+                alternativeNames.LastIndexOf(')') - alternativeNames.IndexOf('(') - 1);
+
+            foreach (string alternativeName in alternativeNames.Split(',').Select(x => x.Trim()))
+            {
+                if (!alternativeName.IsNullOrWhitespace())
+                {
+                    returnVal.Add((field, tooltips, alternativeName));
+                }
+            }
+        }
+
+        return returnVal;
     }
 
     /// <summary>
@@ -783,6 +900,7 @@ public class WriteSchema
         
         List<(FieldInfo field, List<string> tooltips)> fieldTooltipList = GetToolTips(typeof(Class).GetFields().ToList());
         List<(FieldInfo field, List<string> tooltips)> writableFields = GetWritableExtended(fieldTooltipList);
+        List<(FieldInfo field, List<string> tooltips, string propertyName)> writableFieldsWithAlternates = GetWritableWithAlternates(writableFields);
         
         // Handle Required Properties.
         List<string> required = GetRequired(writableFields);
@@ -794,14 +912,16 @@ public class WriteSchema
                                       ],
                                   """);
         
-        // Handle AllOf / OneOf Required Properties.
+        // Handle AllOf Properties.
         List<List<string>> allOf = GetAllOfRequired(writableFields);
+        List<List<string>> anyOfAlternates = GetAnyOfAlternativeNames(writableFields);
 
-        if (!allOf.IsNullOrEmpty())
+        if (!allOf.IsNullOrEmpty() || !anyOfAlternates.IsNullOrEmpty())
         {
-            WritingWriter.Write(HandleAllOf(allOf, 0));
+            WritingWriter.Write(HandleAllOf(allOf, anyOfAlternates, 0));
             WritingWriter.Write(",");
         }
+        
         
         // Open the Objects Properties
         WritingWriter.Write($$"""
@@ -810,42 +930,42 @@ public class WriteSchema
                               """);
         
         // Get All Non-Excluded Fields and Write them to the Schema
-        foreach ((FieldInfo field, List<string> tooltips) in writableFields)
+        foreach ((FieldInfo field, List<string> tooltips, string propertyName) in writableFieldsWithAlternates)
         {
             // Handles String JSON Schema Types
             if (field.FieldType == typeof(string))
             {
-                WritingWriter.Write(HandleString(writableFields, field, tooltips, 0, field.DeclaringType));
+                WritingWriter.Write(HandleString(writableFieldsWithAlternates, field, tooltips, 0, field.DeclaringType, propertyName));
             }
 
             // Handles Int JSON Schema Types
             else if (field.FieldType == typeof(int))
             {
-                WritingWriter.Write(HandleInt(writableFields, field, tooltips, 0, field.DeclaringType));
+                WritingWriter.Write(HandleInt(writableFieldsWithAlternates, field, tooltips, 0, field.DeclaringType, propertyName));
             }
             
             // Handles Boolean JSON Schema Types
             else if (field.FieldType == typeof(bool))
             {
-                WritingWriter.Write(HandleBoolean(writableFields, field, tooltips, 0, field.DeclaringType));
+                WritingWriter.Write(HandleBoolean(writableFieldsWithAlternates, field, tooltips, 0, field.DeclaringType, propertyName));
             }
             
             // Handles Array JSON Schema Types
             else if (field.FieldType == typeof(List<string>))
             {
-                WritingWriter.Write(HandleStringArray(writableFields, field, tooltips, 0, field.DeclaringType));
+                WritingWriter.Write(HandleStringArray(writableFieldsWithAlternates, field, tooltips, 0, field.DeclaringType, propertyName));
             }
 
             // Handles Object Array JSON Schema Types
             else if (field.FieldType.IsGenericType && field.FieldType.GetGenericTypeDefinition() == typeof(List<>))
             {
-                WritingWriter.Write(HandleObjectArray(writableFields, field, tooltips, 0, field.DeclaringType));
+                WritingWriter.Write(HandleObjectArray(writableFieldsWithAlternates, field, tooltips, 0, field.DeclaringType, propertyName));
             }
             
             // Handles Object JSON Schema Types
             else if (field.FieldType.IsClass)
             {
-                WritingWriter.Write(HandleObject(writableFields, field, tooltips, 0, field.DeclaringType));
+                WritingWriter.Write(HandleObject(writableFieldsWithAlternates, field, tooltips, 0, field.DeclaringType, propertyName));
             }
         }
 
@@ -873,6 +993,7 @@ public class WriteSchema
         List<FieldInfo> fields = Class.GetFields().ToList();
         List<(FieldInfo field, List<string> tooltips)> fieldTooltipList = GetToolTips(fields);
         List<(FieldInfo field, List<string> tooltips)> writableFields = GetWritableExtended(fieldTooltipList);
+        List<(FieldInfo field, List<string> tooltips, string propertyName)> writableFieldsWithAlternates = GetWritableWithAlternates(writableFields);
         
         // Handle Required Properties.
         List<string> required = GetRequired(writableFields);
@@ -884,11 +1005,13 @@ public class WriteSchema
                                {{new string(' ', Indentation*4)}}],
                            """;
         
+        // Handle AllOf Properties.
         List<List<string>> allOf = GetAllOfRequired(writableFields);
+        List<List<string>> anyOfAlternates = GetAnyOfAlternativeNames(writableFields);
 
-        if (!allOf.IsNullOrEmpty())
+        if (!allOf.IsNullOrEmpty() || !anyOfAlternates.IsNullOrEmpty())
         {
-            toSendOut += HandleAllOf(allOf, Indentation);
+            toSendOut += HandleAllOf(allOf, anyOfAlternates, 0);
             toSendOut += ",";
         }
         
@@ -899,42 +1022,42 @@ public class WriteSchema
                        """;
         
         // Get All Non-Excluded Fields and Write them to the Schema
-        foreach ((FieldInfo field, List<string> tooltips) in writableFields)
+        foreach ((FieldInfo field, List<string> tooltips, string propertyName) in writableFieldsWithAlternates)
         {
             // Handles String JSON Schema Types
             if (field.FieldType == typeof(string))
             {
-                toSendOut += HandleString(writableFields, field, tooltips, Indentation, field.DeclaringType);
+                toSendOut += HandleString(writableFieldsWithAlternates, field, tooltips, Indentation, field.DeclaringType, propertyName);
             }
 
             // Handles Int JSON Schema Types
             else if (field.FieldType == typeof(int))
             {
-                toSendOut += HandleInt(writableFields, field, tooltips, Indentation, field.DeclaringType);
+                toSendOut += HandleInt(writableFieldsWithAlternates, field, tooltips, Indentation, field.DeclaringType, propertyName);
             }
             
             // Handles Boolean JSON Schema Types
             else if (field.FieldType == typeof(bool))
             {
-                toSendOut += HandleBoolean(writableFields, field, tooltips, Indentation, field.DeclaringType);
+                toSendOut += HandleBoolean(writableFieldsWithAlternates, field, tooltips, Indentation, field.DeclaringType, propertyName);
             }
             
             // Handles Array JSON Schema Types
             else if (field.FieldType == typeof(List<string>))
             {
-                toSendOut += HandleStringArray(writableFields, field, tooltips, Indentation, field.DeclaringType);
+                toSendOut += HandleStringArray(writableFieldsWithAlternates, field, tooltips, Indentation, field.DeclaringType, propertyName);
             }
 
             // Handles Object Array JSON Schema Types
             else if (field.FieldType.IsGenericType && field.FieldType.GetGenericTypeDefinition() == typeof(List<>))
             {
-                toSendOut += HandleObjectArray(writableFields, field, tooltips, Indentation, field.DeclaringType);
+                toSendOut += HandleObjectArray(writableFieldsWithAlternates, field, tooltips, Indentation, field.DeclaringType, propertyName);
             }
             
             // Handles Object JSON Schema Types
             else if (field.FieldType.IsClass)
             {
-                toSendOut += HandleObject(writableFields, field, tooltips, Indentation, field.DeclaringType);
+                toSendOut += HandleObject(writableFieldsWithAlternates, field, tooltips, Indentation, field.DeclaringType, propertyName);
             }
         }
 

@@ -5,6 +5,10 @@
 
 ## 3.0.0-Nightly-0.1.5
 * FIXED `appearenceBehavior` to `appearanceBehaviour` as it was intended for JSONLoader1's documentation.
+* We now log when there are files found for CSV and JLDR3 loading that we are not loading them farther because we don't have built-in support for the future data formats yet.
+* Reimplemented compatibility for pre-1.7 JSONLoader. We now support the `cost` field again. However, a card may not have both `cost` and `bloodCost` or we will flag it as an error in Linting.
+* Fixed our Alternative Name handling to actually add Alternative Names into the Generated Schemas from `WriteSchema`.
+* We now support Optional Properties having Alternative Names within the `WriteSchema` handling.
 
 ## 3.0.0-Nightly-0.1.4
 * Cleaned up some Logging.
