@@ -1,5 +1,8 @@
-﻿<details open>
+<details open>
 <summary>JSONLoader 2.0.0 Changelog</summary>
+
+## 2.7.2
+* Properly mark 3 fields in the Card Verbose for the VerboseLog instead of overall Debug Log.
 
 ## 2.7.1
 * Small Patch to Reimplement Verbose Logging accross all Data Types. (Logging where it shows how JSONLoader is applying the fields from your JSON's).

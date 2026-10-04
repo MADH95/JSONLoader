@@ -310,18 +310,15 @@ namespace JLPlugin.V2.Data
                 Plugin.VerboseLog($"Energy Cost: {energyCost}");
                 Plugin.VerboseLog($"Gems Cost: {(gemsCost == null ? "null" : string.Join(", ", gemsCost))}");
                 Plugin.VerboseLog($"Abilities: {(abilities == null ? "null" : string.Join(", ", abilities))}");
-                Plugin.Log.LogDebug(
-                    $"Special Abilities: {(specialAbilities == null ? "null" : string.Join(", ", specialAbilities))}");
+                Plugin.VerboseLog($"Special Abilities: {(specialAbilities == null ? "null" : string.Join(", ", specialAbilities))}");
                 Plugin.VerboseLog($"Special Stat Icon: {specialStatIcon}");
-                Plugin.Log.LogDebug(
-                    $"Meta Categories: {(metaCategories == null ? "null" : string.Join(", ", metaCategories))}");
+                Plugin.VerboseLog($"Meta Categories: {(metaCategories == null ? "null" : string.Join(", ", metaCategories))}");
                 Plugin.VerboseLog($"Card Complexity: {cardComplexity}");
                 Plugin.VerboseLog($"One Per Deck: {onePerDeck}");
                 Plugin.VerboseLog($"Temple: {temple}");
                 Plugin.VerboseLog($"Title Graphic: {titleGraphic}");
                 Plugin.VerboseLog($"Hide Attack And Health: {hideAttackAndHealth}");
-                Plugin.Log.LogDebug(
-                    $"Appearance Behaviour: {(appearanceBehaviour == null ? "null" : string.Join(", ", appearanceBehaviour))}");
+                Plugin.VerboseLog($"Appearance Behaviour: {(appearanceBehaviour == null ? "null" : string.Join(", ", appearanceBehaviour))}");
                 Plugin.VerboseLog($"Texture: {texture}");
                 Plugin.VerboseLog($"Emission Texture: {emissionTexture}");
                 Plugin.VerboseLog($"Holo Portrait Prefab: {holoPortraitPrefab}");
@@ -338,8 +335,7 @@ namespace JLPlugin.V2.Data
                 Plugin.VerboseLog($"Tail Lost Portrait: {tailLostPortrait}");
                 Plugin.VerboseLog($"Ice Cube Name: {iceCubeName}");
                 Plugin.VerboseLog($"Flip Portrait For Strafe: {flipPortraitForStrafe}");
-                Plugin.Log.LogDebug(
-                    $"Extension Properties: {(extensionProperties == null ? "null" : string.Join(", ", extensionProperties.Select(x => $"{x.Key}={x.Value}")))}");
+                Plugin.VerboseLog($"Extension Properties: {(extensionProperties == null ? "null" : string.Join(", ", extensionProperties.Select(x => $"{x.Key}={x.Value}")))}");
                 Plugin.VerboseLog($"File Path: {filePath}");
             }
             else
@@ -364,18 +360,15 @@ namespace JLPlugin.V2.Data
                 Plugin.VerboseLog($"Energy Cost: {energyCost}");
                 Plugin.VerboseLog($"Gems Cost: {(gemsCost == null ? "null" : string.Join(", ", gemsCost))}");
                 Plugin.VerboseLog($"Abilities: {(abilities == null ? "null" : string.Join(", ", abilities))}");
-                Plugin.Log.LogDebug(
-                    $"Special Abilities: {(specialAbilities == null ? "null" : string.Join(", ", specialAbilities))}");
+                Plugin.VerboseLog($"Special Abilities: {(specialAbilities == null ? "null" : string.Join(", ", specialAbilities))}");
                 Plugin.VerboseLog($"Special Stat Icon: {specialStatIcon}");
-                Plugin.Log.LogDebug(
-                    $"Meta Categories: {(metaCategories == null ? "null" : string.Join(", ", metaCategories))}");
+                Plugin.VerboseLog($"Meta Categories: {(metaCategories == null ? "null" : string.Join(", ", metaCategories))}");
                 Plugin.VerboseLog($"Card Complexity: {cardComplexity}");
                 Plugin.VerboseLog($"One Per Deck: {onePerDeck}");
                 Plugin.VerboseLog($"Temple: {temple}");
                 Plugin.VerboseLog($"Title Graphic: {titleGraphic}");
                 Plugin.VerboseLog($"Hide Attack And Health: {hideAttackAndHealth}");
-                Plugin.Log.LogDebug(
-                    $"Appearance Behaviour: {(appearanceBehaviour == null ? "null" : string.Join(", ", appearanceBehaviour))}");
+                Plugin.VerboseLog($"Appearance Behaviour: {(appearanceBehaviour == null ? "null" : string.Join(", ", appearanceBehaviour))}");
                 Plugin.VerboseLog($"Texture: {texture}");
                 Plugin.VerboseLog($"Emission Texture: {emissionTexture}");
                 Plugin.VerboseLog($"Holo Portrait Prefab: {holoPortraitPrefab}");
@@ -392,8 +385,7 @@ namespace JLPlugin.V2.Data
                 Plugin.VerboseLog($"Tail Lost Portrait: {tailLostPortrait}");
                 Plugin.VerboseLog($"Ice Cube Name: {iceCubeName}");
                 Plugin.VerboseLog($"Flip Portrait For Strafe: {flipPortraitForStrafe}");
-                Plugin.Log.LogDebug(
-                    $"Extension Properties: {(extensionProperties == null ? "null" : string.Join(", ", extensionProperties.Select(x => $"{x.Key}={x.Value}")))}");
+                Plugin.VerboseLog($"Extension Properties: {(extensionProperties == null ? "null" : string.Join(", ", extensionProperties.Select(x => $"{x.Key}={x.Value}")))}");
                 Plugin.VerboseLog($"File Path: {filePath}");
             }
         }
